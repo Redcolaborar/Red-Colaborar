@@ -1,7 +1,7 @@
 <?php
 /**
  *  WP-SpamShield Utilities
- *  File Version 1.9.9.8.8
+ *  File Version 1.9.9.8.9
  */
 
 if( !defined( 'ABSPATH' ) || !defined( 'WPSS_VERSION' ) ) {
@@ -130,7 +130,7 @@ class WPSS_Utils {
 	 *	@used by		WPSS_Utils::get_web_host(),WPSS_Utils::get_web_proxy()
 	 *	@since			1.9.9.8.8
 	 */
-	static public function preg_match( $pattern, $subject, &$matches, $flags = 0, $offset = 0 ) {
+	static public function preg_match( $pattern, $subject, &$matches = NULL, $flags = 0, $offset = 0 ) {
 		return WP_SpamShield::preg_match( $pattern, $subject, $matches, $flags, $offset );
 	}
 

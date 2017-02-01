@@ -19,9 +19,11 @@ class RM_Metricas {
     		wp_register_style( 'jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css');
 			wp_enqueue_style( 'jquery-ui' );
 
-			//wp_enqueue_script( 'jquery' );
-			//wp_enqueue_script( 'jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js', array('jquery'), time() );
-			//wp_enqueue_script( 'jquery-ui-datepicker' );
+			if ($_GET['page'] == 'rm_metricas') {
+				wp_enqueue_script( 'jquery' );
+				wp_enqueue_script( 'jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js', array('jquery'), time() );
+				wp_enqueue_script( 'jquery-ui-datepicker' );
+			}
 		} );
 
 		/* Create database */
