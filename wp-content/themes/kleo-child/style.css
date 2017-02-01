@@ -1,0 +1,441 @@
+/*
+Theme Name:     Red Colaborar v3
+Theme URI:
+Description:    Child theme for Kleo
+Author:         Maurizio Bricola
+Author URI:     http://www.redcolaborar.org
+Template:       kleo
+Version:        1.0.0
+Tags:  one-column, two-columns, right-sidebar, fluid-layout, custom-menu, featured-images, post-formats, sticky-post, translation-ready
+License: GNU General Public License
+License URI: license.txt
+*/
+
+/*
+* Please add your custom styles below
+*/
+
+/*login form home page*/
+
+#kleo-login-result {color: #ffffff !important;}
+
+.kleo-pop-title-wrap h3 {color: #ffffff !important;}
+
+.login-form-inline h3 {color: #ffffff !important;}
+
+.login-form-inline p {color: #ffffff !important;}
+
+.kleo-lostpass-switch {font-size: 1.2em !important;}
+
+.checkbox {font-size: 1.1em !important;}
+
+
+/* white text call to actions support tutorials */
+
+.ayuda-home h1 {color: #ffffff !important;}
+
+.support-home h2 {color: #ffffff !important;}
+
+.support-home h4 {color: #ffffff !important;}
+
+/*add custom profile and groups icons for Q&A, Courses and Resources */
+
+/*Kleo profile and group page nav icons*/
+
+/* Profile: AnsPress, Invite anyone, Social articles, MediaPress icons */
+#buddypress div#item-nav ul #questions-personal-li a:before { content: "\E861"; }
+#buddypress div#item-nav ul #answers-personal-li a:before { content: "\E862"; }
+#buddypress div#item-nav ul #invite-anyone-personal-li a:before { content: "\E991"; }
+#buddypress div#item-nav ul #listing-personal-li a:before { content: "\E993"; }
+#buddypress div#item-nav ul #mediapress-personal-li a:before { content: "\E875"; }
+
+ 
+/* Group: Course icon */
+#buddypress div#item-nav ul #nav-invite-anyone-groups-li a:before { content: "\E991"; }
+
+/* Group: Resource icon */
+#buddypress div#item-nav ul #nav-mediapress-groups-li a:before { content: "\E875"; }
+
+/* Group: Course icon */
+#buddypress div#item-nav ul #nav-listing-groups-li a:before { content: "\E993"; }
+
+/* AnsPress ask button mobile quick fix */
+
+#anspress .ap-btn-ask {
+    margin-top: 15px;
+    float: right !important;
+    margin-left: 15px;
+   
+}
+
+
+ 
+ 
+/* =Theme customization starts here
+------------------------------------------------------- */
+
+/* header banner */
+
+.main-title {
+display:none;
+}
+
+/* member search */
+
+
+
+/*anspress custom style */
+
+.ap-answer-content {
+font-size: 1.5em !important;
+}
+
+.question-content {
+font-size: 1.5em !important;
+}
+
+.mce-menubtn button {
+display:none;
+}
+
+.ap-btn, .ap-upload-o, .apicon-image {
+font-size: 1.3em !important;
+}
+
+/*main navigation text size*/
+
+.navbar-nav > li > .dropdown-menu {
+font-size: 1.5em !important;
+}
+
+.navbar-transparent.on-dark-bg #header .logo a {
+font-size: 1.5em !important;
+}
+
+.navbar-nav > li > a {
+    font-size: 19px !important;
+}
+
+/*sign in button home page*/
+
+.form-control {
+font-size: 1.5em;
+}
+
+.kleo-pop-title {
+font-size:2em !important;
+}
+
+.btn-lg {
+background-color:#00b9f7 !important;
+font-size:1.5em;
+}
+
+.new-account {
+font-size:2em;
+color:#ffffff !important;
+
+}
+
+.multiselect {
+background-color: #ffffff !important;
+}
+
+
+/* adjust select category widget in footer */
+
+#cat {
+    width: 95% !important;
+}
+
+
+.field_habilidades p.description {
+display:none !important;
+}
+
+
+ 
+/*
+* Media Queries
+*/
+@media screen and (max-width: 980px) {
+    .search #left-area,
+    .archive #left-area {
+        -moz-column-count: 2;
+            column-count: 2;
+        -moz-column-gap: 60px;
+            column-gap: 60px;
+    }
+}
+@media screen and (max-width: 767px) {
+    .search #left-area,
+    .archive #left-area {
+        -moz-column-count: 1;
+            column-count: 1;
+    }
+    .search .et_pb_post.format-audio .et_audio_content,
+    .archive .et_pb_post.format-audio .et_audio_content{
+        margin: 0;
+    }
+    .search #left-area .et_pb_post.format-audio .et_audio_container .mejs-controls div.mejs-time-rail,
+    .archive #left-area .et_pb_post.format-audio .et_audio_container .mejs-controls div.mejs-time-rail,
+    .search #left-area .et_pb_post.format-audio .et_audio_container .mejs-controls .mejs-time-rail .mejs-time-total,
+    .archive #left-area .et_pb_post.format-audio .et_audio_container .mejs-controls .mejs-time-rail .mejs-time-total{
+        min-width: 300px!important;
+        width: 300px!important;
+    }
+}
+
+/*Google Translate*/
+
+
+.goog-te-menu-frame {
+margin-left: 25px !important;
+padding-left: 25px !important;
+border: none !important;
+}
+
+
+
+#google_translate_element div {
+margin-left: 25px;
+}
+
+#page-container {
+padding-top: 1px !important;
+}
+
+/*Embed any document button not working on frontend of Post and Courses*/
+
+.awsm-embed {
+display: none !important;
+}
+
+
+/*mediapress custom button*/
+
+.mpp-button-primary, .mpp-button-secondary {
+background-color: #009cd7 !important;
+font-size: 20px !important;
+color: #fff !important;
+}
+
+/*mediapress document embed container*/
+
+#buddypress #whats-new-options {
+    height: 100% !important;
+    overflow: hidden;
+}
+.mpp-item-content {
+width: 100% !important;
+}
+
+.mpp-lightbox-activity-container {
+width: 100% !important;
+height: 250px;
+}
+
+.mpp-lightbox-media-container {
+width: 100% !important;
+}
+
+iframe {
+width: 100% !important;
+height: 250px;
+}
+
+/*mediapress upload icons*/
+
+.mpp-upload-buttons a img {
+    display: inline-block;
+    height: 20px;
+    width: auto;
+}
+
+
+
+/*LearnDash custom styles*/
+
+/* Customizing fcc-learndash styles */
+
+.ui-state-active .ui-icon {
+background-image: url("../images/ui-icons_222222_256x240.png") !important;
+}
+
+.ui-state-default .ui-icon {
+background-image: url("../images/ui-icons_222222_256x240.png") !important;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+ border: 1px solid #009cd7 !important;
+    color: #009cd7 !important;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+ border: 1px solid #009cd7 !important;
+    color: #009cd7 !important;
+}
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus .ui-widget-header .ui-state-focus {
+ border: 1px solid #009cd7 !important;
+    color: #009cd7 !important;
+}
+
+#wdm_quiz_submit {
+font-size: 20px !important;
+color: #fff !important;
+background-color: #009cd7 !important;
+padding: 5px 10px !important;
+}
+
+#wdmAddNewButton, #wdm_course_submit, #wdm_lesson_submit, #wdm_topic_submit, #saveQuestion {
+font-size: 20px !important;
+color: #fff !important;
+background-color: #009cd7 !important;
+padding: 5px 10px !important;
+margin-top: 10px !important;
+}
+
+#wdmAddNewButton:hover, #wdm_course_submit:hover, #wdm_lesson_submit:hover, #wdm_topic_submit:hover, #wdm_quiz_submit:hover, #saveQuestion:hover {
+padding: 3px 4px !important;
+}
+
+#wdmQuestionTitle, #wdmQuestion, #wdmQuestionHint, #wdmAnswerType, #wdmAnswerRequired {
+margin-top: 20px;
+}
+
+#wdmHideTfoot {
+display: none;
+}
+
+#post-6552 h1 {
+display: none;
+}
+
+#post-6553 h1, #post-6554 h1, #post-6555 h1, #post-6556 h1, #post-6557 h1, #post-6559 h1, #post-6560 h1, #post-6561 h1 {
+display: none;
+}
+
+/*Hide difficult and unecessary fields from Quiz and Questions front-end forms fcc-learndash plugin */
+
+
+
+#wpProQuiz_incorrectMassageBox {
+display: none !important;
+}
+
+#wdmQuestionPoints, #wdmQuestionCategory, #wdmCorrectMessage {
+display: none;
+}
+
+#whoSignUp {
+display: none !important;
+}
+
+#insertAuto {
+display: none !important;
+}
+
+#displayCaptcha {
+display: none !important;
+}
+
+#sortListBy {
+display: none !important;
+}
+
+#userApplyMultiple {
+display: none !important;
+}
+
+#statistics_ip_lock_tr {
+display: none !important;
+}
+
+
+#hideQuizTitle, #restartQuizButton, #viewQuestionButton, #displayAnswerRandom, #sortQuestionsByCatecory, #quizOnlyOnce, #showSpecificQuestions, #questionOverview, #adminEmailNotification, #userEmailNotification, #registeredUsersOnly, #questionOptions, #showCategoryScore, #hideCorrectQuestionDisplay, #hideQuizTime, #hideScoreDisplay, #back, #onePage, #quizCustomFields, #quizResultText, #displayQuestionRandom, #timeLimit, #saveAnswersCookie, #quizPrerequisites {
+display: none;
+}
+
+#wpProQuiz_showPointsBox {
+display: none !important;
+}
+
+#singleChoiceOptions {
+display: none !important;
+}
+
+#wdm_content-html {
+display: none;
+}
+
+/* 
+#wp-editor-area {
+height: 90% !important;
+}
+
+#wdm_content_ifr {
+height: 90% !important;
+}
+*/
+
+#sfwd-courses_course_materials, #sfwd-courses_course_access_list, #sfwd-courses_certificate, #sfwd-quiz_repeats, #sfwd-quiz_threshold, #sfwd-quiz_certificate {
+display: none;
+}
+
+
+#order_number {
+display: none;
+}
+
+label[for=order_number] {
+display: none;
+}
+
+
+
+
+
+
+
+
+/* Styling comments */
+
+.comment-reply-link {
+    display: inline-block !important;
+    position: relative !important;
+    right: 0;
+    top: 7px;
+}
+
+.comment_avatar img {
+width: 50% !important;
+}
+
+
+
+
+
+/*buddypress registration page*/
+
+.field-visibility-settings-toggle {
+display: none;
+}
+
+/*BuddyPress navigation
+body.no-sidebar #buddypress #object-nav {
+    border-right: 1px solid #ddd;
+    float: left !important;
+    margin-right: -1px;
+    width: 200px !important;
+}
+*/
+
+/*wp-admin custom style*/
+
+div#formatdiv.postbox {
+display: none !important;
+}
+#post-formats-select{
+display: none !important;
+}

@@ -1,0 +1,75 @@
+$_items_mobile : ( whatsapp, telegram, viber );
+
+@each $item in $_items_mobile {
+    .#{$prefix} .#{$prefix}-#{$item} {
+        display: inline-block;
+    }
+
+    .#{$prefix}-fixed-left,
+    .#{$prefix}-fixed-right {
+        .#{$prefix}-#{$item} {
+             display: block;
+         }
+    }
+}
+
+div[data-#{$prefix}-component="share-preview"] {
+    position: relative;
+
+    button[data-action="no-title"],
+    button[data-action="no-counter"] {
+        margin: 10px;
+    }
+}
+
+.#{$prefix}-preview-container {
+    background: #fff;
+    border-radius: 3px;
+    border: 1px solid #ECECEC;
+    margin-top: 10px;
+    padding: 8px 6px 0 6px;
+
+    .#{$prefix} {
+        margin: 0;
+        padding: 0;
+    }
+
+    .#{$prefix}-count {
+        padding: 5px 8px;
+    }
+}
+
+.#{$prefix}-fixed-left,
+.#{$prefix}-fixed-right {
+    z-index: 99999;
+
+    .#{$prefix}-item a {
+        border-radius: initial;
+        height: 48px;
+        line-height: 48px;
+        text-align: center;
+        width: 48px;
+    }
+}
+
+.#{$prefix}-item a span {
+    position: relative;
+    top: 7px;
+}
+
+.#{$prefix}-wrap .#{$prefix}-custom-css-btn-content {
+    margin-left: 10px;
+    margin-top: 0;
+    position: relative;
+
+    .ajax-spinner {
+        bottom: 22px;
+        height: 22px;
+        left: 130px;
+        width: 22px;
+    }
+
+    .ajax-spinner-visible {
+        visibility: visible;
+    }
+}

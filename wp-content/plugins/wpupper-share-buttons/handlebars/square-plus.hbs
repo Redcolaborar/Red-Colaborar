@@ -1,0 +1,40 @@
+{{#each this}}
+
+	{{#if first}}
+
+		{{#if title}}
+			<div class="{{prefix}}-title">
+			 	<span>{{title}}</span>
+			 </div>
+		 {{/if}}
+
+		<div id="{{prefix}}-container-square-plus" class="{{prefix}} {{prefix}}-{{layout}} social-share {{prefix}}-preview">
+
+			<div class="{{prefix}}-item {{prefix}}-counter {{prefix}}-total-share">
+				<div class="{{prefix}}-shares-count">{{counter}}</div>
+				<div class="{{prefix}}-shares-text" data-title="{{share_count_label}}"></div>
+				<span class="wpusb-pipe" data-pipe="&#x0007C;"></span>
+			</div>
+
+			<div class="{{prefix}}-item {{prefix}}-{{item_class}} {{prefix}}-full {{prefix}}-inside">
+				<a href="#" class="{{prefix}}-link" title="{{item_title}}">
+					<i class="{{prefix}}-icon-{{item_class}}-square-plus"></i>
+
+					{{#if inside}}
+						<span class="wpusb-title" data-title="{{item_name}}"></span>
+					{{/if}}
+				</a>
+			</div>
+	{{/if}}
+
+	{{#unless first}}
+		<div class="{{prefix}}-item {{prefix}}-{{item_class}}">
+			<a href="#" class="{{prefix}}-link" title="{{item_title}}">
+				<i class="{{prefix}}-icon-{{item_class}}-square-plus"></i>
+			</a>
+		</div>
+	{{/unless}}
+{{/each}}
+</div>
+<button class="button" data-action="no-title"></button>
+<button class="button" data-action="no-counter"></button>

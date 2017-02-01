@@ -1,0 +1,537 @@
+# Translation of Development (trunk) in English (Australia)
+# This file is distributed under the same license as the Development (trunk) package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Development (trunk)\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpupper-share-"
+"buttons\n"
+"POT-Creation-Date: 2017-01-05 14:59-0200\n"
+"PO-Revision-Date: 2017-01-05 14:59-0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_AU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.8.11\n"
+
+#: Config/enqueue-scripts.php:55
+msgid "View Untitled"
+msgstr ""
+
+#: Config/enqueue-scripts.php:56
+msgid "View without count"
+msgstr ""
+
+#: Config/enqueue-scripts.php:57
+msgid "See with title"
+msgstr ""
+
+#: Config/enqueue-scripts.php:58
+msgid "See with count"
+msgstr ""
+
+#: Config/social-elements.php:94
+msgid "Share on Facebook"
+msgstr "Share on Facebook"
+
+#: Config/social-elements.php:100 Config/social-elements.php:134
+#: Config/social-elements.php:151 Config/social-elements.php:168
+#: Config/social-elements.php:185 Config/social-elements.php:202
+#: Config/social-elements.php:270 Config/social-elements.php:287
+#: Config/social-elements.php:304 Config/social-elements.php:355
+#: Config/social-elements.php:372
+msgid "Share"
+msgstr "Share"
+
+#: Config/social-elements.php:111 Config/social-elements.php:117
+msgid "Tweet"
+msgstr ""
+
+#: Config/social-elements.php:128
+msgid "Share on Google+"
+msgstr ""
+
+#: Config/social-elements.php:145
+msgid "Share on WhatsApp"
+msgstr ""
+
+#: Config/social-elements.php:162
+msgid "Share on Pinterest"
+msgstr ""
+
+#: Config/social-elements.php:179
+msgid "Share on Linkedin"
+msgstr ""
+
+#: Config/social-elements.php:196
+msgid "Share on Tumblr"
+msgstr "Share on Tumblr"
+
+#: Config/social-elements.php:213
+msgid "Send by email"
+msgstr ""
+
+#: Config/social-elements.php:230
+msgid "Send by Gmail"
+msgstr ""
+
+#: Config/social-elements.php:247
+msgid "Print via PrintFriendly"
+msgstr ""
+
+#: Config/social-elements.php:253
+msgid "Print"
+msgstr "Print"
+
+#: Config/social-elements.php:264
+msgid "Share on Telegram"
+msgstr ""
+
+#: Config/social-elements.php:281
+msgid "Share on Skype"
+msgstr ""
+
+#: Config/social-elements.php:298
+msgid "Share on Viber"
+msgstr ""
+
+#: Config/social-elements.php:315
+msgid "Like on Facebook"
+msgstr ""
+
+#: Config/social-elements.php:321
+msgid "Like"
+msgstr ""
+
+#: Config/social-elements.php:332 Templates/layouts-primary.php:154
+msgid "Open modal social networks"
+msgstr ""
+
+#: Config/social-elements.php:349
+msgid "Share on Reddit"
+msgstr ""
+
+#: Config/social-elements.php:366
+msgid "Share on Flipboard"
+msgstr ""
+
+#: Config/social-elements.php:383
+msgid "Send on Facebook Messenger"
+msgstr ""
+
+#: Config/social-elements.php:389
+msgid "Messenger"
+msgstr ""
+
+#: Config/social-elements.php:560 View/settings-extra.view.php:128
+msgid "I just saw"
+msgstr ""
+
+#: Config/social-elements.php:564
+msgid "Click to see also"
+msgstr ""
+
+#: Controller/settings.controller.php:48 View/settings.view.php:43
+msgid "Settings"
+msgstr "Settings"
+
+#: Controller/settings.controller.php:65 View/settings-extra.view.php:29
+#: View/settings-faq.view.php:28 View/settings.view.php:31
+#: View/share-report.view.php:35
+msgid "WPUpper Share Buttons"
+msgstr ""
+
+#: Controller/settings.controller.php:66
+msgid "WPUpper Share"
+msgstr ""
+
+#: Controller/settings.controller.php:75
+msgid "Extra Settings | WPUpper Share Buttons"
+msgstr ""
+
+#: Controller/settings.controller.php:76 View/settings-extra.view.php:41
+#: View/settings.view.php:471
+msgid "Extra Settings"
+msgstr ""
+
+#: Controller/settings.controller.php:84
+msgid "Use options | WPUpper Share Buttons"
+msgstr ""
+
+#: Controller/settings.controller.php:85 View/settings-faq.view.php:34
+#: View/settings.view.php:476
+msgid "Use options"
+msgstr ""
+
+#: Controller/share-reports.controller.php:222 View/settings.view.php:191
+msgid "Title"
+msgstr "Title"
+
+#: Controller/share-reports.controller.php:223
+msgid "Facebook"
+msgstr "Facebook"
+
+#: Controller/share-reports.controller.php:224
+msgid "Google+"
+msgstr "Google+"
+
+#: Controller/share-reports.controller.php:225
+msgid "Twitter"
+msgstr "Twitter"
+
+#: Controller/share-reports.controller.php:226
+msgid "Linkedin"
+msgstr ""
+
+#: Controller/share-reports.controller.php:227
+msgid "Pinterest"
+msgstr "Pinterest"
+
+#: Controller/share-reports.controller.php:228
+msgid "Tumblr"
+msgstr ""
+
+#: Controller/share-reports.controller.php:229
+msgid "Total"
+msgstr "Total"
+
+#: Controller/share-reports.controller.php:291
+msgid "There is no record available at the moment!"
+msgstr ""
+
+#: Controller/share-reports.controller.php:304
+msgid "Sharing Report | WPUpper Share Buttons"
+msgstr ""
+
+#: Controller/share-reports.controller.php:305 View/settings.view.php:484
+msgid "Sharing Report"
+msgstr ""
+
+#: Helper/utils.php:1189
+msgid "SHARES"
+msgstr ""
+
+#: Templates/fixed-left.php:134
+msgid "Shares"
+msgstr ""
+
+#: View/settings-extra.view.php:37 View/settings-faq.view.php:29
+#: View/settings.view.php:39 View/share-report.view.php:36
+msgid "Add the Share Buttons automatically."
+msgstr ""
+
+#: View/settings-extra.view.php:52
+msgid "Cache time"
+msgstr ""
+
+#: View/settings-extra.view.php:63
+msgid "Minute"
+msgstr "Minute"
+
+#: View/settings-extra.view.php:65
+msgid "Set the time in minutes that will be cached in the Sharing report page"
+msgstr ""
+
+#: View/settings-extra.view.php:72 View/settings-extra.view.php:79
+msgid "Twitter username"
+msgstr ""
+
+#: View/settings-extra.view.php:82
+msgid "Your twitter username"
+msgstr ""
+
+#: View/settings-extra.view.php:88 View/settings-extra.view.php:95
+msgid "Twitter hashtags"
+msgstr ""
+
+#: View/settings-extra.view.php:101
+msgid ""
+"Optional Hashtags appended onto the tweet (comma separated. don't include \"#"
+"\")"
+msgstr ""
+
+#: View/settings-extra.view.php:104 View/settings-extra.view.php:127
+#: View/settings-extra.view.php:149
+msgid "Example: "
+msgstr ""
+
+#: View/settings-extra.view.php:113 View/settings-extra.view.php:120
+msgid "Twitter text"
+msgstr ""
+
+#: View/settings-extra.view.php:125
+msgid "Use {title} to add the post title"
+msgstr ""
+
+#: View/settings-extra.view.php:136
+msgid "UTM tracking"
+msgstr ""
+
+#: View/settings-extra.view.php:143
+msgid "Add UTM tracking (Analytics)"
+msgstr ""
+
+#: View/settings-extra.view.php:152
+msgid "Use <code>?</code> and"
+msgstr ""
+
+#: View/settings-extra.view.php:153
+msgid "adding parameters to use <code>&</code> in the tracking."
+msgstr ""
+
+#: View/settings-extra.view.php:161
+msgid "Bitly access token"
+msgstr ""
+
+#: View/settings-extra.view.php:168
+msgid "Insert your access token Bitly"
+msgstr ""
+
+#: View/settings-extra.view.php:172
+msgid "Shorten urls using bitly, generate token in "
+msgstr ""
+
+#: View/settings-extra.view.php:180
+msgid "Deactivate sharing report"
+msgstr ""
+
+#: View/settings-extra.view.php:193
+msgid ""
+"This allows you to disable counting of the shares report. You will not lose "
+"the report you have already computed."
+msgstr ""
+
+#: View/settings-extra.view.php:200
+msgid "Disable CSS"
+msgstr "Disable CSS"
+
+#: View/settings-extra.view.php:217
+msgid "Disable JS"
+msgstr ""
+
+#: View/settings-extra.view.php:234
+msgid "CSS file in footer"
+msgstr ""
+
+#: View/settings-extra.view.php:247
+msgid ""
+"Keep the CSS style in the footer is recommended to improve the performance "
+"of your website."
+msgstr ""
+
+#: View/settings-faq.view.php:106
+msgid "Available filters"
+msgstr ""
+
+#: View/settings.view.php:59
+msgid "Places available"
+msgstr ""
+
+#: View/settings.view.php:68
+msgid "Page home"
+msgstr ""
+
+#: View/settings.view.php:77
+msgid "Archive/Category"
+msgstr ""
+
+#: View/settings.view.php:86
+msgid "Pages"
+msgstr "Pages"
+
+#: View/settings.view.php:95
+msgid "Single"
+msgstr ""
+
+#: View/settings.view.php:106
+msgid "WooCommerce share"
+msgstr ""
+
+#: View/settings.view.php:117
+msgid "Before content"
+msgstr ""
+
+#: View/settings.view.php:126
+msgid "After content"
+msgstr ""
+
+#: View/settings.view.php:133
+msgid "Social networks available"
+msgstr ""
+
+#: View/settings.view.php:157
+msgid "Custom class"
+msgstr ""
+
+#: View/settings.view.php:166
+msgid "Custom class for primary div"
+msgstr ""
+
+#: View/settings.view.php:174
+msgid "Share count label"
+msgstr ""
+
+#: View/settings.view.php:183
+msgid "Change text of the share count title. Default SHARES"
+msgstr ""
+
+#: View/settings.view.php:184
+#, php-format
+msgid "Used in %s layout."
+msgstr ""
+
+#: View/settings.view.php:184 View/settings.view.php:274
+msgid "Square plus"
+msgstr ""
+
+#: View/settings.view.php:200
+msgid "Insert the title here."
+msgstr ""
+
+#: View/settings.view.php:201
+msgid "Text to display above the sharing buttons."
+msgstr ""
+
+#: View/settings.view.php:208
+msgid "Context ID"
+msgstr ""
+
+#: View/settings.view.php:217
+msgid "Enter name to context of search. ID of content tag"
+msgstr ""
+
+#: View/settings.view.php:218
+msgid ""
+"This is to set the fixed layout to the left of the post content. "
+"<strong>Example:</strong> <code>wrap</code> use {id} for post id."
+msgstr ""
+
+#: View/settings.view.php:225
+msgid "Layout options"
+msgstr ""
+
+#: View/settings.view.php:227
+msgid "All layout supports responsive"
+msgstr ""
+
+#: View/settings.view.php:238
+msgid "Default"
+msgstr "Standard"
+
+#: View/settings.view.php:247
+msgid "Button"
+msgstr "Button"
+
+#: View/settings.view.php:256 View/settings.view.php:336
+msgid "Rounded"
+msgstr ""
+
+#: View/settings.view.php:265 View/settings.view.php:326
+msgid "Square"
+msgstr "Square"
+
+#: View/settings.view.php:280
+msgid "Position fixed"
+msgstr ""
+
+#: View/settings.view.php:290
+msgid "Fixed left"
+msgstr ""
+
+#: View/settings.view.php:300
+msgid "Fixed right"
+msgstr ""
+
+#: View/settings.view.php:307
+msgid "Clear"
+msgstr ""
+
+#: View/settings.view.php:308
+msgid "Click to clear the positions."
+msgstr ""
+
+#: View/settings.view.php:313
+msgid "Position fixed layout"
+msgstr ""
+
+#: View/settings.view.php:342
+msgid "Fixed Items in top"
+msgstr ""
+
+#: View/settings.view.php:354
+msgid "It is activated when scrolling the page on the buttons position."
+msgstr ""
+
+#: View/settings.view.php:360
+msgid "Highlighted by reference"
+msgstr ""
+
+#: View/settings.view.php:372
+msgid "This allows highlight the social network where the user Came from."
+msgstr ""
+
+#: View/settings.view.php:378
+msgid "Remove button title"
+msgstr ""
+
+#: View/settings.view.php:393
+msgid "Remove counter"
+msgstr ""
+
+#: View/settings.view.php:414
+msgid ""
+"The share count Twitter is powered by <a href=\"http://newsharecounts.com\" "
+"target=\"_blank\">newsharecounts.com</a>, you have to sign up with your "
+"Twitter account to get free service and twitter count. Just visit the "
+"website, fill in the domain of your site and click Sign in with Twitter. "
+"That, and nothing else!"
+msgstr ""
+
+#: View/settings.view.php:432
+msgid "Save Changes"
+msgstr "Save Changes"
+
+#: View/settings.view.php:450
+msgid "Settings saved."
+msgstr "Settings saved."
+
+#: View/settings.view.php:466
+msgid "General"
+msgstr ""
+
+#: View/settings.view.php:596
+#, php-format
+msgid ""
+"Help keep the free %s, you can make a donation or vote with %s at WordPress."
+"org. Thank you very much!"
+msgstr ""
+
+#: View/settings.view.php:609
+msgid "Make a donation"
+msgstr ""
+
+#: View/settings.view.php:617
+msgid "Make a review"
+msgstr ""
+
+#: View/share-report.view.php:27
+msgid "Search"
+msgstr "Start Search"
+
+#: View/share-report.view.php:28
+msgid "This report has a cache of "
+msgstr ""
+
+#: View/share-report.view.php:29
+msgid "minutes"
+msgstr "minutes"
+
+#: View/share-report.view.php:30
+#, php-format
+msgid "%d minute"
+msgstr ""
+
+#~ msgid "Fixed"
+#~ msgstr "Fixed"

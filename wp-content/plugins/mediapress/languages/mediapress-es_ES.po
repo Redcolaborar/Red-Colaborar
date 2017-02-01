@@ -1,0 +1,2252 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MediaPress\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-03-17 16:33+0530\n"
+"PO-Revision-Date: 2016-10-28 12:32+0200\n"
+"Last-Translator: BuddyDev.com\n"
+"Language-Team: BuddyDev\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 1.8.11\n"
+"Language: es_419\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../mpp-core-component.php:440
+msgctxt "Profile context menu rel"
+msgid "Edit media"
+msgstr "Editar archivo"
+
+#: ../mpp-core-component.php:440
+msgctxt "Profile context menu media edit label"
+msgid "Edit"
+msgstr "Editar "
+
+#: ../mpp-core-component.php:446
+msgctxt "Profile context menu rel attribute"
+msgid "Edit Gallery"
+msgstr "Editar carpeta de recursos"
+
+#: ../mpp-core-component.php:446
+msgctxt "Profile contextual edit gallery menu label"
+msgid "Edit"
+msgstr "Editar carpeta"
+
+#: ../mpp-core-component.php:448
+msgctxt "Profile context menu rel attribute"
+msgid "Add Media"
+msgstr "Subir archivo"
+
+#: ../mpp-core-component.php:448
+msgctxt "Profile contextual add media  menu label"
+msgid "Add Media"
+msgstr "Subir archivo"
+
+#: ../mpp-init.php:25 ../mpp-init.php:27 ../mpp-init.php:28
+#: ../admin/mpp-admin-install.php:132
+msgid "Public"
+msgstr "Público"
+
+#: ../mpp-init.php:30 ../admin/mpp-admin-install.php:133
+msgid "Public Gallery Privacy Type"
+msgstr "Tipo de privacidad de las carpetas de recursos públicos"
+
+#: ../mpp-init.php:37 ../mpp-init.php:39 ../mpp-init.php:40
+#: ../admin/mpp-admin-install.php:137
+msgid "Private"
+msgstr "Privado"
+
+#: ../mpp-init.php:42
+msgid "Private Privacy Typemediapress"
+msgstr "Tipo de privacidad de MediaPress privada"
+
+#: ../mpp-init.php:50 ../mpp-init.php:52 ../mpp-init.php:53
+#: ../admin/mpp-admin-install.php:142 ../admin/mpp-admin-install.php:148
+msgid "Logged In Users Only"
+msgstr "Únicamente usuarios conectados"
+
+#: ../mpp-init.php:55 ../admin/mpp-admin-install.php:143
+#: ../admin/mpp-admin-install.php:149
+msgid "Logged In Users Only Privacy Type"
+msgstr "Tipo de privacidad, únicamente usuarios conectados "
+
+#: ../mpp-init.php:64 ../mpp-init.php:67 ../mpp-init.php:69
+#: ../admin/mpp-admin-install.php:113 ../admin/mpp-admin-install.php:114
+msgid "Sitewide Galleries"
+msgstr "Recursos de todo el sitio web"
+
+#: ../mpp-init.php:66
+msgid "Sitewide Gallery"
+msgstr "Recurso(s) de todo el sitio web"
+
+#: ../mpp-init.php:76 ../mpp-init.php:79 ../admin/mpp-admin-install.php:171
+msgid "Photo"
+msgstr "Foto"
+
+#: ../mpp-init.php:77 ../admin/mpp-admin-install.php:172
+msgid "taxonomy for image media type"
+msgstr "Taxonomía de tipos de multimedia para imágen "
+
+#: ../mpp-init.php:80
+msgid "Photos"
+msgstr "Fotos"
+
+#: ../mpp-init.php:87 ../mpp-init.php:89 ../admin/mpp-admin-install.php:177
+msgid "Video"
+msgstr "Video"
+
+#: ../mpp-init.php:90
+msgid "Videos"
+msgstr "Videos"
+
+#: ../mpp-init.php:92
+msgid "Video media type taxonomy"
+msgstr "Taxonomía de tipo de multimedia para video"
+
+#: ../mpp-init.php:98 ../mpp-init.php:100 ../admin/mpp-admin-install.php:182
+msgid "Audio"
+msgstr "Audio"
+
+#: ../mpp-init.php:101
+msgid "Audios"
+msgstr "Audios"
+
+#: ../mpp-init.php:103
+msgid "Audio Media type taxonomy"
+msgstr "Taxonomía de tipo de multimedia para audio"
+
+#: ../mpp-init.php:109 ../mpp-init.php:112 ../admin/mpp-admin-install.php:187
+msgid "Documents"
+msgstr "Documentos"
+
+#: ../mpp-init.php:111
+msgid "Document"
+msgstr "Documento"
+
+#: ../mpp-init.php:114
+msgid "This is documents gallery"
+msgstr "Este es la carpeta de documentos"
+
+#: ../mpp-init.php:225 ../assets/mpp-script-loader.php:267
+msgid "View"
+msgstr "Ver - "
+
+#: ../mpp-init.php:237 ../admin/class-mpp-admin-post-helper.php:246
+msgid "Edit Media"
+msgstr "Editar archivo"
+
+#: ../mpp-init.php:248 ../admin/class-mpp-admin-post-helper.php:235
+msgid "Add Media"
+msgstr "Subir archivo"
+
+#: ../mpp-init.php:259
+msgid "Reorder"
+msgstr "Reordenar"
+
+#: ../mpp-init.php:267 ../admin/class-mpp-admin-post-helper.php:241
+msgid "Edit Details"
+msgstr "Editar detalles"
+
+#: ../mpp-init.php:278 ../admin/templates/gallery/edit-media.php:39
+#: ../templates/mediapress/default/buddypress/activity/comment.php:42
+msgid "Delete"
+msgstr "Eliminar"
+
+#: ../admin/mpp-admin.php:168
+msgctxt "Admin settings panel title"
+msgid "General"
+msgstr "General "
+
+#: ../admin/mpp-admin.php:172
+msgctxt "Admin settings section title"
+msgid "Component Settings"
+msgstr "Configuraciones de componente  "
+
+#: ../admin/mpp-admin.php:197
+msgctxt "Admin settings"
+msgid "Enable Galleries for?"
+msgstr "¿Activar carpetas de recursos para? "
+
+#: ../admin/mpp-admin.php:215
+msgctxt "Admin settings section title"
+msgid "Privacy Settings"
+msgstr "Configuraciones de privacidad "
+
+#: ../admin/mpp-admin.php:218
+msgctxt "Admin settings"
+msgid "Default status for Gallery/Media"
+msgstr "Estado predeterminado para carpetas de recursos/archivos"
+
+#: ../admin/mpp-admin.php:219
+msgctxt "Admin settings"
+msgid "It will be used when we are not allowed to get the status from user"
+msgstr ""
+"Será utilizado cuando no se nos permita obtener el estado del usuario  "
+
+#: ../admin/mpp-admin.php:249
+msgctxt "Admin settings"
+msgid "Enabled Media/Gallery Statuses"
+msgstr "Activar carpetas de recursos  "
+
+#: ../admin/mpp-admin.php:262
+msgctxt "Admin settings section title"
+msgid "Media Type settings"
+msgstr "Configuración de tipo de multimedia  "
+
+#: ../admin/mpp-admin.php:276
+#, php-format
+msgctxt "Settings page"
+msgid "Allowed extensions for %s"
+msgstr "Extensiones permitidas para %s "
+
+#: ../admin/mpp-admin.php:277
+#, php-format
+msgctxt "Settings page"
+msgid "Use comma separated list of file extensions for %s "
+msgstr ""
+"Utilizar la lista separada por comas de extensiones de archivo para %s  "
+
+#: ../admin/mpp-admin.php:298 ../admin/mpp-admin.php:624
+msgctxt "Settings page"
+msgid "Enabled Media/Gallery Types"
+msgstr "Activar carpetas de recursos   "
+
+#: ../admin/mpp-admin.php:324
+msgctxt "Settings page section title"
+msgid "Storage Settings"
+msgstr "Configuración de almacenamiento   "
+
+#: ../admin/mpp-admin.php:327
+msgctxt "Admin storage settings"
+msgid "maximum Upload space per user(MB)?"
+msgstr "¿Espacio máximo de carga por usuario (MB)?"
+
+#: ../admin/mpp-admin.php:334
+msgctxt "Admin storage settings"
+msgid "maximum Upload space per group(MB)?"
+msgstr "¿Espacio máximo de carga por grupo (MB)? "
+
+#: ../admin/mpp-admin.php:341
+msgctxt "Admin storage settings"
+msgid "Show upload Quota?"
+msgstr "¿Mostrar cuota de carga?  "
+
+#: ../admin/mpp-admin.php:345 ../admin/mpp-admin.php:426
+#: ../admin/mpp-admin.php:439 ../admin/mpp-admin.php:453
+#: ../admin/mpp-admin.php:465 ../admin/mpp-admin.php:481
+#: ../admin/mpp-admin.php:493 ../admin/mpp-admin.php:507
+#: ../admin/mpp-admin.php:519 ../admin/mpp-admin.php:531
+#: ../admin/mpp-admin.php:571 ../admin/mpp-admin.php:650
+#: ../admin/mpp-admin.php:662 ../admin/mpp-admin.php:679
+#: ../admin/mpp-admin.php:721 ../admin/mpp-admin.php:734
+#: ../admin/mpp-admin.php:773 ../admin/mpp-admin.php:802
+#: ../admin/mpp-admin.php:814 ../admin/mpp-admin.php:826
+#: ../admin/mpp-admin.php:839
+msgctxt "Admin settings option"
+msgid "Yes"
+msgstr "Si  "
+
+#: ../admin/mpp-admin.php:346 ../admin/mpp-admin.php:427
+#: ../admin/mpp-admin.php:440 ../admin/mpp-admin.php:454
+#: ../admin/mpp-admin.php:466 ../admin/mpp-admin.php:482
+#: ../admin/mpp-admin.php:494 ../admin/mpp-admin.php:508
+#: ../admin/mpp-admin.php:520 ../admin/mpp-admin.php:532
+#: ../admin/mpp-admin.php:572 ../admin/mpp-admin.php:651
+#: ../admin/mpp-admin.php:663 ../admin/mpp-admin.php:680
+#: ../admin/mpp-admin.php:722 ../admin/mpp-admin.php:735
+#: ../admin/mpp-admin.php:774 ../admin/mpp-admin.php:803
+#: ../admin/mpp-admin.php:815 ../admin/mpp-admin.php:827
+#: ../admin/mpp-admin.php:840
+msgctxt "Admin settings option"
+msgid "No"
+msgstr "No "
+
+#: ../admin/mpp-admin.php:364
+msgctxt "Admin storage settings"
+msgid "Which should be marked as default storage?"
+msgstr "¿Cuál debería ser seleccionado como almacenamiento predeterminado? "
+
+#: ../admin/mpp-admin.php:370
+msgctxt "Settings page section title"
+msgid "Misc Settings"
+msgstr "Configuraciones varias "
+
+#: ../admin/mpp-admin.php:373
+msgctxt "Admin storage settings"
+msgid "Enable Debug Info?"
+msgstr "¿Habilitar información de corrección de errores? "
+
+#: ../admin/mpp-admin.php:377 ../admin/tools/class-mpp-media-debugger.php:52
+msgid "Yes"
+msgstr "Si"
+
+#: ../admin/mpp-admin.php:378 ../admin/tools/class-mpp-media-debugger.php:55
+msgid "No"
+msgstr "No"
+
+#: ../admin/mpp-admin.php:391
+msgctxt "Admin settings theme panel tab title"
+msgid "Theming"
+msgstr "Temas  "
+
+#: ../admin/mpp-admin.php:392
+msgctxt "Admin settings theme section title"
+msgid "Display Settings "
+msgstr "Mostrar configuraciones "
+
+#: ../admin/mpp-admin.php:395
+msgctxt "Admin theme settings"
+msgid "How many galleries to list per page?"
+msgstr "¿Cuántos recursos se deben mostrar por página?"
+
+#: ../admin/mpp-admin.php:401
+msgctxt "Admin theme settings"
+msgid "How many Media per page?"
+msgstr "¿Cuántos archivos multimedia por página?  "
+
+#: ../admin/mpp-admin.php:408
+msgctxt "Admin theme settings"
+msgid "How many media per row?"
+msgstr "¿Cuántos archivos multimedia por fila?  "
+
+#: ../admin/mpp-admin.php:414
+msgctxt "Admin theme settings"
+msgid "How many galleries per row?"
+msgstr "¿Cuántos carpetas de recursos por fila?  "
+
+#: ../admin/mpp-admin.php:421
+msgctxt "admin theme settings"
+msgid "Show Gallery description on single gallery pages?"
+msgstr ""
+"¿Mostrar descripción de la carpeta de recursos en las páginas individuales "
+"de recursos?  "
+
+#: ../admin/mpp-admin.php:422
+msgctxt "admin theme settings"
+msgid "Should the description for gallery be shown above the media list?"
+msgstr ""
+"¿Debería mostrarse la descripción de la carpeta de recursos sobre la lista "
+"de multimedia?  "
+
+#: ../admin/mpp-admin.php:434
+msgctxt "admin theme settings"
+msgid "Show media description on single media pages?"
+msgstr ""
+"¿Mostrar la descripción de archivos multimedia en páginas individuales de "
+"multimedia? "
+
+#: ../admin/mpp-admin.php:435
+msgctxt "admin theme settings"
+msgid "Should the description for media be shown below the media ?"
+msgstr "¿Debería mostrarse la descripción abajo del archivo multimedia ? "
+
+#: ../admin/mpp-admin.php:445
+msgctxt " Admin theme section title"
+msgid "Audio/Video specific settings"
+msgstr "Configuración específica de audio/video "
+
+#: ../admin/mpp-admin.php:448
+msgctxt "admin theme settings"
+msgid "Enable Audio Playlist?"
+msgstr "¿Habilitar la lista de reproducción de audio? "
+
+#: ../admin/mpp-admin.php:449
+msgctxt "admin theme settings"
+msgid "Should an audio gallery be listed as a playlist?"
+msgstr "¿Debería mostrarse la lista de audio como lista de reproducción? "
+
+#: ../admin/mpp-admin.php:460
+msgctxt "admin theme settings"
+msgid "Enable Video Playlist?"
+msgstr "¿Habilitar la lista de reproducción de videos?"
+
+#: ../admin/mpp-admin.php:461
+msgctxt "admin theme settings"
+msgid "Should a video gallery be listed as a playlist?"
+msgstr "¿Debería mostrarse la lista de video como lista de reproducción?   "
+
+#: ../admin/mpp-admin.php:473
+msgctxt "Admin theme section title"
+msgid "Comment Settings"
+msgstr "Configuraciones de comentario "
+
+#: ../admin/mpp-admin.php:476
+msgctxt "admin theme comment settings"
+msgid "Enable Commenting on single media?"
+msgstr "¿Habilitar comentarios en los archivos individuales de multimedia?  "
+
+#: ../admin/mpp-admin.php:499
+msgctxt "admin theme section title"
+msgid "Lightbox Settings"
+msgstr "Configuración de Lightbox "
+
+#: ../admin/mpp-admin.php:502
+msgctxt "Admin theme settings"
+msgid "Load Lightbox javascript & css?"
+msgstr "¿Cargar javascript & css de Lightbox?"
+
+#: ../admin/mpp-admin.php:503
+msgctxt "Admin settings"
+msgid ""
+"Should we load the included lightbox script? Set no, if you are not using "
+"lightbox or want to use your own"
+msgstr ""
+"¿Deberíamos cargar el script incluido de lightbox? sin establecer, si usted "
+"no está utilizando lightbox o desea utilizar el suyo "
+
+#: ../admin/mpp-admin.php:514
+msgctxt "Admin theme settings"
+msgid "Open Activity media in lightbox ?"
+msgstr "¿Abrir la actividad de archivos multimedia en lightbox?  "
+
+#: ../admin/mpp-admin.php:515
+msgctxt "Admin theme settings"
+msgid ""
+"If you set yes, the photos etc will be open in lightbox on activity screen."
+msgstr ""
+"Si lo configura a si, las fotos  y etc. serán abiertas en lightbox en la "
+"pantalla de actividad "
+
+#: ../admin/mpp-admin.php:526
+msgctxt "Admin theme settings"
+msgid "Open photos in lightbox if gallery is clicked?"
+msgstr "¿Abrir fotografías en lightbox al hacer click en recursos?  "
+
+#: ../admin/mpp-admin.php:527
+msgctxt "Admin theme settings"
+msgid ""
+"If you set yes, the photos will be opened in lightbox when a gallery is "
+"clicked."
+msgstr ""
+"Si se configura a si, las fotos se abrirán en lightbox al hacer click en "
+"recursos.  "
+
+#: ../admin/mpp-admin.php:540
+msgctxt "Admin settings Addons panel tab title"
+msgid "Addons"
+msgstr "Complementos "
+
+#: ../admin/mpp-admin.php:540
+msgctxt "Addons panel description"
+msgid "MediaPress Addon Settings"
+msgstr "Configuración de complemento de MediaPress  "
+
+#: ../admin/mpp-admin.php:561
+msgctxt "Admin settings sitewide gallery panel tab title"
+msgid "Sitewide Gallery"
+msgstr "Recursos de todo el sitio web   "
+
+#: ../admin/mpp-admin.php:563
+msgctxt "Admin settings sitewide gallery section title"
+msgid "General Settings "
+msgstr "Configuración general  "
+
+#: ../admin/mpp-admin.php:566
+msgctxt "admin sitewide gallery  settings"
+msgid "Enable Gallery Archive?"
+msgstr "¿Habilitar el archivo de recursos?  "
+
+#: ../admin/mpp-admin.php:567
+msgctxt "admin sitewide gallery settings"
+msgid ""
+"If you enable, you will be able to see all galleries on a single "
+"page(archive page)"
+msgstr ""
+"Si lo habilita, podrá ver todas los recursos en una sola página (página de "
+"archivo)   "
+
+#: ../admin/mpp-admin.php:578
+msgctxt "admin sitewide gallery  settings"
+msgid "Gallery Archive Slug"
+msgstr "Enlace corto de archivo de las carpetas de recursos   "
+
+#: ../admin/mpp-admin.php:579
+msgctxt "admin sitewide gallery settings"
+msgid ""
+"Please choose a slug that becomes part of the gallery archive permalink e.g "
+"http://yoursite.com/{slug}. No spaces, only lowercase letters."
+msgstr ""
+"Por favor elija una enlace corto que se convierta en parte del archivo de "
+"los recursos de enlace permanente, por ejemplo http://yoursite.com/{slug}. "
+"Sin espacios, sólo letras minúsculas.  "
+
+#: ../admin/mpp-admin.php:586
+msgctxt "admin sitewide gallery  settings"
+msgid "Gallery permalink Slug"
+msgstr "Ficha de enlace permanente de recursos"
+
+#: ../admin/mpp-admin.php:587
+msgctxt "admin sitewide gallery settings"
+msgid ""
+"Please choose a slug that becomes part of the gallery permalink e.g http://"
+"yoursite.com/{slug}/gallery-name. No spaces, only lowercase letters."
+msgstr ""
+"Por favor elija una enlace corto que pase a formar parte del archivo del "
+"recurso, ejemplo: http://yoursite.com/{slug}/gallery-name. Sin espacios, "
+"sólo letras minúsculas.  "
+
+#: ../admin/mpp-admin.php:621
+msgctxt "Admin settings sitewide gallery section title"
+msgid "Types Settings "
+msgstr "Configuraciones de tipos  "
+
+#: ../admin/mpp-admin.php:639
+msgctxt "Admin settings BuddyPress panel tab title"
+msgid "BuddyPress"
+msgstr "BuddyPress  "
+
+#: ../admin/mpp-admin.php:641
+msgctxt "Admin settings section title"
+msgid "Directory Settings"
+msgstr "Configuración de directorio   "
+
+#: ../admin/mpp-admin.php:645
+msgctxt "Admin settings"
+msgid "Enable Gallery Directory?"
+msgstr "¿Habilitar directorio de recursos?  "
+
+#: ../admin/mpp-admin.php:646
+msgctxt "Admin settings"
+msgid "Create a page to list all galleries?"
+msgstr "¿Crear una página para listar todas las recursos?  "
+
+#: ../admin/mpp-admin.php:657
+msgctxt "Admin settings"
+msgid "Enable Media directory?"
+msgstr "¿Habilitar directorio de archivos multimedia?   "
+
+#: ../admin/mpp-admin.php:658
+msgctxt "Admin settings"
+msgid ""
+"Create a page to list all photos, videos etc? Please keep it disabled for "
+"now )"
+msgstr ""
+"¿Crear una página para listar todas las fotos, videos, etc.? Por favor "
+"manténgala desactivada por ahora)   "
+
+#: ../admin/mpp-admin.php:669
+msgctxt "Admin settings section title"
+msgid "Activity Settings"
+msgstr "Configuración de actividad    "
+
+#: ../admin/mpp-admin.php:674
+msgctxt "Admin settings"
+msgid "Allow Activity Upload?"
+msgstr "¿Permitir actividad de carga?   "
+
+#: ../admin/mpp-admin.php:675
+msgctxt "Admin settings"
+msgid "Allow users to uploading from Activity screen?"
+msgstr "¿Permitir a los usuarios cargar desde la pantalla de actividad?  "
+
+#: ../admin/mpp-admin.php:687
+msgctxt "Admin settings"
+msgid "New Gallery is created."
+msgstr "Una nueva carpeta de recursos  ha sido creado.  "
+
+#: ../admin/mpp-admin.php:688
+msgctxt "Admin settings"
+msgid "New Media added/uploaded."
+msgstr "Nueva multimedia agregada/cargada.   "
+
+#: ../admin/mpp-admin.php:703
+msgctxt "Admin settings"
+msgid "Automatically Publish to activity When?"
+msgstr "¿Publicar automáticamente a la actividad, cuando?    "
+
+#: ../admin/mpp-admin.php:713
+msgctxt "Admin settings section title"
+msgid "Miscellaneous Settings"
+msgstr "Configuraciones varias   "
+
+#: ../admin/mpp-admin.php:716
+msgctxt "Admin settings option"
+msgid "Show orphaned media to the user?"
+msgstr "¿Mostrar multimedia abandonada al usuario?   "
+
+#: ../admin/mpp-admin.php:717
+msgctxt "Admin settings"
+msgid ""
+"Do you want to list the media if it was uploaded from activity but the "
+"activity was not published?"
+msgstr ""
+"¿Desea mostrar los archivos multimedia que fueron cargados desde una "
+"actividad, pero la actividad no fue publicada?    "
+
+#: ../admin/mpp-admin.php:729
+msgctxt "Admin settings"
+msgid "Delete orphaned media automatically?"
+msgstr "¿Eliminar automáticamente archivos multimedia abandonados? "
+
+#: ../admin/mpp-admin.php:730
+msgctxt "Admin settings"
+msgid "Do you want to delete the abandoned media uploaded from activity?"
+msgstr "¿Desea eliminar la multimedia abandonada cargada desde actividad?  "
+
+#: ../admin/mpp-admin.php:742
+msgctxt "Admin settings"
+msgid "Maximum number of media to display in activity?"
+msgstr "¿Número máximo de  archivos multimedia para mostrar en actividad?  "
+
+#: ../admin/mpp-admin.php:743
+msgctxt "Admin settings"
+msgid "Limit the no. of media that is shown as attached to activity."
+msgstr ""
+"Limitar el número de archivos multimedia que se muestran como adjuntos a la "
+"actividad. "
+
+#: ../admin/mpp-admin.php:760
+msgctxt "Admin settings BuddyPress panel tab title"
+msgid "Members Gallery"
+msgstr "Miembros de  recursos "
+
+#: ../admin/mpp-admin.php:769
+msgctxt "Admin settings group section"
+msgid "Enable Gallery Type Filters on profile?"
+msgstr "¿Habilitar los filtros de tipos de recursos en el perfil? "
+
+#: ../admin/mpp-admin.php:791
+msgctxt "Admin settings BuddyPress panel tab title"
+msgid "Groups Gallery"
+msgstr "Recursos de grupos"
+
+#: ../admin/mpp-admin.php:794
+msgctxt "Admin settings section title"
+msgid "Group Settings"
+msgstr "Configuraciones de grupo  "
+
+#: ../admin/mpp-admin.php:797
+msgctxt "Admin settings group section"
+msgid "Enable group galleries by default?"
+msgstr "¿Habilitar los grupos de recursos de forma predeterminada?  "
+
+#: ../admin/mpp-admin.php:798
+msgctxt "Admin settings group section"
+msgid ""
+"If you set yes, Group galleries will be On by default for all the groups. A "
+"group admin can turn off by visiting settings though."
+msgstr ""
+"Si lo habilita, los recursos  de grupo estarán activadas en forma "
+"predeterminada para todos los grupos, sin embargo, un administrador de grupo "
+"lo puede desactivar en configuración.  "
+
+#: ../admin/mpp-admin.php:810
+msgctxt "Admin settings group section"
+msgid "Contributors can edit their own media?"
+msgstr "¿Los colaboradores pueden editar sus propios archivos multimedia?  "
+
+#: ../admin/mpp-admin.php:822
+msgctxt "Admin settings group section"
+msgid "Contributors can delete their own media?"
+msgstr "¿Los colaboradores pueden eliminar sus propios archivos multimedia? "
+
+#: ../admin/mpp-admin.php:834
+msgctxt "Admin settings group section"
+msgid "Show My Galleries to Group members?"
+msgstr "¿Mostrar mis recursos a los miembros del grupo?  "
+
+#: ../admin/mpp-admin.php:835
+msgctxt "Admin settings group section"
+msgid ""
+"It adds a tab named My Gallery on group pages where the logged in user can "
+"see the galleries they created in this group."
+msgstr ""
+"Esto agrega una pestaña llamada mis recursos en las páginas de grupo, donde "
+"el usuario conectado puede ver los recursos creados en este grupo.  "
+
+#: ../admin/mpp-admin.php:855
+#, php-format
+msgctxt "Gallery view section title"
+msgid " %s Gallery Default Views"
+msgstr "%s Vistas predeterminadas de la carpeta de recursos"
+
+#: ../admin/mpp-admin.php:880
+#, php-format
+msgctxt "admin gallery  settings"
+msgid "%s Gallery"
+msgstr "%s Carpeta"
+
+#: ../admin/mpp-admin.php:881
+msgctxt "admin gallery settings"
+msgid "It will be used as the default view. It can be overridden per gallery"
+msgstr ""
+"Será utilizado como vista predeterminada. Esto puede ser sustituida por "
+"recursos"
+
+#: ../admin/mpp-admin.php:893
+msgctxt "Activity view section title"
+msgid "Activity Media List View"
+msgstr "Vista de la lista de actividad de multimedia "
+
+#: ../admin/mpp-admin.php:911
+#, php-format
+msgctxt "admin gallery settings"
+msgid "%s List"
+msgstr "%s Lista "
+
+#: ../admin/mpp-admin.php:912
+msgctxt "admin gallery settings"
+msgid "It will be used to display attached activity media."
+msgstr ""
+"Será utilizado para mostrar la actividad de los archivos multimedia "
+"adjuntos. "
+
+#: ../admin/mpp-admin.php:924
+msgctxt "Admin settings page title"
+msgid "Settings"
+msgstr "Configuraciones "
+
+#: ../admin/mpp-admin.php:924
+msgctxt "Admin settings menu label"
+msgid "Settings"
+msgstr "Configuraciones  "
+
+#: ../admin/class-mpp-admin-gallery-list-helper.php:61
+msgctxt "Label for gallery list title"
+msgid "Type"
+msgstr "Tipo "
+
+#: ../admin/class-mpp-admin-gallery-list-helper.php:62
+msgctxt "Label for gallery list title"
+msgid "Status"
+msgstr "Estado "
+
+#: ../admin/class-mpp-admin-gallery-list-helper.php:63
+msgctxt "Label for gallery list title"
+msgid "Component"
+msgstr "Componente "
+
+#: ../admin/class-mpp-admin-gallery-list-helper.php:65
+msgctxt "Label for gallery list title"
+msgid "Created By:"
+msgstr "Creado por:  "
+
+#: ../admin/class-mpp-admin-gallery-list-helper.php:67
+msgctxt "Label for gallery list title"
+msgid "Media"
+msgstr "Multimedia"
+
+#: ../admin/class-mpp-admin-gallery-list-helper.php:68
+msgctxt "Label for gallery list title"
+msgid "Date"
+msgstr "Fecha "
+
+#: ../admin/mpp-admin-install.php:119
+msgid "User"
+msgstr "Usuario"
+
+#: ../admin/mpp-admin-install.php:120
+#: ../modules/buddypress/mpp-bp-loader.php:113
+#: ../modules/buddypress/mpp-bp-loader.php:116
+#: ../modules/buddypress/mpp-bp-loader.php:118
+msgid "User Galleries"
+msgstr "Recursos de usuario"
+
+#: ../admin/mpp-admin-install.php:125
+msgid "Groups"
+msgstr "Grupos"
+
+#: ../admin/mpp-admin-install.php:126
+#: ../modules/buddypress/mpp-bp-loader.php:151
+msgid "Groups Galleries"
+msgstr "Recursos de los grupos"
+
+#: ../admin/mpp-admin-install.php:138
+msgid "Private Gallery Privacy Type"
+msgstr "Tipo de privacidad de la carpeta de recursos privado"
+
+#: ../admin/mpp-admin-install.php:154
+#: ../modules/buddypress/mpp-bp-loader.php:72
+#: ../modules/buddypress/mpp-bp-loader.php:74
+#: ../modules/buddypress/mpp-bp-loader.php:75
+msgid "Friends Only"
+msgstr "Únicamente amigos"
+
+#: ../admin/mpp-admin-install.php:155
+#: ../modules/buddypress/mpp-bp-loader.php:77
+msgid "Friends Only Privacy Type"
+msgstr "Tipo de privacidad de únicamente amigos"
+
+#: ../admin/mpp-admin-install.php:160
+#: ../modules/buddypress/mpp-bp-loader.php:87
+#: ../modules/buddypress/mpp-bp-loader.php:89
+#: ../modules/buddypress/mpp-bp-loader.php:90
+msgid "Followers Only"
+msgstr "Únicamente seguidores"
+
+#: ../admin/mpp-admin-install.php:161
+#: ../modules/buddypress/mpp-bp-loader.php:92
+msgid "Followers Only Privacy Type"
+msgstr "Tipo de privacidad de únicamente seguidores"
+
+#: ../admin/mpp-admin-install.php:165
+#: ../modules/buddypress/mpp-bp-loader.php:99
+#: ../modules/buddypress/mpp-bp-loader.php:101
+#: ../modules/buddypress/mpp-bp-loader.php:102
+msgid "Persons I Follow"
+msgstr "Personas a las que sigo"
+
+#: ../admin/mpp-admin-install.php:166
+#: ../modules/buddypress/mpp-bp-loader.php:104
+msgid "Following Only Privacy Type"
+msgstr "Tipo de privacidad de únicamente seguidores"
+
+#: ../admin/mpp-admin-install.php:178
+msgid "taxonomy for video media type"
+msgstr "Taxonomía para tipo de archivos multimedia de video "
+
+#: ../admin/mpp-admin-install.php:183
+msgid "taxonomy for audio media type"
+msgstr "Taxonomía para tipo de archivos multimedia de audio "
+
+#: ../admin/mpp-admin-install.php:188
+msgid "taxonomy for documents media type"
+msgstr "Taxonomía para tipo de documentos multimedia "
+
+#: ../admin/mpp-admin-misc.php:19
+msgid "View User Galleries"
+msgstr "Ver Recursos del usuario"
+
+#: ../admin/mpp-admin-misc.php:19
+msgid "Galleries"
+msgstr "Recursos"
+
+#: ../admin/class-mpp-admin-post-helper.php:97
+#, php-format
+msgid "Add %s Gallery"
+msgstr "Agregar  %s Carpeta de recursos"
+
+#: ../admin/class-mpp-admin-post-helper.php:159
+#: ../admin/tools/class-mpp-media-debugger.php:39
+#: ../templates/mediapress/default/gallery/create.php:51
+#: ../templates/mediapress/default/gallery/manage/settings.php:43
+#: ../templates/mediapress/default/gallery/media/manage/edit.php:38
+#: ../templates/mediapress/default/shortcodes/create-gallery.php:60
+msgid "Status"
+msgstr "Estado"
+
+#: ../admin/class-mpp-admin-post-helper.php:192
+msgctxt "Upload Media Box Title"
+msgid "Gallery Admin"
+msgstr "Administración de recursos"
+
+#: ../admin/class-mpp-admin-post-helper.php:202
+msgctxt "Shortcode metabox Title"
+msgid "Shortcode"
+msgstr "Shortcode   "
+
+#: ../admin/class-mpp-admin-post-helper.php:214
+#, php-format
+msgctxt "admin shortcode message"
+msgid ""
+"To find out more about the shortcode options, please see the <a href=\"%s"
+"\">docs</a> here."
+msgstr ""
+"Para obtener más información sobre las opciones de shortcode, por favor "
+"consulte  <a href=\"%s\">docs</a>aquí   "
+
+#: ../admin/tools/class-mpp-media-debugger.php:23
+msgid "Debug Info"
+msgstr "Información de corrección de errores"
+
+#: ../admin/tools/class-mpp-media-debugger.php:37
+msgid "Component"
+msgstr "Componente"
+
+#: ../admin/tools/class-mpp-media-debugger.php:38
+#: ../templates/mediapress/default/gallery/create.php:46
+#: ../templates/mediapress/default/shortcodes/create-gallery.php:55
+msgid "Type"
+msgstr "Tipo"
+
+#: ../admin/tools/class-mpp-media-debugger.php:40
+msgid "Is Orphan Media"
+msgstr "Son archivos multimedia abandonados"
+
+#: ../admin/tools/class-mpp-media-debugger.php:41
+msgid "Storage Method"
+msgstr "Método de almacenamiento"
+
+#: ../admin/tools/class-mpp-media-debugger.php:42
+msgid "Valid Media?"
+msgstr "¿Multimedia válida?"
+
+#: ../admin/tools/debug/mpp-admin-debug-helper.php:38
+msgid "Tools"
+msgstr "Herramientas"
+
+#: ../admin/tools/debug/mpp-debug-view.php:13
+msgid "System Info"
+msgstr "Información del sistema"
+
+#: ../admin/tools/debug/mpp-debug-view.php:21
+msgid ""
+"To copy the System Info, click below then press Ctrl + C (PC) or Cmd + C "
+"(Mac)."
+msgstr ""
+"Para copiar la información del sistema, haga click abajo y luego oprima Ctrl "
+"+ C (PC) o Cmd + C (Mac)."
+
+#: ../admin/mpp-settings-manager/fields/image.php:45
+msgid "Remove"
+msgstr "Quitar"
+
+#: ../admin/templates/gallery/reorder-media.php:42
+#: ../admin/templates/gallery/edit.php:61
+#: ../templates/mediapress/default/gallery/manage/reorder-media.php:42
+#: ../templates/mediapress/default/gallery/manage/settings.php:67
+#: ../templates/mediapress/default/gallery/media/manage/edit.php:57
+msgid "Save"
+msgstr "Guardar"
+
+#: ../admin/templates/gallery/add-media.php:7
+msgid "Reload add media panel"
+msgstr "Volver a cargar archivos multimedia"
+
+#: ../admin/templates/gallery/add-media.php:7
+#: ../admin/templates/gallery/edit-media.php:15
+msgid "Reload"
+msgstr "Volver a cargar "
+
+#: ../admin/templates/gallery/edit.php:34
+#: ../templates/mediapress/default/gallery/manage/settings.php:35
+#: ../templates/mediapress/default/gallery/media/manage/edit.php:29
+msgid "Upload New Cover"
+msgstr "Subir nueva portada"
+
+#: ../admin/templates/gallery/edit.php:36
+#: ../templates/mediapress/default/gallery/manage/settings.php:37
+#: ../templates/mediapress/default/gallery/media/manage/edit.php:31
+msgid "Delete Cover"
+msgstr "Eliminar portada"
+
+#: ../admin/templates/gallery/edit.php:48
+#: ../templates/mediapress/default/gallery/create.php:62
+#: ../templates/mediapress/default/gallery/manage/settings.php:54
+#: ../templates/mediapress/default/gallery/media/manage/edit.php:48
+#: ../templates/mediapress/default/shortcodes/create-gallery.php:72
+msgid "Description"
+msgstr "Descripción"
+
+#: ../admin/templates/gallery/edit.php:72
+#: ../templates/mediapress/default/gallery/create.php:94
+#: ../templates/mediapress/default/gallery/manage/settings.php:78
+#: ../templates/mediapress/default/gallery/media/manage/edit.php:68
+#: ../templates/mediapress/default/shortcodes/create-gallery.php:105
+msgid "Unauthorized access!"
+msgstr "¡Acceso no autorizado!"
+
+#: ../admin/templates/gallery/edit-media.php:15
+msgid "Reload media edit panel"
+msgstr "Volver a cargar el panel de edición de archivos multimedia"
+
+#: ../admin/templates/gallery/edit-media.php:38
+msgid "Bulk Action"
+msgstr "Acción masiva"
+
+#: ../admin/templates/gallery/edit-media.php:43
+#: ../templates/mediapress/default/gallery/manage/edit-media.php:39
+msgid "Apply"
+msgstr "Aplicar"
+
+#: ../admin/templates/gallery/edit-media.php:48
+#: ../admin/templates/gallery/edit-media.php:127
+#: ../templates/mediapress/default/gallery/manage/edit-media.php:44
+#: ../templates/mediapress/default/gallery/manage/edit-media.php:123
+msgid "Update"
+msgstr "Actualizar"
+
+#: ../admin/templates/gallery/edit-media.php:87
+#: ../templates/mediapress/default/gallery/manage/edit-media.php:83
+msgctxt "Media status label on edit media page"
+msgid "Status"
+msgstr "Estado "
+
+#: ../admin/templates/gallery/edit-media.php:92
+#: ../templates/mediapress/default/gallery/manage/edit-media.php:88
+msgctxt "Media title label on edit media page"
+msgid "Title:"
+msgstr "Título "
+
+#: ../admin/templates/gallery/edit-media.php:93
+#: ../templates/mediapress/default/gallery/manage/edit-media.php:89
+msgctxt "Placeholder for media edit form title"
+msgid "Title (Required)"
+msgstr "Título (requerido)"
+
+#: ../admin/templates/gallery/edit-media.php:98
+#: ../templates/mediapress/default/gallery/manage/edit-media.php:94
+msgctxt "Media description label on edit media page"
+msgid "Description"
+msgstr "Descripción  "
+
+#: ../admin/templates/gallery/edit-media.php:134
+#: ../templates/mediapress/default/gallery/manage/edit-media.php:130
+msgid "There is no media in this gallery. Please add media to see them here!"
+msgstr ""
+"¡No hay archivos multimedia en esta carpeta,  por favor añadir multimedia!"
+
+#: ../assets/mpp-script-loader.php:139
+msgid "Allowed Files"
+msgstr "Archivos permitidos"
+
+#: ../assets/mpp-script-loader.php:190
+msgid "You have attempted to queue too many files."
+msgstr "Ha intentado dejar en cola demasiados archivos."
+
+#: ../assets/mpp-script-loader.php:191
+#, php-format
+msgid "%s exceeds the maximum upload size for this site."
+msgstr "%s Se excede del tamaño máximo de carga para este sitio."
+
+#: ../assets/mpp-script-loader.php:192
+msgid "This file is empty. Please try another."
+msgstr "Este archivo está vacío, por favor pruebe otro."
+
+#: ../assets/mpp-script-loader.php:193
+msgid "This file type is not allowed. Please try another."
+msgstr "No se permite este tipo de archivo, por favor pruebe otro."
+
+#: ../assets/mpp-script-loader.php:194
+msgid "This file is not an image. Please try another."
+msgstr "Este archivo no es una imagen, por favor pruebe otro."
+
+#: ../assets/mpp-script-loader.php:195
+msgid "Memory exceeded. Please try another smaller file."
+msgstr ""
+"Ha superado el espacio de la memoria, por favor intente con otro archivo más "
+"pequeño."
+
+#: ../assets/mpp-script-loader.php:196
+msgid "This is larger than the maximum size. Please try another."
+msgstr "Este archivo supera el tamaño máximo permitido, por favor pruebe otro."
+
+#: ../assets/mpp-script-loader.php:197
+msgid "An error occurred in the upload. Please try again later."
+msgstr ""
+"Se ha producido un error al cargar el archivo, por favor intente de nuevo "
+"más tarde."
+
+#: ../assets/mpp-script-loader.php:198
+msgid ""
+"There was a configuration error. Please contact the server administrator."
+msgstr ""
+"Hubo un error de configuración, por favor póngase en contacto con el "
+"administrador del servidor."
+
+#: ../assets/mpp-script-loader.php:199
+msgid "You may only upload 1 file."
+msgstr "Puede subir solamente 1 archivo."
+
+#: ../assets/mpp-script-loader.php:200
+msgid "HTTP error."
+msgstr "Error HTTP."
+
+#: ../assets/mpp-script-loader.php:201
+msgid "Upload failed."
+msgstr "Error de carga"
+
+#: ../assets/mpp-script-loader.php:202
+#, php-format
+msgid "Please try uploading this file with the %1$sbrowser uploader%2$s."
+msgstr ""
+"Por favor intente subir este archivo con el %1$scargador del navegador%2$s."
+
+#: ../assets/mpp-script-loader.php:203
+#, php-format
+msgid ""
+"%s exceeds the maximum upload size for the multi-file uploader when used in "
+"your browser."
+msgstr ""
+"%s  Se excede del tamaño máximo de carga, por subir varios archivos cuando "
+"es utilizado su navegador."
+
+#: ../assets/mpp-script-loader.php:204
+msgid "IO error."
+msgstr "Error IO."
+
+#: ../assets/mpp-script-loader.php:205
+msgid "Security error."
+msgstr "Error de seguridad."
+
+#: ../assets/mpp-script-loader.php:206
+msgid "File canceled."
+msgstr "Archivo cancelado."
+
+#: ../assets/mpp-script-loader.php:207
+msgid "Upload stopped."
+msgstr "Se detuvo la carga."
+
+#: ../assets/mpp-script-loader.php:208
+msgid "Dismiss"
+msgstr "Descartar"
+
+#: ../assets/mpp-script-loader.php:209
+msgid "Crunching&hellip;"
+msgstr "Crunching&hellip;"
+
+#: ../assets/mpp-script-loader.php:210
+msgid "moved to the trash."
+msgstr "Movido a la papelera."
+
+#: ../assets/mpp-script-loader.php:211
+#, php-format
+msgid "&#8220;%s&#8221; has failed to upload."
+msgstr "&#8220;%s&#8221;  ha habido un error de carga. "
+
+#: ../assets/mpp-script-loader.php:232
+#, php-format
+msgctxt "type error message"
+msgid "This file type is not allowed. Allowed file types are: %s"
+msgstr ""
+"Este tipo de archivo no está permitido. Los tipos de archivo permitidos son: "
+"%s  "
+
+#: ../assets/mpp-script-loader.php:233
+#, php-format
+msgctxt "type error message"
+msgid " Please only select : %s"
+msgstr "Por favor seleccione sólo: %s "
+
+#: ../assets/mpp-script-loader.php:261
+msgid "Show all"
+msgstr "Mostrar todos"
+
+#: ../assets/mpp-script-loader.php:262
+msgid "Show all comments for this thread"
+msgstr "Mostrar todos los comentarios para este tema"
+
+#: ../assets/mpp-script-loader.php:263
+#, php-format
+msgid "Show all %d comments"
+msgstr "Mostrar todos los  %d comentarios"
+
+#: ../assets/mpp-script-loader.php:264
+#: ../templates/mediapress/default/buddypress/activity/entry.php:74
+msgid "Favorite"
+msgstr "Favorito"
+
+#: ../assets/mpp-script-loader.php:265
+msgid "My Favorites"
+msgstr "Mis favoritos"
+
+#: ../assets/mpp-script-loader.php:266
+#: ../templates/mediapress/default/buddypress/activity/entry.php:78
+msgid "Remove Favorite"
+msgstr "Quitar favorito"
+
+#: ../assets/mpp-script-loader.php:268
+msgctxt "bulk deleting warning message"
+msgid ""
+"Deleting will permanently remove all selected media and files. Do you want "
+"to proceed?"
+msgstr ""
+"La eliminación quitará permanentemente todos los archivos multimedia y "
+"archivos seleccionados. ¿Desea continuar?  "
+
+#: ../templates/mediapress/default/gallery/create.php:56
+#: ../templates/mediapress/default/gallery/manage/settings.php:48
+#: ../templates/mediapress/default/gallery/media/manage/edit.php:42
+#: ../templates/mediapress/default/shortcodes/create-gallery.php:66
+#: ../core/widgets/mpp-widget-media.php:179
+#: ../core/widgets/mpp-widget-gallery.php:157
+msgid "Title:"
+msgstr "Título:"
+
+#: ../templates/mediapress/default/gallery/create.php:57
+#: ../templates/mediapress/default/shortcodes/create-gallery.php:67
+msgctxt "Placeholder for gallery create form title"
+msgid "Gallery Title (Required)"
+msgstr "Título de la carpeta de recurso (requerido) "
+
+#: ../templates/mediapress/default/gallery/create.php:82
+#: ../templates/mediapress/default/shortcodes/create-gallery.php:93
+#: ../modules/buddypress/mpp-bp-component.php:217
+msgid "Create"
+msgstr "Crear"
+
+#: ../templates/mediapress/default/gallery/404.php:13
+msgid "Sorry, Nothing to be seen here!"
+msgstr "Lo sentimos, ¡No hay nada para mostrar aquí!"
+
+#: ../templates/mediapress/default/gallery/loop-gallery.php:59
+#: ../templates/mediapress/default/widgets/gallery-list.php:63
+msgctxt "No Gallery Message"
+msgid "There are no galleries available!"
+msgstr "¡No hay Recursos disponibles!  "
+
+#: ../templates/mediapress/default/gallery/manage/delete.php:10
+msgid ""
+"Are you sure you want to delete this gallery? You will loose all the media!"
+msgstr ""
+"¿Está seguro de que desea eliminar esta carpeta? ¡Todos los archivos se "
+"perderán!"
+
+#: ../templates/mediapress/default/gallery/manage/delete.php:18
+msgid "Yes, I understand and I want to delete!"
+msgstr "Sí, lo entiendo y deseo eliminarla!"
+
+#: ../templates/mediapress/default/gallery/manage/settings.php:49
+msgctxt "Placeholder for gallery edit form title"
+msgid "Gallery Title (Required)"
+msgstr "Título de la carpeta de recursos (requerido) "
+
+#: ../templates/mediapress/default/gallery/media/views/lightbox/activity.php:57
+#: ../templates/mediapress/default/sitewide/gallery/activity.php:56
+#: ../templates/mediapress/default/sitewide/media/activity.php:57
+#: ../templates/mediapress/default/buddypress/groups/gallery/activity.php:56
+#: ../templates/mediapress/default/buddypress/groups/media/activity.php:57
+#: ../templates/mediapress/default/buddypress/members/gallery/activity.php:57
+#: ../templates/mediapress/default/buddypress/members/media/activity.php:57
+msgid "Load More"
+msgstr "Subir más archivos"
+
+#: ../templates/mediapress/default/gallery/media/manage/edit.php:43
+msgctxt "Placeholder for media edit form title"
+msgid "Media title (Required)"
+msgstr "Título de multimedia (requerido)  "
+
+#: ../templates/mediapress/default/sitewide/gallery/single.php:70
+#: ../templates/mediapress/default/sitewide/media/single.php:77
+#: ../templates/mediapress/default/buddypress/groups/gallery/single.php:69
+#: ../templates/mediapress/default/buddypress/groups/media/single.php:76
+#: ../templates/mediapress/default/buddypress/members/gallery/single.php:69
+#: ../templates/mediapress/default/buddypress/members/media/single.php:81
+#: ../templates/mediapress/default/buddypress/activity/entry-comment-video.php:33
+#: ../templates/mediapress/default/buddypress/activity/entry-comment-video.php:45
+#: ../templates/mediapress/default/buddypress/activity/entry-comment-audio.php:34
+#: ../templates/mediapress/default/buddypress/activity/entry-comment-audio.php:46
+msgid "The privacy policy does not allow you to view this."
+msgstr "La política de privacidad no le permite ver esto."
+
+#: ../templates/mediapress/default/sitewide/gallery/single.php:84
+#: ../templates/mediapress/default/buddypress/groups/gallery/single.php:84
+#: ../templates/mediapress/default/buddypress/members/gallery/single.php:83
+msgctxt "No media Message"
+msgid "Nothing to see here!"
+msgstr "¡Nada que ver aquí! "
+
+#: ../templates/mediapress/default/sitewide/media/single.php:93
+#: ../templates/mediapress/default/buddypress/groups/media/single.php:92
+#: ../templates/mediapress/default/buddypress/members/media/single.php:92
+msgctxt "No media message"
+msgid "There is nothing to see here!"
+msgstr "¡No hay nada que ver aquí! "
+
+#: ../templates/mediapress/default/buddypress/activity/post-form.php:24
+#, php-format
+msgid "Want to say Something, %s?"
+msgstr "¿Desea comentar algo, %s?"
+
+#: ../templates/mediapress/default/buddypress/activity/entry.php:58
+msgid "View Conversation"
+msgstr "Ver conversación"
+
+#: ../templates/mediapress/default/buddypress/activity/entry.php:66
+#, php-format
+msgid "Comment <span>%s</span>"
+msgstr "Comentar <span>%s</span>"
+
+#: ../templates/mediapress/default/buddypress/activity/entry.php:116
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: ../templates/mediapress/default/buddypress/activity/comment.php:26
+#, php-format
+msgid ""
+"<a href=\"%1$s\">%2$s</a> replied <a href=\"%3$s\" class=\"activity-time-"
+"since\"><span class=\"time-since\">%4$s</span></a>"
+msgstr ""
+"<a href=\"%1$s\">%2$s</a> contestado <a href=\"%3$s\" class=\"activity-time-"
+"since\"><span class=\"time-since\">%4$s</span></a>"
+
+#: ../templates/mediapress/default/buddypress/activity/comment.php:36
+msgid "Reply"
+msgstr "Responder"
+
+#: ../templates/mediapress/default/buddypress/directory/index.php:26
+#, php-format
+msgid "All Galleries <span>%s</span>"
+msgstr "Todos los recursos <span>%s</span>"
+
+#: ../templates/mediapress/default/buddypress/directory/index.php:33
+msgid "Filter By:"
+msgstr "Filtrar por:"
+
+#: ../templates/mediapress/default/buddypress/directory/index.php:35
+#: ../modules/buddypress/groups/mpp-bp-groups-hooks.php:83
+msgid "All Galleries"
+msgstr "Todos los recursos"
+
+#: ../modules/buddypress/mpp-bp-component.php:39
+#: ../modules/buddypress/mpp-bp-component.php:213
+#: ../modules/buddypress/groups/mpp-bp-groups-group-extension.php:17
+#: ../modules/buddypress/groups/mpp-bp-groups-group-extension.php:20
+msgid "Gallery"
+msgstr "Recursos"
+
+#: ../modules/buddypress/mpp-bp-component.php:70
+msgid "Search Galleries..."
+msgstr "Buscar recursos..."
+
+#: ../modules/buddypress/mpp-bp-component.php:71
+#: ../core/mpp-theme-compat.php:89
+msgid "Gallery Directory"
+msgstr "Directorio de recursos"
+
+#: ../modules/buddypress/mpp-bp-component.php:93
+#, php-format
+msgid "Gallery <span>%d</span>"
+msgstr "Recursos <span>%d</span>"
+
+#: ../modules/buddypress/mpp-bp-component.php:112
+#: ../modules/buddypress/mpp-bp-component.php:215
+msgid "My Gallery"
+msgstr "Mis carpetas de recursos"
+
+#: ../modules/buddypress/mpp-bp-component.php:124
+msgid "Create a Gallery"
+msgstr "Crear una carpeta de recursos"
+
+#: ../modules/buddypress/mpp-bp-loader.php:115
+msgid "User Gallery"
+msgstr "Recursos de usuario"
+
+#: ../modules/buddypress/mpp-bp-loader.php:146
+#: ../modules/buddypress/mpp-bp-loader.php:148
+msgid "Group Galleries"
+msgstr "Recursos de grupo"
+
+#: ../modules/buddypress/mpp-bp-loader.php:149
+msgid "Group Gallery"
+msgstr "Recursos de grupo"
+
+#: ../modules/buddypress/groups/mpp-bp-groups-group-extension.php:91
+msgid "Enable Gallery"
+msgstr "Habilitar carpetas de recursos"
+
+#: ../modules/buddypress/groups/mpp-bp-groups-loader.php:39
+#: ../modules/buddypress/groups/mpp-bp-groups-loader.php:41
+#: ../modules/buddypress/groups/mpp-bp-groups-loader.php:42
+msgid "Group Only"
+msgstr "Únicamente grupo"
+
+#: ../modules/buddypress/groups/mpp-bp-groups-loader.php:44
+msgid "Group Only Privacy Type"
+msgstr "Tipo de privacidad de únicamente grupo"
+
+#: ../modules/buddypress/groups/mpp-bp-groups-hooks.php:64
+#, php-format
+msgid "%s uploaded %d new %s to %s"
+msgstr "%s subido %d nuevo %s para %s"
+
+#: ../modules/buddypress/groups/mpp-bp-groups-hooks.php:86
+msgid "My Galleries"
+msgstr "Mis recursos"
+
+#: ../modules/buddypress/groups/mpp-bp-groups-hooks.php:89
+msgid "Create Gallery"
+msgstr "Crear carpeta"
+
+#: ../modules/buddypress/activity/mpp-activity-template.php:150
+#, php-format
+msgid "%s uploaded %d new %s"
+msgstr "%s subido %d nuevo %s"
+
+#: ../modules/buddypress/activity/mpp-activity-template.php:157
+#: ../modules/buddypress/activity/mpp-activity-template.php:173
+#, php-format
+msgid "%s"
+msgstr "%s"
+
+#: ../modules/buddypress/activity/mpp-activity-template.php:159
+#, php-format
+msgid "%s commented on %s's %s"
+msgstr "%s comentó en %s's %s"
+
+#: ../modules/buddypress/activity/mpp-activity-template.php:166
+#, php-format
+msgid "%s commented on %s's <a href='%s'>%s gallery</a>"
+msgstr "%s comentó en %s's <a href='%s'>%s carpeta de recursos</a>"
+
+#: ../modules/buddypress/activity/mpp-activity-template.php:170
+#: ../core/gallery/mpp-gallery-actions.php:701
+#, php-format
+msgid "%s created a %s <a href=\"%s\">gallery</a>"
+msgstr "%s creó una%s <a href=\"%s\">carpeta de recursos</a>"
+
+#: ../modules/buddypress/activity/mpp-activity-actions.php:81
+msgid "User Uploaded a media"
+msgstr "El usuario subió un archivo multimedia"
+
+#: ../modules/buddypress/activity/mpp-activity-actions.php:81
+msgid "Gallery Updates"
+msgstr "Actualizaciones de la carpeta de recursos"
+
+#: ../core/mpp-post-type.php:46
+msgctxt "The Gallery Post Type Name"
+msgid "Gallery"
+msgstr "Recursos"
+
+#: ../core/mpp-post-type.php:47
+msgctxt "The Gallery Post Type Plural Name"
+msgid "Galleries"
+msgstr "Carpetas de recursos"
+
+#: ../core/mpp-post-type.php:52
+msgctxt "MediaPress Admin menu name"
+msgid "MediaPress"
+msgstr "MediaPress"
+
+#: ../core/mpp-post-type.php:53
+msgctxt "MediaPress admin bar menu name"
+msgid "MediaPress"
+msgstr "MediaPress"
+
+#: ../core/mpp-post-type.php:54
+msgctxt "MediaPress All galleries label"
+msgid "All Galleries"
+msgstr "Todos los recursos"
+
+#: ../core/mpp-post-type.php:55
+msgctxt "admin add new gallery menu label"
+msgid "Add Gallery"
+msgstr "Agregar carpeta de recursos"
+
+#: ../core/mpp-post-type.php:56
+msgctxt "admin add gallery label"
+msgid "Add Gallery"
+msgstr "Agregar carpeta de recursos"
+
+#: ../core/mpp-post-type.php:57
+msgctxt "admin edit gallery"
+msgid "Edit Gallery"
+msgstr "Editar carpeta de recursos"
+
+#: ../core/mpp-post-type.php:58
+msgctxt "admin add new item label"
+msgid "Add Gallery"
+msgstr "Agregar carpeta de recursos"
+
+#: ../core/mpp-post-type.php:59
+msgctxt "admin view galery label"
+msgid "View Gallery"
+msgstr "Ver carpeta de recursos"
+
+#: ../core/mpp-post-type.php:60
+msgctxt "admin search galleries lable"
+msgid "Search Galleries"
+msgstr "Buscar recursos"
+
+#: ../core/mpp-post-type.php:61
+msgctxt "admin no galleries text"
+msgid "No Galleries found!"
+msgstr "¡No se encontraron recursos! "
+
+#: ../core/mpp-post-type.php:62
+msgctxt "admin no galleries text"
+msgid "No Galleries found in trash!"
+msgstr "¡No se encontraron recursos en la papelera! "
+
+#: ../core/mpp-post-type.php:63
+msgctxt "admin gallery parent label"
+msgid "Parent Gallery"
+msgstr "Origen de la carpeta de recursos"
+
+#: ../core/mpp-post-type.php:104
+msgctxt "Gallery Media Type"
+msgid "Media Type"
+msgstr "Tipo de archivo multimedia  "
+
+#: ../core/mpp-post-type.php:105
+msgctxt "Gallery Media Type Plural Name"
+msgid "Media Types"
+msgstr "Tipos de archivos multimedia "
+
+#: ../core/mpp-post-type.php:111
+msgctxt "Gallery Associated Type"
+msgid "Component"
+msgstr "Componente "
+
+#: ../core/mpp-post-type.php:112
+msgctxt "Gallery Associated Component Plural Name"
+msgid "Components"
+msgstr "Componentes "
+
+#: ../core/mpp-post-type.php:118
+msgctxt "Gallery privacy/status Type"
+msgid "Gallery Status"
+msgstr "Estado de la carpeta de recursos"
+
+#: ../core/mpp-post-type.php:119
+msgctxt "Gallery Privacy Plural Name"
+msgid "Galery Statuses"
+msgstr "Estados de la carpeta de recursos"
+
+#: ../core/mpp-post-type.php:195
+#, php-format
+msgid "Search %s"
+msgstr "Buscar %s"
+
+#: ../core/mpp-post-type.php:196
+#, php-format
+msgid "Popular %s"
+msgstr "Popular %s"
+
+#: ../core/mpp-post-type.php:197
+#, php-format
+msgid "All %s"
+msgstr "Todos %s"
+
+#: ../core/mpp-post-type.php:198
+#, php-format
+msgid "Parent %s"
+msgstr "Origen %s"
+
+#: ../core/mpp-post-type.php:199
+#, php-format
+msgid "Parent %s:"
+msgstr "Origen %s"
+
+#: ../core/mpp-post-type.php:200 ../core/media/mpp-media-template-tags.php:682
+#, php-format
+msgid "Edit %s"
+msgstr "Editar %s"
+
+#: ../core/mpp-post-type.php:201
+#, php-format
+msgid "Update %s"
+msgstr "Actualizar %s"
+
+#: ../core/mpp-post-type.php:202
+#, php-format
+msgid "Add New %s"
+msgstr "Agregar nuevo %s"
+
+#: ../core/mpp-post-type.php:203
+#, php-format
+msgid "New %s Name"
+msgstr "Nuevo %s nombre"
+
+#: ../core/mpp-post-type.php:204
+#, php-format
+msgid "Separate %s with commas"
+msgstr "Separar %s con comas"
+
+#: ../core/mpp-post-type.php:205
+#, php-format
+msgid "Add or Remove %s"
+msgstr "Agregar o quitar %s"
+
+#: ../core/mpp-post-type.php:206
+#, php-format
+msgid "Choose from the most used %s"
+msgstr "Elegir del más utilizado %s"
+
+#: ../core/mpp-template-helpers.php:242
+msgid "Unable to display content. Needs a registered view."
+msgstr "No es posible mostrar el contenido. Necesita una vista registrada."
+
+#: ../core/views/class-mpp-gallery-view-default.php:15
+msgid "Default Grid layout"
+msgstr "Diseño de cuadrícula predeterminado"
+
+#: ../core/views/class-mpp-gallery-view-audio-playlist.php:14
+msgid "Audio Playlist"
+msgstr "Lista de reproducción de audio"
+
+#: ../core/views/class-mpp-gallery-view-list.php:16
+msgid "List View"
+msgstr "Vista de la lista"
+
+#: ../core/views/class-mpp-gallery-view-video-playlist.php:15
+msgid "Video Playlist"
+msgstr "Lista de reproducción de video "
+
+#: ../core/gallery/mpp-gallery-link-template.php:332
+msgctxt " Publish to activity button label"
+msgid "Publish"
+msgstr "Publicar "
+
+#: ../core/gallery/mpp-gallery-link-template.php:335
+msgid "Publish to the activity"
+msgstr "Publicar en la actividad"
+
+#: ../core/gallery/mpp-gallery-link-template.php:354
+msgctxt "Clear unpublished media notification"
+msgid "Hide"
+msgstr "Ocultar "
+
+#: ../core/gallery/mpp-gallery-link-template.php:357
+msgid "Clear unpublished media notification"
+msgstr "Quitar notificación de multimedia no publicada "
+
+#: ../core/gallery/mpp-gallery-template-tags.php:403
+#: ../core/media/mpp-media-template-tags.php:496
+msgid "Previous"
+msgstr "Anterior"
+
+#: ../core/gallery/mpp-gallery-template-tags.php:403
+#: ../core/media/mpp-media-template-tags.php:496
+msgid "Next"
+msgstr "Siguiente"
+
+#: ../core/gallery/mpp-gallery-template-tags.php:560
+msgid "view"
+msgstr "Ver -"
+
+#: ../core/gallery/mpp-gallery-template-tags.php:565
+#, php-format
+msgid "upload files to %s"
+msgstr "Subir archivos a %s"
+
+#: ../core/gallery/mpp-gallery-template-tags.php:565
+msgid "upload"
+msgstr "Subir archivo"
+
+#: ../core/gallery/mpp-gallery-template-tags.php:569
+#: ../core/media/mpp-media-template-tags.php:686
+#, php-format
+msgid "delete %s"
+msgstr "Eliminar %s"
+
+#: ../core/gallery/mpp-gallery-template-tags.php:569
+#: ../core/media/mpp-media-template-tags.php:686
+msgid "delete"
+msgstr "Eliminar"
+
+#: ../core/gallery/mpp-gallery-template-tags.php:822
+msgctxt "widget view message"
+msgid "To reveal view options, please save the widget"
+msgstr ""
+"Para mostrar las opciones de visualización, por favor guarde el widget "
+
+#: ../core/gallery/mpp-gallery-template-tags.php:864
+msgid "Search"
+msgstr "Buscar"
+
+#: ../core/gallery/mpp-gallery-actions.php:30
+#: ../core/gallery/mpp-gallery-actions.php:147
+#: ../core/gallery/mpp-gallery-actions.php:262
+#: ../core/gallery/mpp-gallery-actions.php:325
+#: ../core/gallery/mpp-gallery-actions.php:425
+#: ../core/gallery/mpp-gallery-actions.php:493
+#: ../core/media/mpp-media-actions.php:27
+#: ../core/media/mpp-media-actions.php:140
+#: ../core/media/mpp-media-actions.php:204
+msgid "Action not authorized!"
+msgstr "¡Acción no autorizada!"
+
+#: ../core/gallery/mpp-gallery-actions.php:45
+msgid "You don't have permission to create gallery!"
+msgstr "¡Usted no tiene permiso para crear una carpeta de recursos!"
+
+#: ../core/gallery/mpp-gallery-actions.php:64
+#: ../core/gallery/mpp-gallery-actions.php:186
+msgid "Invalid Gallery status!"
+msgstr "¡Estado de la carpeta de recursos no válido!"
+
+#: ../core/gallery/mpp-gallery-actions.php:68
+msgid "Invalid gallery type!"
+msgstr "¡Tipo de carpeta de recursos no válido!"
+
+#: ../core/gallery/mpp-gallery-actions.php:73
+msgid "Invalid action!"
+msgstr "¡Acción no válida!"
+
+#: ../core/gallery/mpp-gallery-actions.php:77
+#: ../core/gallery/mpp-gallery-actions.php:190
+#: ../core/media/mpp-media-actions.php:67
+msgid "Title can not be empty"
+msgstr "El título no puede estar vacío"
+
+#: ../core/gallery/mpp-gallery-actions.php:109
+msgid "Unable to create gallery!"
+msgstr "¡No se puede crear la carpeta de recursos!"
+
+#: ../core/gallery/mpp-gallery-actions.php:122
+msgid "Gallery created successfully!"
+msgstr "¡Recurso creado con éxito!"
+
+#: ../core/gallery/mpp-gallery-actions.php:167
+msgid "You don't have permission to edit this gallery!"
+msgstr "¡Usted no tiene permiso de editar esta carpeta de recursos!"
+
+#: ../core/gallery/mpp-gallery-actions.php:222 ../core/ajax/mpp-ajax.php:1244
+msgid "Unable to update gallery!"
+msgstr "¡No se puede actualizar la carpeta de recursos!"
+
+#: ../core/gallery/mpp-gallery-actions.php:236 ../core/ajax/mpp-ajax.php:1250
+msgid "Gallery updated successfully!"
+msgstr "¡Recurso actualizado exitosamente!"
+
+#: ../core/gallery/mpp-gallery-actions.php:286
+msgid "You don't have permission to delete this gallery!"
+msgstr "¡Usted no tiene permiso para eliminar esta carpeta de recursos!"
+
+#: ../core/gallery/mpp-gallery-actions.php:357 ../core/ajax/mpp-ajax.php:1089
+msgid "Not allowed to delete!"
+msgstr "¡No tiene permitido eliminar!"
+
+#: ../core/gallery/mpp-gallery-actions.php:369 ../core/ajax/mpp-ajax.php:1096
+msgid "Deleted successfully!"
+msgstr "¡Eliminación exitosa!"
+
+#: ../core/gallery/mpp-gallery-actions.php:399 ../core/ajax/mpp-ajax.php:1128
+msgid "Updated!"
+msgstr "¡Actualizado!"
+
+#: ../core/gallery/mpp-gallery-actions.php:442 ../core/ajax/mpp-ajax.php:1021
+msgid "You don't have permission to update!"
+msgstr "¡Usted no tiene permiso para actualizar!"
+
+#: ../core/gallery/mpp-gallery-actions.php:463 ../core/ajax/mpp-ajax.php:1038
+msgid "Updated"
+msgstr "Actualizado"
+
+#: ../core/gallery/mpp-gallery-actions.php:506 ../core/ajax/mpp-ajax.php:1174
+#: ../core/media/mpp-media-actions.php:216
+msgid "You don't have permission to delete this cover!"
+msgstr "¡Usted no tiene permiso para eliminar esta portada!"
+
+#: ../core/gallery/mpp-gallery-actions.php:524
+#: ../core/media/mpp-media-actions.php:230
+msgid "Cover deleted successfully!"
+msgstr "¡La portada se ha eliminado con éxito!"
+
+#: ../core/gallery/mpp-gallery-actions.php:553 ../core/ajax/mpp-ajax.php:989
+msgid "Unauthorized action."
+msgstr "Acción no autorizada."
+
+#: ../core/gallery/mpp-gallery-actions.php:561
+#: ../core/gallery/mpp-gallery-actions.php:639 ../core/ajax/mpp-ajax.php:889
+#: ../core/ajax/mpp-ajax.php:958
+msgid "You don't have sufficient permission."
+msgstr "Usted no tiene permisos suficientes."
+
+#: ../core/gallery/mpp-gallery-actions.php:567
+msgid "Nothing to publish."
+msgstr "No hay nada para publicar."
+
+#: ../core/gallery/mpp-gallery-actions.php:593 ../core/ajax/mpp-ajax.php:914
+#, php-format
+msgid "%s shared %d %s to %s "
+msgstr "%s compartido %d %s a %s "
+
+#: ../core/gallery/mpp-gallery-actions.php:601 ../core/ajax/mpp-ajax.php:923
+msgid "Published to activity successfully."
+msgstr "Publicado en actividad con éxito."
+
+#: ../core/gallery/mpp-gallery-actions.php:603 ../core/ajax/mpp-ajax.php:928
+msgid "There was a problem. Please try again later."
+msgstr "Hubo un problema, por favor intente de nuevo más tarde."
+
+#: ../core/gallery/mpp-gallery-actions.php:633 ../core/ajax/mpp-ajax.php:952
+msgid "Nothing to hide."
+msgstr "Nada que ocultar."
+
+#: ../core/gallery/mpp-gallery-actions.php:646 ../core/ajax/mpp-ajax.php:964
+msgid "Successfully hidden!"
+msgstr "¡Ocultado con éxito!"
+
+#: ../core/gallery/mpp-gallery-functions.php:604
+msgid "Must provide ID to update a gallery."
+msgstr "Debe proveer una ID para actualizar un recurso."
+
+#: ../core/gallery/mpp-gallery-functions.php:611
+msgid "Gallery Does not exist!"
+msgstr "¡Esta carpeta de recursos no existe!"
+
+#: ../core/gallery/mpp-gallery-functions.php:1044
+#, php-format
+msgid "%s's gallery"
+msgstr "%s's carpeta de recursos"
+
+#: ../core/gallery/mpp-gallery-functions.php:1048
+msgid "Your Galleries"
+msgstr "Tus recursos"
+
+#: ../core/gallery/mpp-gallery-template.php:38
+#, php-format
+msgid "You have %d %s not published to actvity."
+msgstr "Usted no ha %d %s publicado en actividad. "
+
+#: ../core/gallery/mpp-gallery-template.php:55
+msgid "Drop files here"
+msgstr "Coloque los archivos aquí"
+
+#: ../core/gallery/mpp-gallery-template.php:56
+msgid "or"
+msgstr "o"
+
+#: ../core/gallery/mpp-gallery-template.php:57
+msgid "Select files"
+msgstr "Seleccione los archivos"
+
+#: ../core/ajax/class-mpp-ajax-comment-helper.php:65
+msgid "Please enter some content to post."
+msgstr "Por favor ingrese algún contenido para publicar."
+
+#: ../core/ajax/class-mpp-ajax-comment-helper.php:92
+msgid "There was a problem posting your update, please try again."
+msgstr ""
+"Hubo un problema al publicar su actualización, por favor intente de nuevo."
+
+#: ../core/ajax/class-mpp-ajax-comment-helper.php:174
+msgid "There was an error posting your reply. Please try again."
+msgstr "Hubo un error al publicar su respuesta, por favor inténtelo de nuevo."
+
+#: ../core/ajax/mpp-ajax.php:135 ../core/ajax/mpp-ajax.php:412
+#: ../core/ajax/mpp-ajax.php:652
+msgid ""
+"Server can not handle this much amount of data. Please upload a smaller file "
+"or ask your server administrator to change the settings."
+msgstr ""
+"El servidor no puede manejar esta cantidad de datos. Por favor suba un "
+"archivo más pequeño o pregunte al administrador del servidor cómo cambiar la "
+"configuración."
+
+#: ../core/ajax/mpp-ajax.php:141 ../core/ajax/mpp-ajax.php:418
+msgid "Unable to upload. You have used the allowed storage quota!"
+msgstr ""
+"¡No se puede cargar, usted ha superado la cuota de almacenamiento permitida!"
+
+#: ../core/ajax/mpp-ajax.php:164 ../core/ajax/mpp-ajax.php:440
+msgid "This file type is not supported."
+msgstr "Este tipo de archivo no es compatible."
+
+#: ../core/ajax/mpp-ajax.php:186 ../core/ajax/mpp-ajax.php:462
+msgid "The gallery is not selected."
+msgstr "El recurso  no está seleccionado."
+
+#: ../core/ajax/mpp-ajax.php:203 ../core/ajax/mpp-ajax.php:471
+#, php-format
+msgctxt "wall gallery name"
+msgid "Wall %s Gallery"
+msgstr "Carpeta de %s "
+
+#: ../core/ajax/mpp-ajax.php:250 ../core/ajax/mpp-ajax.php:505
+#, php-format
+msgid ""
+"This file type is not allowed in current gallery. Only <strong>%s</strong> "
+"files are allowed!"
+msgstr ""
+"!Este tipo de archivo no está permitido en la carpeta de recursos actual, "
+"únicamente los archivos <strong>%s</strong> están permitidos!"
+
+#: ../core/ajax/mpp-ajax.php:266 ../core/ajax/mpp-ajax.php:514
+#: ../core/ajax/mpp-ajax.php:672
+msgid "You don't have sufficient permissions to upload."
+msgstr "Usted no tiene los permisos suficientes para cargar archivos."
+
+#: ../core/ajax/mpp-ajax.php:662
+#, php-format
+msgid "Please upload a photo. Only <strong>%s</strong> files are allowed!"
+msgstr ""
+"Por favor suba una foto, únicamente los archivos <strong>%s</strong> están "
+"permitidos"
+
+#: ../core/ajax/mpp-ajax.php:811
+#, php-format
+msgid "\"%1$s\" from %2$s by %3$s."
+msgstr "\"%1$s\" de %2$s por %3$s."
+
+#: ../core/ajax/mpp-ajax.php:814
+#, php-format
+msgid "\"%1$s\" from %2$s."
+msgstr "\"%1$s\" de %2$s."
+
+#: ../core/ajax/mpp-ajax.php:817
+#, php-format
+msgid "\"%1$s\" by %2$s."
+msgstr "\"%1$s\" por %2$s."
+
+#: ../core/ajax/mpp-ajax.php:819
+#, php-format
+msgid "\"%s\"."
+msgstr "\"%s\"."
+
+#: ../core/ajax/mpp-ajax.php:826
+#, php-format
+msgid "%1$s by %2$s."
+msgstr "%1$s por %2$s."
+
+#: ../core/ajax/mpp-ajax.php:837
+#, php-format
+msgid "Released: %d."
+msgstr "Publicado: %d."
+
+#: ../core/ajax/mpp-ajax.php:845
+#, php-format
+msgid "Track %1$s of %2$s."
+msgstr "Pista %1$s de %2$s."
+
+#: ../core/ajax/mpp-ajax.php:847
+#, php-format
+msgid "Track %1$s."
+msgstr "Pista %1$s."
+
+#: ../core/ajax/mpp-ajax.php:853
+#, php-format
+msgid "Genre: %s."
+msgstr "Género %s."
+
+#: ../core/ajax/mpp-ajax.php:883
+msgid "No media to publish."
+msgstr "No hay archivos multimedia para publicar."
+
+#: ../core/ajax/mpp-ajax.php:971 ../core/ajax/mpp-ajax.php:1004
+#: ../core/ajax/mpp-ajax.php:1046 ../core/ajax/mpp-ajax.php:1058
+#: ../core/ajax/mpp-ajax.php:1160 ../core/ajax/mpp-ajax.php:1167
+#: ../core/ajax/mpp-ajax.php:1194 ../core/ajax/mpp-ajax.php:1260
+#: ../core/ajax/mpp-ajax.php:1268 ../core/ajax/mpp-ajax.php:1307
+#: ../core/ajax/mpp-ajax.php:1315
+msgid "Invalid action."
+msgstr "Acción no válida."
+
+#: ../core/ajax/mpp-ajax.php:979 ../core/ajax/mpp-ajax.php:984
+msgid "Invalid Media."
+msgstr "Archivos multimedia no válidos."
+
+#: ../core/ajax/mpp-ajax.php:995
+msgid "Deleted."
+msgstr "Eliminado."
+
+#: ../core/ajax/mpp-ajax.php:1130
+msgid "Please select media to apply bulk actions."
+msgstr ""
+"Por favor, seleccione archivos multimedia para aplicar acciones en masa."
+
+#: ../core/ajax/mpp-ajax.php:1185
+msgid "Cover deleted"
+msgstr "Portada eliminada"
+
+#: ../core/ajax/mpp-ajax.php:1208
+msgid "You don't have permission to update."
+msgstr "Usted no tiene permisos para actualizar."
+
+#: ../core/ajax/mpp-ajax.php:1274
+msgid "You don't have permission to update gallery."
+msgstr "Usted no tiene permisos para actualizar la carpeta de recursos."
+
+#: ../core/ajax/mpp-ajax.php:1298 ../core/ajax/mpp-ajax.php:1340
+msgid "Updated."
+msgstr "Actualizado."
+
+#: ../core/ajax/mpp-ajax.php:1321
+msgid "You don't have permission to upload."
+msgstr "Usted no tiene permisos para cargar archivos"
+
+#: ../core/ajax/class-mpp-ajax-lightbox-helper.php:53
+msgid "Sorry, Nothing found!"
+msgstr "Lo sentimos, ¡No se encontró nada!"
+
+#: ../core/widgets/mpp-widget-media.php:18
+msgid "(MediaPress) Media List"
+msgstr "Lista de multimedia (MediaPress)"
+
+#: ../core/widgets/mpp-widget-media.php:171
+msgctxt "media widget title"
+msgid "Recent Media"
+msgstr "Multimedia reciente "
+
+#: ../core/widgets/mpp-widget-media.php:186
+#: ../core/widgets/mpp-widget-gallery.php:164
+msgid "Select Component:"
+msgstr "Seleccione un componente: "
+
+#: ../core/widgets/mpp-widget-media.php:198
+#: ../core/widgets/mpp-widget-gallery.php:177
+msgid "Select Type:"
+msgstr "Seleccione un tipo:"
+
+#: ../core/widgets/mpp-widget-media.php:210
+#: ../core/widgets/mpp-widget-gallery.php:190
+msgid "Select Status:"
+msgstr "Seleccione un estado:"
+
+#: ../core/widgets/mpp-widget-media.php:221
+#: ../core/widgets/mpp-widget-gallery.php:202
+msgid "Per Page:"
+msgstr "Por página:"
+
+#: ../core/widgets/mpp-widget-media.php:229
+#: ../core/widgets/mpp-widget-gallery.php:210
+msgid "Order By:"
+msgstr "Ordenar por:"
+
+#: ../core/widgets/mpp-widget-media.php:232
+#: ../core/widgets/mpp-widget-gallery.php:213
+msgid "Alphabet"
+msgstr "Alfabeto"
+
+#: ../core/widgets/mpp-widget-media.php:233
+#: ../core/widgets/mpp-widget-gallery.php:214
+msgid "Date"
+msgstr "Fecha"
+
+#: ../core/widgets/mpp-widget-media.php:234
+#: ../core/widgets/mpp-widget-gallery.php:215
+msgid "Random"
+msgstr "Aleatorio"
+
+#: ../core/widgets/mpp-widget-media.php:240
+#: ../core/widgets/mpp-widget-gallery.php:220
+msgid "Sort Order"
+msgstr "Ordenar"
+
+#: ../core/widgets/mpp-widget-media.php:243
+#: ../core/widgets/mpp-widget-gallery.php:223
+msgid "Ascending"
+msgstr "Ascendente"
+
+#: ../core/widgets/mpp-widget-media.php:244
+#: ../core/widgets/mpp-widget-gallery.php:224
+msgid "Descending"
+msgstr "Descendiente"
+
+#: ../core/widgets/mpp-widget-media.php:250
+msgid "Show as playlist?"
+msgstr "¿Mostrar como lista de reproducción?"
+
+#: ../core/widgets/mpp-widget-media.php:253
+msgid "only applies to audio/video type"
+msgstr "Únicamente aplica para audio/video"
+
+#: ../core/widgets/mpp-widget-gallery.php:15
+msgctxt "mediapress gallery widget name"
+msgid "(MediaPress) Galleries List"
+msgstr "Lista de recursos (MediaPress) "
+
+#: ../core/widgets/mpp-widget-gallery.php:150
+msgid "Recent Galleries"
+msgstr "Recursos recientes"
+
+#: ../core/storage/mpp-storage-space-stats-functions.php:132
+msgid "GB"
+msgstr "GB"
+
+#: ../core/storage/mpp-storage-space-stats-functions.php:134
+msgid "MB"
+msgstr "MB"
+
+#: ../core/storage/mpp-storage-space-stats-functions.php:138
+#, php-format
+msgid "You have <span> %1s%%</span> of your %2s space left"
+msgstr "Usted tiene <span> %1s%%</span> de su %2s espacio disponible"
+
+#: ../core/storage/class-mpp-local-storage.php:189
+msgctxt "upload error message"
+msgid "File is empty. Please upload something more substantial."
+msgstr "El archivo está vacío, por favor suba algo más sustancial. "
+
+#: ../core/storage/class-mpp-local-storage.php:191
+msgctxt "upload error message"
+msgid ""
+"File is empty. Please upload something more substantial. This error could "
+"also be caused by uploads being disabled in your php.ini or by post_max_size "
+"being defined as smaller than upload_max_filesize in php.ini."
+msgstr ""
+"El archivo está vacío, por favor suba algo más sustancial. Éste error "
+"también pudo ser causado porque la opción de subir está desactivada en su "
+"php.ini o porque  tamani_máximode_publicación, está definido como mas "
+"pequeño que el tamaño_maximode_cargadearchivos in php.ini.  "
+
+#: ../core/storage/class-mpp-local-storage.php:199
+msgctxt "upload error message"
+msgid "Specified file failed upload test."
+msgstr "El archivo seleccionado falló la prueba de carga. "
+
+#: ../core/storage/class-mpp-local-storage.php:214
+msgctxt "upload error message"
+msgid "Sorry, this file type is not permitted for security reasons."
+msgstr ""
+"Lo sentimos, no se permite este tipo de archivo por razones de seguridad. "
+
+#: ../core/storage/class-mpp-local-storage.php:252
+#, php-format
+msgctxt "upload error message"
+msgid "The uploaded file could not be moved to %s."
+msgstr "El archivo subido no se pudo mover a %s. "
+
+#: ../core/storage/class-mpp-local-storage.php:281
+msgctxt "upload error message"
+msgid "Empty filename"
+msgstr "Nombre del archivo vacío  "
+
+#: ../core/storage/class-mpp-local-storage.php:287
+msgctxt "upload error message"
+msgid "Invalid file type"
+msgstr "Tipo de archivo no válido "
+
+#: ../core/storage/class-mpp-local-storage.php:307
+#, php-format
+msgctxt "upload error message"
+msgid ""
+"Unable to create directory %s. Is its parent directory writable by the "
+"server?"
+msgstr ""
+"No se puede crear el directorio %s. ¿Puede su directorio origen, ser escrito "
+"por el servidos? "
+
+#: ../core/storage/class-mpp-local-storage.php:314
+#, php-format
+msgctxt "upload error message"
+msgid "Could not write file %s"
+msgstr "No se pudo escribir el archivo %s    "
+
+#: ../core/storage/class-mpp-local-storage.php:674
+msgctxt "upload error message"
+msgid "Great! the file uploaded successfully!"
+msgstr "¡Genial! ¡El archivo fue subido con éxito!  "
+
+#: ../core/storage/class-mpp-local-storage.php:675
+#, php-format
+msgctxt "upload error message"
+msgid "Your file size was bigger than the maximum allowed file size of: %s"
+msgstr ""
+"El tamaño de su archivo es más grande que el tamaño máximo permitido: %s  "
+
+#: ../core/storage/class-mpp-local-storage.php:676
+#, php-format
+msgctxt "upload error message"
+msgid "Your file was bigger than the maximum allowed file size of: %s"
+msgstr "Su archivo era más grande que el tamaño máximo permitido: %s  "
+
+#: ../core/storage/class-mpp-local-storage.php:677
+msgctxt "upload error message"
+msgid "The uploaded file was only partially uploaded"
+msgstr "El archivo no se cargo completamente "
+
+#: ../core/storage/class-mpp-local-storage.php:678
+msgctxt "upload error message"
+msgid "No file was uploaded"
+msgstr "Ningun archivo fue cargado "
+
+#: ../core/storage/class-mpp-local-storage.php:679
+msgctxt "upload error message"
+msgid "Missing a temporary folder."
+msgstr "Falta un archivo temporal.  "
+
+#: ../core/shortcodes/mpp-shortcode-media-uploader.php:19
+msgid "Please select a gallery"
+msgstr "Por favor seleccione una carpeta de recursos."
+
+#: ../core/shortcodes/mpp-shortcode-media-uploader.php:33
+msgid "Nonexistent gallery should not be used"
+msgstr "Una carpeta de recursos no existente no debería ser utilizado"
+
+#: ../core/shortcodes/mpp-shortcode-media-uploader.php:51
+msgid "Sorry, you are not allowed to upload here."
+msgstr "Lo sentimos, no tiene permitido cargar archivos aquí."
+
+#: ../core/api/mpp-api.php:42
+msgid "You must provide valid key and label for privacy"
+msgstr "Usted debe proveer una clave y etiqueta válidas por privacidad"
+
+#: ../core/api/mpp-api.php:150
+msgid "You must provide valid key, label and extensions for gallery/media type"
+msgstr ""
+"Usted debe proveer una clave, etiqueta y extensiones válidas por tipo de "
+"recurso/multimedia"
+
+#: ../core/api/mpp-api.php:224
+msgid "You must provide valid key and label for associated component."
+msgstr ""
+"Usted debe proveer una clave y etiqueta válidas para el componente asociado."
+
+#: ../core/common/class-mpp-gallery-query.php:332
+#, php-format
+msgid "Viewing gallery %d to %d (of %d galleries)"
+msgstr "Viendo carpeta %d a %d (de %d carpetas)"
+
+#: ../core/common/mpp-cron.php:11
+msgid "Once per 15 minutes"
+msgstr "Una vez cada 15 minutos"
+
+#: ../core/common/class-mpp-media-query.php:422
+#, php-format
+msgid "Viewing  %d to %d (of %d %s)"
+msgstr "Viendo %d a %d (de %d %s)"
+
+#: ../core/media/mpp-media-actions.php:44
+msgid "You don't have permission to edit this!"
+msgstr "¡Usted no tiene permiso para editar esto!"
+
+#: ../core/media/mpp-media-actions.php:63
+msgid "Invalid media status!"
+msgstr "¡Estado de archivos de multimedia no válido!"
+
+#: ../core/media/mpp-media-actions.php:98
+msgid "Unable to update!"
+msgstr "¡No se puede actualizar!"
+
+#: ../core/media/mpp-media-actions.php:112
+msgid "Updated successfully!"
+msgstr "¡Actualización exitosa!"
+
+#: ../core/media/mpp-media-actions.php:158
+msgid "You don't have permission to delete this!"
+msgstr "¡Usted no tiene permiso para eliminar esto!"
+
+#: ../core/media/mpp-media-actions.php:172
+msgid "Successfully deleted!"
+msgstr "¡Eliminación exitosa!"
+
+#: ../core/media/mpp-media-actions.php:264
+#, php-format
+msgid "%s added a new <a href=\"%s\">%s</a>"
+msgstr "%s agregó un nuevo <a href=\"%s\">%s</a>"
+
+#: ../core/media/mpp-media-template-tags.php:155
+#, php-format
+msgid ""
+"There are no view object registered to handle the display of the content of "
+"<strong> %s </strong> type"
+msgstr ""
+"No hay vista registrada de objetos para manipular la visualización del "
+"contenido de tipo <strong> %s </strong>"
+
+#: ../core/media/mpp-media-template-tags.php:653
+#, php-format
+msgid "There are no %s yet."
+msgstr "No hay %s aún."
+
+#: ../core/media/mpp-media-template-tags.php:655
+msgid "There are no galleries yet."
+msgstr "No hay recursos aún"
+
+#: ../core/media/mpp-media-template-tags.php:682
+msgid "edit"
+msgstr "Editar - "
+
+#: ../core/media/mpp-media-functions.php:484
+msgid "(no title)"
+msgstr "(Sin título)"
+
+#: ../core/media/mpp-media-functions.php:501
+msgid "Thumbnail"
+msgstr "miniatura"
+
+#: ../core/media/mpp-media-functions.php:502
+msgid "Medium"
+msgstr "Mediano"
+
+#: ../core/media/mpp-media-functions.php:503
+msgid "Large"
+msgstr "Grande"
+
+#: ../core/media/mpp-media-functions.php:504
+msgid "Full Size"
+msgstr "Tamaño completo"
+
+#: ../core/media/class-mpp-media.php:260
+msgid ""
+"Please do not call the constructor directly, Instead the recommended way is "
+"to use mpp_get_media"
+msgstr ""
+"Please do not call the constructor directly, Instead the recommended way is "
+"to use mpp_get_media"

@@ -1,0 +1,376 @@
+.#{$prefix} {
+    @extend %noSelect;
+    font-size: 0;
+    margin-bottom: 20px;
+    margin-top: 20px;
+
+    .#{$prefix}-count {
+        display: none;
+        margin-left: 10px;
+    }
+
+    .#{$prefix}-item,
+    .#{$prefix}-count {
+        font-size: $fontSizeDefault;
+        vertical-align: middle;
+    }
+}
+// ===================================================
+// --               hare item
+// ===================================================
+.#{$prefix}-default .#{$prefix}-item,
+.#{$prefix}-square .#{$prefix}-item,
+.#{$prefix}-rounded .#{$prefix}-item {
+    a { box-shadow: none; }
+}
+
+.#{$prefix}-square-plus {
+    .#{$prefix}-item {
+        margin-right: 5px;
+    }
+}
+
+// ===================================================
+// --          Items position fixed left
+// ===================================================
+.#{$prefix}-fixed-left,
+.#{$prefix}-fixed-right {
+    position: fixed;
+    top: 23%;
+    z-index: 999;
+
+    .#{$prefix}-item {
+        display: block;
+        margin-bottom: 0;
+        margin-left: 0;
+        margin-right: 0;
+
+        .#{$prefix}-button {
+            @extend %brightness;
+            @extend %transitionAll;
+            line-height: 48px;
+            height: 48px;
+        }
+
+        .#{$prefix}-button,
+        .#{$prefix}-counts {
+            border-radius: initial;
+            text-align: center;
+            width: 48px;
+        }
+
+        .#{$prefix}-button span {
+            display: none;
+        }
+
+        .#{$prefix}-count {
+            display: none;
+        }
+
+        .#{$prefix}-button i {
+            display: inline;
+            line-height: 48px;
+
+            &:hover {
+                line-height: 48px;
+            }
+        }
+
+        .#{$prefix}-default {
+            background-color: $colorWhite;
+            background: $colorWhite;
+            border-radius: 100%;
+            margin: 3px 0 0 2px;
+
+
+            i {
+                font-size: 20px;
+                line-height: 40px;
+                height: 40px;
+                width: 40px;
+            }
+
+            &:hover i {
+                color: $colorWhite;
+            }
+        }
+    }
+
+    &.#{$prefix}-default .#{$prefix}-counts {
+        background: transparent;
+
+        span {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+
+            &:last-child {
+                font-size: 8px;
+            }
+        }
+    };
+
+    .#{$prefix}-toggle {
+        @extend %transitionAll;
+        @extend %icon;
+        color: #3e5da0;
+        cursor: pointer;
+        display: inline-block;
+        float: left;
+        font-size: 16px;
+        font-weight: bold;
+        left: 2px;
+        margin: 0;
+        padding: 4px;
+        position: relative;
+        text-align: center;
+        top: 4px;
+    }
+
+    .#{$prefix}-toggle-active {
+        left: 2px;
+        position: absolute;
+        top: 20%;
+        width: 20px;
+    }
+
+    div[data-element="buttons"] {
+        @extend %transitionAll;
+    }
+
+    @media ( min-width: $tablet ) {
+        .#{$prefix}-button:hover {
+            text-decoration: none;
+        }
+    }
+}
+
+.#{$prefix}-fixed-left {
+    left: 0;
+
+    .#{$prefix}-buttons {
+        transform: translateX( -100% );
+    }
+
+    .#{$prefix}-toggle:not(.#{$prefix}-icon-right):before {
+        @extend .#{$prefix}-icon-angle-double-left:before;
+    }
+
+    .#{$prefix}-icon-right {
+        padding: 0 5px;
+
+        &:before {
+            @extend .#{$prefix}-icon-angle-double-right:before;
+        }
+    }
+
+    .#{$prefix}-item {
+        text-align: left;
+    }
+}
+
+.#{$prefix}-fixed-right {
+    right: 0;
+
+    .#{$prefix}-buttons {
+        transform: translateX( 100% );
+    }
+
+    .#{$prefix}-toggle {
+        float: right;
+        left: initial;
+        right: 10px;
+    }
+
+    .#{$prefix}-toggle:not(.#{$prefix}-icon-right):before {
+        @extend .#{$prefix}-icon-angle-double-right:before;
+    }
+
+    .#{$prefix}-icon-right {
+        right: 0;
+        padding: 0 5px;
+
+        &:before {
+            @extend .#{$prefix}-icon-angle-double-left:before;
+        }
+    }
+
+    .#{$prefix}-item {
+        text-align: right;
+    }
+
+    .#{$prefix}-total-share {
+        margin-left: 60px;
+    }
+}
+
+.#{$prefix}-fixed-right,
+.#{$prefix}-fixed-left {
+    @media ( min-width: $tablet ) {
+        .#{$prefix}-button:hover {
+            box-shadow: none;
+            width: 70px;
+        }
+    }
+}
+
+.#{$prefix}-counts {
+    background: #E3E3E3;
+    color: #757575;
+    font-weight: bold;
+    text-align: center;
+}
+
+.#{$prefix}-total-share {
+    span {
+        font-family: Arial;
+        font-size: 13px;
+    }
+}
+// ===================================================
+// --                  MOBILE
+// ===================================================
+@media ( min-width: $tablet ) {
+    .#{$prefix} {
+        .#{$prefix}-whatsapp,
+        .#{$prefix}-telegram,
+        .#{$prefix}-viber {
+            display: none;
+        }
+
+        .#{$prefix}-count {
+            display: inline-block;
+        }
+    }
+}
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  {
+    .#{$prefix} {
+        .#{$prefix}-whatsapp,
+        .#{$prefix}-telegram,
+        .#{$prefix}-viber {
+            display: inline-block;
+        }
+    }
+
+    .#{$prefix}-fixed-left,
+     .#{$prefix}-fixed-right {
+        .#{$prefix}-whatsapp,
+        .#{$prefix}-telegram,
+        .#{$prefix}-viber {
+            display: block;
+        }
+     }
+}
+
+@media ( max-width: $mobile ) {
+    .#{$prefix}-item a span {
+        display: none;
+    }
+}
+
+.#{$prefix}-square-plus {
+
+    .#{$prefix}-total-share {
+        color: #8c8c8c;
+        font-weight: 700;
+        margin: 0 15px 0 0;
+        line-height: 1.5;
+        position: relative;
+
+        .#{$prefix}-shares-count {
+            line-height: .5;
+            text-align: center;
+        }
+
+        .#{$prefix}-shares-text {
+            font-size: 12px;
+
+            &:before {
+                content: attr(data-title);
+            }
+        }
+
+        .#{$prefix}-pipe {
+            font-size: 30px;
+            font-weight: normal;
+            position: absolute;
+            right: -5px;
+            top: -14px;
+            width: 1px;
+
+            &:before {
+                content: attr(data-pipe);
+            }
+        }
+    }
+
+     @media ( max-width: $mobile ) {
+        .#{$prefix}-total-share {
+            display: none;
+        }
+    }
+}
+//===================================================
+// --        Layout Fixed left Mobile
+//===================================================
+@media ( max-width: $tablet ) {
+    .#{$prefix}-fixed-left,
+    .#{$prefix}-fixed-right {
+        bottom: 0;
+        display: block;
+        left: initial;
+        margin: 0;
+        padding: 0;
+        top: initial;
+
+        .#{$prefix}-fixed-left-container,
+        .#{$prefix}-fixed-right-container {
+            display: table;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        .#{$prefix}-item {
+            display: table-cell;
+            height: auto;
+            width: auto;
+
+            .#{$prefix}-button {
+                display: block;
+                width: auto;
+            }
+
+            .#{$prefix}-default {
+                border-radius: initial;
+                margin: 0;
+                text-align: center;
+                width: 100%;
+            }
+
+            &:first-child {
+                float: none;
+            }
+        }
+
+        .#{$prefix}-toggle,
+        .#{$prefix}-total-share { display: none; }
+    }
+
+    .#{$prefix} .#{$prefix}-printer {
+        display: none;
+    }
+}
+
+.#{$prefix}-rounded,
+.#{$prefix}-square {
+    .#{$prefix}-item .#{$prefix}-button {
+        color: #555;
+    }
+}
+#post-entry .#{$prefix} {
+    .#{$prefix}-link,
+    .#{$prefix}-button {
+        color: #fff;
+    }
+}

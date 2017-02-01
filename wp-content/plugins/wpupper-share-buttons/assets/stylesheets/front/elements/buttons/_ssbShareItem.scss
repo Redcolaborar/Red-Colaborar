@@ -1,0 +1,202 @@
+#wrapper .#{$prefix},
+#content .#{$prefix} {
+    .#{$prefix}-item a,
+    .#{$prefix}-item a:hover,
+    .#{$prefix}-item a:focus {
+        border-bottom: none;
+        font-family: $fontFamily;
+        outline: none;
+        text-decoration: none;
+    }
+}
+
+#wrapper .#{$prefix},
+#content .#{$prefix}:not(.#{$prefix}-buttons, .#{$prefix}-square-plus) {
+    .#{$prefix}-item a,
+    .#{$prefix}-item a:hover,
+    .#{$prefix}-item a:focus {
+        box-shadow: none;
+    }
+}
+
+.#{$prefix}-item {
+    display: inline-block;
+    font-family: Arial, Sans-serif;
+    margin-bottom: 10px;
+    margin-right: 10px;
+
+    &:last-child {
+        margin-right: 0;
+    }
+
+    a {
+        -moz-transition: background 0.3s ease;
+        -webkit-transition: background 0.3s ease;
+        border: none;
+        color: #424242;
+        cursor: pointer;
+        display: inline-block;
+        font-family: $fontFamily;
+        text-decoration: none;
+        transition: background 0.3s ease;
+
+        i,
+        span {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        i {
+            font-size: $size;
+            height: $size;
+            width: $size;
+        }
+
+        span {
+            font-size: 12px;
+            margin-left: 5px;
+
+            &:before {
+                content: attr(data-title);
+            }
+        }
+
+        .#{$prefix}-buttons & {
+            border-radius: 3px;
+            color: #fff;
+
+            i,
+            i:hover {
+                color: inherit;
+                font-size: 26px;
+                height: 31px;
+                line-height: $size;
+            }
+
+            span {
+                margin-left: 0;
+                padding: 0 5px;
+                position: relative;
+                right: 2px;
+            }
+
+            .#{$prefix}-icon-facebook:before {
+                bottom: 1px;
+                position: relative;
+            }
+        }
+    }
+}
+
+.#{$prefix}-default,
+.#{$prefix}-square,
+.#{$prefix}-rounded {
+    .#{$prefix}-button span {
+        color: #424242;
+    }
+}
+
+
+@each $key, $color in $colors {
+    // Theme > Other
+    @include icon( $key, $color );
+
+    // Theme > Buttons
+    @include icon( $key, $color, buttons );
+
+    // Theme > Square Plus
+    @include icon( $key, $color, 'square-plus' );
+
+    // Theme > items hover
+    @include items-hover( $key, $color );
+}
+
+.#{$prefix}-square .#{$prefix}-whatsapp i {
+    border-radius: 4px;
+    box-shadow: 0px 0px 0px 5px $colorWhatsapp inset;
+    font-size: 31px;
+    line-height: 35px;
+    width: 36px;
+}
+
+.#{$prefix}-square .#{$prefix}-whatsapp a:hover i {
+    box-shadow: 0px 0px 0px 5px darken( $colorWhatsapp, 5% ) inset;
+}
+
+.#{$prefix}-rounded .#{$prefix}-printer i,
+ .#{$prefix}-square .#{$prefix}-printer i {
+    background: $colorPrint;
+    color: #fff;
+    font-size: 25px;
+    line-height: 38px;
+}
+
+.#{$prefix}-rounded .#{$prefix}-printer a:hover i,
+.#{$prefix}-square .#{$prefix}-printer a:hover i {
+    background: darken( $colorPrint, 10 );
+    color: #fff;
+}
+
+.#{$prefix}-rounded .#{$prefix}-printer i {
+    border-radius: 16px;
+}
+
+.#{$prefix}-square .#{$prefix}-printer i {
+    border-radius: 4px;
+}
+
+.#{$prefix} .#{$prefix}-viber .#{$prefix}-icon-viber-rounded {
+    background: $colorViber;
+    border-radius: 16px;
+    color: #fff;
+    font-size: 22px;
+    line-height: 34px;
+}
+.#{$prefix} .#{$prefix}-viber a:hover .#{$prefix}-icon-viber-rounded {
+    color: #fff;
+}
+.#{$prefix}-rounded .#{$prefix}-like i,
+.#{$prefix}-square .#{$prefix}-like i {
+    background: $colorfacebookLike;
+    color: #fff;
+}
+
+.#{$prefix}-rounded .#{$prefix}-like i {
+    border-radius: 15px;
+    font-size: 27px;
+    line-height: 33px;
+}
+
+.#{$prefix}-square .#{$prefix}-like i {
+    border-radius: 5px;
+    font-size: 28px;
+    line-height: 34px;
+}
+.#{$prefix} .#{$prefix}-icon-share-square,
+.#{$prefix} .#{$prefix}-icon-reddit-square {
+    font-size: 41px;
+    position: relative;
+    top: -3px;
+}
+
+.#{$prefix} .#{$prefix}-icon-email-square {
+    font-size: 42px;
+    position: relative;
+    top: -3px;
+}
+
+.fixed-left-container .#{$prefix}-icon-share-buttons,
+.fixed-right-container .#{$prefix}-icon-share-buttons {
+    left: -3px;
+    position: relative;
+    top: 1px;
+}
+
+.#{$prefix}-rounded,
+.#{$prefix}-square {
+    .#{$prefix}-like a:hover i {
+        background: darken( $colorfacebookLike, 10% );
+        color: #fff;
+    }
+}
