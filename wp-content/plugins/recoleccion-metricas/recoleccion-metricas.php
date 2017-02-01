@@ -374,7 +374,7 @@ class RM_Metricas {
 		}
 
 		?>
-		<div class="wrap"> asdf
+		<div class="wrap">
 			<h1 class="wp-heading-inline">Metricas</h1>
 
 			<?php 
