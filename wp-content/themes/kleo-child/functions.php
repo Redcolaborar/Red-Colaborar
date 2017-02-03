@@ -16,21 +16,17 @@
 /* pulling Parent Theme styles */
 
 function my_theme_enqueue_styles() {
+    $parent_style = 'parent-style'; // This is 'divi-style' for the Divi theme.
+    wp_enqueue_style ( $parent_style, get_template_directory_uri() . '/style.css' );
+    wp_enqueue_style ( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( $parent_style ), wp_get_theme()->get('Version') );
 
     
-$parent_style = 'parent-style'; // This is 'divi-style' for the Divi theme.
+    wp_enqueue_style ( 'mentions-style', get_stylesheet_directory_uri() . '/mentions/jquery.mentionsInput.css' );
+    wp_enqueue_script( 'mentions-elastic-script', get_stylesheet_directory_uri() . '/mentions/lib/jquery.elastic.js' );
+    wp_enqueue_script( 'mentions-events-input-script', get_stylesheet_directory_uri() . '/mentions/lib/jquery.events.input.js' );
+    wp_enqueue_script( 'mentions-script', get_stylesheet_directory_uri() . '/mentions/jquery.mentionsInput.js' );
 
-    
-wp_enqueue_style ($parent_style, get_template_directory_uri() . '/style.css' );
-    
-wp_enqueue_style ('child-style',
- get_stylesheet_directory_uri() . '/style.css',
-        
-array( $parent_style ),
-        
-wp_get_theme()->get('Version')
-);
-
+    wp_enqueue_script( 'child-script', get_stylesheet_directory_uri() . '/custom.js' );
 }
 
 

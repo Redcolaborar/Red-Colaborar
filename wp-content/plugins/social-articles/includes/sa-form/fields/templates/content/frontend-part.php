@@ -10,7 +10,7 @@ $sa_content_config = $this->get_config();
         $settings = array(
             'quicktags'     => false,
             'textarea_rows' => 15,
-            'media_buttons' => false,
+            'media_buttons' => true,
             'teeny' => true,
             'theme' => "simple"
 

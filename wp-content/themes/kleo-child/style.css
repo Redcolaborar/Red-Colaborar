@@ -439,3 +439,17 @@ display: none !important;
 #post-formats-select{
 display: none !important;
 }
+
+.atwho-view .cur {
+    color: #000!important;
+}
+
+.atwho-view small,
+.atwho-view .cur small,
+.atwho-view .cur strong {
+    color: #000!important;
+}
+
+.atwho-view .cur strong {
+    font-weight: bold;
+}

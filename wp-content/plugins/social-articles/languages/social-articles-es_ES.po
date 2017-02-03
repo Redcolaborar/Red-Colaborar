@@ -1,23 +1,24 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: social-articles\n"
-"POT-Creation-Date: 2016-10-13 16:33-0300\n"
-"PO-Revision-Date: 2016-10-13 16:33-0300\n"
-"Last-Translator: broobe <dev@broobe.com>\n"
-"Language-Team: \n"
-"Language: es_ES\n"
+"Project-Id-Version: Social Articles\n"
+"POT-Creation-Date: 2016-10-13 16:29-0300\n"
+"PO-Revision-Date: 2017-02-03 10:29+0100\n"
+"Language-Team: Broobe <dev@broobe.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.3\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es_ES\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: social-articles.php:196
 msgid "Settings"
-msgstr "Administración"
+msgstr ""
 
 #: social-articles.php:208
 msgid "Donate"
@@ -35,28 +36,28 @@ msgstr ""
 
 #: includes/social-articles-functions.php:102
 msgid "One of your articles was approved"
-msgstr "Uno de tus articulos ha sido aprovado"
+msgstr "Una de tus noticias ha sido aprovada"
 
 #: includes/social-articles-functions.php:102
 #: includes/social-articles-functions.php:110
 msgid "check it out!"
-msgstr "accede!"
+msgstr "¡Échele un vistazo!"
 
 #: includes/social-articles-functions.php:109
 msgid "There is a new article by "
-msgstr "Hay un nuevo articulo de "
+msgstr "Hay una nueva noticia de "
 
 #: includes/social-articles-load.php:11 includes/social-articles-load.php:139
 msgid "Social Articles"
-msgstr "Social Articles"
+msgstr "Noticias"
 
 #: includes/social-articles-load.php:40
 msgid "Search articles..."
-msgstr "Buscar artículos..."
+msgstr "Buscar noticias..."
 
 #: includes/social-articles-load.php:54 includes/social-articles-load.php:56
 msgid "Articles"
-msgstr "Artículos"
+msgstr "Noticias"
 
 #: includes/social-articles-load.php:80 includes/sa-form/sa-form-class.php:130
 #: includes/templates/members/single/articles/new.php:6
@@ -75,24 +76,24 @@ msgstr "Borrador"
 #: includes/social-articles-load.php:108
 #: includes/templates/members/single/articles/new.php:36
 msgid "New article"
-msgstr "Nuevo artículo"
+msgstr "Nueva noticia"
 
 #: includes/social-articles-load.php:146
 #, php-format
 msgid "Articles <span class=\"count\">%s</span>"
-msgstr "Artículos <span class=\"count\">%s</span>"
+msgstr "Noticias <span class=\"count\">%s</span>"
 
 #: includes/social-articles-load.php:152
 msgid "New Article"
-msgstr "Nuevo artículo"
+msgstr "Nueva noticia"
 
 #: includes/social-articles-manage-functions.php:95
 msgid "edit article"
-msgstr "editar artículo"
+msgstr "Editar noticia"
 
 #: includes/social-articles-manage-functions.php:98
 msgid "delete article"
-msgstr "borrar artículo"
+msgstr "borrar noticia"
 
 #: includes/social-articles-manage-functions.php:128
 msgid "Archived"
@@ -108,7 +109,7 @@ msgstr "Configuración guardada"
 
 #: includes/admin/social-articles-options.php:45
 msgid "Social Articles Settings"
-msgstr "Configuración de social articles"
+msgstr "Ajustes de noticias"
 
 #: includes/admin/social-articles-options.php:53
 #: includes/admin/tabs/social-articles-general-settings.php:52
@@ -118,7 +119,7 @@ msgstr "General"
 #: includes/admin/social-articles-options.php:54
 #: includes/admin/tabs/social-articles-view-settings.php:28
 msgid "View"
-msgstr "Vista"
+msgstr "Ver"
 
 #: includes/admin/social-articles-options.php:55
 msgid "Form"
@@ -126,11 +127,11 @@ msgstr "Formulario"
 
 #: includes/admin/social-articles-options.php:56
 msgid "Get Premium"
-msgstr "Características premium"
+msgstr "Obtén la versión Premium"
 
 #: includes/admin/social-articles-options.php:57
 msgid "There are unsaved changes"
-msgstr "Hay cambios sin salvar"
+msgstr "Hay cambios sin guardar"
 
 #: includes/admin/tabs/social-articles-form-settings.php:8
 msgid "Available Fields"
@@ -145,7 +146,7 @@ msgstr ""
 
 #: includes/admin/tabs/social-articles-form-settings.php:27
 msgid "Form Layout"
-msgstr "Estructura del formulario"
+msgstr "Diseño del Formulario"
 
 #: includes/admin/tabs/social-articles-form-settings.php:47
 msgid "Field Configuration"
@@ -200,11 +201,11 @@ msgstr "Si"
 
 #: includes/admin/tabs/social-articles-general-settings.php:34
 msgid "Can users edit their articles?"
-msgstr "Pueden los usuarios editar sus artículos?"
+msgstr "Pueden los usuarios editar sus noticias?"
 
 #: includes/admin/tabs/social-articles-general-settings.php:44
 msgid "Can users delete their articles?"
-msgstr "Pueden los usuarios borrar sus artículos?"
+msgstr "Pueden los usuarios borrar sus noticias?"
 
 #: includes/admin/tabs/social-articles-get-premium-settings.php:7
 msgid "Coming Soon!!!"
@@ -212,17 +213,19 @@ msgstr "Proximamente!"
 
 #: includes/admin/tabs/social-articles-get-premium-settings.php:11
 msgid "Mail Notifications"
-msgstr "Notificaciónes vía e-mail"
+msgstr "Notificaciones de correo"
 
 #: includes/admin/tabs/social-articles-get-premium-settings.php:12
 msgid ""
 "Mail Notification sends mail to your mailboxes. When new notification "
 "arrives, Mail Notification sends a new email."
-msgstr "Notificaciones por mail cuando se publica un artículo."
+msgstr ""
+"Notificación de correo envía correo a los buzones de correo. Cuando llega la "
+"nueva notificación, notificación de correo envía un nuevo correo electrónico."
 
 #: includes/admin/tabs/social-articles-get-premium-settings.php:14
 msgid "Html Template Customization"
-msgstr "Personalización de la pantilla html para el envío de mails"
+msgstr "Personalización de plantillas HTML"
 
 #: includes/admin/tabs/social-articles-get-premium-settings.php:15
 msgid "Customize your email with HTML Template Customizations!"
@@ -230,11 +233,11 @@ msgstr "Personaliza las notificaciones por mail con las plantillas HTML!"
 
 #: includes/admin/tabs/social-articles-get-premium-settings.php:17
 msgid "Custom Post Type definition"
-msgstr "Definición del custom post type"
+msgstr "Tipo de Entrada Personalizada"
 
 #: includes/admin/tabs/social-articles-get-premium-settings.php:18
 msgid "Custom taxonomies"
-msgstr "Taxonomies personalizadas"
+msgstr "Taxonomías personalizadas"
 
 #: includes/admin/tabs/social-articles-get-premium-settings.php:19
 msgid "Taxonomies Black/White List"
@@ -242,11 +245,11 @@ msgstr "Exclusión/Inclusión de términos de una taxonomía"
 
 #: includes/admin/tabs/social-articles-get-premium-settings.php:20
 msgid "Hierarchical taxonomies"
-msgstr "Taxonomias con herencia"
+msgstr "taxonomías jerárquicas"
 
 #: includes/admin/tabs/social-articles-get-premium-settings.php:21
 msgid "Ability to add terms from the front end"
-msgstr "Funcionalidad para agregar terms desde el front end"
+msgstr "Posibilidad de añadir términos desde el extremo frontal"
 
 #: includes/admin/tabs/social-articles-get-premium-settings.php:22
 msgid "Required Fields definition"
@@ -309,7 +312,7 @@ msgstr "Ayuda a correr la voz!"
 
 #: includes/admin/tabs/social-articles-view-settings.php:7
 msgid "Show published articles counter"
-msgstr ""
+msgstr "Mostrar publicado artículos contador"
 
 #: includes/admin/tabs/social-articles-view-settings.php:17
 msgid "Post per page#"
@@ -334,16 +337,16 @@ msgid ""
 "Your article is under review. When the editors approve it you will get a "
 "notification."
 msgstr ""
-"Tu artículo está pendiente de revisión. Cuando los editores lo aprueben, "
+"Tu noticia está pendiente de revisión. Cuando los editores lo aprueben, "
 "recibirás una notificación."
 
 #: includes/sa-form/sa-form-class.php:146
 msgid "Your article is in draft form."
-msgstr "Su artículo se encuentra en borrador"
+msgstr "Su noticia se encuentra en borrador"
 
 #: includes/sa-form/sa-form-class.php:150
 msgid "Your article has been published."
-msgstr "Su artículo ha sido publicado"
+msgstr "Su noticia ha sido publicado"
 
 #: includes/sa-form/sa-helper-class.php:57
 #: includes/sa-form/fields/classes/sa-title-class.php:10
@@ -352,7 +355,7 @@ msgstr "Título"
 
 #: includes/sa-form/sa-helper-class.php:78
 msgid "Content"
-msgstr "Contenido del artículo"
+msgstr "Contenido de la noticia"
 
 #: includes/sa-form/sa-helper-class.php:84
 msgid "Featured image"
@@ -360,11 +363,11 @@ msgstr "Imagen Destacada"
 
 #: includes/sa-form/fields/classes/sa-content-class.php:11
 msgid "Article content"
-msgstr "Contenido del artículo"
+msgstr "Contenido de la noticia"
 
 #: includes/sa-form/fields/classes/sa-featured-image-class.php:10
 msgid "Featured Image"
-msgstr "Imagen destacada"
+msgstr "Imagen Destacada"
 
 #: includes/sa-form/fields/classes/sa-title-class.php:11
 msgid "Insert the title"
@@ -376,13 +379,11 @@ msgstr "El título es obligatorio"
 
 #: includes/sa-form/fields/commons/uploader.php:138
 msgid "Server error. Upload directory isn't writable."
-msgstr ""
-"Error del servidor. El directorio de subida de archivos no tiene permisos de "
-"escritura."
+msgstr "Error del Servidor. Directorio de subida no se puede escribir."
 
 #: includes/sa-form/fields/commons/uploader.php:142
 msgid "No files were uploaded."
-msgstr "El archivo no se subió"
+msgstr "No se ha subido ningún archivo."
 
 #: includes/sa-form/fields/commons/uploader.php:148
 msgid "File is empty"
@@ -403,7 +404,8 @@ msgid ""
 "Could not save uploaded file. The upload was cancelled, or server error "
 "encountered"
 msgstr ""
-"No se pudo salvar el archive. Se cancel la subida por un error del servidor."
+"No se pudo guardar el archivo subido. La carga fue cancelada, o se encontró "
+"un error en el servidor"
 
 #: includes/sa-form/fields/templates/commons/article-status-tpart.php:4
 msgid "Status"
@@ -411,7 +413,7 @@ msgstr "Estado"
 
 #: includes/sa-form/fields/templates/commons/publish-actions-tpart.php:4
 msgid "Save and move it under review"
-msgstr "Guardar y pasar a estado pendiente de aprobación"
+msgstr "Guardar y moverlo en revisión"
 
 #: includes/sa-form/fields/templates/commons/publish-actions-tpart.php:8
 msgid "Save and publish"
@@ -445,7 +447,7 @@ msgstr "Borrar"
 
 #: includes/sa-form/fields/templates/featured-image/frontend-part.php:36
 msgid "Generating preview"
-msgstr "Generando vista preview"
+msgstr "Generando vista previa"
 
 #: includes/sa-form/fields/templates/featured-image/frontend-part.php:60
 msgid "Choose image"
@@ -472,7 +474,7 @@ msgstr "Tamaño máximo permitido: %s"
 #: includes/sa-form/fields/templates/taxonomy-regular/backend-part.php:11
 #: includes/sa-form/fields/templates/title/backend-part.php:13
 msgid "Placeholder"
-msgstr "Placeholder"
+msgstr "Texto de marcador de posición"
 
 #: includes/sa-form/fields/templates/taxonomy-hierarchical/backend-part.php:16
 #: includes/sa-form/fields/templates/taxonomy-regular/backend-part.php:16
@@ -507,23 +509,23 @@ msgstr "Campo vacío"
 
 #: includes/templates/members/single/articles/loop.php:19
 msgid "Load more articles"
-msgstr "Cargar mas artículos"
+msgstr "Cargar mas noticias"
 
 #: includes/templates/members/single/articles/loop.php:28
 msgid "This user doesn't have any article."
-msgstr "Este usuario no tiene ningun artículo"
+msgstr "Este usuario no tiene ninguna noticia"
 
 #: includes/templates/members/single/articles/new.php:34
 msgid "Edit article"
-msgstr "Editar artículo"
+msgstr "Editar noticia"
 
 #: includes/templates/members/single/articles/new.php:35
 msgid "View article"
-msgstr "Ver artículo"
+msgstr "Ver noticia"
 
 #: includes/templates/members/single/articles/new.php:40
 msgid "Saving your article. Please wait."
-msgstr "Guardando tu articulo. Por favor espera"
+msgstr "Guardando tu noticia. Por favor espera"
 
 #: includes/templates/members/single/articles/new.php:50
 msgid "Save"
@@ -532,106 +534,3 @@ msgstr "Guardar"
 #: includes/templates/members/single/articles/new.php:51
 msgid "Cancel"
 msgstr "Cancelar"
-
-#~ msgid "Why not do any or all of the following:"
-#~ msgstr "Por que no hacer alguna de las siguientes cosas?"
-
-#~ msgid "Link to it so other folks can find out about it."
-#~ msgstr ""
-#~ "Enlaza nuestro plugin asi otras personas tambien pueden encontrarlo."
-
-#~ msgid "Give it a 5 star rating on WordPress.org."
-#~ msgstr "Puntúa el plugin con 5 estrellas en Wordpress.org."
-
-#~ msgid "Let other people know that it works with your WordPress setup."
-#~ msgstr ""
-#~ "Hazle saber a otras personas que funcionó con tu configuración de "
-#~ "wordpress."
-
-#~ msgid "Like this plugin?"
-#~ msgstr "Te gusta esta plugin?"
-
-#~ msgid "Found a bug?"
-#~ msgstr "Has encontrado un error?"
-
-#~ msgid "Category Black List"
-#~ msgstr "Exclusión de categorías"
-
-#~ msgid "Post type"
-#~ msgstr "Selección de custom post types"
-
-#~ msgid "Selection of areas to display"
-#~ msgstr "Selección de areas a mostras"
-
-#~ msgid "Galleries"
-#~ msgstr "Galerías"
-
-#~ msgid "My articles <span>%d</span>"
-#~ msgstr "Mis artículos <span>%d</span>"
-
-#~ msgid "My Articles <span class=\"count\">%d</span>"
-#~ msgstr "Mis artículos <span class=\"count\">%d</span>"
-
-#~ msgid "Error creating the article. Try again please."
-#~ msgstr "Error creando el artículo. Por favor, vuelva a intentarlo."
-
-#~ msgid "done"
-#~ msgstr "listo"
-
-#~ msgid "Select category type"
-#~ msgstr "Seleccionar tipo de categoría"
-
-#~ msgid "Number of categories people can select"
-#~ msgstr "Cantidad de categorías que se pueden seleccionar"
-
-#~ msgid "You cannot perform this action"
-#~ msgstr "No pueder realizar esta acción"
-
-#~ msgid "Categories"
-#~ msgstr "Categorías"
-
-#~ msgid "Select your category"
-#~ msgstr "Selecciona tu categoría"
-
-#~ msgid "Tags"
-#~ msgstr "Etiquetas"
-
-#~ msgid "Select your tags"
-#~ msgstr "Selecciona tus etiquetas"
-
-#~ msgid "Article title..."
-#~ msgstr "Título del artículo"
-
-#~ msgid "Insert unordered list"
-#~ msgstr "Insertar lista desordenada"
-
-#~ msgid "Insert ordered list"
-#~ msgstr "Insertar lista ordenada"
-
-#~ msgid "Insert link"
-#~ msgstr "Insertar link"
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid "Article content..."
-#~ msgstr "Contenido del artículo"
-
-#~ msgid "Upload Image"
-#~ msgstr "Subir imagen"
-
-#~ msgid "Max size allowed is 2 MB"
-#~ msgstr "El tamaño maximo permitido es 2 MB"
-
-#~ msgid "Uploading your image. Please wait."
-#~ msgstr "Subiendo tu imagen. Por favor espera."
-
-#~ msgid ""
-#~ "Your article is in draft form. If you think the article is ready to be "
-#~ "published, you can submit it for review."
-#~ msgstr ""
-#~ "Tu artículo esta en borrador. Si crees que esta listo para ser publicado, "
-#~ "envíalo para su revisión."
-
-#~ msgid "Custom Workflow"
-#~ msgstr "Flujo de estados personalizado"

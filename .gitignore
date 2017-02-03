@@ -14,6 +14,9 @@ wp-cli.yml
 wp-comments-post.php
 wp-config-sample.php
 wp-config.php
+wp-content/*
+!wp-content/plugins/
+!wp-content/themes/
 wp-content/activity_get.log
 wp-content/advanced-cache.php
 wp-content/cache/
