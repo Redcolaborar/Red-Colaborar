@@ -54,9 +54,17 @@ if (!class_exists('Mediapresscustomizerfront')) {
 
         function red_after_activity_upload_buttons_callback() {
 
+          if( bp_is_group() ) {
+            $terms = '_groups';
+          } else if( bp_is_user() ) {
+            $terms = '_members';
+          } else if( bp_is_activity_component() ) {
+            $terms = array('_members', '_groups');
+          }
+
             $args = array(
                     'orderby'          => 'date',
-                    'posts_per_page'   => 10,
+                    'posts_per_page'   => 15,
                     'order'            => 'DESC',
                     'post_type'        => 'mpp-gallery',
                     'post_parent'      => '',
@@ -66,10 +74,11 @@ if (!class_exists('Mediapresscustomizerfront')) {
                         array(
                         'taxonomy' => 'mpp-component',
                         'field' => 'slug',
-                        'terms' => array('_members', '_groups')
+                        'terms' => ( empty($terms) ? '' : $terms )
                          )
                       )
             );
+
             $posts_array = get_posts( $args );
 
             if(count($posts_array) > 0)
@@ -79,7 +88,8 @@ if (!class_exists('Mediapresscustomizerfront')) {
                 $html .='<div class="assign_gallery_container" style="display: none;"><div class="assign_laggery_label">'.__("Assign Gallery", 'mediapress_customizer').'</div><div class="galley_selection"><select name="mpp_galler_data" id="mpp_gallery_assignment" onchange="getSelectedGallery(this);">';
                 foreach($posts_array as $post_data)
                 {
-                    $html .= "<option value='{$post_data->ID}'>{$post_data->post_title}</option>";
+                  $g_type = has_term('_members', 'mpp-component', $post_data->ID) ? "user" : "group";
+                  $html .= "<option data-gallerytype='{$g_type}' value='{$post_data->ID}'>{$post_data->post_title}</option>";
                 }
                 $html .= '<option value="create_new">'.__("Add New Gallery", 'mediapress_customizer').'</option>';
                 $html .= '</select></div></div>';

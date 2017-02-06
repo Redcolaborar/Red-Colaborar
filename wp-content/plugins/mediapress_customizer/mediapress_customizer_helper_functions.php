@@ -20,7 +20,7 @@ function red_legacy_theme_post_update()
 	$item_id     = 0;
 	$object      = '';
 
-	error_log("request = " . var_export($_REQUEST, 1) . "\n", 3, WP_CONTENT_DIR . '/uploads/mpc_debug.log' );
+	// error_log("request = " . var_export($_REQUEST, 1) . "\n", 3, WP_CONTENT_DIR . '/uploads/mpc_debug.log' );
 
         //Start saving file meta data while uploadin
 
@@ -53,13 +53,13 @@ function red_legacy_theme_post_update()
         {
            $mpp_galler_data = $_REQUEST['mpp_galler_data'];
 
-				 	 error_log("\$mpp_galler_data = $mpp_galler_data\n", 3, WP_CONTENT_DIR . '/uploads/mpc_debug.log' );
+					 //  error_log("\$mpp_galler_data = $mpp_galler_data\n", 3, WP_CONTENT_DIR . '/uploads/mpc_debug.log' );
 
            if($mpp_galler_data == 'create_new')
            {
                $gallery_title_text = $_REQUEST['gallery_title_text'];
 
-							 error_log("\$gallery_title_text = $gallery_title_text\n", 3, WP_CONTENT_DIR . '/uploads/mpc_debug.log' );
+							//  error_log("\$gallery_title_text = $gallery_title_text\n", 3, WP_CONTENT_DIR . '/uploads/mpc_debug.log' );
 
                if(!empty($gallery_title_text))
                {
@@ -79,7 +79,7 @@ function red_legacy_theme_post_update()
                                 'component_id'	=> $component_id
                     ) );
 
-										error_log("\$created_gallery_id = $created_gallery_id\n", 3, WP_CONTENT_DIR . '/uploads/mpc_debug.log' );
+										// error_log("\$created_gallery_id = $created_gallery_id\n", 3, WP_CONTENT_DIR . '/uploads/mpc_debug.log' );
 
                     if(!empty($created_gallery_id))
                     {
