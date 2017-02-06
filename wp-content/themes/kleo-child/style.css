@@ -453,3 +453,18 @@ display: none !important;
 .atwho-view .cur strong {
     font-weight: bold;
 }
+
+@media (max-width: 782px) {
+    #wpadminbar #wp-admin-bar-my-account li.menupop > a {
+        padding-left: 30px;
+    }
+    #wpadminbar #wp-admin-bar-my-account li.menupop > a:before {
+        top: 8px!important;
+        left: 16px!important;
+        content: "+"!important;
+        position: absolute!important;
+        display: block!important;
+        font-size: 20px;
+        font-weight: bold;
+    }
+}

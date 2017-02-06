@@ -13,6 +13,163 @@
 
 
 
+/* Top menu */
+function object_to_array($object) {
+ if (is_object($object)) {
+  return array_map(__FUNCTION__, get_object_vars($object));
+ } else if (is_array($object)) {
+  return array_map(__FUNCTION__, $object);
+ } else {
+  return $object;
+ }
+}
+
+add_action( 'admin_bar_menu', 'remove_wp_logo', 999 );
+
+function remove_wp_logo( $wp_admin_bar ) {
+    //if (get_current_user_id() == 1) {
+        $top_secondary = object_to_array($wp_admin_bar->get_node( 'top-secondary' ));
+
+        $my_account = object_to_array($wp_admin_bar->get_node( 'my-account' ));
+        $user_actions = object_to_array($wp_admin_bar->get_node( 'user-actions' ));
+        $user_info = object_to_array($wp_admin_bar->get_node( 'user-info' ));
+        $edit_profile = object_to_array($wp_admin_bar->get_node( 'edit-profile' ));
+        $logout = object_to_array($wp_admin_bar->get_node( 'logout' ));
+
+        $my_account_activity = object_to_array($wp_admin_bar->get_node( 'my-account-activity' ));
+
+        $my_account_messages = object_to_array($wp_admin_bar->get_node( 'my-account-messages' ));
+        $my_account_messages_inbox = object_to_array($wp_admin_bar->get_node( 'my-account-messages-inbox' ));
+        $my_account_messages_starred = object_to_array($wp_admin_bar->get_node( 'my-account-messages-starred' ));
+        $my_account_messages_sentbox = object_to_array($wp_admin_bar->get_node( 'my-account-messages-sentbox' ));
+        $my_account_messages_compose = object_to_array($wp_admin_bar->get_node( 'my-account-messages-compose' ));
+
+        $my_account_groups = object_to_array($wp_admin_bar->get_node( 'my-account-groups' ));
+        $my_account_groups_memberships = object_to_array($wp_admin_bar->get_node( 'my-account-groups-memberships' ));
+        $my_account_groups_invites = object_to_array($wp_admin_bar->get_node( 'my-account-groups-invites' ));
+
+        $my_account_cursos = object_to_array($wp_admin_bar->get_node( 'my-account-cursos' ));
+        $my_account_my_cursos = object_to_array($wp_admin_bar->get_node( 'my-account-my-cursos' ));
+        $my_account_crear_cursos = $my_account_my_cursos;
+
+        $recursos = object_to_array($wp_admin_bar->get_node( 'my-account-mediapress' ));
+        $recursos_carpetas = object_to_array($wp_admin_bar->get_node( 'my-account-mediapress-my-galleries' ));
+        $recursos_create = object_to_array($wp_admin_bar->get_node( 'my-account-mediapress-create' ));
+        $recursos_articles = object_to_array($wp_admin_bar->get_node( 'my-account-mediapress-articles' ));
+
+        $articulos = object_to_array($wp_admin_bar->get_node( 'my-account-social-articles' ));
+        $articulos_nuevo = object_to_array($wp_admin_bar->get_node( 'nuevo-articulo' ));
+
+        $settings = object_to_array($wp_admin_bar->get_node( 'my-account-settings' ));
+        $settings_general = object_to_array($wp_admin_bar->get_node( 'my-account-settings-general' ));
+        $settings_notifications = object_to_array($wp_admin_bar->get_node( 'my-account-settings-notifications' ));
+        $settings_profile = object_to_array($wp_admin_bar->get_node( 'my-account-settings-profile' ));
+
+
+        /* Delete all current menu options */
+        $all_nodes = $wp_admin_bar->get_nodes();
+     
+        foreach ($all_nodes as $node) {
+            $wp_admin_bar->remove_node( $node->id );
+        }
+
+        // Menu derecha
+        $wp_admin_bar->add_node( $top_secondary );
+
+        // Hello
+        $my_account['parent'] = 'top-secondary';
+        $wp_admin_bar->add_node( $my_account );
+        $wp_admin_bar->add_node( $user_actions );
+        $wp_admin_bar->add_node( $user_info );
+        $wp_admin_bar->add_node( $edit_profile );
+        $wp_admin_bar->add_node( $logout );
+
+        // Actividad
+        $my_account_activity['parent'] = 'my-account';
+        $wp_admin_bar->add_node( $my_account_activity );
+
+        // Mensajes
+        $my_account_messages['parent'] = 'my-account';
+        $wp_admin_bar->add_node( $my_account_messages );
+        $wp_admin_bar->add_node( $my_account_messages_inbox );
+        $wp_admin_bar->add_node( $my_account_messages_starred );
+        $wp_admin_bar->add_node( $my_account_messages_sentbox );
+        $wp_admin_bar->add_node( $my_account_messages_compose );
+
+        // Grupos
+        $my_account_groups['parent'] = 'my-account';
+        $wp_admin_bar->add_node( $my_account_groups );
+        $wp_admin_bar->add_node( $my_account_groups_memberships );
+        $wp_admin_bar->add_node( $my_account_groups_invites );
+
+        // Cursos
+        $my_account_cursos['parent'] = 'my-account';
+        $wp_admin_bar->add_node( $my_account_cursos );
+        $my_account_my_cursos['title'] = 'Mis Cursos';
+        $my_account_my_cursos['href'] = bp_core_get_user_domain( get_current_user_id() ).'listing/';
+        $wp_admin_bar->add_node( $my_account_my_cursos );
+
+        $my_account_crear_cursos['id'] = 'my-account-crear-curso';
+        $my_account_crear_cursos['title'] = 'Crear Curso';
+        $my_account_crear_cursos['href'] = 'http://redcolaborar.org/create-course/';
+        $wp_admin_bar->add_node( $my_account_crear_cursos );
+
+        // Recursos
+        $recursos['parent'] = 'my-account';
+        $recursos['title'] = 'Mis Recursos';
+        $wp_admin_bar->add_node( $recursos );
+        //$wp_admin_bar->add_node( $recursos_carpetas );
+        $recursos_create['title'] = 'Crear carpeta';
+        $wp_admin_bar->add_node( $recursos_create );
+        //$wp_admin_bar->add_node( $recursos_articles );
+
+        // Articulos
+        $articulos['parent'] = 'my-account';
+        $articulos['title'] = 'Mis Noticias';
+        $wp_admin_bar->add_node( $articulos );
+        $articulos_nuevo['title'] = 'Escribir noticia';
+        $wp_admin_bar->add_node( $articulos_nuevo );
+
+        // Preguntas y respuestas
+        $my_account_preguntas = $my_account_crear_cursos;
+        $my_account_preguntas['parent'] = 'my-account';
+        $my_account_preguntas['id'] = 'my-account-mis-preguntas';
+        $my_account_preguntas['title'] = 'Mis Preguntas';
+        $my_account_preguntas['href'] = bp_core_get_user_domain( get_current_user_id() ).'questions/';
+        $wp_admin_bar->add_node( $my_account_preguntas );
+
+        $my_account_preguntas_2 = $my_account_crear_cursos;
+        $my_account_preguntas_2['parent'] = 'my-account-mis-preguntas';
+        $my_account_preguntas_2['id'] = 'my-account-mis-preguntas-2';
+        $my_account_preguntas_2['title'] = 'Hacer Pregunta';
+        $my_account_preguntas_2['href'] = 'http://redcolaborar.org/preguntas/hacer-pregunta/';
+        $wp_admin_bar->add_node( $my_account_preguntas_2 );
+
+        $my_account_preguntas_3 = $my_account_crear_cursos;
+        $my_account_preguntas_3['parent'] = 'my-account-mis-preguntas';
+        $my_account_preguntas_3['id'] = 'my-account-mis-respuestas';
+        $my_account_preguntas_3['title'] = 'Mis Respuestas';
+        $my_account_preguntas_3['href'] = bp_core_get_user_domain( get_current_user_id() ).'answers/';
+        $wp_admin_bar->add_node( $my_account_preguntas_3 );
+
+        // Configuracion
+        $settings['parent'] = 'my-account';
+        $wp_admin_bar->add_node( $settings );
+        $wp_admin_bar->add_node( $settings_general );
+        $wp_admin_bar->add_node( $settings_notifications );
+        $wp_admin_bar->add_node( $settings_profile );
+
+        // Reportar problema
+        $my_account_rep_prob = $my_account_crear_cursos;
+        $my_account_rep_prob['parent'] = 'my-account';
+        $my_account_rep_prob['id'] = 'my-account-reportar-problemas';
+        $my_account_rep_prob['title'] = 'Reportar Problema';
+        $my_account_rep_prob['href'] = 'http://redcolaborar.org/foros/foro/problemas-y-sugerencias/';
+        $wp_admin_bar->add_node( $my_account_rep_prob );
+    //}
+}
+
+
 /* pulling Parent Theme styles */
 
 function my_theme_enqueue_styles() {

@@ -9,15 +9,7 @@ if (!class_exists('Mediapresscustomizeradmin')) {
         function init_hooks() {
             add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
         }
-    
-
         function admin_init_hooks() {
-            // gets the author role
-            $role = get_role( 'subscriber' );        
-            $role->add_cap( 'edit_others_posts' ); 
-            $role->add_cap( 'edit_posts' );             
-            $role->add_cap( 'publish_posts' ); 
-            $role->add_cap( 'edit_published_posts' ); 
             
         }
         public static function create_instance() {

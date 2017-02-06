@@ -49,7 +49,7 @@
 
 			<?php if ( bp_is_active( 'groups' ) && !bp_is_my_profile() && !bp_is_group() ) : ?>
 
-                    <div id="whats-new-post-in-box" style="display: none;">
+          <div id="whats-new-post-in-box">
 
 					<span><?php _e( 'Post in', 'buddypress' ); ?>: </span>
 
