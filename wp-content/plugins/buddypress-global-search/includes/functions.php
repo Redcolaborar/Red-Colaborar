@@ -351,6 +351,8 @@ function bb_gs_create_searchstring( $user_id, $posted_field_ids, $errors, $old_v
     
     $items_to_search = buddyboss_global_search()->option('items-to-search');
     
+    $search_string = '';
+    
     foreach ( $new_values as $key => $value ) {
         
         if (in_array('xprofile_field_'.$key, $items_to_search) ) {
@@ -362,3 +364,45 @@ function bb_gs_create_searchstring( $user_id, $posted_field_ids, $errors, $old_v
 	
 }
 add_action('xprofile_updated_profile', 'bb_gs_create_searchstring', 1, 5);
+
+function bb_gs_create_group_searchstring($groupid) {
+    
+    if( !function_exists( 'bp_is_active' ) || !bp_is_active( 'groups' ) ){
+        return;
+    }
+    
+    if ( empty( $groupid ) ) {
+        global $bp;
+        $groupid = $bp->groups->new_group_id;
+    }
+    
+    $address = isset( $_POST['bpla-group-address'] ) ? $_POST['bpla-group-address'] : '';
+    $street = isset( $_POST['bpla-group-street'] ) ? $_POST['bpla-group-street'] : '';
+    $city = isset( $_POST['bpla-group-city'] ) ? $_POST['bpla-group-city'] : '';
+    $state = isset( $_POST['bpla-group-state'] ) ? $_POST['bpla-group-state'] : ''; 
+    $zip = isset( $_POST['bpla-group-zip'] ) ? $_POST['bpla-group-zip'] : '';
+    $country = isset( $_POST['bpla-group-country'] ) ? $_POST['bpla-group-country'] : '';
+    
+    if ($address) {
+        groups_update_groupmeta($groupid, 'bbgs_group_search_string', $address);
+    }
+    if ($street) {
+        groups_update_groupmeta($groupid, 'bbgs_group_search_string', $address.' '.$street);
+    }
+    if ($city) {
+        groups_update_groupmeta($groupid, 'bbgs_group_search_string', $address.' '.$street.' '.$city);
+    }
+    if ($state) {
+        groups_update_groupmeta($groupid, 'bbgs_group_search_string', $address.' '.$street.' '.$city.' '.$state);
+    }
+    if ($zip) {
+        groups_update_groupmeta($groupid, 'bbgs_group_search_string', $address.' '.$street.' '.$city.' '.$state.' '.$zip);
+    }
+    if ($country) {
+        groups_update_groupmeta($groupid, 'bbgs_group_search_string', $address.' '.$street.' '.$city.' '.$state.' '.$zip.' '.$country);
+    }
+    
+    
+}
+add_action('groups_create_group_step_save_group-details','bb_gs_create_group_searchstring');
+add_action('groups_details_updated','bb_gs_create_group_searchstring');

@@ -227,6 +227,14 @@ If you have any further questions, please submit them on the main [WP-SpamShield
 
 == Changelog ==
 
+= 1.9.9.9 =
+*released 02/09/17*
+
+* Made some improvements to the whitelisting functionality.
+* Made some improvements to the widgets, and made some tweaks to make them fully compatible with the customizer. It was necessary to remove the custom color option and color picker on the "WP-SpamShield Counter - Custom" widget to make this possible. We may look into re-adding these in the future.
+* Made various code enhancements and improvements.
+* Improved some filters in the anti-spam algorithm.
+
 = 1.9.9.8.9 =
 *released 01/31/17*
 
@@ -895,7 +903,7 @@ If you have any further questions, please submit them on the main [WP-SpamShield
 For a complete list of changes to the plugin, view the [Changelog](https://www.redsandmarketing.com/plugins/wp-spamshield/changelog/).
 
 == Upgrade Notice ==
-= 1.9.9.8.9 =
+= 1.9.9.9 =
 
-* Made various code enhancements/improvements, and updated the spam filters. Please see Changelog for details.
+* Made various code enhancements/improvements, and improved some filters in the anti-spam algorithm. Please see Changelog for details.
 

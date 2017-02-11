@@ -85,6 +85,30 @@ if (!class_exists('BBoss_Global_Search_Groups')):
 				";
 			$query_placeholder[] = $search_term;
 			$query_placeholder[] = $search_term;
+                        
+                        //String Search
+                        
+                        if (function_exists('bp_bpla') && 'yes' == bp_bpla()->option('enable-for-groups') ) {
+                                
+                                $split_search_term = explode(' ', $search_term);
+
+                                $sql .= "OR g.id IN ( SELECT group_id FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = 'bbgs_group_search_string' AND ";
+
+                                foreach ( $split_search_term as $k => $sterm ) {
+
+                                    if ( $k == 0 ) {
+                                        $sql .= "meta_value LIKE '%%%s%%'";
+                                        $query_placeholder[] = $sterm;
+                                    } else {
+                                        $sql .= "AND meta_value LIKE '%%%s%%'";
+                                        $query_placeholder[] = $sterm;
+                                    }
+
+                                }
+                                $sql .= " ) ";
+                        
+                        }
+                            
 			
 			/**
 			 * Properly handle hidden groups.

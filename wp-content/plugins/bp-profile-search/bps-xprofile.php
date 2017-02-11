@@ -33,12 +33,13 @@ function bps_xprofile_setup ($fields)
 				$f->description = str_replace ('&amp;', '&', stripslashes ($field->description));
 				$f->description = bps_wpml (0, $f->id, 'description', $f->description);
 				$f->type = $field->type;
+				$f->format = bps_xprofile_format ($field->type, $field->id);
 				$f->options = bps_xprofile_options ($field->id);
 				foreach ($f->options as $key => $label)
 					$f->options[$key] = bps_wpml (0, $f->id, 'option', $label);
 
-				$f->filters = bps_xprofile_filters ($field->type);
-				$f->display = empty ($f->filters)? '': $field->type;
+				$f->filters = bps_xprofile_filters ($field->type, $f);
+				$f->display = bps_displayXsearch_form ($f);
 				$f->search = 'bps_xprofile_search';
 
 				if ($field->type != 'checkbox' && $field->type != 'multiselectbox')
@@ -179,6 +180,30 @@ function bps_xprofile_get_value ($f)
 	return BP_XProfile_ProfileData::get_value_byid ($f->id, $members_template->member->ID);
 }
 
+function bps_xprofile_format ($type, $field_id)
+{
+	$formats = array
+	(
+		'textbox'			=> array ('text', 'decimal'),
+		'number'			=> array ('integer'),		
+		'url'				=> array ('text'),
+		'textarea'			=> array ('text'),
+		'selectbox'			=> array ('text', 'integer', 'decimal', 'date'),
+		'radio'				=> array ('text', 'integer', 'decimal', 'date'),
+		'multiselectbox'	=> array ('serialized'),
+		'checkbox'			=> array ('serialized'),
+		'datebox'			=> array ('date'),
+	);
+
+	if (!isset ($formats[$type]))  return 'text';
+	
+	$formats = $formats[$type];
+	$default = $formats[0];
+	$format = apply_filters ('bps_xprofile_format', $default, $field_id);
+
+	return in_array ($format, $formats)? $format: $default;
+}
+
 function bps_xprofile_options ($id)
 {
 	static $options = array ();
@@ -197,31 +222,53 @@ function bps_xprofile_options ($id)
 	return $options[$id];
 }
 
-function bps_xprofile_filters ($type)
+function bps_xprofile_filters ($type, $f)
 {
 	$filters = array
 	(
-		'textbox'			=> array ('' => 'default', 'range' => 'range'),
-		'number'			=> array ('' => 'default', 'range' => 'range'),
-		'url'				=> array ('' => 'default'),
-		'textarea'			=> array ('' => 'default'),
-		'selectbox'			=> array ('' => 'default', 'range' => 'range'),
-		'radio'				=> array ('' => 'default', 'range' => 'range'),
-		'multiselectbox'	=> array ('' => 'default'),
-		'checkbox'			=> array ('' => 'default'),
+		'textbox'			=> array ('' => 'normal', 'range' => 'range'),
+		'number'			=> array ('' => 'normal', 'range' => 'range'),
+		'url'				=> array ('' => 'normal'),
+		'textarea'			=> array ('' => 'normal'),
+		'selectbox'			=> array ('' => 'normal', 'range' => 'range'),
+		'radio'				=> array ('' => 'normal', 'range' => 'range'),
+		'multiselectbox'	=> array ('' => 'normal'),
+		'checkbox'			=> array ('' => 'normal'),
 		'datebox'			=> array ('range' => 'range'),
 	);
 
-	if (isset ($filters[$type]))  return $filters[$type];
-	return array ();
+	return isset ($filters[$type])? $filters[$type]: bps_cft_filters ($type, $f);
 }
 
-function bps_filtersXvalidation ($f)
+function bps_cft_filters ($type, $f)
 {
-	$type = apply_filters ('bps_field_validation_type', $f->type, $f);
-	$type = apply_filters ('bps_field_type_for_validation', $type, $f);
+	$filters = array
+	(
+		'textbox'			=> array ('' => 'normal', 'range' => 'range'),
+		'number'			=> array ('' => 'normal', 'range' => 'range'),
+		'url'				=> array ('' => 'normal'),
+		'textarea'			=> array ('' => 'normal'),
+		'selectbox'			=> array ('' => 'normal', 'range' => 'range'),
+		'radio'				=> array ('' => 'normal', 'range' => 'range'),
+		'multiselectbox'	=> array ('' => 'normal'),
+		'checkbox'			=> array ('' => 'normal'),
+		'datebox'			=> array ('range' => 'range'),
+	);
 
-	return bps_xprofile_filters ($type);
+	$mapped = apply_filters ('bps_field_validation_type', $type, $f);
+	$mapped = apply_filters ('bps_field_type_for_validation', $mapped, $f);
+
+	if ($mapped != $type)
+		return isset ($filters[$mapped])? $filters[$mapped]: array ();
+
+	list (, , $range) = apply_filters ('bps_field_validation', array ('test', 'test', 'test'), $f);
+
+	if ($range === true)
+		return array ('range' => 'range');
+	else if ($range === false)
+		return array ('' => 'normal');
+	else
+		return array ();
 }
 
 function bps_filterXquery ($f)
@@ -275,7 +322,7 @@ function bps_anyfield_setup ($fields)
 	$f->description = __('Search every BP Profile Field', 'bp-profile-search');
 	$f->type = 'anyfield';
 	$f->options = array ();
-	$f->filters = array ('' => 'default');
+	$f->filters = array ('' => 'normal');
 	$f->display = 'textbox';
 	$f->search = 'bps_anyfield_search';
 
@@ -323,7 +370,7 @@ function bps_membertype_setup ($fields)
 		$f->options[$label] = $label;
 	}
 
-	$f->filters = array ('' => 'default');
+	$f->filters = array ('' => 'normal');
 	$f->display = 'selectbox';
 	$f->search = 'bps_membertype_search';
 

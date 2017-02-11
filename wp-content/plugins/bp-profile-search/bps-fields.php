@@ -87,16 +87,7 @@ function bps_validate_filter ($filter, $f)
 	if ($filter == '_min' || $filter == '_max')  $filter = 'range';
 	if ($filter == '_label')  return true;
 
-	if (!empty ($f->filters))  return isset ($f->filters[$filter]);
-
-	$filters = bps_filtersXvalidation ($f);
-	if (isset ($filters[$filter]))  return true;
-
-	list ($x, $y, $range) = apply_filters ('bps_field_validation', array ('test', 'test', 'test'), $f);
-	if ($range === true && $filter == 'range')  return true;
-	if ($range === false && $filter == '')  return true;
-
-	return false;
+	return isset ($f->filters[$filter]);
 }
 
 function bps_escaped_form_data ()
@@ -124,8 +115,7 @@ function bps_escaped_form_data ()
 		if (empty ($fields[$id]))  continue;
 
 		$f = clone $fields[$id];
-		if (isset ($meta['field_range'][$k]))  { $f->display = 'range'; $f->type = bps_displayXsearch_form ($f); }
-		if (empty ($f->display))  $f->display = bps_displayXsearch_form ($f);
+		if ($meta['field_mode'][$k] == 'range')  { $f->display = 'range'; $f->type = bps_displayXsearch_form ($f); }
 
 		$f->label = $f->name;
 		$custom_label = bps_wpml ($form, $id, 'label', $meta['field_label'][$k]);
@@ -186,7 +176,6 @@ function bps_escaped_filters_data ()
 
 		$f = clone $field;
 		if ($f->filter == 'range')  $f->display = 'range';
-		if (empty ($f->display))  $f->display = bps_displayXsearch_form ($f);
 
 		if (empty ($f->label))  $f->label = $f->name;
 

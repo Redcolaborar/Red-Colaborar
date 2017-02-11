@@ -1,11 +1,11 @@
 <?php
 /**
  *  WP-SpamShield Security
- *  File Version 1.9.9.8.8
+ *  File Version 1.9.9.9
  */
 
 if( !defined( 'ABSPATH' ) || !defined( 'WPSS_VERSION' ) ) {
-	if( !headers_sent() ) { @header($_SERVER['SERVER_PROTOCOL'].' 403 Forbidden',TRUE,403); @header('X-Robots-Tag: noindex',TRUE); }
+	if( !headers_sent() ) { @header( $_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', TRUE, 403 ); @header( 'X-Robots-Tag: noindex', TRUE ); }
 	die( 'ERROR: Direct access to this file is not allowed.' );
 }
 
@@ -422,7 +422,6 @@ class WPSS_Security {
 
 		/* Add next here... */
 
-
 	}
 
 	public static function get_raw_post_data() {
@@ -638,7 +637,7 @@ class WPSS_Security {
 				add_filter( 'json_enabled',			'__return_false', 100 );
 				add_filter( 'json_jsonp_enabled',	'__return_false', 100 );
 				/* Disable REST WP-API version 2.x */
-				if( !WP_SpamShield::is_wp_ver('4.7') ) {
+				if( !WP_SpamShield::is_wp_ver( '4.7' ) ) {
 					add_filter( 'rest_enabled',		'__return_false', 100 );
 				}
 				add_filter( 'rest_jsonp_enabled',	'__return_false', 100 );
@@ -690,10 +689,11 @@ class WPSS_Security {
 	 *  @since			1.9.8.1
 	 */
 	static public function early_admin_intercept() {
-		if( rs_wpss_is_admin_sproc() || rs_wpss_is_doing_cron() ) { return FALSE; }
+		global $HTTP_RAW_POST_DATA, $pagenow;
 		if( 'POST' !== $_SERVER['REQUEST_METHOD'] ) { return; }
-		global $HTTP_RAW_POST_DATA;
 		if( empty( $_POST ) && empty( $HTTP_RAW_POST_DATA ) ) { return; }
+		if( 'widgets.php' === $pagenow || 'customize.php' === $pagenow ) { return; }
+		if( rs_wpss_is_admin_sproc() || rs_wpss_is_doing_cron() || is_customize_preview() ) { return; }
 		if( empty( $_POST ) && !empty( $HTTP_RAW_POST_DATA ) ) { $_POST = array( 'HTTP_RAW_POST_DATA' => $HTTP_RAW_POST_DATA ); }
 		if( !empty( $_POST ) && is_array( $_POST ) ) {
 			foreach( $_POST as $k => $v ) {

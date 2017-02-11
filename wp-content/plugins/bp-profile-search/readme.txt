@@ -3,7 +3,7 @@ Contributors: dontdream
 Tags: buddypress, directory, members, users, profile, search, filter
 Requires at least: 4.2
 Tested up to: 4.7
-Stable tag: 4.7
+Stable tag: 4.7.2
 
 Custom members search forms and results pages, and custom members directories for your BuddyPress site.
 
@@ -13,11 +13,11 @@ With BP Profile Search you can build custom Members search forms, and custom Mem
 
 To build a search form, use the form settings, and select the form's search results page among the existing Members directories.
 
-To display a search form:
+To display a search form...
 
-* in its Members directory, select *Add to Directory: Yes* in the form settings
-* in a sidebar or widget area, use the widget *Profile Search*
-* in a post or page, use the shortcode **[bps_display form='id of your form' template='name of your form template']**
+* in its Members directory: select *Add to Directory = Yes* in the form settings
+* in a sidebar or widget area: use the widget *Profile Search*
+* in a post or page: use the shortcode **[bps_display form='id of your form' template='name of your form template']**
 
 To build a Members directory, use the shortcode:
 
@@ -41,6 +41,10 @@ Follow the standard plugin installation procedure.
 
 == Changelog ==
 
+= 4.7.2 =
+* Fixed bug with custom field types introduced in 4.7.1
+= 4.7.1 =
+* Modified the *Form Fields* settings UI to enable further development
 = 4.7 =
 * Added ability to sort a Members directory using a profile field
 = 4.6.3 =

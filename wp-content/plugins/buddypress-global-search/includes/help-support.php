@@ -14,7 +14,7 @@
 
 		<h3><?php _e("Unleash the power of BuddyPress.","buddypress-global-search"); ?></h3>
 
-		<p><?php _e('BuddyPress Global Search is built by the experienced developers at BuddyBoss who also offer premium <a href="http://www.buddyboss.com/themes/" target=_"blank">themes</a>, <a href="http://www.buddyboss.com/plugin/" target=_"blank">plugins</a> and <a href="http://www.buddyboss.com/solutions/" target=_"blank">packaged solutions</a> to build your social network.','buddypress-global-search'); ?></p>
+		<p><?php _e('BuddyPress Global Search is built by the experienced developers at BuddyBoss who also offer premium <a href="https://www.buddyboss.com/themes/" target=_"blank">themes</a>, <a href="https://www.buddyboss.com/plugin/" target=_"blank">plugins</a> and <a href="https://www.buddyboss.com/solutions/" target=_"blank">packaged solutions</a> to build your social network.','buddypress-global-search'); ?></p>
 
 	</div>
 </div>

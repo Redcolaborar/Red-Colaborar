@@ -1,11 +1,11 @@
 <?php
 /**
  *  WP-SpamShield Widgets
- *  File Version 1.9.9.8.7
+ *  File Version 1.9.9.9
  */
 
 if( !defined( 'ABSPATH' ) || !defined( 'WPSS_VERSION' ) ) {
-	if( !headers_sent() ) { @header($_SERVER['SERVER_PROTOCOL'].' 403 Forbidden',TRUE,403); @header('X-Robots-Tag: noindex',TRUE); }
+	if( !headers_sent() ) { @header( $_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', TRUE, 403 ); @header( 'X-Robots-Tag: noindex', TRUE ); }
 	die( 'ERROR: Direct access to this file is not allowed.' );
 }
 
@@ -17,81 +17,47 @@ class WP_SpamShield_Counter_CG extends WP_Widget {
 
 		parent::__construct(
 			'wp_spamshield_counter_css', /* Base ID */
-			__( 'WP-SpamShield Counter', 'wp-spamshield' ) .' - '. str_replace( ':', '', trim( __('Custom:') ) ), /* Name */
+			__( 'WP-SpamShield Counter', 'wp-spamshield' ) .' - '. str_replace( ':', '', trim( __( 'Custom:' ) ) ), /* Name */
 			array( 
 				'description' => __( 'Show how much spam is being blocked by WP-SpamShield.', 'wp-spamshield' ) .' '. __( 'This is a very customizable widget with options for color and style, including a custom color chooser.', 'wp-spamshield' ), /* NEEDS TRANSLATION */
 			)
 		);
-		if( is_active_widget( false, false, $this->id_base ) ) {
-			add_action( 'wp_head', array( $this, 'css' ) );
-		}
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'admin_footer-widgets.php', array( $this, 'print_scripts' ), 9999 );
-
 	}
 
-    public function enqueue_scripts( $hook_suffix ) {
-		if( 'widgets.php' !== $hook_suffix ) { return; }
-        wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_script( 'underscore' );
-	}
-
-	public function print_scripts() {
-		?>
-
-		<script>
-			( function( $ ){
-				function initColorPicker( widget ) {
-					widget.find( '.wpss-color-picker' ).wpColorPicker( {
-						change: _.throttle( function() { // For Customizer
-							$(this).trigger( 'change' );
-					}, 3000 )
-				});
-			}
-				function onFormUpdate( event, widget ) {
-					initColorPicker( widget );
-			}
-
-				$( document ).on( 'widget-added widget-updated', onFormUpdate );
-
-				$( document ).ready( function() {
-					$( '#widgets-right .widget:has(.wpss-color-picker)' ).each( function () {
-						initColorPicker( $( this ) );
-				} );
-			} );
-		}( jQuery ) );
-		</script>
-		<?php
-}
-
-	public function css() {
+	public function css( $instance, $wpss_wid_inst ) {
 		/**
 		 *  Allow users to customize.
 		 *  Load colors from options, only use individual color override is that option is selected from the drop down, otherwise use palettes
 		 */
 
-		$widget_options = get_option('spamshield_widget_settings');
-		if( empty( $widget_options ) ) { $widget_options = array( 'basecolor' => '#5A5A5A', 'style' => '1' ); }
-		extract($widget_options);
+		if( !empty( $instance['basecolor'] ) && !empty( $instance['basecolor'] )  ) {
+			$widget_options = array( 'basecolor' => $instance['basecolor'], 'style' => $instance['style'] );
+		} else {
+			$widget_options = get_option( 'spamshield_widget_options' );
+		}
+		if( empty( $widget_options ) || empty( $widget_options['basecolor'] ) || empty( $widget_options['style'] ) ) {
+			$widget_options = array( 'basecolor' => '#5A5A5A', 'style' => '1' );
+		}
+		extract( $widget_options );
 
 		/* Custom Palettes */
-		$custom_palettes = array(
-			/* 'Base Color' => array( 'BG Light','BG Dark','Line 2 Text','Hover BG Light','Hover BG Dark','Line 1 Text' ); */
-			'#5A5A5A' => array('#5A5A5A','#000000','#BEBEBE','#31332F','#2D2D2D','#FFF'), 		/* Black/Gray */
-			'#5B5853' => array('#5B5853','#262523','#C4B49D','#5B5853','#262523','#D1C1A9'),	/* Brown/Tan */
-			'#5D4022' => array('#5D4022','#000000','#E7BC6D','#5D4022','#000000','#FAF1B8'),	/* Brown/Black/Gold */
-			'#623C17' => array('#623C17','#27190E','#A5651C','#623C17','#27190E','#FBC36C'),	/* Brown/Yellow */
-			'#5B1B04' => array('#5B1B04','#350E00','#E5D8B8','#491301','#3F1101','#FFF'),		/* Dark Brown */
-			'#AB0101' => array('#AB0101','#410101','#E7BC6D','#AB0101','#410101','#FAF1B8'),	/* Red/Black/Gold */
-			'#B61C3E' => array('#B61C3E','#76242A','#E0ADA1','#B61C3E','#76242A','#EDE5CE'),	/* Cherry Red/Tan */
-			'#DB3446' => array('#DB3446','#8B142A','#E9C5B3','#D52C42','#860C27','#F6EDDB'),	/* Red */
-			'#F2922B' => array('#F8AA58','#A96119','#764115','#EB8C23','#A25c13','#F6EDDB'),	/* Orange-Yellow */
-			'#F8AA58' => array('#F8AA58','#F2922C','#A0672D','#EA9E4D','#E98B25','#F6EDDB'),	/* Orange-Yellow */
-			'#00B599' => array('#00B599','#058674','#066350','#00AE92','#00806E','#F6EDDB'),	/* Teal */
-			'#079AAD' => array('#079AAD','#005962','#C3D4D4','#007D8D','#00555E','#F6EDDB'),	/* Dark Teal Blue */
-			'#125C69' => array('#125C69','#002738','#9EB6BA','#125C69','#002738','#DCDCD2'),	/* Blue/Tan */
-			'#5386BB' => array('#5386BB','#030629','#E7BC6D','#5386BB','#030629','#FAF1B8'),	/* Blue/Black/Gold */	
+		$custom_palettes =
+			array(
+			/*	'Base Color' => array( 'BG Light','BG Dark','Line 2 Text','Hover BG Light','Hover BG Dark','Line 1 Text' ); */
+				'#5A5A5A' => array('#5A5A5A','#000000','#BEBEBE','#31332F','#2D2D2D','#FFF'), 		/* Black/Gray */
+				'#5B5853' => array('#5B5853','#262523','#C4B49D','#5B5853','#262523','#D1C1A9'),	/* Brown/Tan */
+				'#5D4022' => array('#5D4022','#000000','#E7BC6D','#5D4022','#000000','#FAF1B8'),	/* Brown/Black/Gold */
+				'#623C17' => array('#623C17','#27190E','#A5651C','#623C17','#27190E','#FBC36C'),	/* Brown/Yellow */
+				'#5B1B04' => array('#5B1B04','#350E00','#E5D8B8','#491301','#3F1101','#FFF'),		/* Dark Brown */
+				'#AB0101' => array('#AB0101','#410101','#E7BC6D','#AB0101','#410101','#FAF1B8'),	/* Red/Black/Gold */
+				'#B61C3E' => array('#B61C3E','#76242A','#E0ADA1','#B61C3E','#76242A','#EDE5CE'),	/* Cherry Red/Tan */
+				'#DB3446' => array('#DB3446','#8B142A','#E9C5B3','#D52C42','#860C27','#F6EDDB'),	/* Red */
+				'#F2922B' => array('#F8AA58','#A96119','#764115','#EB8C23','#A25c13','#F6EDDB'),	/* Orange-Yellow */
+				'#F8AA58' => array('#F8AA58','#F2922C','#A0672D','#EA9E4D','#E98B25','#F6EDDB'),	/* Orange-Yellow */
+				'#00B599' => array('#00B599','#058674','#066350','#00AE92','#00806E','#F6EDDB'),	/* Teal */
+				'#079AAD' => array('#079AAD','#005962','#C3D4D4','#007D8D','#00555E','#F6EDDB'),	/* Dark Teal Blue */
+				'#125C69' => array('#125C69','#002738','#9EB6BA','#125C69','#002738','#DCDCD2'),	/* Blue/Tan */
+				'#5386BB' => array('#5386BB','#030629','#E7BC6D','#5386BB','#030629','#FAF1B8'),	/* Blue/Black/Gold */	
 			);
 
 		$colors = $this->get_colors();
@@ -131,13 +97,13 @@ class WP_SpamShield_Counter_CG extends WP_Widget {
 ?>
 
 <style type="text/css">
-.wpssstats { width: auto; }
-.wpssstats a { background: <?php echo $color_pal[0]; ?>; background-image:-moz-linear-gradient(0% 100% 90deg,<?php echo $color_pal[1]; ?>,<?php echo $color_pal[0]; ?>); background-image:-webkit-gradient(linear,0% 0,0% 100%,from(<?php echo $color_pal[0]; ?>),to(<?php echo $color_pal[1]; ?>)); border: <?php echo $style2_bor; ?>px solid <?php echo $color_pal[1]; ?>; border-radius:<?php echo $style2_borrad; ?>px; color: <?php echo $color_pal[2]; ?> !important; cursor: pointer; display: block; font-weight: normal; height: 100%; -moz-border-radius:<?php echo $style2_borrad; ?>px; padding: 7px 0 6px; text-align: center; text-decoration: none; -webkit-border-radius:<?php echo $style2_borrad; ?>px; width: 98%; transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
-.wpssstats a:hover { text-decoration: none; background-image:-moz-linear-gradient(0% 100% 90deg,<?php echo $color_pal[3]; ?>,<?php echo $color_pal[4]; ?>); background-image:-webkit-gradient(linear,0% 0,0% 100%,from(<?php echo $color_pal[4]; ?>),to(<?php echo $color_pal[3]; ?>)); transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
-.wpssstats a:active { text-decoration: none; background-image:-moz-linear-gradient(0% 100% 90deg,<?php echo $style2_actbglt; ?>,<?php echo $style2_actbgdk; ?>); background-image:-webkit-gradient(linear,0% 0,0% 100%,from(<?php echo $style2_actbgdk; ?>),to(<?php echo $style2_actbglt; ?>)); transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
-.wpssstats .wpsscount { color: <?php echo $color_pal[5]; ?> !important; display: block; font-size: <?php echo $l1_fnt_sz; ?>px; line-height: 140%; letter-spacing: <?php echo $l1_let_spac; ?>px; padding: 0 13px; white-space: nowrap; }
-.wpssstats .wpsscount2 { color: <?php echo $color_pal[5]; ?> !important; display: block; font-size: <?php echo $l2_fnt_sz; ?>px; line-height: 120%; letter-spacing: <?php echo $l2_let_spac; ?>px; padding: 0 13px; white-space: nowrap; }
-.wpssstats .wpsscount3 { font-size: <?php echo $l3_fnt_sz; ?>px; line-height: 120%; letter-spacing: <?php echo $l3_let_spac; ?>px; padding: 0 0; white-space: nowrap; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> { width: auto; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> a { background: <?php echo $color_pal[0]; ?>; background-image:-moz-linear-gradient(0% 100% 90deg,<?php echo $color_pal[1]; ?>,<?php echo $color_pal[0]; ?>); background-image:-webkit-gradient(linear,0% 0,0% 100%,from(<?php echo $color_pal[0]; ?>),to(<?php echo $color_pal[1]; ?>)); border: <?php echo $style2_bor; ?>px solid <?php echo $color_pal[1]; ?>; border-radius:<?php echo $style2_borrad; ?>px; color: <?php echo $color_pal[2]; ?> !important; cursor: pointer; display: block; font-weight: normal; height: 100%; -moz-border-radius:<?php echo $style2_borrad; ?>px; padding: 7px 0 6px; text-align: center; text-decoration: none; -webkit-border-radius:<?php echo $style2_borrad; ?>px; width: 98%; transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> a:hover { text-decoration: none; background-image:-moz-linear-gradient(0% 100% 90deg,<?php echo $color_pal[3]; ?>,<?php echo $color_pal[4]; ?>); background-image:-webkit-gradient(linear,0% 0,0% 100%,from(<?php echo $color_pal[4]; ?>),to(<?php echo $color_pal[3]; ?>)); transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> a:active { text-decoration: none; background-image:-moz-linear-gradient(0% 100% 90deg,<?php echo $style2_actbglt; ?>,<?php echo $style2_actbgdk; ?>); background-image:-webkit-gradient(linear,0% 0,0% 100%,from(<?php echo $style2_actbgdk; ?>),to(<?php echo $style2_actbglt; ?>)); transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> .wpsscount { color: <?php echo $color_pal[5]; ?> !important; display: block; font-size: <?php echo $l1_fnt_sz; ?>px; line-height: 140%; letter-spacing: <?php echo $l1_let_spac; ?>px; padding: 0 13px; white-space: nowrap; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> .wpsscount2 { color: <?php echo $color_pal[5]; ?> !important; display: block; font-size: <?php echo $l2_fnt_sz; ?>px; line-height: 120%; letter-spacing: <?php echo $l2_let_spac; ?>px; padding: 0 13px; white-space: nowrap; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> .wpsscount3 { font-size: <?php echo $l3_fnt_sz; ?>px; line-height: 120%; letter-spacing: <?php echo $l3_let_spac; ?>px; padding: 0 0; white-space: nowrap; }
 </style>
 <?php
 		} else {
@@ -145,13 +111,13 @@ class WP_SpamShield_Counter_CG extends WP_Widget {
 ?>
 
 <style type="text/css">
-.wpssstats { width: auto; }
-.wpssstats a { background: <?php echo $color_pal[0]; ?>; border: <?php echo $style1_bor; ?>px solid <?php echo $style1_borcol; ?>; border-radius:<?php echo $style1_borrad; ?>px; color: <?php echo $color_pal[2]; ?> !important; cursor: pointer; display: block; font-weight: normal; height: 100%; -moz-border-radius:<?php echo $style1_borrad; ?>px; padding: 7px 0 6px; text-align: center; text-decoration: none; -webkit-border-radius:<?php echo $style1_borrad; ?>px; width: 98%; -moz-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_col; ?>; -webkit-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_col; ?>; box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_col; ?>; transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
-.wpssstats a:hover { background: <?php echo $style1_hovbg; ?>; border: <?php echo $style1_bor; ?>px solid <?php echo $style1_borcol; ?>; text-decoration: none; -moz-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; -webkit-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
-.wpssstats a:active { background: <?php echo $style1_actbg; ?>; border: <?php echo $style1_bor; ?>px solid <?php echo $style1_borcol; ?>; text-decoration: none; -moz-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; -webkit-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
-.wpssstats .wpsscount { color: <?php echo $color_pal[5]; ?> !important; display: block; font-size: <?php echo $l1_fnt_sz; ?>px; line-height: 140%; letter-spacing: <?php echo $l1_let_spac; ?>px; padding: 0 13px; white-space: nowrap; }
-.wpssstats .wpsscount2 { color: <?php echo $color_pal[5]; ?> !important; display: block; font-size: <?php echo $l2_fnt_sz; ?>px; line-height: 120%; letter-spacing: <?php echo $l2_let_spac; ?>px; padding: 0 13px; white-space: nowrap; }
-.wpssstats .wpsscount3 { font-size: <?php echo $l3_fnt_sz; ?>px; line-height: 120%; letter-spacing: <?php echo $l3_let_spac; ?>px; padding: 0 0px; white-space: nowrap; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> { width: auto; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> a { background: <?php echo $color_pal[0]; ?>; border: <?php echo $style1_bor; ?>px solid <?php echo $style1_borcol; ?>; border-radius:<?php echo $style1_borrad; ?>px; color: <?php echo $color_pal[2]; ?> !important; cursor: pointer; display: block; font-weight: normal; height: 100%; -moz-border-radius:<?php echo $style1_borrad; ?>px; padding: 7px 0 6px; text-align: center; text-decoration: none; -webkit-border-radius:<?php echo $style1_borrad; ?>px; width: 98%; -moz-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_col; ?>; -webkit-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_col; ?>; box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_col; ?>; transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> a:hover { background: <?php echo $style1_hovbg; ?>; border: <?php echo $style1_bor; ?>px solid <?php echo $style1_borcol; ?>; text-decoration: none; -moz-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; -webkit-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> a:active { background: <?php echo $style1_actbg; ?>; border: <?php echo $style1_bor; ?>px solid <?php echo $style1_borcol; ?>; text-decoration: none; -moz-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; -webkit-box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; box-shadow: inset 0 0 <?php echo $style1_boxshad_blurrad; ?>px <?php echo $style1_boxshad_sprdrad; ?>px <?php echo $style1_boxshad_hovcol; ?>; transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> .wpsscount { color: <?php echo $color_pal[5]; ?> !important; display: block; font-size: <?php echo $l1_fnt_sz; ?>px; line-height: 140%; letter-spacing: <?php echo $l1_let_spac; ?>px; padding: 0 13px; white-space: nowrap; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> .wpsscount2 { color: <?php echo $color_pal[5]; ?> !important; display: block; font-size: <?php echo $l2_fnt_sz; ?>px; line-height: 120%; letter-spacing: <?php echo $l2_let_spac; ?>px; padding: 0 13px; white-space: nowrap; }
+.wpssstats_<?php echo $wpss_wid_inst; ?> .wpsscount3 { font-size: <?php echo $l3_fnt_sz; ?>px; line-height: 120%; letter-spacing: <?php echo $l3_let_spac; ?>px; padding: 0 0px; white-space: nowrap; }
 </style>
 
 <?php
@@ -160,7 +126,7 @@ class WP_SpamShield_Counter_CG extends WP_Widget {
 }
 
 	private function is_valid_hex_color( $color ) {
-		return ( WP_SpamShield::preg_match("~^#([a-f0-9]{6}|[a-f0-9]{3})$~i", $color) ) ? TRUE : FALSE;
+		return ( WP_SpamShield::preg_match( "~^#([a-f0-9]{6}|[a-f0-9]{3})$~i", $color ) ) ? TRUE : FALSE;
 	}
 
 	private function is_light_color( $hex ) {
@@ -248,17 +214,18 @@ class WP_SpamShield_Counter_CG extends WP_Widget {
 		return $RGB;
 	}
 
-	private function fixhex2($num) {
+	private function fixhex2( $num ) {
 		$padnum = '0'.$num;
-		return (rs_wpss_strlen($num) < 2) ? $padnum : $num;
+		return ( rs_wpss_strlen( $num ) < 2 ) ? $padnum : $num;
 	}
 
 	private function get_colors() {
-		$colors = array( 
-			/* Custom */
-			'#5A5A5A', '#5B5853', '#5D4022', '#623C17', '#5B1B04', '#AB0101', '#B61C3E', '#DB3446', '#F2922B', '#F8AA58', '#00B599', '#079AAD', '#125C69', '#5386BB', 
-			/* Auto-generated */
-			'#215DA8', '#2183A8', '#38A821', '#56A821', '#86A821', '#A3A821', '#A88D21', '#A87021', '#A85221', '#A83A21', '#A82121', '#A82156', '#A82186', '#A821A8', '#3121A8', 
+		$colors =
+			array( 
+				/* Custom */
+				'#5A5A5A', '#5B5853', '#5D4022', '#623C17', '#5B1B04', '#AB0101', '#B61C3E', '#DB3446', '#F2922B', '#F8AA58', '#00B599', '#079AAD', '#125C69', '#5386BB', 
+				/* Auto-generated */
+				'#215DA8', '#2183A8', '#38A821', '#56A821', '#86A821', '#A3A821', '#A88D21', '#A87021', '#A85221', '#A83A21', '#A82121', '#A82156', '#A82186', '#A821A8', '#3121A8', 
 			);
 		return $colors;
 	}
@@ -295,22 +262,20 @@ class WP_SpamShield_Counter_CG extends WP_Widget {
 	}
 
 	public function form( $instance ) {
-		$color_options = $this->get_colors();
-		$color_options['user_color'] = rs_wpss_casetrans( 'ucwords', __('Custom color') );
-		$title = !empty( $instance['title'] ) ? sanitize_text_field( $instance['title'] ) : rs_wpss_blocked_txt('UCW');
-		$color = isset( $instance['color'] ) ? sanitize_text_field( $instance['color'] ) : '0';
-		$style = isset( $instance['style'] ) ? sanitize_text_field( $instance['style'] ) : '1';
-		$user_color = ( !empty( $instance['user_color'] ) && $color == 'user_color' ) ? sanitize_text_field( $instance['user_color'] ) : $color_options[$color];
-		$style_text = __('Style');
-		$style_options = array( '1' => $style_text.' 1', '2' => $style_text.' 2' );
+		$color_options					= $this->get_colors();
+		$title							= !empty( $instance['title'] ) ? sanitize_text_field( $instance['title'] ) : rs_wpss_blocked_txt( 'UCW' );
+		$color							= isset( $instance['color'] ) ? sanitize_text_field( $instance['color'] ) : '0';
+		$style							= isset( $instance['style'] ) ? sanitize_text_field( $instance['style'] ) : '1';
+		$style_text						= __( 'Style' );
+		$style_options					= array( '1' => $style_text.' 1', '2' => $style_text.' 2' );
 ?>
 		<p>
-		<label for="<?php echo $this->get_field_id('title' ); ?>"><?php _e('Title:'); ?></label>
-		<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
+		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 		<p>
-		<label for="<?php echo $this->get_field_id('style'); ?>"><?php _e('Style'); ?>:</label>
-		<select class="widefat" id="<?php echo $this->get_field_id('style'); ?>" name="<?php echo $this->get_field_name( 'style' ); ?>" >
+		<label for="<?php echo $this->get_field_id( 'style' ); ?>"><?php _e( 'Style' ); ?>:</label>
+		<select class="widefat" id="<?php echo $this->get_field_id( 'style' ); ?>" name="<?php echo $this->get_field_name( 'style' ); ?>" >
 <?php
 			foreach ( $style_options as $i => $option ) {
 				$selected = $style == $i ? ' selected="selected"' : '';
@@ -321,15 +286,15 @@ class WP_SpamShield_Counter_CG extends WP_Widget {
 		</select>
 		</p>
 		<p>
-		<label for="<?php echo $this->get_field_id('color'); ?>"><?php _e('Select Color'); ?>:</label>
-		<select class="widefat" id="<?php echo $this->get_field_id('color'); ?>" name="<?php echo $this->get_field_name('color'); ?>" >
+		<label for="<?php echo $this->get_field_id( 'color' ); ?>"><?php _e( 'Select Color' ); ?>:</label>
+		<select class="widefat" id="<?php echo $this->get_field_id( 'color' ); ?>" name="<?php echo $this->get_field_name( 'color' ); ?>" >
 <?php
 		$i = 0;
 		$textcolor = '#FFF';
 		foreach ( $color_options as $k => $option ) {
 			++$i; $selected = $color == $k ? 'selected="selected"' : '';
-			$textcolor = ( $i > 1 && $k == 'user_color' ) ? '#000' : '#FFF';
-			echo '<option value="'.$k.'" style="background-color:'.$option.';color:'.$textcolor.';" '.$selected.'>'. $i.' - '. $option .'</option>';
+			$textcolor = '#FFF';
+			echo '<option value="'.$k.'" style="background-color:'.$option.';color:'.$textcolor.';" '.$selected.'>'. $i.' - '. $option .'</option>'."\n"."\t"."\t";
 		}
 ?>
 
@@ -337,35 +302,17 @@ class WP_SpamShield_Counter_CG extends WP_Widget {
 		<?php _e( 'Once you select a base color, the plugin will use this to generate a color palette for your new widget.', 'wp-spamshield' ); ?>
 
 		</p>
-		<p>
-		<?php printf( __( 'If you\'d prefer to use your own color, for example if you\'d like to match things more closely with your website colors, select the "%1$s" option from the menu above, and then choose a base color below.', 'wp-spamshield' ), $color_options['user_color'] ); ?>
-
-		</p>
-		<p>
-		<label for="<?php echo $this->get_field_id('user_color' ); ?>"><?php echo $color_options['user_color']; ?>:</label><br />
-		<input class="wpss-color-picker" type="text" id="<?php echo $this->get_field_id( 'user_color' ); ?>" name="<?php echo $this->get_field_name( 'user_color' ); ?>" value="<?php echo esc_attr($user_color); ?>" />
-		</p>
-		<p>
-		<?php _e( 'You pick the color, and the plugin will make sure your new widget looks great.', 'wp-spamshield' ); ?>
-
-		</p>
+		
 <?php
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
-		$color_options = $this->get_colors();
-		$color_options['user_color'] = rs_wpss_casetrans( 'ucwords', __('Custom color') );
-		$instance['color'] = isset( $new_instance['color'] ) ? sanitize_text_field( $new_instance['color'] ) : '0';
-		$instance['style'] = isset( $new_instance['style'] ) ? sanitize_text_field( $new_instance['style'] ) : '1';
-		$instance['title'] = !empty( $new_instance['title'] ) ? sanitize_text_field( $new_instance['title'] ) : rs_wpss_blocked_txt('UCW');
-		$instance['user_color'] = !empty( $new_instance['user_color'] ) ? sanitize_text_field( $new_instance['user_color'] ) : '#5A5A5A';
-		$basecolor = $color_options[$instance['color']];
-		if( $instance['color'] == 'user_color' ) {  $basecolor = $instance['user_color']; }
-		$basecolor = rs_wpss_casetrans( 'upper', $basecolor );
-		$style = $instance['style'];
-		$widget_settings = compact('basecolor','style');
-		update_option( 'spamshield_widget_settings', $widget_settings );
+		$instance						= $old_instance;
+		$color_options					= $this->get_colors();
+		$instance['color']				= isset( $new_instance['color'] ) ? sanitize_text_field( $new_instance['color'] ) : '0';
+		$instance['style']				= isset( $new_instance['style'] ) ? sanitize_text_field( $new_instance['style'] ) : '1';
+		$instance['title']				= !empty( $new_instance['title'] ) ? sanitize_text_field( $new_instance['title'] ) : rs_wpss_blocked_txt('UCW');
+		$instance['basecolor']			= $color_options[$instance['color']];
 		return $instance;
 	}
 
@@ -374,11 +321,17 @@ class WP_SpamShield_Counter_CG extends WP_Widget {
 		$count	= rs_wpss_number_format( rs_wpss_count() );
 		/* $count	= rs_wpss_number_format( 1000000 ); // FOR TESTING & SCREEN SHOTS ONLY */
 		$byline	= str_replace( WPSS_PLUGIN_NAME, '<strong>WP-SpamShield</strong>', rs_wpss_casetrans( 'lower', WPSS_Promo_Links::promo_text(1) ) );
+		global $wpss_wid_inst;
+		if( !isset( $wpss_wid_inst ) ) { $wpss_wid_inst = 0; }
+		++$wpss_wid_inst;
+		
 		echo $args['before_widget'];
 		echo $args['before_title'] . $title . $args['after_title'];
+		
+		$this->css( $instance, $wpss_wid_inst );
 ?>
 
-	<div class="wpssstats">
+	<div class="wpssstats_<?php echo $wpss_wid_inst; ?>">
 		<a href="<?php echo WPSS_HOME_URL; ?>" target="_blank" rel="external" title=""><?php printf( __( '<strong class="wpsscount">%1$s</strong> <strong class="wpsscount2">%2$s</strong> <span class="wpsscount3">%3$s</span>', 'wp-spamshield' ), $count, rs_wpss_blocked_txt(), $byline ); ?></a>
 	</div>
 <?php
@@ -404,8 +357,8 @@ class WP_SpamShield_Counter_LG extends WP_Widget {
 	public function form( $instance ) {
 		$title		= !empty( $instance['title'] ) ? sanitize_text_field( $instance['title'] ) : rs_wpss_blocked_txt('UCW');
 		$style		= !empty( $instance['style'] ) ? sanitize_text_field( $instance['style'] ) : '6';
-		$lg_txt		= __('Large'); $sm_txt = __('Small', WPSS_PLUGIN_NAME); $ctr_txt = __( 'Counters', 'wp-spamshield' );
-		$blk_txt	= __('Black'); $red_txt = __('Red'); $lbl_txt = __('Light Blue', WPSS_PLUGIN_NAME); $dbl_txt = __('Blue'); $grn_txt = __('Green');
+		$lg_txt		= __( 'Large' ); $sm_txt = __( 'Small', 'wp-spamshield' ); $ctr_txt = __( 'Counters', 'wp-spamshield' );
+		$blk_txt	= __( 'Black' ); $red_txt = __( 'Red' ); $lbl_txt = __('Light Blue', WPSS_PLUGIN_NAME); $dbl_txt = __('Blue'); $grn_txt = __('Green');
 		$options	= array('1'=>$lg_txt.' - '.$blk_txt, '2'=>$lg_txt.' - '.$lbl_txt, '3'=>$lg_txt.' - '.$red_txt, '4'=>$lg_txt.' - '.$dbl_txt, '5'=>$lg_txt.' - '.$grn_txt, '6'=>$sm_txt.' - '.$blk_txt, '7'=>$sm_txt.' - '.$lbl_txt, '8'=>$sm_txt.' - '.$red_txt, '9'=>$sm_txt.' - '.$dbl_txt, '10'=>$sm_txt.' - '.$grn_txt, );
 ?>
 		<p>
@@ -456,7 +409,7 @@ class WP_SpamShield_Counter_LG extends WP_Widget {
 
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
-		$instance['title'] = !empty( $new_instance['title'] ) ? sanitize_text_field( $new_instance['title'] ) : rs_wpss_blocked_txt('UCW');
+		$instance['title'] = !empty( $new_instance['title'] ) ? sanitize_text_field( $new_instance['title'] ) : rs_wpss_blocked_txt( 'UCW' );
 		$instance['style'] = !empty( $new_instance['style'] ) ? sanitize_text_field( $new_instance['style'] ) : '6';
 		return $instance;
 	}

@@ -1,10 +1,10 @@
 === BuddyPress Global Search ===
 Contributors: buddyboss
-Donate link: http://www.buddyboss.com/donate/
+Donate link: https://www.buddyboss.com/donate/
 Tags: buddypress, search, social networking, activity, profiles, messaging, friends, groups, forums, notifications, settings, social, community, networks, networking
 Requires at least: 3.8
-Tested up to: 4.7.1
-Stable tag: 1.1.6
+Tested up to: 4.7.2
+Stable tag: 1.1.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,7 +16,7 @@ Let your members search through every BuddyPress component, along with pages and
 
 Just activate the plugin, and every WordPress search input will instantly search your entire BuddyPress site, returning the results in a native tabbed interface right on your default Search Results template, automatically styled by BuddyPress to fit with your theme.
 
-BuddyPress Global Search is built by the experienced developers at BuddyBoss who also offer premium [BuddyPress themes](http://www.buddyboss.com/themes/ "BuddyPress themes from BuddyBoss") and [plugins](http://www.buddyboss.com/plugins/ "BuddyPress plugins from BuddyBoss") to build your social network.
+BuddyPress Global Search is built by the experienced developers at BuddyBoss who also offer premium [BuddyPress themes](https://www.buddyboss.com/themes/ "BuddyPress themes from BuddyBoss") and [plugins](https://www.buddyboss.com/plugins/ "BuddyPress plugins from BuddyBoss") to build your social network.
 
 == Installation ==
 
@@ -41,7 +41,7 @@ BuddyPress Global Search is built by the experienced developers at BuddyBoss who
 
 = Where can I find documentation and tutorials? =
 
-For help setting up and configuring any BuddyBoss plugin please refer to our [tutorials](http://www.buddyboss.com/tutorials/).
+For help setting up and configuring any BuddyBoss plugin please refer to our [tutorials](https://www.buddyboss.com/tutorials/).
 
 = Does this plugin require BuddyPress? =
 
@@ -61,7 +61,7 @@ Yes, as well as translations for English, German, and Swedish
 
 = Where can I request customizations? =
 
-For BuddyPress customizations, submit your request at [BuddyBoss](http://www.buddyboss.com/buddypress-developers/).
+For BuddyPress customizations, submit your request at [BuddyBoss](https://www.buddyboss.com/buddypress-developers/).
 
 == Screenshots ==
 
@@ -70,9 +70,13 @@ For BuddyPress customizations, submit your request at [BuddyBoss](http://www.bud
 
 == Changelog ==
 
+= 1.1.7 =
+* New - Compatibility with Groups location search when using [Location Autocomplete for BuddyPress](https://www.buddyboss.com/product/locations-for-buddypress/)
+* Fix - Optimized member profile search query
+
 = 1.1.6 =
 * New - Ability to search multiple profile fields at once (requires re-saving profiles)
-* New - Better compatibility with [Location Autocomplete for BuddyPress](http://www.buddyboss.com/product/locations-for-buddypress/)
+* New - Better compatibility with [Location Autocomplete for BuddyPress](https://www.buddyboss.com/product/locations-for-buddypress/)
 
 = 1.1.5 =
 * Fix - Sanitize user input

@@ -169,7 +169,7 @@ if (!class_exists('BBoss_Global_Search_Members')):
                             
                             if (count($split_search_term) > 1 ) {
                         
-                                $clause_search_string_table = "u.id IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE ";
+                                $clause_search_string_table = "u.id IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = 'bbgs_search_string' AND ";
                                 
                                 foreach ( $split_search_term as $k => $sterm ) {
                                     

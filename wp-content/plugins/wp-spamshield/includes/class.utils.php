@@ -1,7 +1,7 @@
 <?php
 /**
  *  WP-SpamShield Utilities
- *  File Version 1.9.9.8.9
+ *  File Version 1.9.9.9
  */
 
 if( !defined( 'ABSPATH' ) || !defined( 'WPSS_VERSION' ) ) {
@@ -247,13 +247,13 @@ class WPSS_Utils {
 		$a = $blocks[0]; $b = $blocks[1]; $c = $blocks[2]; $d = $blocks[3];
 		return
 		(
-			WP_SpamShield::preg_match( "~(^|[a-z]?[\-\.][a-z]?)".$a."[a-z]?[\-\.][a-z]?~i", $str )
+			WP_SpamShield::preg_match( "~(^|[a-z]?[x\.\-][a-z]?)".$a."[a-z]?[x\.\-][a-z]?~i", $str )
 			&&
-			WP_SpamShield::preg_match( "~(^|[a-z]?[\-\.][a-z]?)".$b."[a-z]?[\-\.][a-z]?~i", $str )
+			WP_SpamShield::preg_match( "~(^|[a-z]?[x\.\-][a-z]?)".$b."[a-z]?[x\.\-][a-z]?~i", $str )
 			&&
-			WP_SpamShield::preg_match( "~(^|[a-z]?[\-\.][a-z]?)".$c."[a-z]?[\-\.][a-z]?~i", $str )
+			WP_SpamShield::preg_match( "~(^|[a-z]?[x\.\-][a-z]?)".$c."[a-z]?[x\.\-][a-z]?~i", $str )
 			&&
-			WP_SpamShield::preg_match( "~(^|[a-z]?[\-\.][a-z]?)".$d."[a-z]?[\-\.][a-z]?~i", $str )
+			WP_SpamShield::preg_match( "~(^|[a-z]?[x\.\-][a-z]?)".$d."[a-z]?[x\.\-][a-z]?~i", $str )
 		) ? TRUE : FALSE;
 	}
 
@@ -572,8 +572,8 @@ class WPSS_Utils {
 		);
 		/* RegEx - Nameservers, Internal Server Names, or RevDNS of Website IP - Test $site_ns, $server_hostname, & $server_rev_dns */
 		$web_hosts_rg = array(
-			'1and1 Internet'			=> array( 'slug' => '1and1', 'webhost' => '1and1 Internet', 'domainsrgx' => "~(^|\.)(ns[0-9]*[\.\-])?(1and1([\.\-]ui)?(\-dns)?)(\.[a-z]{2,3}){1,2}[a-z]*$~i", ), 
-			'Amazon Web Services (AWS)'	=> array( 'slug' => 'amazon-aws', 'webhost' => 'Amazon Web Services (AWS)', 'domainsrgx' => "~(^|\.)ns[\.\-][0-9]+\.awsdns\-[0-9]+(\.[a-z]{2,3}){1,2}[a-z]*$~i", ), 
+			'1and1 Internet'			=> array( 'slug' => '1and1', 'webhost' => '1and1 Internet', 'domainsrgx' => "~(^|\.)(ns[0-9]*[x\.\-])?(1and1([x\.\-]ui)?(\-dns)?)(\.[a-z]{2,3}){1,2}[a-z]*$~i", ), 
+			'Amazon Web Services (AWS)'	=> array( 'slug' => 'amazon-aws', 'webhost' => 'Amazon Web Services (AWS)', 'domainsrgx' => "~(^|\.)ns[x\.\-][0-9]+\.awsdns\-[0-9]+(\.[a-z]{2,3}){1,2}[a-z]*$~i", ), 
 			'Cloudways'					=> array( 'slug' => 'cloudways', 'webhost' => 'Cloudways', 'domainsrgx' => "~(^|\.)cloudways(apps)?(\.[a-z]{2,3}){1,2}[a-z]*$~i", ), 
 			'HostGator'					=> array( 'slug' => 'hostgator', 'webhost' => 'HostGator', 'domainsrgx' => "~(^|\.)(hostgator|websitewelcome)\.com~i", ), 
 			'Hetzner'					=> array( 'slug' => 'hetzner', 'webhost' => 'Hetzner', 'domainsrgx' => "~(^|\.)(hetzner\.|host\-h\.net|your\-server\.de)~i", ), 

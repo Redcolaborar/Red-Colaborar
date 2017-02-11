@@ -1,11 +1,11 @@
 <?php 
 /**
  * Plugin Name: BuddyPress Global Search
- * Plugin URI:  http://www.buddyboss.com/product/buddypress-global-search/
+ * Plugin URI:  https://www.buddyboss.com/product/buddypress-global-search/
  * Description: Ajax powered global BuddyPress search
  * Author:      BuddyBoss
  * Author URI:  http://buddyboss.com
- * Version:     1.1.6
+ * Version:     1.1.7
  */
 // Exit if accessed directly
 if (!defined('ABSPATH'))
@@ -18,7 +18,7 @@ if (!defined('ABSPATH'))
  */
 // Codebase version
 if (!defined('BUDDYBOSS_GLOBAL_SEARCH_PLUGIN_VERSION')) {
-	define('BUDDYBOSS_GLOBAL_SEARCH_PLUGIN_VERSION', '1.1.6');
+	define('BUDDYBOSS_GLOBAL_SEARCH_PLUGIN_VERSION', '1.1.7');
 }
 
 // Database version
