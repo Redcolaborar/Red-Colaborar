@@ -12,6 +12,8 @@ class kleoImport {
 	private static $pages_data  = array();
 	public $error	            = '';
 	public $data_imported	    = false;
+	private $url_remap          = array();
+	private $import_domain      = '';
 
 	/** ---------------------------------------------------------------------------
 	 * Constructor
@@ -341,6 +343,92 @@ class kleoImport {
 		ob_start();
 		$import->import( $xml );	
 		ob_end_clean();
+		
+		$this->vc_replace_img_url_with_id();
+		$this->delete_import_data();
+	}
+
+
+	private function vc_replace_img_url_with_id() {
+		$args = array(
+			'post_type' => array( 'post', 'page', 'portfolio' ),
+			'meta_key'  => 'sq_import',
+		);
+		$query = new WP_Query( $args );
+		$posts = $query->posts;
+
+		foreach ( $posts as $post ) {
+
+			$this->attempt_img_url_id_replace( $post );
+
+		}
+		/* Restore original Post Data */
+		wp_reset_postdata();
+
+		$this->replace_attachment_urls();
+
+	}
+
+	function delete_import_data() {
+		delete_post_meta_by_key( 'sq_img_data' );
+		delete_post_meta_by_key( 'sq_domain' );
+	}
+
+	function attempt_img_url_id_replace( $post ) {
+		if ( preg_match_all( '/image=.http[a-zA-Z0-9_.:\/-]*./i', $post->post_content, $matches ) ) {
+
+			/* set import domain */
+			if ( get_post_meta( $post->ID, 'sq_domain', true ) ) {
+				$this->import_domain = get_post_meta( $post->ID, 'sq_domain', true );
+			}
+
+			//print_r( $matches[0] );
+			foreach ( $matches[0] as $match ) {
+
+				$img_url = str_replace( array( 'image="', '"' ), '', $match );
+				$old_domain_url = $img_url;
+
+				if ( $this->import_domain != '' && strpos( $img_url, $this->import_domain ) !== false ) {
+					$img_url = str_replace( trailingslashit( $this->import_domain ), trailingslashit( site_url() ), $img_url );
+				}
+
+				$img_id = attachment_url_to_postid( $img_url );
+				if ( $img_id ) {
+					$this->url_remap[ 'image="' . $old_domain_url . '"' ] = 'image="' . $img_id . '"';
+				}
+
+				if ( $this->import_domain != '' ) {
+					$old_domain = trailingslashit( $this->import_domain );
+					$new_domain = trailingslashit( site_url() );
+					$this->url_remap[ $old_domain ] = $new_domain ;
+				}
+
+			}
+
+			//reset import domain to be set by next post
+			$this->import_domain = '';
+
+			return true;
+		}
+		return false;
+	}
+
+	function replace_attachment_urls() {
+		global $wpdb;
+
+		if ( empty( $this->url_remap ) ) {
+			return;
+		}
+
+		// make sure we do the longest urls first, in case one is a substring of another
+		uksort( $this->url_remap, array( $this, 'cmpr_strlen' ) );
+
+		foreach ( $this->url_remap as $from_url => $to_url ) {
+			// remap urls in post_content
+			$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, %s, %s)", $from_url, $to_url ) );
+			// remap enclosure urls
+			$result = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->postmeta} SET meta_value = REPLACE(meta_value, %s, %s) WHERE meta_key='enclosure'", $from_url, $to_url ) );
+		}
 	}
 
 	

@@ -1,5 +1,5 @@
 /*!
- * Customizr v3.5.1
+ * Customizr v3.5.2
  *
  * Licensed under the GNU General Public License v2 or later
  * http://www.gnu.org/licenses/gpl-2.0.html
@@ -8731,12 +8731,16 @@ li#wp-admin-bar-tc-customizr-help a {
     height: 100% !important;
     overflow: auto !important;
   }
-  /* btn-toggle-nav edge case positioning*/
+  /* btn-toggle-nav edge case positioning */
   /* when on the right */
-  body:not(.sticky-enabled) .tc-header .btn-toggle-nav.pull-right {
+  body .tc-header .btn-toggle-nav.pull-right {
     clear: both;
   }
-  /* if only socials + btn-nav in navbar (no tagline), do not drop on a new line */
+  /* do not drop on a new line if:
+  - only socials + btn-nav in navbar (no tagline), do not drop on a new line when sticky disabled 
+  - tagline-off (socials are never displayed as of now) when sticky enabled
+  */
+  .sticky-enabled .tc-tagline-off .btn-toggle-nav.pull-right,
   body:not(.sticky-enabled) .tc-header .social-block + .btn-toggle-nav.pull-right {
     clear: none;
   }

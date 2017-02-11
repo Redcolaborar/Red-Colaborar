@@ -6609,6 +6609,9 @@ a .link-icon {
 .top-menu li.bp-register-nav a:before {
   content: "\e82b";
 }
+.top-menu ul.dropdown-menu.pull-left ul.dropdown-menu.sub-menu {
+  left: 100%;
+}
 /* Nav Menu */
 #header .is-sticky .kleo-main-header {
   animation-fill-mode: both;
@@ -15040,7 +15043,7 @@ html:not(.kleo-transform) .offcanvas-sidebar {
 .divided-items:after,
 .divided-items .one-by-one-animated:before,
 .divided-items .one-by-one-animated:after {
-  display: table;
+  display: block;
   content: " ";
 }
 .divided-items:after,
@@ -20080,4 +20083,3 @@ body[class*="rtm-3.7"] .rtmedia-activity-container .mejs-time-rail {
 .icon-toggle-on:before {
   content: '\f205';
 }
-/*# sourceMappingURL=combined-and-fonts.css.map */

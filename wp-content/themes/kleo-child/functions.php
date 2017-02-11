@@ -15,19 +15,19 @@
 
 /* Top menu */
 function object_to_array($object) {
- if (is_object($object)) {
-  return array_map(__FUNCTION__, get_object_vars($object));
- } else if (is_array($object)) {
-  return array_map(__FUNCTION__, $object);
- } else {
-  return $object;
- }
+    if (is_object($object)) {
+        return array_map(__FUNCTION__, get_object_vars($object));
+    } else if (is_array($object)) {
+        return array_map(__FUNCTION__, $object);
+    } else {
+        return $object;
+    }
 }
 
 add_action( 'admin_bar_menu', 'remove_wp_logo', 999 );
 
 function remove_wp_logo( $wp_admin_bar ) {
-    //if (get_current_user_id() == 1) {
+    if (!current_user_can('administrator')) {
         $top_secondary = object_to_array($wp_admin_bar->get_node( 'top-secondary' ));
 
         $my_account = object_to_array($wp_admin_bar->get_node( 'my-account' ));
@@ -68,7 +68,16 @@ function remove_wp_logo( $wp_admin_bar ) {
 
         /* Delete all current menu options */
         $all_nodes = $wp_admin_bar->get_nodes();
-     
+
+        /* Get all notifications */
+        $notifications = object_to_array($wp_admin_bar->get_node( 'bp-notifications' ));
+        $inner_notifications = array();
+        foreach ($all_nodes as $key => $node) {
+            if ($node->parent == 'bp-notifications') {
+                $inner_notifications[$key] = object_to_array($wp_admin_bar->get_node( $key ));
+            }
+        }
+
         foreach ($all_nodes as $node) {
             $wp_admin_bar->remove_node( $node->id );
         }
@@ -152,12 +161,13 @@ function remove_wp_logo( $wp_admin_bar ) {
         $my_account_preguntas_3['href'] = bp_core_get_user_domain( get_current_user_id() ).'answers/';
         $wp_admin_bar->add_node( $my_account_preguntas_3 );
 
-        // Configuracion
-        $settings['parent'] = 'my-account';
-        $wp_admin_bar->add_node( $settings );
-        $wp_admin_bar->add_node( $settings_general );
-        $wp_admin_bar->add_node( $settings_notifications );
-        $wp_admin_bar->add_node( $settings_profile );
+        // Notificaciones
+        //$notifications['parent'] = 'my-account';
+        $notifications['title'] = 'Notificaciones '.$notifications['title'];
+        $wp_admin_bar->add_node( $notifications );
+        foreach ($inner_notifications as $key => $notif_single) {
+            $wp_admin_bar->add_node( $notif_single );
+        }
 
         // Reportar problema
         $my_account_rep_prob = $my_account_crear_cursos;
@@ -166,9 +176,36 @@ function remove_wp_logo( $wp_admin_bar ) {
         $my_account_rep_prob['title'] = 'Reportar Problema';
         $my_account_rep_prob['href'] = 'http://redcolaborar.org/foros/foro/problemas-y-sugerencias/';
         $wp_admin_bar->add_node( $my_account_rep_prob );
-    //}
+
+        // Configuracion
+        $settings['parent'] = 'my-account';
+        $wp_admin_bar->add_node( $settings );
+        $wp_admin_bar->add_node( $settings_general );
+        $wp_admin_bar->add_node( $settings_notifications );
+        $wp_admin_bar->add_node( $settings_profile );
+
+    }
 }
 
+
+
+function get_excerpt_by_id($post_id){
+    $the_post = get_post($post_id); //Gets post ID
+    $the_excerpt = $the_post->post_content; //Gets post_content to be used as a basis for the excerpt
+    $excerpt_length = 105; //Sets excerpt length by word count
+    $the_excerpt = strip_tags(strip_shortcodes($the_excerpt)); //Strips tags and images
+    $words = explode(' ', $the_excerpt, $excerpt_length + 1);
+
+    if(count($words) > $excerpt_length) :
+        array_pop($words);
+        array_push($words, '…');
+        $the_excerpt = implode(' ', $words);
+    endif;
+
+    $the_excerpt = '<p>' . $the_excerpt . '</p>';
+
+    return $the_excerpt;
+}
 
 /* pulling Parent Theme styles */
 
@@ -196,14 +233,13 @@ add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
 add_filter( 'wp_nav_menu_items', 'nav_sign_links');
 function nav_sign_links($menu) {
     if (is_user_logged_in()){
-         $outlink = '<li><a href="http://redcolaborar.org/wp-login.php?action=logout"></a></li>';
-         $menu = $menu . $outlink;
-         return $menu;
+        $outlink = '<li><a href="http://redcolaborar.org/wp-login.php?action=logout"></a></li>';
+        $menu = $menu . $outlink;
+        return $menu;
     } else {
-
-         $signlinks = '<li><a href="http://redcolaborar.org/wp-login.php?">Ingresar</a></li><li><a href="http://redcolaborar.org/wp-login.php?action=wordpress_social_authenticate&mode=login&provider=Facebook"><img alt="Facebook" title="Ingresar con Facebook" src="http://redcolaborar.org/wp-content/plugins/wordpress-social-login/assets/img/32x32/wpzoom/facebook.png"></a></li><li><a href="http://redcolaborar.org/wp-login.php?action=wordpress_social_authenticate&mode=login&provider=LinkedIn"><img alt="LinkedIn" title="Ingresar con LinkedIn" src="http://redcolaborar.org/wp-content/plugins/wordpress-social-login/assets/img/32x32/wpzoom/linkedin.png"></a></li>';
-         $menu = $menu . $signlinks;
-         return $menu;
+        $signlinks = '<li><a href="http://redcolaborar.org/wp-login.php?">Ingresar</a></li><li><a href="http://redcolaborar.org/wp-login.php?action=wordpress_social_authenticate&mode=login&provider=Facebook"><img alt="Facebook" title="Ingresar con Facebook" src="http://redcolaborar.org/wp-content/plugins/wordpress-social-login/assets/img/32x32/wpzoom/facebook.png"></a></li><li><a href="http://redcolaborar.org/wp-login.php?action=wordpress_social_authenticate&mode=login&provider=LinkedIn"><img alt="LinkedIn" title="Ingresar con LinkedIn" src="http://redcolaborar.org/wp-content/plugins/wordpress-social-login/assets/img/32x32/wpzoom/linkedin.png"></a></li>';
+        $menu = $menu . $signlinks;
+        return $menu;
     }
 }
 
@@ -290,15 +326,15 @@ add_filter( 'ajax_query_attachments_args', 'show_current_user_attachments', 10, 
 
 function show_current_user_attachments( $query = array() ) {
     
-$user_id = get_current_user_id();
-    
-if( $user_id ) {
+    $user_id = get_current_user_id();
         
-$query['author'] = $user_id;
-    
-}
-    
-return $query;
+    if( $user_id ) {
+            
+        $query['author'] = $user_id;
+            
+    }
+        
+    return $query;
 
 }
 
@@ -309,13 +345,13 @@ return $query;
 
 function bp_disable_kses_notices() {
 	
-if( current_user_can('manage_options') ) {
-		
-remove_filter( 'bp_get_message_notice_text', 'wp_filter_kses', 1 );
-		
-remove_filter( 'messages_notice_message_before_save', 'wp_filter_kses', 1 );
-	
-}
+    if( current_user_can('manage_options') ) {
+    		
+        remove_filter( 'bp_get_message_notice_text', 'wp_filter_kses', 1 );
+        		
+        remove_filter( 'messages_notice_message_before_save', 'wp_filter_kses', 1 );
+    	
+    }
 
 }
 
@@ -329,11 +365,11 @@ add_action('init','bp_disable_kses_notices');
 
 
 function bbp_enable_visual_editor( $args = array() ) {
-    
-$args['tinymce'] = true;
+        
+    $args['tinymce'] = true;
     $args['quicktags'] = false;
-    
-return $args;
+        
+    return $args;
 
 }
 
@@ -361,15 +397,11 @@ add_filter ('bbp_get_title_max_length','change_title');
 
 function change_title ($default) {
 
-$default=160 ;
+    $default=160 ;
 
-return $default ;
+    return $default ;
 
 }
 
 
-
-
-
-?>
 

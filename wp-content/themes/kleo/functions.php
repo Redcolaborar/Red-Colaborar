@@ -1070,7 +1070,7 @@ if ( ! function_exists( 'kleo_frontend_files' ) ) :
 		}
 
 		//head scripts
-		wp_register_script( 'kleo-init', get_template_directory_uri() . '/assets/js/init.js', array(), $version, false );
+		//wp_register_script( 'kleo-init', get_template_directory_uri() . '/assets/js/init.js', array(), $version, false );
 		wp_register_script( 'modernizr', get_template_directory_uri() . '/assets/js/modernizr.custom.46504.js', array(), $version, false );
 
 		/* Footer scripts */
@@ -1101,7 +1101,7 @@ if ( ! function_exists( 'kleo_frontend_files' ) ) :
 		wp_register_script( 'bootstrap-multiselect', get_template_directory_uri() . '/assets/js/plugins/bootstrap-multiselect.js', array( 'jquery' ), $version, true );
 
 		//enqueue them
-		wp_enqueue_script( 'kleo-init' );
+		//wp_enqueue_script( 'kleo-init' );
 		wp_enqueue_script( 'modernizr' );
 
 		if ( sq_option( 'perf_combine_js', 0 ) == 1 ) {
@@ -1129,6 +1129,7 @@ if ( ! function_exists( 'kleo_frontend_files' ) ) :
 		$header_height_scrolled     = intval( sq_option( 'menu_height_scrolled', '' ) );
 		$header_two_height          = intval( sq_option( 'menu_two_height', 88 ) );
 		$header_two_height_scrolled = intval( sq_option( 'menu_two_height_scrolled', '' ) );
+		$header_resize_offset = sq_option( 'menu_scroll_offset', '' ) != '' ? intval( sq_option( 'menu_scroll_offset', '' ) ) : '';
 
 		$obj_array = array(
 			'ajaxurl'                    => admin_url( 'admin-ajax.php' ),
@@ -1143,6 +1144,7 @@ if ( ! function_exists( 'kleo_frontend_files' ) ) :
 			'headerHeightScrolled'       => $header_height_scrolled,
 			'headerTwoRowHeight'         => $header_two_height,
 			'headerTwoRowHeightScrolled' => $header_two_height_scrolled,
+			'headerResizeOffset'         => $header_resize_offset,
 			'loadingmessage'             => '<i class="icon icon-spin5 animate-spin"></i> ' . __( 'Sending info, please wait...', 'kleo_framework' ),
 			'DisableMagnificGallery'     => sq_option( 'magnific_disable_gallery', '0' ),
 			'flexMenuEnabled'            => sq_option( 'header_flexmenu', 0 ),
@@ -1256,6 +1258,27 @@ function kleo_load_combined_files() {
 		wp_enqueue_style( 'kleo-combined' );
 	}
 }
+
+function kleo_add_inline_js_helper_classes() {
+	?>
+	<script type="text/javascript">
+		/*
+		 prevent dom flickering for elements hidden with js
+		 */
+		"use strict";
+
+		document.documentElement.className += ' js-active ';
+		document.documentElement.className += 'ontouchstart' in document.documentElement ? ' kleo-mobile ' : ' kleo-desktop ';
+
+		var prefix = ['-webkit-', '-o-', '-moz-', '-ms-', ""];
+		for (var i in prefix) {
+			if (prefix[i] + 'transform' in document.documentElement.style) document.documentElement.className += " kleo-transform ";
+		}
+	</script>
+	<?php
+}
+
+add_action( 'wp_head', 'kleo_add_inline_js_helper_classes' );
 
 
 if ( ! function_exists( 'remove_wp_open_sans' ) ) {

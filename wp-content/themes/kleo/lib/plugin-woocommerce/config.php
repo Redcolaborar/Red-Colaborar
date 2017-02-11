@@ -1239,15 +1239,29 @@ add_action('woocommerce_before_checkout_page', 'kleo_checkout_steps');
  ***************************************************/
 function kleo_woo_set_custom_menu( $args = '' ) {
 
+	if ( 'primary' != $args['theme_location'] && 'secondary' != $args['theme_location'] ) {
+		return $args;
+	}
+
     $shop_id = wc_get_page_id( 'shop' );
 
     if (is_shop()) {
 
-        $menuslug = get_cfield( 'page_menu', $shop_id );
+	    if ( 'primary' == $args['theme_location'] ) {
+		    $menuslug = get_cfield( 'page_menu', $shop_id );
 
-        if( ! empty( $menuslug ) && $menuslug != 'default' && is_nav_menu( $menuslug ) ) {
-            $args['menu'] = $menuslug;
-        }
+		    if ( ! empty( $menuslug ) && $menuslug != 'default' && is_nav_menu( $menuslug ) ) {
+			    $args['menu'] = $menuslug;
+		    }
+	    } elseif ( 'secondary' == $args['theme_location'] ) {
+
+		    $sec_menuslug = get_cfield( 'page_menu_secondary', $shop_id );
+
+		    if ( ! empty( $sec_menuslug ) && $sec_menuslug != 'default' && is_nav_menu( $sec_menuslug ) ) {
+			    $args['menu'] = $sec_menuslug;
+		    }
+
+	    }
 
     }
 

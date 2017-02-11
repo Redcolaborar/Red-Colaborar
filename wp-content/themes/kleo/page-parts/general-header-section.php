@@ -18,7 +18,7 @@ $top_bar = apply_filters( 'kleo_show_top_bar', $top_bar );
 
 $top_menu = wp_nav_menu( array(
         'theme_location'    => 'top',
-        'depth'             => 2,
+        'depth'             => 3,
         'container'         => 'div',
         'container_class'   => 'top-menu col-xs-12 col-sm-7 no-padd',
         'menu_class'        => '',

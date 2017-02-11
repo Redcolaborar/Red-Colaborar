@@ -2572,10 +2572,6 @@ function kleo_vc_manipulate_shortcodes() {
                         "value"       => "",
                         "description" => "Default 1",
                         "dependency"  => array(
-                            "element" => "specific_id",
-                            "value"   => "no"
-                        ),
-                        "dependency"  => array(
                             "element" => "type",
                             "value"   => "carousel"
                         ),
@@ -2647,7 +2643,7 @@ function kleo_vc_manipulate_shortcodes() {
                     ),
                     array(
                         'type'        => 'iconpicker',
-                        'heading'     => __( 'Icon when toggle is closed' ),
+                        'heading'     => __( 'Icon' ),
                         'param_name'  => 'icon',
                         "class"       => "hide hidden",
                         'value'       => '', // default value to backend editor admin_label

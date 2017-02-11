@@ -43,6 +43,7 @@ add_filter('kleo_main_template_classes', create_function('$cls','$cls .=" posts-
 
 <?php if ( category_description() ) : ?>
     <div class="archive-description"><?php echo category_description(); ?></div>
+
 <?php endif; ?>
 
 <?php if ( have_posts() ) : ?>
@@ -53,11 +54,14 @@ add_filter('kleo_main_template_classes', create_function('$cls','$cls .=" posts-
 
     <?php endif; ?>
 
+    <?php do_action('kleo_before_archive_content'); ?>
+
     <?php
     if ($blog_type == 'masonry') {
         echo '<div class="row responsive-cols kleo-masonry per-row-' . sq_option( 'blog_columns', 3 ) . '">';
     }
     ?>
+
 
     <?php
     // Start the Loop.
@@ -95,6 +99,8 @@ else :
 
 endif;
 ?>
+
+<?php do_action('kleo_after_archive_content'); ?>
 
 <?php get_template_part('page-parts/general-after-wrap'); ?>
 

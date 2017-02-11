@@ -286,9 +286,6 @@ ins {
   transition: all 0.25s ease-out 0s;
 }
 /* Useful classes*/
-.mb50 {
-  margin-bottom: 50px;
-}
 .no-padd {
   padding: 0;
 }
@@ -1090,6 +1087,9 @@ a .link-icon {
 }
 .top-menu li.bp-register-nav a:before {
   content: "\e82b";
+}
+.top-menu ul.dropdown-menu.pull-left ul.dropdown-menu.sub-menu {
+  left: 100%;
 }
 /* Nav Menu */
 #header .is-sticky .kleo-main-header {

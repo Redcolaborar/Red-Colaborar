@@ -91,7 +91,7 @@ function kleo_get_required_plugins() {
 			// The plugin source
 			'required'           => true,
 			// If false, the plugin is only 'recommended' instead of required
-			'version'            => '4.1.7',
+			'version'            => '4.1.8',
 			// E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation'   => false,
 			// If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
@@ -201,7 +201,7 @@ function kleo_get_required_plugins() {
 			// If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
 			'external_url'       => '',
 			// If set, overrides default API URL and points to an external URL
-			'description'        => 'Adds Wishlist functionality to your WooCommerce shop'
+			'description'        => 'Adds Wishlist functionality to your WooCommerce shop',
 		),
 		array(
 			'name'               => 'Paid Memberships Pro',
@@ -304,6 +304,44 @@ function kleo_get_required_plugins() {
 			'external_url'       => '',
 			// If set, overrides default API URL and points to an external URL
 			'description'        => 'Create and manage posts from your BuddyPress profile.',
+		),
+		array(
+			'name'               => 'Sensei',
+			// The plugin name
+			'slug'               => 'sensei',
+			// The plugin slug (typically the folder name)
+			'required'           => false,
+			// If false, the plugin is only 'recommended' instead of required
+			'version'            => '1.9.11',
+			// E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'source'             => 'https://github.com/Automattic/sensei/archive/version/1.9.11.zip',
+			// The plugin source
+			'force_activation'   => false,
+			// If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
+			'force_deactivation' => false,
+			// If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
+			'external_url'       => '',
+			// If set, overrides default API URL and points to an external URL
+			'description'        => 'A learning management plugin that allows you to sell courses.',
+		),
+		array(
+			'name'               => 'KLEO Monetizer',
+			// The plugin name
+			'slug'               => 'sq-kleo-monetizer',
+			// The plugin slug (typically the folder name)
+			'required'           => false,
+			// If false, the plugin is only 'recommended' instead of required
+			'version'            => kleo_get_plugin_version( 'sq-kleo-monetizer', '1.0', $kleo_rem_plugin_transient ),
+			// E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'source'             => kleo_get_plugin_src( 'sq-kleo-monetizer', '1.0' ),
+			// The plugin source
+			'force_activation'   => false,
+			// If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
+			'force_deactivation' => false,
+			// If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
+			'external_url'       => '',
+			// If set, overrides default API URL and points to an external URL
+			'description'        => 'Add banners or content in different site areas. See Theme options - Monetizer.',
 		),
 	);
 

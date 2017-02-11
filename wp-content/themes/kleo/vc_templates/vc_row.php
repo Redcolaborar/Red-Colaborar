@@ -65,9 +65,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Row
  */
-$el_class = $full_height = $parallax_speed_bg = $parallax_speed_video = $full_width = $equal_height = $flex_row = $columns_placement = $content_placement = $parallax = $parallax_image = $css = $el_id = $video_bg = $video_bg_url = $video_bg_parallax = '';
+$el_class        = $full_height = $parallax_speed_bg = $parallax_speed_video = $full_width = $equal_height = $flex_row = $columns_placement = $content_placement = $parallax = $parallax_image = $css = $el_id = $video_bg = $video_bg_url = $video_bg_parallax = '';
 $disable_element = '';
-$output = $after_output = '';
+$output          = $after_output = '';
 
 /* KLEO ADDED */
 $front_status = $inner_container = $text_align = $section_type = $type = $text_color = $bg_image = $bg_gradient = $bg_color = $bg_position =
@@ -100,19 +100,21 @@ if ( 'yes' === $disable_element ) {
 	}
 }
 
-if (vc_shortcode_custom_css_has_property( $css, array(
-		'border', 'background',
-	) ) || $video_bg || $parallax) {
-	$css_classes[]='vc_row-has-fill';
+if ( vc_shortcode_custom_css_has_property( $css, array(
+		'border',
+		'background',
+	) ) || $video_bg || $parallax
+) {
+	$css_classes[] = 'vc_row-has-fill';
 }
 
-if (!empty($atts['gap'])) {
-	$css_classes[] = 'vc_column-gap-'.$atts['gap'];
+if ( ! empty( $atts['gap'] ) ) {
+	$css_classes[] = 'vc_column-gap-' . $atts['gap'];
 }
 
 /* KLEO ADDED */
 if ( $front_status == 'draft' ) {
-  return false;
+	return false;
 }
 
 $bg_video = $video_output = '';
@@ -126,8 +128,8 @@ $css_classes[] = 'row';
 $section_classes[] = 'container-wrap';
 $section_classes[] = $el_class;
 
-if ($this->settings( 'base' ) !== 'vc_row_inner' ) {
-	$section_classes[] =  $section_type . '-color';
+if ( $this->settings( 'base' ) !== 'vc_row_inner' ) {
+	$section_classes[] = $section_type . '-color';
 }
 $container_attributes = array();
 /* END KLEO ADDED */
@@ -135,7 +137,7 @@ $container_attributes = array();
 $wrapper_attributes = array();
 // build attributes for wrapper
 if ( ! empty( $el_id ) ) {
-    $wrapper_attributes[] = 'id="' . esc_attr( $el_id ) . '"';
+	$wrapper_attributes[] = 'id="' . esc_attr( $el_id ) . '"';
 }
 if ( ! empty( $full_width ) ) {
 	$wrapper_attributes[] = 'data-vc-full-width="true"';
@@ -144,7 +146,7 @@ if ( ! empty( $full_width ) ) {
 		$wrapper_attributes[] = 'data-vc-stretch-content="true"';
 	} elseif ( 'stretch_row_content_no_spaces' === $full_width ) {
 		$wrapper_attributes[] = 'data-vc-stretch-content="true"';
-		$css_classes[] = 'vc_row-no-padding';
+		$css_classes[]        = 'vc_row-no-padding';
 	}
 	$after_output .= '<div class="vc_row-full-width vc_clearfix"></div>';
 }
@@ -152,7 +154,7 @@ if ( ! empty( $full_width ) ) {
 if ( ! empty( $full_height ) ) {
 	$css_classes[] = ' vc_row-o-full-height';
 	if ( ! empty( $columns_placement ) ) {
-		$flex_row = true;
+		$flex_row      = true;
 		$css_classes[] = ' vc_row-o-columns-' . $columns_placement;
 		if ( 'stretch' === $columns_placement ) {
 			$css_classes[] = 'vc_row-o-equal-height';
@@ -161,12 +163,12 @@ if ( ! empty( $full_height ) ) {
 }
 
 if ( ! empty( $equal_height ) ) {
-	$flex_row = true;
+	$flex_row      = true;
 	$css_classes[] = ' vc_row-o-equal-height';
 }
 
 if ( ! empty( $content_placement ) ) {
-	$flex_row = true;
+	$flex_row      = true;
 	$css_classes[] = ' vc_row-o-content-' . $content_placement;
 }
 
@@ -178,19 +180,19 @@ $has_video_bg = ( ! empty( $video_bg ) && ! empty( $video_bg_url ) && vc_extract
 
 $vc_parallax_speed = $parallax_speed_bg;
 if ( $has_video_bg ) {
-	$parallax = $video_bg_parallax;
+	$parallax          = $video_bg_parallax;
 	$vc_parallax_speed = $parallax_speed_video;
-	$parallax_image = $video_bg_url;
-	$css_classes[] = ' vc_video-bg-container';
+	$parallax_image    = $video_bg_url;
+	$css_classes[]     = ' vc_video-bg-container';
 	wp_enqueue_script( 'vc_youtube_iframe_api_js' );
 }
 
 if ( ! empty( $parallax ) ) {
 	wp_enqueue_script( 'vc_jquery_skrollr_js' );
 	$wrapper_attributes[] = 'data-vc-parallax="' . esc_attr( $vc_parallax_speed ) . '"'; // parallax speed
-	$css_classes[] = 'vc_general vc_parallax vc_parallax-' . $parallax;
+	$css_classes[]        = 'vc_general vc_parallax vc_parallax-' . $parallax;
 	if ( false !== strpos( $parallax, 'fade' ) ) {
-		$css_classes[] = 'js-vc_parallax-o-fade';
+		$css_classes[]        = 'js-vc_parallax-o-fade';
 		$wrapper_attributes[] = 'data-vc-parallax-o-fade="on"';
 	} elseif ( false !== strpos( $parallax, 'fixed' ) ) {
 		$css_classes[] = 'js-vc_parallax-o-fixed';
@@ -198,35 +200,35 @@ if ( ! empty( $parallax ) ) {
 }
 
 if ( ! empty ( $parallax_image ) ) {
-    if ( $has_video_bg ) {
-        $parallax_image_src = $parallax_image;
-    } else {
-        $parallax_image_id = preg_replace( '/[^\d]/', '', $parallax_image );
-        $parallax_image_src = wp_get_attachment_image_src( $parallax_image_id, 'full' );
-        if ( ! empty( $parallax_image_src[0] ) ) {
-            $parallax_image_src = $parallax_image_src[0];
-        }
-    }
-    $wrapper_attributes[] = 'data-vc-parallax-image="' . esc_attr( $parallax_image_src ) . '"';
+	if ( $has_video_bg ) {
+		$parallax_image_src = $parallax_image;
+	} else {
+		$parallax_image_id  = preg_replace( '/[^\d]/', '', $parallax_image );
+		$parallax_image_src = wp_get_attachment_image_src( $parallax_image_id, 'full' );
+		if ( ! empty( $parallax_image_src[0] ) ) {
+			$parallax_image_src = $parallax_image_src[0];
+		}
+	}
+	$wrapper_attributes[] = 'data-vc-parallax-image="' . esc_attr( $parallax_image_src ) . '"';
 }
 if ( ! $parallax && $has_video_bg ) {
-    $wrapper_attributes[] = 'data-vc-video-bg="' . esc_attr( $video_bg_url ) . '"';
+	$wrapper_attributes[] = 'data-vc-video-bg="' . esc_attr( $video_bg_url ) . '"';
 }
 
 /* KLEO ADDED */
 switch ( $inner_container ) {
-  case 'yes' :
-    $container_start = '<div class="section-container container">';
-    $container_end   = '</div>';
-    break;
-  default :
-    $container_start = '<div class="section-container container-full">';
-    $container_end   = '</div>';
+	case 'yes' :
+		$container_start = '<div class="section-container container">';
+		$container_end   = '</div>';
+		break;
+	default :
+		$container_start = '<div class="section-container container-full">';
+		$container_end   = '</div>';
 }
 
 
 if ( $text_color != '' ) {
-	$my_style[] = 'color: '.$text_color;
+	$my_style[]        = 'color: ' . $text_color;
 	$section_classes[] = 'custom-color';
 }
 
@@ -237,41 +239,48 @@ switch ( $type ) {
 		if ( $bg_color ) {
 			$my_style[] = 'background-color: ' . $bg_color;
 
-			$css_classes[]='vc_row-has-fill';
+			$css_classes[] = 'vc_row-has-fill';
 		}
 		break;
-		
+
 	case 'image':
 
-		$bg_cover = apply_filters( 'kleo_sanitize_flag', $bg_cover );
+		$bg_cover      = apply_filters( 'kleo_sanitize_flag', $bg_cover );
 		$bg_attachment = in_array( $bg_attachment, array( 'false', 'fixed', 'true' ) ) ? $bg_attachment : 'false';
 
-        if ( $bg_image && !in_array( $bg_image, array('none') ) ) {
-            $bg_image_path = wp_get_attachment_image_src($bg_image, 'full');
-            if ( $bg_image_path == NULL )  {
-                $bg_image_path[0] = get_template_directory_uri() . "/assets/img/row_bg.jpg";
-            } //' <small>'.__('This is image placeholder, edit your page to replace it.', 'js_composer').'</small>';
+		if ( $bg_image && ! in_array( $bg_image, array( 'none' ) ) ) {
 
-            $my_style[] = 'background-image: url(' . esc_url($bg_image_path[0]) . ')';
-        }
+			if ( is_numeric( $bg_image ) ) {
+				$bg_image_path = wp_get_attachment_image_src( $bg_image, 'full' );
+			} else {
+				$bg_image_path = array();
+				$bg_image_path[0] = $bg_image;
+			}
+
+			if ( null == $bg_image_path ) {
+				$bg_image_path[0] = get_template_directory_uri() . '/assets/img/row_bg.jpg';
+			} //' <small>'.__('This is image placeholder, edit your page to replace it.', 'js_composer').'</small>';
+
+			$my_style[] = 'background-image: url(' . esc_url( $bg_image_path[0] ) . ')';
+		}
 		if ( $bg_color ) {
 			$my_style[] = 'background-color: ' . $bg_color;
 		}
 
 		$position = array();
-        if ( $bg_position != 'top' || $bg_position_horizontal != 'left' ) {
-            $position[] = $bg_position_horizontal;
+		if ( $bg_position != 'top' || $bg_position_horizontal != 'left' ) {
+			$position[] = $bg_position_horizontal;
 			$position[] = $bg_position;
 		}
 
 		if ( ! empty( $position ) ) {
-			$my_style[] = 'background-position: ' . join(' ', $position);
+			$my_style[] = 'background-position: ' . join( ' ', $position );
 		}
 
-        if ($bg_repeat == '' ) {
-            $bg_repeat = 'no-repeat';
-        }
-        $my_style[] = 'background-repeat: ' . $bg_repeat;
+		if ( $bg_repeat == '' ) {
+			$bg_repeat = 'no-repeat';
+		}
+		$my_style[] = 'background-repeat: ' . $bg_repeat;
 
 		if ( $enable_parallax != '' && $parallax_speed != '' ) {
 			$parallax_speed = floatval( $parallax_speed );
@@ -279,31 +288,31 @@ switch ( $type ) {
 				$parallax_speed = 0.05;
 			}
 
-			$section_classes[] = 'bg-parallax';
+			$section_classes[]      = 'bg-parallax';
 			$container_attributes[] = 'data-prlx-speed="' . $parallax_speed . '"';
 
-            $my_style[] = 'background-attachment: fixed';
-            $my_style[] = 'background-size: cover';
+			$my_style[] = 'background-attachment: fixed';
+			$my_style[] = 'background-size: cover';
 		} else {
 
-            if ( 'false' != $bg_attachment ) {
-                $my_style[] = 'background-attachment: fixed';
-            } else {
-                $my_style[] = 'background-attachment: scroll';
-            }
+			if ( 'false' != $bg_attachment ) {
+				$my_style[] = 'background-attachment: fixed';
+			} else {
+				$my_style[] = 'background-attachment: scroll';
+			}
 
-            if ( 'false' != $bg_cover ) {
-                $my_style[] = 'background-size: cover';
-            } else {
-                $my_style[] = 'background-size: auto';
-            }
+			if ( 'false' != $bg_cover ) {
+				$my_style[] = 'background-size: cover';
+			} else {
+				$my_style[] = 'background-size: auto';
+			}
 
-        }
+		}
 
-		$css_classes[]='vc_row-has-fill';
-	
+		$css_classes[] = 'vc_row-has-fill';
+
 		break;
-		
+
 	case 'video':
 
 		// video bg
@@ -321,29 +330,29 @@ switch ( $type ) {
 			$bg_video_args['webm'] = $bg_video_src_webm;
 		}
 
-		if ( !empty($bg_video_args) ) {
+		if ( ! empty( $bg_video_args ) ) {
 			$attr_strings = array(
 				'loop',
 				'preload="1"',
 				'autoplay=""',
 				'muted="muted"'
 			);
-			if ($video_mute) {
+			if ( $video_mute ) {
 				//$attr_strings[] = 'muted="muted"';
 			}
-			if ($video_autoplay) {
+			if ( $video_autoplay ) {
 				//$attr_strings[] = 'autoplay=""';
 			}
-			
-			if ( $bg_video_cover && !in_array( $bg_video_cover, array('none') ) ) {
-				$bg_video_path = wp_get_attachment_image_src($bg_video_cover, 'kleo-full-width');
-				$attr_strings[] = 'poster="' . esc_url($bg_video_path[0]) . '"';
+
+			if ( $bg_video_cover && ! in_array( $bg_video_cover, array( 'none' ) ) ) {
+				$bg_video_path  = wp_get_attachment_image_src( $bg_video_cover, 'kleo-full-width' );
+				$attr_strings[] = 'poster="' . esc_url( $bg_video_path[0] ) . '"';
 			}
 
 			$bg_video .= sprintf( '<div class="video-wrap"><video %s class="full-video" webkit-playsinline>', join( ' ', $attr_strings ) );
 
 			$source = '<source type="%s" src="%s" />';
-			foreach ( $bg_video_args as $video_type=>$video_src ) {
+			foreach ( $bg_video_args as $video_type => $video_src ) {
 
 				$video_type = wp_check_filetype( $video_src, wp_get_mime_types() );
 				$bg_video .= sprintf( $source, $video_type['type'], esc_url( $video_src ) );
@@ -354,7 +363,7 @@ switch ( $type ) {
 
 			$section_classes[] = 'bg-full-video no-video-controls';
 
-			$css_classes[]='vc_row-has-fill';
+			$css_classes[] = 'vc_row-has-fill';
 		}
 		break;
 
@@ -369,7 +378,14 @@ if ( $vertical_align == 'yes' ) {
 	$section_classes[] = 'vertical-col';
 }
 
-$style_elements = array( 'padding_top', 'padding_bottom', 'padding_left', 'padding_right', 'margin_top', 'margin_bottom' );
+$style_elements = array(
+	'padding_top',
+	'padding_bottom',
+	'padding_left',
+	'padding_right',
+	'margin_top',
+	'margin_bottom'
+);
 
 foreach ( $style_elements as $style_element ) {
 	if ( $$style_element != '' ) {
@@ -422,12 +438,12 @@ if ( $animation != '' ) {
 	$section_classes[] = "animated {$animation} {$css_animation}";
 }
 
-if( $text_align != '' ) {
-	$section_classes[] = 'text-'.$text_align;
+if ( $text_align != '' ) {
+	$section_classes[] = 'text-' . $text_align;
 }
 
 if ( $visibility != '' ) {
-	$section_classes[] = str_replace(',', ' ', $visibility);
+	$section_classes[] = str_replace( ',', ' ', $visibility );
 }
 
 if ( $inline_style ) {
@@ -443,10 +459,10 @@ if ( ! empty( $my_style ) ) {
 }
 /* END KLEO ADDED */
 
-$css_class = preg_replace( '/\s+/', ' ', apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, implode( ' ', array_filter( array_unique( $css_classes ) ) ), $this->settings['base'], $atts ) );
+$css_class            = preg_replace( '/\s+/', ' ', apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, implode( ' ', array_filter( array_unique( $css_classes ) ) ), $this->settings['base'], $atts ) );
 $wrapper_attributes[] = 'class="' . esc_attr( trim( $css_class ) ) . '"';
 
-$output .= '<section class="' . implode( ' ', $section_classes )  . '" ' . $my_style . ' ' . implode( ' ', $container_attributes ) . '>';
+$output .= '<section class="' . implode( ' ', $section_classes ) . '" ' . $my_style . ' ' . implode( ' ', $container_attributes ) . '>';
 
 $output .= $container_start;
 $output .= '<div ' . implode( ' ', $wrapper_attributes ) . '>';

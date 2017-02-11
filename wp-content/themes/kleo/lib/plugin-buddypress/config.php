@@ -6,9 +6,9 @@
  * @since 1.6
  */
 
-  if ( bp_is_active('notifications') ) {
+if ( bp_is_active('notifications') ) {
     require_once( KLEO_LIB_DIR . '/plugin-buddypress/menu-notifications.php' );
-  }
+}
 
 
 
@@ -259,7 +259,7 @@ function kleo_bp_header() {
     $page_header = get_cfield( 'header_content', $current_page_id );
     if( $page_header != '' ) {
         echo '<section class="kleo-bp-header container-wrap main-color">';
-        echo do_shortcode( $page_header );
+        echo do_shortcode( html_entity_decode($page_header) );
         echo '</section>';
     }
 }
@@ -342,13 +342,29 @@ if ( ! function_exists( 'kleo_bp_page_options' ) ) {
 
 function kleo_bp_set_custom_menu( $args = '' ) {
 
+	if ( 'primary' != $args['theme_location'] && 'secondary' != $args['theme_location'] ) {
+		return $args;
+	}
+
     $page_id = kleo_bp_get_component_id();
 
     if( $page_id ) {
-        $menuslug = get_cfield( 'page_menu', $page_id );
 
-        if( ! empty( $menuslug ) && $menuslug != 'default' && is_nav_menu( $menuslug ) ) {
-            $args['menu'] = $menuslug;
+	    if ( 'primary' == $args['theme_location'] ) {
+		    $menuslug = get_cfield( 'page_menu', $page_id );
+
+		    if ( ! empty( $menuslug ) && $menuslug != 'default' && is_nav_menu( $menuslug ) ) {
+			    $args['menu'] = $menuslug;
+		    }
+
+	    } elseif ( 'secondary' == $args['theme_location'] ) {
+
+		    $sec_menuslug = get_cfield( 'page_menu_secondary', $page_id );
+
+		    if ( ! empty( $sec_menuslug ) && $sec_menuslug != 'default' && is_nav_menu( $sec_menuslug ) ) {
+			    $args['menu'] = $sec_menuslug;
+		    }
+
         }
 
     }

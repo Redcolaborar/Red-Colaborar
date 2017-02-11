@@ -111,6 +111,8 @@ if ( have_posts() ) : ?>
 
     <?php endif; ?>
 
+	<?php do_action('kleo_before_blog_outer_content'); ?>
+
     <?php
     if ($blog_type == 'masonry') : ?>
         <div class="row responsive-cols kleo-masonry per-row-<?php echo sq_option( 'blog_columns', 3 );?>">
@@ -150,7 +152,8 @@ else :
 
 endif;
 ?>
-        
+<?php do_action('kleo_after_blog_outer_content'); ?>
+
 <?php get_template_part('page-parts/general-after-wrap');?>
 
 <?php get_footer(); ?>

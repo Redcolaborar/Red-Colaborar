@@ -15,6 +15,29 @@ License URI: license.txt
 * Please add your custom styles below
 */
 
+/*buddypress group welcome message*/
+
+.activity-greeting {
+line-height: 1.2em !important;
+font-size:1.2em !important;
+}
+
+/*Video wrapper*/
+
+.wpb_video_widget.vc_video-aspect-ratio-169 .wpb_video_wrapper {
+padding-top: 0 !important;
+}
+
+.texto-respuesta-home {
+background-color: #ffffff;
+width: 80%;
+}
+
+.texto-pregunta-home {
+background-color: #ffffff;
+width: 80%;
+}
+
 /*login form home page*/
 
 #kleo-login-result {color: #ffffff !important;}
@@ -228,20 +251,23 @@ color: #fff !important;
 }
 .mpp-item-content {
 width: 100% !important;
+
 }
 
 .mpp-lightbox-activity-container {
 width: 100% !important;
-height: 250px;
+
 }
 
 .mpp-lightbox-media-container {
 width: 100% !important;
+height: 350px;
+
 }
 
 iframe {
 width: 100% !important;
-height: 250px;
+height: 350px;
 }
 
 /*mediapress upload icons*/
@@ -466,5 +492,123 @@ display: none !important;
         display: block!important;
         font-size: 20px;
         font-weight: bold;
+    }
+}
+
+.redcolaborar-activity-thumbnail {
+    display: inline-block;
+    float: left;
+    max-width: 350px;
+    margin: 0px 25px 15px 0px;
+}
+
+.redcolaborar-tags {
+    display: block;
+    clear: both;
+    text-transform: uppercase;
+}
+.redcolaborar-tags-container {
+    font-size: 0.8em;
+    padding-top: 20px;
+}
+
+#wpadminbar .quicklinks li#wp-admin-bar-bp-notifications > a {
+    padding-left: 2em;
+    padding-right: 1em;
+    line-height: 26px;
+    height: 26px;
+    white-space: nowrap;
+}
+
+.kleo-love {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+}
+.activity-meta .awst_like {
+
+}
+.activity-meta .awst_like:before {
+}
+
+.single.single-post .awst_like {
+
+}
+
+.awst_block .err_msg {
+    display: none;
+}
+
+.awst_block {
+    padding: 20px 0px;
+}
+
+.awst_like i {
+    font-size: 20px;
+}
+.awst_like .fa-thumbs-up:before {
+    content: "\f004";
+}
+.awst_like .fa-thumbs-o-up:before {
+    content: "\f08a";
+}
+
+.mpp-g {
+    display: block;
+    width: 100%;
+    position: relative;
+    overflow: auto;
+    padding-top: 20px;
+}
+
+.mpp-item {
+    width: 25%;
+    float: left;
+    display: inline-block;
+}
+
+.mpp-paginator {
+    display: block;
+    clear: both;
+    width: 100%;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.mpp-item .awst_like {
+    display: inline-block;
+}
+.mpp-item .total_like {
+    position: inherit;
+}
+
+@media (max-width: 1024px) {
+    .mpp-item {
+        width: 25%;
+        float: left;
+        display: table-cell;
+        height: 340px;
+        padding: 16px;
+    }
+}
+@media (max-width: 768px) {
+    .mpp-item {
+        width: 25%;
+        float: left;
+        display: table-cell;
+        height: 270px;
+        padding: 16px;
+    }
+}
+@media (max-width: 375px) {
+    .mpp-item {
+        width: 25%;
+        float: left;
+        display: table-cell;
+        height: 190px;
+        padding: 6px;
+    }
+    .mpp-item .awst_like {
+        display: none;
     }
 }

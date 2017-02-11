@@ -1,5 +1,5 @@
 <?php
-define( 'KLEO_THEME_VERSION', '4.1.7' );
+define( 'KLEO_THEME_VERSION', '4.1.8' );
 
 /* Configuration array */
 global $kleo_config;
@@ -481,57 +481,59 @@ if ( ! function_exists( 'kleo_search_menu_item' ) ) {
 		return $items;
 	}
 }
+if ( ! function_exists( 'kleo_get_search_menu_item' ) ) {
 
-function kleo_get_search_menu_item() {
+	function kleo_get_search_menu_item()
+	{
 
-	$context = sq_option( 'search_context', '' );
-	if ( is_array( $context ) ) {
-		$context = implode( ',', $context );
+		$context = sq_option('search_context', '');
+		if (is_array($context)) {
+			$context = implode(',', $context);
+		}
+
+		//Defaults
+		$action = home_url('/');
+		$hidden = '';
+		$input_name = 's';
+		if (function_exists('bp_is_active') && $context == 'members') {
+			//Buddypress members form link
+			$action = bp_get_members_directory_permalink();
+
+		} elseif (function_exists('bp_is_active') && bp_is_active('groups') && $context == 'groups') {
+			//Buddypress group directory link
+			$action = bp_get_groups_directory_permalink();
+
+		} elseif (class_exists('bbPress') && $context == 'forum') {
+			$action = bbp_get_search_url();
+			$input_name = 'bbp_search';
+
+		} elseif ($context == 'product') {
+			$hidden .= '<input type="hidden" name="post_type" value="product">';
+		}
+
+
+		ob_start();
+		?>
+		<a class="search-trigger" href="#"><i class="icon icon-search"></i></a>
+		<div class="kleo-search-wrap searchHidden" id="ajax_search_container">
+			<form class="form-inline" id="ajax_searchform" action="<?php echo $action; ?>"
+				  data-context="<?php echo $context; ?>">
+				<?php echo $hidden; ?>
+				<input name="<?php echo $input_name; ?>" class="ajax_s form-control" autocomplete="off" type="text"
+					   value="<?php if (isset($_REQUEST['s'])) {
+						   echo esc_attr($_REQUEST['s']);
+					   } ?>" placeholder="<?php _e("Start typing to search...", "kleo_framework"); ?>">
+				<span class="kleo-ajax-search-loading"><i class="icon-spin6 animate-spin"></i></span>
+			</form>
+			<div class="kleo_ajax_results"></div>
+		</div>
+
+		<?php
+		$form = ob_get_clean();
+
+		return $form;
 	}
-
-	//Defaults
-	$action     = home_url( '/' );
-	$hidden     = '';
-	$input_name = 's';
-	if ( function_exists( 'bp_is_active' ) && $context == 'members' ) {
-		//Buddypress members form link
-		$action = bp_get_members_directory_permalink();
-
-	} elseif ( function_exists( 'bp_is_active' ) && bp_is_active( 'groups' ) && $context == 'groups' ) {
-		//Buddypress group directory link
-		$action = bp_get_groups_directory_permalink();
-
-	} elseif ( class_exists( 'bbPress' ) && $context == 'forum' ) {
-		$action     = bbp_get_search_url();
-		$input_name = 'bbp_search';
-
-	} elseif ( $context == 'product' ) {
-		$hidden .= '<input type="hidden" name="post_type" value="product">';
-	}
-
-
-	ob_start();
-	?>
-	<a class="search-trigger" href="#"><i class="icon icon-search"></i></a>
-	<div class="kleo-search-wrap searchHidden" id="ajax_search_container">
-		<form class="form-inline" id="ajax_searchform" action="<?php echo $action; ?>"
-		      data-context="<?php echo $context; ?>">
-			<?php echo $hidden; ?>
-			<input name="<?php echo $input_name; ?>" class="ajax_s form-control" autocomplete="off" type="text"
-			       value="<?php if ( isset( $_REQUEST['s'] ) ) {
-				       echo esc_attr( $_REQUEST['s'] );
-			       } ?>" placeholder="<?php _e( "Start typing to search...", "kleo_framework" ); ?>">
-			<span class="kleo-ajax-search-loading"><i class="icon-spin6 animate-spin"></i></span>
-		</form>
-		<div class="kleo_ajax_results"></div>
-	</div>
-
-	<?php
-	$form = ob_get_clean();
-
-	return $form;
 }
-
 //Catch ajax requests
 add_action( 'wp_ajax_kleo_ajax_search', 'kleo_ajax_search' );
 add_action( 'wp_ajax_nopriv_kleo_ajax_search', 'kleo_ajax_search' );
@@ -1769,6 +1771,7 @@ function kleo_set_custom_menu( $args = '' ) {
 
 			if ( ! empty( $menuslug ) && $menuslug != 'default' && is_nav_menu( $menuslug ) ) {
 				$args['menu'] = $menuslug;
+
 			}
 
 		} elseif ( 'secondary' == $args['theme_location'] ) {
@@ -2006,10 +2009,9 @@ function kleo_bp_replace_placeholders( $output ) {
 		}
 
 		if ( function_exists( 'bp_is_active' ) ) {
-			$logged_in_link = bp_loggedin_user_domain( '/' );
+			$logged_in_link = bp_loggedin_user_domain();
 			$output         = str_replace( '##profile_link##', $logged_in_link, $output );
 		} elseif ( class_exists( 'bbPress' ) ) {
-			//$logged_in_link = bb_get_profile_link();
 			$logged_in_link = bbp_get_user_profile_url( bbp_get_current_user_id() );
 			$output         = str_replace( '##profile_link##', $logged_in_link, $output );
 		}
