@@ -257,7 +257,7 @@ class H5P_Plugin_Admin {
 
     // Some messages used multiple places
     $staying_msg = __('Thank you for staying up to date with H5P.', $this->plugin_slug);
-    $updates_msg = sprintf(wp_kses(__('You should head over to the <a href="%s">Libraries</a> page and update your content types to the latest version.', $this->plugin_slug), array('a' => array('href' => array(), 'target' => array()))), admin_url('admin.php?page=h5p_libraries'));
+    $updates_msg = sprintf(wp_kses(__('Head over to the <a href="%s">Libraries</a> page and update your content types to the latest version.', $this->plugin_slug), array('a' => array('href' => array(), 'target' => array()))), admin_url('admin.php?page=h5p_libraries'));
     $fetching_msg = sprintf(wp_kses(__('By default, H5P is set up to automatically fetch information regarding Content Type updates from H5P.org. When doing so, H5P will also contribute anonymous usage data to aid the development of H5P. This behaviour can be altered through the <a href="%s">Settings</a> page.', $this->plugin_slug), array('a' => array('href' => array()))), admin_url('options-general.php?page=h5p_settings'));
     $help_msg = sprintf(wp_kses(__('If you need any help you can always file a <a href="%s" target="_blank">Support Request</a>, check out our <a href="%s" target="_blank">Forum</a> or join the conversation in the <a href="%s" target="_blank">H5P Community Chat</a>.', $this->plugin_slug), array('a' => array('href' => array(), 'target' => array()))), esc_url('https://wordpress.org/support/plugin/h5p'), esc_url('https://h5p.org/forum'), esc_url('https://gitter.im/h5p/CommunityChat'));
 
@@ -301,6 +301,16 @@ class H5P_Plugin_Admin {
     if (empty($messages) && $last_print !== H5P_Plugin::VERSION) {
       // Looks like we've just updated, always thank the user for updating.
       $messages[] = $staying_msg;
+
+      $v = H5P_Plugin::split_version($last_print);
+      if ($v) {
+
+        if ($v->major < 1 || ($v->major === 1 && $v->minor < 7) || ($v->major === 1 && $v->minor === 7 && $v->patch < 8)) { // < 1.7.8
+          // Extra warning that content types should be updated in order to look good with the new editor design changes
+          $updates_msg = sprintf(wp_kses(__('You should <strong>upgrade your H5P content types!</strong> The old content types still work, but the authoring tool\'s look and feel is greatly improved with the new content types. Here\'s some more info about <a href="%s" target="_blank">upgrading the content types</a>.', $this->plugin_slug), array('strong' => array(), 'a' => array('href' => array(), 'target' => array()))), 'https://h5p.org/update-all-content-types') . '<br/>' . $updates_msg;
+        }
+      }
+
       if ($update_available > $current_update) {
         // User should update content types
         $messages[] = $updates_msg;
@@ -459,10 +469,10 @@ class H5P_Plugin_Admin {
       $frame = filter_input(INPUT_POST, 'frame', FILTER_VALIDATE_BOOLEAN);
       update_option('h5p_frame', $frame);
 
-      $download = filter_input(INPUT_POST, 'download', FILTER_VALIDATE_BOOLEAN);
+      $download = filter_input(INPUT_POST, 'download', FILTER_VALIDATE_INT);
       update_option('h5p_export', $download);
 
-      $embed = filter_input(INPUT_POST, 'embed', FILTER_VALIDATE_BOOLEAN);
+      $embed = filter_input(INPUT_POST, 'embed', FILTER_VALIDATE_INT);
       update_option('h5p_embed', $embed);
 
       $copyright = filter_input(INPUT_POST, 'copyright', FILTER_VALIDATE_BOOLEAN);
@@ -509,8 +519,10 @@ class H5P_Plugin_Admin {
       $enable_lrs_content_types = get_option('h5p_enable_lrs_content_types', FALSE);
     }
 
+    H5P_Plugin::get_instance()->get_h5p_instance('core'); // Make sure core is loaded;
     include_once('views/settings.php');
-    H5P_Plugin_Admin::add_script('disable', 'h5p-php-library/js/disable.js');
+    H5P_Plugin_Admin::add_script('h5p-jquery', 'h5p-php-library/js/jquery.js');
+    H5P_Plugin_Admin::add_script('h5p-display-options', 'h5p-php-library/js/h5p-display-options.js');
 
     new H5P_Event('settings');
   }
@@ -711,7 +723,7 @@ class H5P_Plugin_Admin {
       H5PCore::ajaxError(__('Invalid content', $this->plugin_slug));
       exit;
     }
-    if (!wp_verify_nonce(filter_input(INPUT_POST, 'token'), 'h5p_result')) {
+    if (!wp_verify_nonce(filter_input(INPUT_GET, 'token'), 'h5p_result')) {
       H5PCore::ajaxError(__('Invalid security token', $this->plugin_slug));
       exit;
     }
@@ -842,7 +854,7 @@ class H5P_Plugin_Admin {
     }
     if ($user_id === NULL) {
       $extra_fields .= " hr.user_id, u.display_name AS user_name,";
-      $joins .= " LEFT JOIN {$wpdb->base_prefix}users u ON hr.user_id = u.ID";
+      $joins .= " LEFT JOIN {$wpdb->users} u ON hr.user_id = u.ID";
     }
 
     // Add filters
@@ -1111,7 +1123,7 @@ class H5P_Plugin_Admin {
     $preload = filter_input(INPUT_POST, 'preload');
     $invalidate = filter_input(INPUT_POST, 'invalidate');
     if ($data !== NULL && $preload !== NULL && $invalidate !== NULL) {
-      if (!wp_verify_nonce(filter_input(INPUT_POST, 'token'), 'h5p_contentuserdata')) {
+      if (!wp_verify_nonce(filter_input(INPUT_GET, 'token'), 'h5p_contentuserdata')) {
         H5PCore::ajaxError(__('Invalid security token', $this->plugin_slug));
         exit;
       }

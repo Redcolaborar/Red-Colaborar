@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Mediapress_customizer
+ * @package mediapress-customizer
  */
 /*
 Plugin Name: Mediapress Customizer
@@ -10,7 +10,7 @@ Version: 1.0.0
 Author: Anylinuxwork
 Author URI: http://anylinuxwork.slack.com/
 License: GPLv2 or later
-Text Domain: Mediapress_customizer
+Text Domain: mediapress-customizer
 */
 // Make sure we don't expose any info if called directly
 if ( !function_exists( 'add_action' ) ) {

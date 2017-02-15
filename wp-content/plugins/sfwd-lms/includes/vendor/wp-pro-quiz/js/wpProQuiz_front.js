@@ -1845,15 +1845,19 @@
 
 
 						if(result.c) {
-							if(typeof result.e.AnswerMessage != "undefined")
+							if(typeof result.e.AnswerMessage != "undefined") {
 								$this.find('.wpProQuiz_correct').find(".wpProQuiz_AnswerMessage").html(result.e.AnswerMessage);
+								$this.find('.wpProQuiz_correct').trigger('learndash-quiz-answer-response-contentchanged');
+							}
 							$this.find('.wpProQuiz_correct').show();
 							results['comp'].correctQuestions += 1;
 						} else {
-							if(typeof result.e.AnswerMessage != "undefined")
+							if(typeof result.e.AnswerMessage != "undefined") {
 								$this.find('.wpProQuiz_incorrect').find(".wpProQuiz_AnswerMessage").html(result.e.AnswerMessage);
-								$this.find('.wpProQuiz_incorrect').show();
+								$this.find('.wpProQuiz_incorrect').trigger('learndash-quiz-answer-response-contentchanged');
 							}							
+							$this.find('.wpProQuiz_incorrect').show();
+						}							
 							
 							$this.find('.wpProQuiz_responsePoints').text(result.p);
 							
@@ -1862,6 +1866,7 @@
 							if(!endCheck)
 								$e.trigger({type: 'questionSolved', values: {item: $this, index: $this.index(), solved: true}});
 						});
+                    
 						if(finishQuiz)
 						plugin.methode.finishQuizEnd();
 				});

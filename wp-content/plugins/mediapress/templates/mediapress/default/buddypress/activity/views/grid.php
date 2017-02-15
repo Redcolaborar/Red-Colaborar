@@ -27,4 +27,3 @@ if ( $mppq->have_media() ):?>
 	</div>
 <?php endif; ?>
 <?php mpp_reset_media_data(); ?>
-

@@ -317,7 +317,7 @@ class BuddyPress_Learndash_Member_Mass_Enrollment {
 
 global $bp_learndash_member_mass_enrollement;
 // Attempt to detect if the server supports PHP sessions
-if( function_exists( 'session_start' ) && ! ini_get( 'safe_mode' ) ) {
+if( function_exists( 'session_start' ) ) {
     $bp_learndash_member_mass_enrollement = BuddyPress_Learndash_Member_Mass_Enrollment::instance();
 }
 

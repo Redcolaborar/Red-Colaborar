@@ -27,7 +27,7 @@ if ( !class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 					if ( wp_verify_nonce( esc_attr( $_GET['data-nonce'] ), 'learndash-data-reports-'. esc_attr( $_GET['data-slug'] ) .'-'. get_current_user_id() ) ) {
 						$transient_key = esc_attr( $_GET['data-slug'] ) .'_'. esc_attr( $_GET['data-nonce'] );
 						
-						$transient_data = get_transient( $transient_key );
+						$transient_data = learndash_get_valid_transient( $transient_key );
 						if ( ( isset( $transient_data['report_filename'] ) ) && ( !empty( $transient_data['report_filename'] ) ) ) {
 							$report_filename = ABSPATH . $transient_data['report_filename'];
 							if ( ( file_exists( $report_filename ) ) && (is_readable( $report_filename ) ) ) {

@@ -15,6 +15,22 @@ License URI: license.txt
 * Please add your custom styles below
 */
 
+/* Buddyboss Edit Activity */
+a.awst_like {
+  padding-right: 80px !important;
+}
+
+
+/*buddypress for learndash member directory hiding students and group leaders counts*/
+
+#members-group_leader {
+display: none;
+}
+
+#members-student {
+display: none;
+}
+
 /*buddypress group welcome message*/
 
 .activity-greeting {

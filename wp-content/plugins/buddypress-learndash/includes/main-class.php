@@ -137,6 +137,18 @@ class BuddyPress_LearnDash_Plugin
 		// Store the instance locally to avoid private static replication
 		static $instance = null;
 
+		//Check the buddypress group component is active
+		$active_component = get_option('bp-active-components');
+
+		if ( ! isset ( $active_component['groups'] ) ) {
+
+			$instance = new BuddyPress_LearnDash_Plugin;
+			add_action( 'admin_notices', array( $instance, 'show_notices' ) );
+
+			//No need to go further until group component has not active
+			return $instance;
+		}
+
 		// Only run these methods if they haven't been run previously
 		if ( null === $instance )
 		{
@@ -490,8 +502,19 @@ class BuddyPress_LearnDash_Plugin
 			bp_register_group_extension( 'GType_Course_Tab' );
 		}
 	}
+	
+	/**
+	 * Show notices when buddypress component is not enable
+	 *
+	 * @since 1.1
+	 */
+	public function show_notices() {
 
-    
+		echo '<div class="error">';
+		echo '<p>' . sprintf( __( '<strong>BuddyPress for Learndash</strong> requires User Groups component to be enabled. Please enable it in your <a href="%s">BuddyPress Settings</a>.', 'buddypress-learndash' ), admin_url( 'admin.php?page=bp-components' ) ) . '</p>';
+		echo '</div>';
+	}
+
 }
 
 endif;

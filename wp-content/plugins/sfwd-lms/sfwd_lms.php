@@ -3,7 +3,7 @@
  * Plugin Name: LearnDash LMS
  * Plugin URI: http://www.learndash.com
  * Description: LearnDash LMS Plugin - Turn your WordPress site into a learning management system.
- * Version: 2.3.1
+ * Version: 2.3.3
  * Author: LearnDash
  * Author URI: http://www.learndash.com
  * Text Domain: learndash
@@ -17,9 +17,10 @@
 /**
  * LearnDash Version Constant
  */
-define( 'LEARNDASH_VERSION', '2.3.1' );
+define( 'LEARNDASH_VERSION', '2.3.3' );
 define( 'LEARNDASH_SETTINGS_DB_VERSION', '2.3.0.4' );
 define( 'LEARNDASH_SETTINGS_TRIGGER_UPGRADE_VERSION', '2.3.0.4' );
+define( 'LEARNDASH_LMS_TEXT_DOMAIN', 'learndash' );
 
 if ( !defined('LEARNDASH_LMS_PLUGIN_DIR' ) ) {
 	define( 'LEARNDASH_LMS_PLUGIN_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
@@ -33,6 +34,10 @@ if ( !defined('LEARNDASH_LMS_PLUGIN_KEY' ) ) {
 	$current_plugin_dir = LEARNDASH_LMS_PLUGIN_DIR;
 	$current_plugin_dir = basename( $current_plugin_dir ) .'/'. basename( __FILE__);
 	define( 'LEARNDASH_LMS_PLUGIN_KEY', $current_plugin_dir );
+}
+
+if ( !defined( 'LEARNDASH_TRANSIENTS_DISABLED' ) ) {
+	define( 'LEARNDASH_TRANSIENTS_DISABLED', false );
 }
 
 // If the WordPress 'SCRIPT_DEBUG' is set then we also set our 'LEARNDASH_SCRIPT_DEBUG' so we are serving non-minified scripts

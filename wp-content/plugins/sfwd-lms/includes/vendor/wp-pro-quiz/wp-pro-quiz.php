@@ -22,6 +22,7 @@ define('WPPROQUIZ_URL', plugins_url('', __FILE__));
 define('WPPROQUIZ_FILE', __FILE__);
 define('WPPROQUIZ_PPATH', dirname(plugin_basename(__FILE__)));
 define('WPPROQUIZ_PLUGIN_PATH', WPPROQUIZ_PATH.'/plugin');
+define('WPPROQUIZ_TEXT_DOMAIN', 'wp-pro-quiz' );
 
 $uploadDir = wp_upload_dir();
 
@@ -88,9 +89,9 @@ function wpProQuiz_autoload($class) {
 function wpProQuiz_pluginLoaded() {
 	
 	if ((defined('LD_LANG_DIR')) && (LD_LANG_DIR)) {
-		load_plugin_textdomain( 'wp-pro-quiz', false, LD_LANG_DIR );
+		load_plugin_textdomain( WPPROQUIZ_TEXT_DOMAIN, false, LD_LANG_DIR );
 	} else {
-		load_plugin_textdomain('wp-pro-quiz', false, WPPROQUIZ_PPATH.'/languages');
+		load_plugin_textdomain( WPPROQUIZ_TEXT_DOMAIN, false, WPPROQUIZ_PPATH.'/languages');
 	}
 	
 	if(get_option('wpProQuiz_version') !== WPPROQUIZ_VERSION) {

@@ -936,7 +936,7 @@ function manage_asigned_assignment_columns( $column_name, $assignment_id ) {
 				}
 			
 			} else {
-				_e('Not Enabed', 'learndash');
+				_e('Not Enabled', 'learndash');
 			}		
 			break;
 			
@@ -1793,8 +1793,10 @@ function learndash_certificate_shortcodes_page() {
 										<i>aggregate</i> is sum for all %s of the %s.<br>
 									<br>Example: <b>[courseinfo show="cumulative_score"]</b> shows average points scored across all quizzes on the course.', 'placeholders: quizzes, course, quizzes, course', 'learndash' ), LearnDash_Custom_Label::label_to_lower( 'quizzes' ), LearnDash_Custom_Label::label_to_lower( 'course' ), LearnDash_Custom_Label::label_to_lower( 'quizzes' ), LearnDash_Custom_Label::label_to_lower( 'course' )) . '<br><br></li>
 									<li><b>FORMAT</b>: ' . __( 'This can be used to change the date format. Default: "F j, Y, g:i a" shows as <i>March 10, 2001, 5:16 pm</i>. <br>Example: <b>[courseinfo show="completed_on" format="Y-m-d H:i:s"]</b> will show as <i>2001-03-10 17:16:18</i>', 'learndash' ) . '</li>
+									<li><b>DECIMALS</b>: ' . __('This can be used to change the number of decimal places displayed for number values. Default is 2 places as in 1.00<br />Example: <b>[courseinfo show="cumulative_percentage" decimals="0"]</b> will show the integer value instead of a number with two decimal places.', 'learndash') . '</li>
+									
 								</ul>
-							<p>' . __( 'See <a target="_blank" href="http://php.net/manual/en/function.date.php">the full list of available date formating strings  here.</a>',      'learndash' ) . '</p>';
+							<p>' . __( 'See <a target="_blank" href="http://php.net/manual/en/function.date.php">the full list of available date formating strings  here.</a>', 'learndash' ) . '</p>';
 					?>
 					</div>
 				</div>
@@ -1850,11 +1852,14 @@ function learndash_course_shortcodes_page() {
 					<br>
 					<p><b>[learndash_course_progress]</b></p><p>' . sprintf( _x( 'This shortcode displays users progress bar for the %s in any %s/%s/%s pages.', 'placeholders: course, course, lesson, quiz', 'learndash' ), LearnDash_Custom_Label::label_to_lower( 'course' ), LearnDash_Custom_Label::label_to_lower( 'course' ), LearnDash_Custom_Label::label_to_lower( 'lesson' ), LearnDash_Custom_Label::label_to_lower( 'quiz' ) ) . '</p>
 					<br>
-					<p><b>[visitor]</b></p><p>' . sprintf( _x( 'This shortcode shows the content if the user is not enrolled in the %s. Example usage: <strong>[visitor]</strong>Welcome Visitor!<strong>[/visitor]</strong>', 'placeholders: course', 'learndash' ), LearnDash_Custom_Label::label_to_lower( 'course' ) ) . '</p>
+					<p><b>[visitor]</b></p><p>' . sprintf( _x( 'This shortcode shows the content if the user is not enrolled in the %s. The shortcode can be used on any page. Example usage: <strong>[visitor]</strong>Welcome Visitor!<strong>[/visitor]</strong>', 'placeholders: course', 'learndash' ), LearnDash_Custom_Label::label_to_lower( 'course' ) ) . '</p>
+					<ul>
+					<li><b>course_id</b>: ' . sprintf( _x( 'Optional. Show content if the student does not have access to a specific %s. Example: [visitor course_id="10"]insert any content[/visitor]</b>', 'placeholders: courses, courses', 'learndash' ), LearnDash_Custom_Label::label_to_lower( 'course' ) ) . '</li>
+					</ul>
 					<br>
                     <p><b>[student]</b></p><p>' . sprintf( _x( 'This shortcode shows the content if the user is enrolled in the %s. Example usage: <strong>[student]</strong>Welcome Student!<strong>[/student]</strong> This shortcode can take following parameters:', 'placeholders: course', 'learndash' ), LearnDash_Custom_Label::label_to_lower( 'course' ) ) . '</p>
 					<ul>
-					<li><b>course_id</b>: ' . sprintf( _x( 'Optional. Show content if the student has access to a specific course. Example: [student course_id="10"]insert any content[/student]</b>', 'placeholders: courses, courses', 'learndash' ), LearnDash_Custom_Label::label_to_lower( 'course' ) ) . '</li>
+					<li><b>course_id</b>: ' . sprintf( _x( 'Optional. Show content if the student has access to a specific %s. Example: [student course_id="10"]insert any content[/student]</b>', 'placeholders: courses, courses', 'learndash' ), LearnDash_Custom_Label::label_to_lower( 'course' ) ) . '</li>
 					</ul>
 					<br>
 					<p><b>[course_complete]</b></p><p>' . sprintf( _x( 'This shortcode shows the content if the user has completed the %s. Example usage: <strong>[course_complete]</strong> You have completed this %s. <strong>[/course_complete]</strong>', 'placeholders: course, course', 'learndash' ), LearnDash_Custom_Label::label_to_lower( 'course' ), LearnDash_Custom_Label::label_to_lower( 'course' ) ) . '</p>

@@ -1,6 +1,6 @@
 <?php
 
-//No direct access to the file 
+//No direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
 	exit( 0 );
 }
@@ -211,7 +211,7 @@ function mpp_activity_delete_activity_type( $activity_id ) {
  *
  */
 function mpp_activity_mark_attached_media( $activity_id ) {
-
+	// error_log("mpp_activity_mark_attached_media :: media ids " . var_export($_POST['mpp-attached-media'], true) . " \n", 3, WP_CONTENT_DIR . '/uploads/bea_debug.log' );
 	if ( empty( $_POST['mpp-attached-media'] ) || ! is_user_logged_in() ) {
 		return;
 	}
@@ -419,7 +419,7 @@ function mpp_record_activity( $args = null ) {
 
 /* * *
  * Since BuddyPress does not allow filtering activity comment template, we do it ourself here
- * 
+ *
  * @see bp_activity_comments for the originalc code
  */
 
@@ -493,7 +493,7 @@ function mpp_activity_recurse_comments( $comment ) {
 
 /* * *
  * Activity comment sync
- * 
+ *
  */
 
 function mpp_activity_get_associated_comment_id( $activity_id ) {
@@ -641,7 +641,7 @@ function mpp_delete_activity_for_single_published_media( $media_id ) {
 
 /* * *
  * Delete activity items by activity meta key and value
- * 
+ *
  */
 
 function mpp_delete_activity_by_meta_key_value( $key, $object_id = null ) {

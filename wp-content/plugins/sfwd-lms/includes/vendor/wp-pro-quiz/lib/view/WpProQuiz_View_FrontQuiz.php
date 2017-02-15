@@ -85,7 +85,8 @@ class WpProQuiz_View_FrontQuiz extends WpProQuiz_View_View {
 		if ( $preview ) {
 			add_action( "admin_footer", array( $this, "script_preview" ) );
 		} else {
-			add_action( "wp_footer", array( $this, "script" ) );
+			//add_action( "wp_footer", array( $this, "script" ) );
+			add_action( "wp_print_footer_scripts", array( $this, "script" ), 999 );
 		}
 
 	}

@@ -155,45 +155,80 @@ function ld_course_list( $attr ) {
 	if ( trim( $categoryselector ) == 'true' ) {
 		$cats = array();
 		$posts = get_posts( $filter );
+		
+		
+		// We first need to build a listing of the categories used by each of the queried posts. 
+		if ( !empty( $posts ) ) {
+			foreach( $posts as $post ) {
+				$post_categories = wp_get_post_categories( $post->ID );
+				if ( !empty( $post_categories ) ) {
+					foreach( $post_categories as $c ) {
 
-		foreach( $posts as $post ) {
-			$post_categories = wp_get_post_categories( $post->ID );
+						if ( empty( $cats[ $c ] ) ) {
+							$cat = get_category( $c );
+							$cats[ $c ] = array(
+								'id' => $cat->cat_ID, 
+								'name' => $cat->name, 
+								'slug' => $cat->slug, 
+								'parent' => $cat->parent, 
+								'count' => 0, 
+								'posts' => array()
+							); 
+						}
 
-			foreach( $post_categories as $c ) {
-
-				if ( empty( $cats[ $c ] ) ) {
-					$cat = get_category( $c );
-					$cats[ $c ] = array('id' => $cat->cat_ID, 'name' => $cat->name, 'slug' => $cat->slug, 'parent' => $cat->parent, 'count' => 0, 'posts' => array()); //stdClass Object ( [term_id] => 39 [name] => Category 2 [slug] => category-2 [term_group] => 0 [term_taxonomy_id] => 41 [taxonomy] => category [description] => [parent] => 0 [count] => 3 [object_id] => 656 [filter] => raw [cat_ID] => 39 [category_count] => 3 [category_description] => [cat_name] => Category 2 [category_nicename] => category-2 [category_parent] => 0 )
-					
+						$cats[ $c ]['count']++;
+						$cats[ $c ]['posts'][] = $post->ID;
+					}
 				}
-
-				$cats[ $c ]['count']++;
-				$cats[ $c ]['posts'][] = $post->ID;
 			}
+			
+			// Once we have these categories we need to requery the categories in order to get them into a proper ordering. 
+			if ( !empty( $cats ) ) {
+		
+				// And also let this query be filtered.
+				$get_categories_args = apply_filters(
+					'learndash_course_list_category_args', 
+					array(
+						'type' 		=>	$post_type,
+						'include'	=>	array_keys($cats),
+						'orderby'	=>	'name',
+						'order'		=>	'ASC'
+					)
+				);
+		
+				if ( !empty( $get_categories_args ) ) {
+					$categories = get_categories( $get_categories_args );
+					if ( !empty( $categories ) ) {
 
+						$categorydropdown = '<div id="ld_categorydropdown">';
+						$categorydropdown.= '<form method="get">
+								<label for="ld_categorydropdown_select">' . __( 'Categories', 'learndash' ) . '</label>
+								<select id="ld_categorydropdown_select" name="catid" onChange="jQuery(\'#ld_categorydropdown form\').submit()">';
+						$categorydropdown.= '<option value="">' . __( 'Select category', 'learndash' ) . '</option>';
+
+						foreach( $categories as $category ) {
+						
+							if ( isset( $cats[$category->term_id] ) ) {
+								$cat = $cats[$category->term_id];
+								$selected =( empty( $_GET['catid'] ) || $_GET['catid'] != $cat['id'] ) ? '' : 'selected="selected"';
+								$categorydropdown.= "<option value='" . $cat['id'] . "' " . $selected . '>' . $cat['name'] . ' (' . $cat['count'] . ')</option>';
+							}
+						}
+
+						$categorydropdown.= "</select><input type='submit' style='display:none'></form></div>";
+
+						/**
+						 * Filter HTML output of category dropdown
+						 * 
+						 * @since 2.1.0
+						 * 
+						 * @param  string  $categorydropdown
+						 */
+						echo apply_filters( 'ld_categorydropdown', $categorydropdown, $shortcode_atts, $filter );
+					}
+				}
+			}
 		}
-
-		$categorydropdown = '<div id="ld_categorydropdown">';
-		$categorydropdown.= '<form method="get">
-				<label for="ld_categorydropdown_select">' . __( 'Categories', 'learndash' ) . '</label>
-				<select id="ld_categorydropdown_select" name="catid" onChange="jQuery(\'#ld_categorydropdown form\').submit()">';
-		$categorydropdown.= '<option value="">' . __( 'Select category', 'learndash' ) . '</option>';
-
-		foreach( $cats as $cat ) {
-			$selected =( empty( $_GET['catid'] ) || $_GET['catid'] != $cat['id'] ) ? '' : 'selected="selected"';
-			$categorydropdown.= "<option value='" . $cat['id'] . "' " . $selected . '>' . $cat['name'] . ' (' . $cat['count'] . ')</option>';
-		}
-
-		$categorydropdown.= "</select><input type='submit' style='display:none'></form></div>";
-
-		/**
-		 * Filter HTML output of category dropdown
-		 * 
-		 * @since 2.1.0
-		 * 
-		 * @param  string  $categorydropdown
-		 */
-		echo apply_filters( 'ld_categorydropdown', $categorydropdown, $shortcode_atts, $filter );
 	}
 
 	$col = intval($col);
@@ -340,21 +375,25 @@ function ld_course_check_user_access( $course_id, $user_id = null ) {
  * @param  string 	$content 	content of shortcode
  * @return string   			shortcode output
  */
-function learndash_visitor_check_shortcode( $atts, $content = null ) {
+function learndash_visitor_check_shortcode( $atts, $content = '' ) {
 	global $learndash_shortcode_used;
-	$learndash_shortcode_used = true;
 
-	if ( ! is_singular() || is_null( $content ) ) {
-		return '';
-	}
+	if ( !empty( $content ) ) {
 	
-	$course_id = learndash_get_course_id();
-	
-	if ( ! sfwd_lms_has_access( $course_id ) ) {
-		return do_shortcode( $content );
-	}
-	
-	return '';
+		$defaults = array(
+			'course_id' => learndash_get_course_id()
+		);
+		$atts = wp_parse_args( $atts, $defaults );
+		
+		if ( ( !is_user_logged_in() ) || ( ( ! empty( $atts['course_id'] ) ) && ( ! sfwd_lms_has_access( $atts['course_id'] ) ) ) ) {
+			$learndash_shortcode_used = true;
+			$content = do_shortcode( $content );
+		} else {
+			$content = '';
+		}
+	}	
+
+	return $content;
 }
 
 add_shortcode( 'visitor', 'learndash_visitor_check_shortcode' );
@@ -374,7 +413,6 @@ add_shortcode( 'visitor', 'learndash_visitor_check_shortcode' );
  */
 function learndash_student_check_shortcode( $atts, $content = null ) {
 	global $learndash_shortcode_used;
-	$learndash_shortcode_used = true;
 
 	if ( ( is_singular() ) && ( !is_null( $content ) ) & ( is_user_logged_in() ) ) {
 	
@@ -393,6 +431,7 @@ function learndash_student_check_shortcode( $atts, $content = null ) {
 			$course_id = learndash_get_course_id( $atts['course_id'] );
 			if ( $course_id == $atts['course_id'] ) {
 				if ( sfwd_lms_has_access( $atts['course_id'], $atts['user_id'] ) ) {
+					$learndash_shortcode_used = true;
 					return do_shortcode( $content );
 				}
 			}

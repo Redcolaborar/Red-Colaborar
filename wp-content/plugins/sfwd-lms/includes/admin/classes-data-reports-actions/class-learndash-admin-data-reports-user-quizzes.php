@@ -127,7 +127,7 @@ if ( !class_exists( 'Learndash_Admin_Data_Reports_Quizzes' ) ) {
 						$this->send_report_headers_to_csv();
 						
 					} else {
-						$this->transient_data = get_transient( $this->transient_key );
+						$this->transient_data = learndash_get_valid_transient( $this->transient_key );
 						$this->report_filename = ABSPATH . $this->transient_data['report_filename'];
 					}
 								
@@ -223,6 +223,10 @@ if ( !class_exists( 'Learndash_Admin_Data_Reports_Quizzes' ) ) {
 							}
 
 							if ( !empty( $course_progress_data ) ) {
+								$this->csv_parse->file = $this->report_filename;
+								$this->csv_parse->output_filename = $this->report_filename;
+								$this->csv_parse = apply_filters('learndash_csv_object', $this->csv_parse, 'quizzes' );
+								
 								$this->csv_parse->save( $this->report_filename, $course_progress_data, true );
 							}
 						} 
@@ -329,6 +333,10 @@ if ( !class_exists( 'Learndash_Admin_Data_Reports_Quizzes' ) ) {
 
 		function send_report_headers_to_csv() {
 			if ( !empty( $this->data_headers ) ) {
+				$this->csv_parse->file = $this->report_filename;
+				$this->csv_parse->output_filename = $this->report_filename;
+				$this->csv_parse = apply_filters('learndash_csv_object', $this->csv_parse, 'quizzes' );
+				
 				$this->csv_parse->save( $this->report_filename, array( wp_list_pluck( $this->data_headers, 'label' ) ), false );
 			}
 		}

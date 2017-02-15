@@ -177,7 +177,13 @@ class LearnDash_Custom_Label {
 	 */
 	public function update_option( $option, $old_value , $new_value ) {
 		if ( 'learndash_custom_label_settings' == $option ) {
-			flush_rewrite_rules();
+			//flush_rewrite_rules();
+			
+			// Changed in v2.3.2. Here we set a transient flag. 
+			// This transient is checked durng the 'shortdown' action 
+			// And if needed flush rewrites.
+			set_transient( 'sfwd_lms_rewrite_flush', true );
+			
 		}
 	}
 

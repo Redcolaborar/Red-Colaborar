@@ -290,7 +290,7 @@ if ( !class_exists( 'Learndash_Admin_Data_Upgrades_User_Meta_Courses' ) ) {
 							$course_args['activity_meta']['steps_last_id'] = intval( $course_data['last_id'] );
 						}
 						
-						error_log('course_args<pre>'. print_r($course_args, true) .'</pre>');
+						//error_log('course_args<pre>'. print_r($course_args, true) .'</pre>');
 						learndash_update_user_activity( $course_args ); 
 					//}
 

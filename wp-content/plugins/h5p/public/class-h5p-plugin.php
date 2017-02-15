@@ -24,7 +24,7 @@ class H5P_Plugin {
    * @since 1.0.0
    * @var string
    */
-  const VERSION = '1.7.7';
+  const VERSION = '1.7.10';
 
   /**
    * The Unique identifier for this plugin.
@@ -300,6 +300,13 @@ class H5P_Plugin {
       PRIMARY KEY  (library_id,hash)
     ) {$charset};");
 
+    dbDelta("CREATE TABLE {$wpdb->prefix}h5p_tmpfiles (
+      path VARCHAR(255) NOT NULL,
+      created_at INT UNSIGNED NOT NULL,
+      PRIMARY KEY  (path),
+      KEY created_at (created_at)
+    ) {$charset};");
+
     // Add default setting options
     add_option('h5p_frame', TRUE);
     add_option('h5p_export', TRUE);
@@ -359,16 +366,13 @@ class H5P_Plugin {
     }
 
     // Split version number
-    $current_version = explode('.', $current_version);
-    $major = (int) $current_version[0];
-    $minor = (int) $current_version[1];
-    $patch = (int) $current_version[2];
+    $v = self::split_version($current_version);
 
     // Check and update database
     self::update_database();
 
     // Run version specific updates
-    if ($major < 1 || ($major === 1 && $minor < 2)) { // < 1.2.0
+    if ($v->major < 1 || ($v->major === 1 && $v->minor < 2)) { // < 1.2.0
       self::upgrade_120();
     }
 
@@ -379,6 +383,26 @@ class H5P_Plugin {
     else {
       update_option('h5p_version', self::VERSION);
     }
+  }
+
+  /**
+   * Parse version string into smaller components.
+   *
+   * @since 1.7.9
+   * @param string $version
+   * @return stdClass|boolean False on failure to parse
+   */
+  public static function split_version($version) {
+    $version_parts = explode('.', $version);
+    if (count($version_parts) !== 3) {
+      return FALSE;
+    }
+
+    return (object) array(
+      'major' => (int) $version_parts[0],
+      'minor' => (int) $version_parts[1],
+      'patch' => (int) $version_parts[2]
+    );
   }
 
   /**
@@ -732,9 +756,6 @@ class H5P_Plugin {
     global $wpdb;
     $core = $this->get_h5p_instance('core');
 
-    // Add global disable settings
-    $content['disable'] |= $core->getGlobalDisable();
-
     $safe_parameters = $core->filterParameters($content);
     if (has_action('h5p_alter_filtered_parameters')) {
       // Parse the JSON parameters
@@ -757,6 +778,9 @@ class H5P_Plugin {
       $safe_parameters = json_encode($decoded_parameters);
     }
 
+    // Getting author's user id
+    $author_id = (int)(is_array($content) ? $content['user_id'] : $content->user_id);
+
     // Add JavaScript settings for this content
     $settings = array(
       'library' => H5PCore::libraryToString($content['library']),
@@ -767,7 +791,7 @@ class H5P_Plugin {
       'resizeCode' => '<script src="' . plugins_url('h5p/h5p-php-library/js/h5p-resizer.js') . '" charset="UTF-8"></script>',
       'url' => admin_url('admin-ajax.php?action=h5p_embed&id=' . $content['id']),
       'title' => $content['title'],
-      'disable' => $content['disable'],
+      'displayOptions' => $core->getDisplayOptionsForView($content['disable'], $author_id),
       'contentUserData' => array(
         0 => array(
           'state' => '{}'
@@ -937,14 +961,9 @@ class H5P_Plugin {
       'baseUrl' => get_site_url(),
       'url' => $this->get_h5p_url(),
       'postUserStatistics' => (get_option('h5p_track_user', TRUE) === '1') && $current_user->ID,
-      'ajaxPath' => admin_url('admin-ajax.php?action=h5p_'),
       'ajax' => array(
-        'setFinished' => admin_url('admin-ajax.php?action=h5p_setFinished'),
-        'contentUserData' => admin_url('admin-ajax.php?action=h5p_contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId')
-      ),
-      'tokens' => array(
-        'result' => wp_create_nonce('h5p_result'),
-        'contentUserData' => wp_create_nonce('h5p_contentuserdata')
+        'setFinished' => admin_url('admin-ajax.php?token=' . wp_create_nonce('h5p_result') . '&action=h5p_setFinished'),
+        'contentUserData' => admin_url('admin-ajax.php?token=' . wp_create_nonce('h5p_contentuserdata') . '&action=h5p_contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId')
       ),
       'saveFreq' => get_option('h5p_save_content_state', FALSE) ? get_option('h5p_save_content_frequency', 30) : FALSE,
       'siteUrl' => get_site_url(),
@@ -1075,38 +1094,63 @@ class H5P_Plugin {
    * @since 1.0.0
    */
   public function remove_old_tmp_files() {
-    $plugin = H5P_Plugin::get_instance();
+    global $wpdb;
 
-    $h5p_path = $plugin->get_h5p_path();
+    $older_than = time() - 86400;
+    $num = 0; // Number of files deleted
+
+    // Locate files not saved in over a day
+    $files = $wpdb->get_results($wpdb->prepare(
+        "SELECT path
+           FROM {$wpdb->prefix}h5p_tmpfiles
+          WHERE created_at < %d",
+        $older_than)
+      );
+
+    // Delete files from file system
+    foreach ($files as $file) {
+      if (@unlink($file->path)) {
+        $num++;
+      }
+    }
+
+    // Remove from tmpfiles table
+    $wpdb->query($wpdb->prepare(
+        "DELETE FROM {$wpdb->prefix}h5p_tmpfiles
+          WHERE created_at < %d",
+        $older_than));
+
+    // Old way of cleaning up tmp files. Needed as a transitional fase and it doesn't really harm to have it here any way.
+    $h5p_path = $this->get_h5p_path();
     $editor_path = $h5p_path . DIRECTORY_SEPARATOR . 'editor';
-    if (!is_dir($h5p_path) || !is_dir($editor_path)) {
-      return;
-    }
+    if (is_dir($h5p_path) && is_dir($editor_path)) {
+      $dirs = glob($editor_path . DIRECTORY_SEPARATOR . '*');
+      if (!empty($dirs)) {
+        foreach ($dirs as $dir) {
+          if (!is_dir($dir)) {
+            continue;
+          }
 
-    $dirs = glob($editor_path . DIRECTORY_SEPARATOR . '*');
-    if (empty($dirs)) {
-      return;
-    }
+          $files = glob($dir . DIRECTORY_SEPARATOR . '*');
+          if (empty($files)) {
+            continue;
+          }
 
-    foreach ($dirs as $dir) {
-      if (!is_dir($dir)) {
-        continue;
-      }
-
-      $files = glob($dir . DIRECTORY_SEPARATOR . '*');
-      if (empty($files)) {
-        continue;
-      }
-
-      foreach ($files as $file) {
-        if (time() - filemtime($file) > 86400) {
-          // Not modified in over a day
-          unlink($file);
-
-          // Clear cached value for dirsize.
-          delete_transient('dirsize_cache');
+          foreach ($files as $file) {
+            if (filemtime($file) < $older_than) {
+              // Not modified in over a day
+              if (unlink($file)) {
+                $num++;
+              }
+            }
+          }
         }
       }
+    }
+
+    if ($num) {
+      // Clear cached value for dirsize.
+      delete_transient('dirsize_cache');
     }
   }
 

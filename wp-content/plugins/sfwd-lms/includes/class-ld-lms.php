@@ -55,13 +55,11 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			add_filter( 'pre_update_option_active_plugins', array( $this, 'pre_update_option_active_plugins' ) );
 			add_filter( 'pre_update_site_option_active_sitewide_plugins', array( $this, 'pre_update_site_option_active_sitewide_plugins' ) );
 
-			if ( is_admin() && get_transient( 'sfwd_lms_rewrite_flush' ) ) {
-				add_action( 'admin_init', 'flush_rewrite_rules' );
-				set_transient( 'sfwd_lms_rewrite_flush', false );
-			}
-
 			//add_action( 'init', array( $this, 'upgrade_settings') );
 			add_action( 'init', array( $this, 'load_template_functions') );
+
+			add_action( 'shutdown', array( $this, 'wp_shutdown' ), 0 ); 
+
 
 			if (is_admin()) {
 				require_once( LEARNDASH_LMS_PLUGIN_DIR .'includes/admin/class-learndash-admin-groups-edit.php' );
@@ -92,6 +90,49 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			add_action( 'wp_ajax_select_a_lesson', array( $this, 'select_a_lesson_ajax' ) );
 			add_action( 'wp_ajax_select_a_lesson_or_topic', array( $this, 'select_a_lesson_or_topic_ajax' ) );
 		}
+
+		function wp_shutdown() {
+			// check if we triggered the rewrite flush
+			$sfwd_lms_rewrite_flush_transient = get_transient( 'sfwd_lms_rewrite_flush' );
+
+			if ( $sfwd_lms_rewrite_flush_transient ) {
+				$PERFORM_REWRITE_FLUSH = false;
+				
+				delete_transient( 'sfwd_lms_rewrite_flush' );
+				
+				$ld_rewrite_post_types = array(
+					'sfwd-courses'	=>	'courses',
+					'sfwd-lessons'	=>	'lessons',
+					'sfwd-topic'	=>	'topic',
+					'sfwd-quiz'		=>	'quizzes'
+				);
+				
+				foreach ( $ld_rewrite_post_types as $cpt_key => $custom_label_key ) {
+					$post_type_object = get_post_type_object( $cpt_key );
+					if ( $post_type_object instanceof WP_Post_Type ) {
+						$cpt_label_value = LearnDash_Custom_Label::label_to_slug( $custom_label_key );
+						
+						if ( ( !empty( $cpt_label_value ) ) && ( !empty( $post_type_object->rewrite['slug'] ) ) && ( $cpt_label_value != $post_type_object->rewrite['slug'] ) ) {
+							//error_log('BEFORE:['. $cpt_key .'] slug['. $post_type_object->rewrite['slug'] .'] label['. $cpt_label_value .']');
+							$post_type_object->rewrite['slug'] = $cpt_label_value;
+
+							register_post_type( $cpt_key, $post_type_object );
+							$PERFORM_REWRITE_FLUSH = true;
+							
+							$post_type_object2 = get_post_type_object( $cpt_key );
+							//error_log('post_type_object2<pre>'. print_r($post_type_object2, true) .'</pre>');
+							//error_log('AFTER: ['. $cpt_key .'] slug['. $post_type_object2->rewrite['slug'] .'] label['. $cpt_label_value .']');
+						}
+					}
+				}
+				
+				if ( $PERFORM_REWRITE_FLUSH == true ) {
+					//error_log('calling flush_rewrite_rules');
+					flush_rewrite_rules();
+				}
+			}
+		}
+
 
 
 		/**
@@ -143,14 +184,10 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 */
 		function i18nize() {
 			
-			//$locale = apply_filters( 'plugin_locale', get_locale(), 'learndash' ); 
-			//load_textdomain( 'learndash', WP_LANG_DIR . '/learndash/learndash-' . $locale . '.mo' ); 
-			//load_plugin_textdomain('learndash', false, dirname( plugin_basename( dirname( __FILE__ ) ) ) . '/languages' ); 
-			
-			if ((defined('LD_LANG_DIR')) && (LD_LANG_DIR)) {
-				load_plugin_textdomain( 'learndash', false, LD_LANG_DIR );
+			if ( ( defined( 'LD_LANG_DIR' ) ) && ( LD_LANG_DIR ) ) {
+				load_plugin_textdomain( LEARNDASH_LMS_TEXT_DOMAIN, false, LD_LANG_DIR );
 			} else {
-				load_plugin_textdomain( 'learndash', false, dirname( plugin_basename( dirname( __FILE__ ) ) ) . '/languages/' );
+				load_plugin_textdomain( LEARNDASH_LMS_TEXT_DOMAIN, false, dirname( plugin_basename( dirname( __FILE__ ) ) ) . '/languages' );
 			}
 		}
 
@@ -1008,7 +1045,8 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 						'supports' => array ( 'title', 'custom-fields' ), 
 						'exclude_from_search' => true, 
 						'publicly_queryable' => false, 
-						'show_in_nav_menus' => false , 
+						'show_in_nav_menus' => false, 
+						'show_in_admin_bar' => false,
 						'show_in_menu'	=> 'edit.php?post_type=sfwd-courses'
 					),
 					'fields' => array(),
@@ -1477,7 +1515,9 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				require_once( dirname( __FILE__ ) . '/vendor/parsecsv.lib.php' );
 
 				$csv = new lmsParseCSV();
-
+				$this->csv->file = 'courses.csv';
+				$this->csv->output_filename = 'courses.csv';
+				$csv = apply_filters('learndash_csv_object', $csv, 'courses' );
 				 /**
 				 * Filter the content will print onto the exported CSV
 				 * 
@@ -1791,6 +1831,10 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				$content = apply_filters( 'quiz_export_data', $content, $users, @$group_id );
 
 				$csv = new lmsParseCSV();
+				$this->csv->file = 'quizzes.csv';
+				$this->csv->output_filename = 'quizzes.csv';
+				$csv = apply_filters('learndash_csv_object', $csv, 'quizzes' );
+				
 				$csv->output('quizzes.csv', $content, array_keys( reset( $content ) ) );
 				die();
 
@@ -1873,6 +1917,11 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 
 				if ( ! empty( $content ) ) {
 					$csv = new lmsParseCSV();
+
+					$this->csv->file = 'transactions.csv';
+					$this->csv->output_filename = 'transactions.csv';
+					$csv = apply_filters('learndash_csv_object', $csv, 'transactions' );
+					
 					$csv->output( true, 'transactions.csv', $content, array_keys( reset( $content ) ) );
 				}
 

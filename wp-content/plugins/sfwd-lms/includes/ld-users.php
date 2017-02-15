@@ -303,7 +303,7 @@ function learndash_user_get_enrolled_courses( $user_id = 0, $course_query_args =
 	$transient_key = "learndash_user_courses_" . $user_id;
 
 	if ( !$bypass_transient ) {
-		$courses_ids_transient = get_transient( $transient_key );
+		$courses_ids_transient = learndash_get_valid_transient( $transient_key );
 		//error_log('from transient: ['. $transient_key .']');
 	} else {
 		$courses_ids_transient = false;
@@ -398,7 +398,7 @@ function learndash_user_get_enrolled_courses_old( $user_id = 0, $bypass_transien
 	$transient_key = "learndash_user_courses_" . $user_id;
 
 	if (!$bypass_transient) {
-		$enrolled_courses_ids_transient = get_transient( $transient_key );
+		$enrolled_courses_ids_transient = learndash_get_valid_transient( $transient_key );
 		//error_log('from transient: ['. $transient_key .']');
 	} else {
 		$enrolled_courses_ids_transient = false;

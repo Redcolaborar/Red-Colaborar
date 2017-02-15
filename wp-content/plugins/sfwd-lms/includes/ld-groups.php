@@ -143,6 +143,8 @@ function learndash_groups_post_content() {
 	 * @var array $args
 	 */
 	$args = apply_filters( 'learndash_post_args_groups', $args );
+	$args = apply_filters( 'learndash-cpt-options', $args, 'groups' );
+	
 	register_post_type( 'groups', $args );
 
 }
@@ -250,7 +252,8 @@ function learndash_all_group_leader_ids() {
  */
 function learndash_all_group_leaders() {
 	$transient_key = "learndash_group_leaders";
-	$group_user_objects = get_transient( $transient_key );
+	//$group_user_objects = get_transient( $transient_key );
+	$group_user_objects = learndash_get_valid_transient( $transient_key );
 	if ( $group_user_objects === false ) {
 	
 		$user_query_args = array(
@@ -361,7 +364,7 @@ function learndash_group_enrolled_courses( $group_id = 0, $bypass_transient = fa
 		$transient_key = "learndash_group_courses_" . $group_id;
 		
 		if (!$bypass_transient) {
-			$group_courses_ids_transient = get_transient( $transient_key );
+			$group_courses_ids_transient = learndash_get_valid_transient( $transient_key );
 	
 		} else {
 			$group_courses_ids_transient = false;
@@ -726,7 +729,7 @@ function learndash_get_users_group_ids( $user_id = 0, $bypass_transient = false 
 		$transient_key = "learndash_user_groups_" . $user_id;
 
 		if (!$bypass_transient) {
-			$user_group_ids_transient = get_transient( $transient_key );
+			$user_group_ids_transient = learndash_get_valid_transient( $transient_key );
 		} else {
 			$user_group_ids_transient = false;
 		}
@@ -797,7 +800,7 @@ function learndash_get_course_groups( $course_id = 0, $bypass_transient = false 
 	if ( !empty( $course_id ) ) {
 		$transient_key = "learndash_course_groups_" . $course_id;
 		if (!$bypass_transient) {
-			$course_groups_ids_transient = get_transient( $transient_key );
+			$course_groups_ids_transient = learndash_get_valid_transient( $transient_key );
 		} else {
 			$course_groups_ids_transient = false;
 		}
@@ -894,7 +897,7 @@ function learndash_get_groups_users( $group_id, $bypass_transient = false ) {
 	
 	if (!$bypass_transient) {
 		$transient_key = "learndash_group_users_" . $group_id;
-		$group_users_objects = get_transient( $transient_key );
+		$group_users_objects = learndash_get_valid_transient( $transient_key );
 	} else {
 		$group_users_objects = false;
 	}
@@ -1045,7 +1048,7 @@ function learndash_get_groups_administrators( $group_id, $bypass_transient = fal
 	$transient_key = "learndash_group_leaders_" . $group_id;
 
 	if ( !$bypass_transient ) {
-		$group_user_objects = get_transient( $transient_key );
+		$group_user_objects = learndash_get_valid_transient( $transient_key );
 	} else {
 		$group_user_objects = false;
 	}

@@ -157,6 +157,7 @@ global $pagenow;
 
 	<?php /* Quizzes */ ?>
 	<?php if ( $quizzes ) : ?>
+		<div id="quiz_progress_details">
 		<?php
 			global $learndash_assets_loaded;
 			
@@ -327,7 +328,7 @@ global $pagenow;
 				</p>
 			<?php endif; ?>	
 		<?php endforeach; ?>
-
+		</div>
 	<?php endif; ?>
 	<!-- End Course info shortcode -->
 </div>

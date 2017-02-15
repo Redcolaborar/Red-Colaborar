@@ -227,10 +227,10 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Groups' ) ) {
 			}
 			
 			if ( 'Private Group' == $type ) {
-				$type = __( "Private Course Group", "buddypress" );
+				$type = __( "Private Course Group", "buddypress-learndash" );
 			}
 			if ( 'Hidden Group' == $type ) {
-				$type = __( "Hidden Course Group", "buddypress" );
+				$type = __( "Hidden Course Group", "buddypress-learndash" );
 			}
 			
 			return apply_filters( 'bp_learndash_course_group_text', $type );
@@ -260,9 +260,9 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Groups' ) ) {
 
 					if ( empty($group_attached) || $group_attached == '-1' )	return $content;
 
-					global $bp;
-					$group_data = groups_get_slug($group_attached);
-					$html = '<p class="bp-group-discussion"><a class="button" href="'. trailingslashit(home_url()).trailingslashit($bp->groups->slug).$group_data .'">'. sprintf( __('%s Discussion','buddypress-learndash'), LearnDash_Custom_Label::get_label( 'course' ) ).'</a></p>';
+					$group 		= groups_get_group( array( 'group_id' => $group_attached ) );
+					$group_link = bp_get_group_permalink( $group );
+					$html 		= '<p class="bp-group-discussion"><a class="button" href="'. $group_link .'">'. sprintf( __('%s Discussion','buddypress-learndash'), LearnDash_Custom_Label::get_label( 'course' ) ).'</a></p>';
 
 					$content .= $html;
 				}

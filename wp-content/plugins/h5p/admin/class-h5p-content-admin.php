@@ -124,13 +124,8 @@ class H5PContentAdmin {
     if (current_user_can('edit_others_h5p_contents')) {
       return TRUE;
     }
-
-    $user_id = get_current_user_id();
-    if (is_array($content)) {
-      return ($user_id === (int)$content['user_id']);
-    }
-
-    return ($user_id === (int)$content->user_id);
+    $author_id = (int)(is_array($content) ? $content['user_id'] : $content->user_id);
+    return get_current_user_id() === $author_id;
   }
 
   /**
@@ -449,10 +444,12 @@ class H5PContentAdmin {
     $safe_text = _wp_specialchars($safe_text, ENT_QUOTES, false, true);
     $parameters = apply_filters('attribute_escape', $safe_text, $parameters);
 
+    $display_options = $core->getDisplayOptionsForEdit($this->content['disable']);
+
     include_once('views/new-content.php');
     $this->add_editor_assets($contentExists ? $this->content['id'] : NULL);
     H5P_Plugin_Admin::add_script('jquery', 'h5p-php-library/js/jquery.js');
-    H5P_Plugin_Admin::add_script('disable', 'h5p-php-library/js/disable.js');
+    H5P_Plugin_Admin::add_script('disable', 'h5p-php-library/js/h5p-display-options.js');
     H5P_Plugin_Admin::add_script('toggle', 'admin/scripts/h5p-toggle.js');
 
     // Log editor opened
@@ -542,16 +539,8 @@ class H5PContentAdmin {
     // Save new content
     $content['id'] = $core->saveContent($content);
 
-    // Create content directory
-    $editor = $this->get_h5peditor_instance();
-    if (!$editor->createDirectories($content['id'])) {
-      $core->h5pF->setErrorMessage(__('Unable to create content directory.', $this->plugin_slug));
-      // Remove content.
-      $core->h5pF->deleteContentData($content['id']);
-      return FALSE;
-    }
-
     // Move images and find all content dependencies
+    $editor = $this->get_h5peditor_instance();
     $editor->processParameters($content['id'], $content['library'], $params, $oldLibrary, $oldParams);
     //$content['params'] = json_encode($params);
     return $content['id'];
@@ -567,12 +556,12 @@ class H5PContentAdmin {
    */
   private function get_disabled_content_features($core, &$content) {
     $set = array(
-      'frame' => filter_input(INPUT_POST, 'frame', FILTER_VALIDATE_BOOLEAN),
-      'download' => filter_input(INPUT_POST, 'download', FILTER_VALIDATE_BOOLEAN),
-      'embed' => filter_input(INPUT_POST, 'embed', FILTER_VALIDATE_BOOLEAN),
-      'copyright' => filter_input(INPUT_POST, 'copyright', FILTER_VALIDATE_BOOLEAN),
+      H5PCore::DISPLAY_OPTION_FRAME => filter_input(INPUT_POST, 'frame', FILTER_VALIDATE_BOOLEAN),
+      H5PCore::DISPLAY_OPTION_DOWNLOAD => filter_input(INPUT_POST, 'download', FILTER_VALIDATE_BOOLEAN),
+      H5PCore::DISPLAY_OPTION_EMBED => filter_input(INPUT_POST, 'embed', FILTER_VALIDATE_BOOLEAN),
+      H5PCore::DISPLAY_OPTION_COPYRIGHT => filter_input(INPUT_POST, 'copyright', FILTER_VALIDATE_BOOLEAN),
     );
-    $content['disable'] = $core->getDisable($set, $content['disable']);
+    $content['disable'] = $core->getStorableDisplayOptions($set, $content['disable']);
   }
 
   /**
@@ -800,7 +789,8 @@ class H5PContentAdmin {
     // Format time
     $time = strtotime($timestamp);
     $current_time = current_time('timestamp');
-    $human_time = human_time_diff($time + $offset, $current_time) . ' ' . __('ago', $this->plugin_slug);
+    $timediff = human_time_diff($time + $offset, $current_time);
+    $human_time = sprintf(__('%s ago', $this->plugin_slug), $timediff);
 
     if ($current_time > $time + DAY_IN_SECONDS) {
       // Over a day old, swap human time for formatted time
@@ -916,9 +906,7 @@ class H5PContentAdmin {
       $plugin = H5P_Plugin::get_instance();
       self::$h5peditor = new H5peditor(
         $plugin->get_h5p_instance('core'),
-        new H5PEditorWordPressStorage(),
-        '',
-        $plugin->get_h5p_path()
+        new H5PEditorWordPressStorage()
       );
     }
 
@@ -1018,7 +1006,7 @@ class H5PContentAdmin {
 
     if ($name) {
       $plugin = H5P_Plugin::get_instance();
-      print $editor->getLibraryData($name, $major_version, $minor_version, $plugin->get_language(), $plugin->get_h5p_path());
+      print $editor->getLibraryData($name, $major_version, $minor_version, $plugin->get_language());
 
       // Log library load
       new H5P_Event('library', NULL,
@@ -1038,6 +1026,8 @@ class H5PContentAdmin {
    * @since 1.1.0
    */
   public function ajax_files() {
+    global $wpdb;
+
     $plugin = H5P_Plugin::get_instance();
     $files_directory = $plugin->get_h5p_path();
 
@@ -1046,18 +1036,10 @@ class H5PContentAdmin {
       exit;
     }
 
+    // Get Content ID for upload
     $contentId = filter_input(INPUT_POST, 'contentId', FILTER_SANITIZE_NUMBER_INT);
-    if ($contentId) {
-      $files_directory .=  '/content/' . $contentId;
-    }
-    else {
-      $files_directory .= '/editor';
-    }
 
-    $editor = $this->get_h5peditor_instance();
-    $interface = $plugin->get_h5p_instance('interface');
-    $file = new H5peditorFile($interface, $files_directory);
-
+    $file = new H5peditorFile($plugin->get_h5p_instance('interface'));
     if (!$file->isLoaded()) {
       H5PCore::ajaxError(__('File not found on server. Check file upload settings.', $this->plugin_slug));
       exit;
@@ -1071,9 +1053,17 @@ class H5PContentAdmin {
       }
     }
 
-    if ($file->validate() && $file->copy()) {
+    // Make sure file is valid
+    if ($file->validate()) {
+      $core = $plugin->get_h5p_instance('core');
+
+      // Save the valid file
+      $file_id = $core->fs->saveFile($file, $contentId);
+
       // Keep track of temporary files so they can be cleaned up later.
-      $editor->addTmpFile($file);
+      $wpdb->insert($wpdb->prefix . 'h5p_tmpfiles',
+          array('path' => $file_id, 'created_at' => time()),
+          array('%s', '%d'));
 
       // Clear cached value for dirsize.
       delete_transient('dirsize_cache');
@@ -1081,10 +1071,7 @@ class H5PContentAdmin {
 
     header('Cache-Control: no-cache');
 
-    // Must support IE, so cannot use application/json
-    header('Content-type: text/plain; charset=utf-8');
-
-    print $file->getResult();
+    $file->printResult();
     exit;
   }
 

@@ -191,12 +191,12 @@ function learndash_quiz_continue_link( $id ) {
 		$url = get_permalink( $return_id );
 		$url .= strpos( 'a'.$url, '?' )? '&':'?';
 		$url .= 'quiz_type=global&quiz_redirect=1&course_id='.$course_id.'&quiz_id='.$id;
-		$returnLink = '<a id="quiz_continue_link" href="'.$url.'">' . LearnDash_Custom_Label::get_label( 'button_click_here_to_continue' ) . '</a>';
+		$returnLink = '<a id="quiz_continue_link" href="'.$url.'">' . esc_html( LearnDash_Custom_Label::get_label( 'button_click_here_to_continue' ) ) . '</a>';
 	} else	{
 		$url = get_permalink( $return_id );
 		$url .= strpos( 'a'.$url, '?' )? '&':'?';
 		$url .= 'quiz_type=lesson&quiz_redirect=1&lesson_id='.$return_id.'&quiz_id='.$id;
-		$returnLink = '<a id="quiz_continue_link" href="'.$url.'">' . LearnDash_Custom_Label::get_label( 'button_click_here_to_continue' ) . '</a>';
+		$returnLink = '<a id="quiz_continue_link" href="'.$url.'">' . esc_html( LearnDash_Custom_Label::get_label( 'button_click_here_to_continue' ) ) . '</a>';
 	}
 
 	// Why are we checking the WordPress version? Shouldn't this be checking the LD version??
@@ -396,7 +396,8 @@ function learndash_get_topic_list( $for_lesson_id = null ) {
 		$transient_key = "learndash_lesson_topics_all";
 	}
 	
-	$topics_array = get_transient( $transient_key );
+	$topics_array = learndash_get_valid_transient( $transient_key );
+
 	if ( $topics_array === false ) {
 		if ( !empty( $for_lesson_id ) ) {
 			$course_id = learndash_get_course_id( $for_lesson_id );
@@ -475,7 +476,7 @@ function learndash_get_global_quiz_list( $id = null ){
 	if (!empty($course_id)) {
 
 		$transient_key = "learndash_quiz_course_". $course_id;
-		$quizzes_new = get_transient( $transient_key );
+		$quizzes_new = learndash_get_valid_transient( $transient_key );
 		if ( $quizzes_new === false ) {
 
 			$course_settings = learndash_get_setting( $course_id );

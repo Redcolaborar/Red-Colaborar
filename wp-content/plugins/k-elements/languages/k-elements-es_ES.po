@@ -1,0 +1,2421 @@
+# Loco Gettext template
+msgid ""
+msgstr ""
+"Project-Id-Version: K Elements\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-14 20:56+0100\n"
+"POT-Revision-Date: Fri May 13 2016 00:01:59 GMT+0300 (EEST)\n"
+"PO-Revision-Date: 2017-02-14 21:31+0100\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
+"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
+"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
+"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
+"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Generator: Poedit 1.8.11\n"
+"Last-Translator: \n"
+"Language: es_ES\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#. Name of the plugin
+#, fuzzy
+msgid "K Elements"
+msgstr "Elementos K"
+
+#. Description of the plugin
+#, fuzzy
+msgid "WordPress elements using easy to add shortcodes"
+msgstr "Elementos de WordPress con fácil añadir códigos cortos"
+
+#. Author of the plugin
+#, fuzzy
+msgid "SeventhQueen"
+msgstr "SeventhQueen"
+
+#. Author URI of the plugin
+#, fuzzy
+msgid "http://seventhqueen.com"
+msgstr "http://seventhqueen.com"
+
+#: /compat/plugin-js-composer/config.php:128 /compat/plugin-js-composer/config.
+#: php:1577 /compat/plugin-js-composer/config.php:2239 /compat/plugin-js-
+#: composer/config.php:4588
+msgid "Animation"
+msgstr "Animación"
+
+#: /compat/plugin-js-composer/config.php:142 /compat/plugin-js-composer/config.
+#: php:3111
+msgid "Animation type"
+msgstr "Tipo de animación"
+
+#: /compat/plugin-js-composer/config.php:163 /compat/plugin-js-composer/config.
+#: php:179
+msgid "Responsive Visibility"
+msgstr "Visibilidad Responsive"
+
+#: /compat/plugin-js-composer/config.php:164 /compat/plugin-js-composer/config.
+#: php:2645
+#, fuzzy
+msgid "Hide/Show content by screen size."
+msgstr "Mostrar/ocultar contenido por tamaño de la pantalla."
+
+#: /compat/plugin-js-composer/config.php:184
+msgid "Letter spacing"
+msgstr "Espaciado de letras"
+
+#: /compat/plugin-js-composer/config.php:185
+#, fuzzy
+msgid "Set a custom letter spacing."
+msgstr "Establecer un espaciado de letra personalizado."
+
+#: /compat/plugin-js-composer/config.php:201 /compat/plugin-js-composer/config.
+#: php:211
+#, fuzzy
+msgid "Vertical separator"
+msgstr "Separador vertical"
+
+#: /compat/plugin-js-composer/config.php:202
+#, fuzzy
+msgid "Set a fancy vertical line separator to the left side."
+msgstr "Establecer un separador de lujo línea vertical a la izquierda."
+
+#: /compat/plugin-js-composer/config.php:217 /compat/plugin-js-composer/config.
+#: php:1323 /compat/plugin-js-composer/config.php:5407 /compat/plugin-js-
+#: composer/config.php:5423 /compat/plugin-js-composer/config.php:5438
+#: /compat/plugin-js-composer/config.php:5453 php:5468
+#: /compat/plugin-js-composer/config.php:5482 composer/config.php:5497
+msgid "Icon"
+msgstr "Icono"
+
+#: /compat/plugin-js-composer/config.php:226 /compat/plugin-js-composer/config.
+#: php:1335 /compat/plugin-js-composer/config.php:1429 /compat/plugin-js-
+#: composer/config.php:1442 /compat/plugin-js-composer/config.php:2051
+#: /compat/plugin-js-composer/config.php:2063 php:5419
+#: /compat/plugin-js-composer/config.php:5434 composer/config.php:5449
+#: /compat/plugin-js-composer/config.php:5464
+#: /compat/plugin-js-composer/config.php:5493 php:5508
+msgid "Select icon from library."
+msgstr "Seleccione icono de la biblioteca."
+
+#: /compat/plugin-js-composer/config.php:233 /compat/plugin-js-composer/config.
+#: php:1682 /compat/plugin-js-composer/config.php:2814
+msgid "Icon size"
+msgstr "Tamaño de ícono"
+
+#: /compat/plugin-js-composer/config.php:248
+msgid "Extra class name"
+msgstr "Puedes introducir el nombre de una clase CSS extra para este elemento"
+
+#: /compat/plugin-js-composer/config.php:251
+msgid ""
+"If you wish to style particular content element differently, then use this "
+"field to add a class name and then refer to it in your css file."
+msgstr ""
+"If you wish to style particular content element differently, then use this "
+"field to add a class name and then refer to it in your css file."
+
+#: /compat/plugin-js-composer/config.php:258
+#, fuzzy
+msgid "Show Tooltip/Popover"
+msgstr "Mostrar información sobre herramientas/Popover"
+
+#: /compat/plugin-js-composer/config.php:265
+#, fuzzy
+msgid "Display a tooltip or popover with descriptive text."
+msgstr "Mostrar un tooltip o popover con texto descriptivo."
+
+#: /compat/plugin-js-composer/config.php:271
+msgid "Tip position"
+msgstr "Tip position"
+
+#: /compat/plugin-js-composer/config.php:283
+#, fuzzy
+msgid "In which position to show the tooltip/popover"
+msgstr "En que posición para mostrar la descripción/popover"
+
+#: /compat/plugin-js-composer/config.php:289
+#, fuzzy
+msgid "Tip/Popover Title"
+msgstr "Titulo de Ventana Emergente"
+
+#: /compat/plugin-js-composer/config.php:301
+#, fuzzy
+msgid "Popover text"
+msgstr "Ventana Emergente"
+
+#: /compat/plugin-js-composer/config.php:313
+#, fuzzy
+msgid "Tip/Popover action"
+msgstr "Acción de punta/Popover"
+
+#: /compat/plugin-js-composer/config.php:323
+#, fuzzy
+msgid "When to trigger the popover"
+msgstr "Cuando activar el popover"
+
+#: /compat/plugin-js-composer/config.php:332 /compat/plugin-js-composer/config.
+#: php:3583
+msgid "Title"
+msgstr "Título"
+
+#: /compat/plugin-js-composer/config.php:333
+msgid "Text on the button"
+msgstr "Texto del botón"
+
+#: /compat/plugin-js-composer/config.php:334
+msgid "Button text."
+msgstr "Button text."
+
+#: /compat/plugin-js-composer/config.php:341
+#, fuzzy
+msgid "URL(Link)"
+msgstr "URL (Link)"
+
+#: /compat/plugin-js-composer/config.php:349
+#, fuzzy
+msgid "Target"
+msgstr ""
+"Selecciona y descarga los tipos de contenido que desees desde <a href=\"%s\" "
+"target=\"_blank\">H5P.org</a>."
+
+#: /compat/plugin-js-composer/config.php:362 /compat/plugin-js-composer/config.
+#: php:1613 /compat/plugin-js-composer/config.php:1895 /compat/plugin-js-
+#: composer/config.php:1912 /compat/plugin-js-composer/config.php:3526
+#: /compat/plugin-js-composer/config.php:3759 php:4073
+msgid "Style"
+msgstr "Estilo"
+
+#: /compat/plugin-js-composer/config.php:376 /compat/plugin-js-composer/config.
+#: php:807
+msgid "Background color"
+msgstr "Color de fondo"
+
+#: /compat/plugin-js-composer/config.php:378 /compat/plugin-js-composer/config.
+#: php:476
+msgid "Select custom background color."
+msgstr "Selecciona un color de fondo personalizado."
+
+#: /compat/plugin-js-composer/config.php:380 /compat/plugin-js-composer/config.
+#: php:392 /compat/plugin-js-composer/config.php:404 /compat/plugin-js-
+#: composer/config.php:416 /compat/plugin-js-composer/config.php:428
+#: /compat/plugin-js-composer/config.php:440 php:466
+#: /compat/plugin-js-composer/config.php:478 composer/config.php:490
+#, fuzzy
+msgid "Custom button"
+msgstr "Botón de URL (enlace)"
+
+#: /compat/plugin-js-composer/config.php:388
+msgid "Hover Background color"
+msgstr "Color de Fondo Flotante"
+
+#: /compat/plugin-js-composer/config.php:390
+#, fuzzy
+msgid "Select custom background color on hover."
+msgstr "Seleccione el color de fondo personalizado en suspender."
+
+#: /compat/plugin-js-composer/config.php:400 /compat/plugin-js-composer/config.
+#: php:760 /compat/plugin-js-composer/config.php:1366
+msgid "Text color"
+msgstr "Color de texto"
+
+#: /compat/plugin-js-composer/config.php:402 /compat/plugin-js-composer/config.
+#: php:488
+msgid "Select custom text color."
+msgstr "Seleccionar el color de texto personalizado."
+
+#: /compat/plugin-js-composer/config.php:412
+#, fuzzy
+msgid "Hover Text color"
+msgstr "Color de texto del botón al pasar por encima el puntero"
+
+#: /compat/plugin-js-composer/config.php:414
+#, fuzzy
+msgid "Select custom text color on hover."
+msgstr "Seleccionar color de texto personalizado en suspender."
+
+#: /compat/plugin-js-composer/config.php:424
+msgid "Border color"
+msgstr "Color del Borde"
+
+#: /compat/plugin-js-composer/config.php:426
+#, fuzzy
+msgid "Select custom border color."
+msgstr "Seleccionar un color de borde personalizado aquí"
+
+#: /compat/plugin-js-composer/config.php:436
+msgid "Hover border color"
+msgstr "Color del borde al pasar el puntero"
+
+#: /compat/plugin-js-composer/config.php:438
+#, fuzzy
+msgid "Select custom border color on hover."
+msgstr "Seleccione el color de borde personalizado en suspender."
+
+#: /compat/plugin-js-composer/config.php:451
+msgid "Border width"
+msgstr "Ancho del borde"
+
+#: /compat/plugin-js-composer/config.php:474
+#, fuzzy
+msgid "Boxed Icon Type - Icon Background"
+msgstr "Tipo de procesador icono - icono fondo"
+
+#: /compat/plugin-js-composer/config.php:486
+#, fuzzy
+msgid "Boxed Icon Type - Icon Text color"
+msgstr "Tipo de icono en caja - color del texto de icono"
+
+#: /compat/plugin-js-composer/config.php:501 /compat/plugin-js-composer/config.
+#: php:2103 /compat/plugin-js-composer/config.php:2795
+msgid "Position"
+msgstr "Posición"
+
+#: /compat/plugin-js-composer/config.php:515 /compat/plugin-js-composer/config.
+#: php:2716
+msgid "Size"
+msgstr "Medida"
+
+#: /compat/plugin-js-composer/config.php:531 /compat/plugin-js-composer/config.
+#: php:1502 /compat/plugin-js-composer/config.php:1563 /compat/plugin-js-
+#: composer/config.php:1724 /compat/plugin-js-composer/config.php:1883
+#: /compat/plugin-js-composer/config.php:2314 php:2460
+#: /compat/plugin-js-composer/config.php:2769 composer/config.php:4625
+#: /compat/plugin-js-composer/config.php:4739
+#: /compat/plugin-js-composer/config.php:4804
+msgid "Type"
+msgstr "Tipo"
+
+#: /compat/plugin-js-composer/config.php:548
+#, fuzzy
+msgid "Second title"
+msgstr "Titulo Segunda Pestaña"
+
+#: /compat/plugin-js-composer/config.php:562
+#, fuzzy
+msgid "Rounded button"
+msgstr "Botón redondo azul"
+
+#: /compat/plugin-js-composer/config.php:576 /compat/plugin-js-composer/config.
+#: php:1133
+msgid "Border"
+msgstr "Borde"
+
+#: /compat/plugin-js-composer/config.php:595 /compat/plugin-js-composer/config.
+#: php:2604
+#, fuzzy
+msgid "Font size. Use px|em|pt"
+msgstr "Tamaño de la fuente. Utilice px | em | pt"
+
+#: /compat/plugin-js-composer/config.php:606 /compat/plugin-js-composer/config.
+#: php:1386
+msgid "Font weight"
+msgstr "Grosor de la fuente"
+
+#: /compat/plugin-js-composer/config.php:622
+#, fuzzy
+msgid "Make text uppercase"
+msgstr "Poner el texto en mayúsculas"
+
+#: /compat/plugin-js-composer/config.php:638
+msgid "Shadow color"
+msgstr "Color de la sombra"
+
+#: /compat/plugin-js-composer/config.php:641 /compat/plugin-js-composer/config.
+#: php:652 /compat/plugin-js-composer/config.php:663 /compat/plugin-js-
+#: composer/config.php:674 /compat/plugin-js-composer/config.php:685
+#, fuzzy
+msgid "Box shadow"
+msgstr "Sombra de caja"
+
+#: /compat/plugin-js-composer/config.php:647
+#, fuzzy
+msgid "Horizontal Length"
+msgstr "LATENT CAPTURE DATE"
+
+#: /compat/plugin-js-composer/config.php:650 /compat/plugin-js-composer/config.
+#: php:661 /compat/plugin-js-composer/config.php:672 /compat/plugin-js-
+#: composer/config.php:683
+#, fuzzy
+msgid "Length in pixels"
+msgstr "Longitud en píxeles"
+
+#: /compat/plugin-js-composer/config.php:658
+#, fuzzy
+msgid "Vertical Length"
+msgstr "HORIZONTAL LINE LENGTH"
+
+#: /compat/plugin-js-composer/config.php:669
+#, fuzzy
+msgid "Blur Radius"
+msgstr "radio de desenfoque"
+
+#: /compat/plugin-js-composer/config.php:680
+#, fuzzy
+msgid "Spread Radius"
+msgstr "radio de propagación"
+
+#: /compat/plugin-js-composer/config.php:695
+#, fuzzy
+msgid "Query offset"
+msgstr "Consulta desplazamiento"
+
+#: /compat/plugin-js-composer/config.php:717
+msgid "Status"
+msgstr "Estado"
+
+#: /compat/plugin-js-composer/config.php:718
+#, fuzzy
+msgid ""
+"Select front-end visibility status. If set to Draft it will not show on your "
+"page."
+msgstr ""
+"Seleccione el estado de visibilidad de front-end. Si establece que el "
+"borrador no se mostrará en tu página."
+
+#: /compat/plugin-js-composer/config.php:730 /compat/plugin-js-composer/config.
+#: php:1193
+msgid "Inner Container"
+msgstr "Contenedor interior"
+
+#: /compat/plugin-js-composer/config.php:731 /compat/plugin-js-composer/config.
+#: php:1194
+#, fuzzy
+msgid ""
+"Select whether to insert a container to the section. This will keep the "
+"content from going full with."
+msgstr ""
+"Seleccione si desea introducir un contenedor a la sección. Esto evitará que "
+"el contenido va completo con."
+
+#: /compat/plugin-js-composer/config.php:743
+msgid "Text align"
+msgstr "Alineación de texto"
+
+#: /compat/plugin-js-composer/config.php:744
+#, fuzzy
+msgid "Align whole row content."
+msgstr "Alinear el contenido de la fila entera."
+
+#: /compat/plugin-js-composer/config.php:763
+#, fuzzy
+msgid "Try to force a color for the whole section."
+msgstr "Intente forzar un color para la sección completa."
+
+#: /compat/plugin-js-composer/config.php:764 /compat/plugin-js-composer/config.
+#: php:782 /compat/plugin-js-composer/config.php:799 /compat/plugin-js-
+#: composer/config.php:815 /compat/plugin-js-composer/config.php:828
+#: /compat/plugin-js-composer/config.php:844 php:864
+#: /compat/plugin-js-composer/config.php:883 composer/config.php:903
+#: /compat/plugin-js-composer/config.php:921
+#: /compat/plugin-js-composer/config.php:938 php:954
+#: /compat/plugin-js-composer/config.php:967 composer/config.php:981
+#: /compat/plugin-js-composer/config.php:994
+#: /compat/plugin-js-composer/config.php:1007 php:1020
+#: /compat/plugin-js-composer/config.php:5007 composer/config.php:5013
+#: /compat/plugin-js-composer/config.php:5019
+#: /compat/plugin-js-composer/config.php:5025
+#, fuzzy
+msgid "Text & Background"
+msgstr "Fondo de texto"
+
+#: /compat/plugin-js-composer/config.php:771
+msgid "Section style"
+msgstr "Estilo de la sección"
+
+#: /compat/plugin-js-composer/config.php:781
+#, fuzzy
+msgid ""
+"These styles are set under Theme options. They will apply that section "
+"styling to this row(background color, text color, highlight color, etc)"
+msgstr ""
+"Estos estilos se encuentran en opciones de tema. Eso estilo de la sección se "
+"aplican a esta fila (color de fondo, color del texto, color del punto "
+"culminante, etcetera)"
+
+#: /compat/plugin-js-composer/config.php:789
+#, fuzzy
+msgid "Background style"
+msgstr "Estilo de fondo"
+
+#: /compat/plugin-js-composer/config.php:821
+msgid "Background image"
+msgstr "Imagen de fondo"
+
+#: /compat/plugin-js-composer/config.php:834 /compat/plugin-js-composer/config.
+#: php:1263 /compat/plugin-js-composer/config.php:1284 /compat/plugin-js-
+#: composer/config.php:1297
+#, fuzzy
+msgid "Enable dark gradient"
+msgstr "Permiten oscuro degradado"
+
+#: /compat/plugin-js-composer/config.php:851
+#, fuzzy
+msgid "BG vertical position"
+msgstr "Posición vertical"
+
+#: /compat/plugin-js-composer/config.php:870
+#, fuzzy
+msgid "BG horizontal position"
+msgstr "Posición Horizontal"
+
+#: /compat/plugin-js-composer/config.php:889
+msgid "Background repeat"
+msgstr "Repetición del fondo"
+
+#: /compat/plugin-js-composer/config.php:909
+msgid "Full-width background"
+msgstr "Fondo de ancho completo"
+
+#: /compat/plugin-js-composer/config.php:927
+msgid "Fixed background"
+msgstr "Фиксированный фон"
+
+#: /compat/plugin-js-composer/config.php:945
+msgid "Enable parallax"
+msgstr "Habilitar parallax"
+
+#: /compat/plugin-js-composer/config.php:960
+msgid "Parallax speed"
+msgstr "Velocidad Parallax"
+
+#: /compat/plugin-js-composer/config.php:974
+msgid "Video background (mp4)"
+msgstr "Video de fondo (mp4)"
+
+#: /compat/plugin-js-composer/config.php:987
+#, fuzzy
+msgid "Video background (ogv)"
+msgstr "Fondo de vídeo"
+
+#: /compat/plugin-js-composer/config.php:1000
+msgid "Video background (webm)"
+msgstr "Video de fondo (webm)"
+
+#: /compat/plugin-js-composer/config.php:1013
+#, fuzzy
+msgid "Image cover"
+msgstr "Imagen de portada"
+
+#: /compat/plugin-js-composer/config.php:1027
+#, fuzzy
+msgid "Vertical Aligned Content"
+msgstr "Vertical alineado contenido"
+
+#: /compat/plugin-js-composer/config.php:1039
+#, fuzzy
+msgid "Between Columns Gap"
+msgstr "Entre las columnas"
+
+#: /compat/plugin-js-composer/config.php:1052
+msgid "Top padding"
+msgstr "Relleno superior"
+
+#: /compat/plugin-js-composer/config.php:1055
+#: /compat/plugin-js-composer/config. php:1065
+#: /compat/plugin-js-composer/config.php:1075 /compat/plugin-js-
+#: composer/config.php:1085 /compat/plugin-js-composer/config.php:1097
+#: /compat/plugin-js-composer/config.php:1107 php:1117
+#: /compat/plugin-js-composer/config.php:1127
+#, fuzzy, php-format
+msgid "Allowed measures: px,em,%,pt,cm."
+msgstr "Permite medidas: px, em, %, pt, cm."
+
+#: /compat/plugin-js-composer/config.php:1062
+msgid "Bottom padding"
+msgstr "Margen interno inferior:"
+
+#: /compat/plugin-js-composer/config.php:1072
+msgid "Left padding"
+msgstr "Relleno izquierdo"
+
+#: /compat/plugin-js-composer/config.php:1082
+#, fuzzy
+msgid "Right padding"
+msgstr "Margen derecho"
+
+#: /compat/plugin-js-composer/config.php:1094
+msgid "Top margin"
+msgstr "Mar. Superior"
+
+#: /compat/plugin-js-composer/config.php:1104
+msgid "Bottom margin"
+msgstr "Marinferior"
+
+#: /compat/plugin-js-composer/config.php:1114
+#, fuzzy
+msgid "Minim height"
+msgstr "Altura mínima"
+
+#: /compat/plugin-js-composer/config.php:1124
+#: /compat/plugin-js-composer/config. php:1219
+#: /compat/plugin-js-composer/config.php:3930
+msgid "Fixed height"
+msgstr "Altura fija"
+
+#: /compat/plugin-js-composer/config.php:1134
+#, fuzzy
+msgid "Select whether or not to display a border on this section."
+msgstr "Seleccione si desea o no mostrar una frontera en esta sección."
+
+#: /compat/plugin-js-composer/config.php:1155
+#, fuzzy
+msgid "Overflow hidden"
+msgstr "desbordamiento Ocultos"
+
+#: /compat/plugin-js-composer/config.php:1157
+#, fuzzy
+msgid "Check if you want to hide section overflow"
+msgstr "Compruebe si desea ocultar el desbordamiento de la sección"
+
+#: /compat/plugin-js-composer/config.php:1172
+#: /compat/plugin-js-composer/config. php:2743
+#: /compat/plugin-js-composer/config.php:2853
+#, fuzzy
+msgid "Custom inline style"
+msgstr "Estilo personalizado en línea"
+
+#: /compat/plugin-js-composer/config.php:1183
+msgid "Element ID"
+msgstr "ID del elemento"
+
+#: /compat/plugin-js-composer/config.php:1208
+#: /compat/plugin-js-composer/config. php:3910
+msgid "Min. height"
+msgstr "Min. height"
+
+#: /compat/plugin-js-composer/config.php:1211
+#: /compat/plugin-js-composer/config. php:3913
+#, fuzzy
+msgid "Force a minimum height. Use px|em|%|pt|cm"
+msgstr "Una altura mínima de la fuerza. Utilice px | em | % | PT | cm"
+
+#: /compat/plugin-js-composer/config.php:1222
+#: /compat/plugin-js-composer/config. php:3933
+#, fuzzy
+msgid "Force a fixed height. Use px|em|%|pt|cm"
+msgstr "Fuerza una altura fija. Utilice px | em | % | PT | cm"
+
+#: /compat/plugin-js-composer/config.php:1229
+#: /compat/plugin-js-composer/config. php:4012
+#, fuzzy
+msgid "Background horizontal position"
+msgstr "Posición horizontal de fondo"
+
+#: /compat/plugin-js-composer/config.php:1239
+#: /compat/plugin-js-composer/config. php:1256
+#: /compat/plugin-js-composer/config.php:1269 /compat/plugin-js-
+#: composer/config.php:1290 /compat/plugin-js-composer/config.php:1303
+#: /compat/plugin-js-composer/config.php:4006 php:4022
+#: /compat/plugin-js-composer/config.php:4039
+msgid "Design Options"
+msgstr "Opciones de Diseño"
+
+#: /compat/plugin-js-composer/config.php:1246
+#: /compat/plugin-js-composer/config. php:4029
+#, fuzzy
+msgid "Background vertical position"
+msgstr "Posición vertical del fondo"
+
+#: /compat/plugin-js-composer/config.php:1310
+#: /compat/plugin-js-composer/config. php:3997
+msgid "Z-index"
+msgstr "Orden de profundidad"
+
+#: /compat/plugin-js-composer/config.php:1313
+#: /compat/plugin-js-composer/config. php:4000
+#, fuzzy
+msgid "Stack order for overlapping elements. Use integer value."
+msgstr "Orden de superposición de elementos de la pila. Usar el valor entero."
+
+#: /compat/plugin-js-composer/config.php:1353
+#, fuzzy
+msgid "Lead Content"
+msgstr "contenido de plomo"
+
+#: /compat/plugin-js-composer/config.php:1376
+#: /compat/plugin-js-composer/config. php:2138
+msgid "Font size"
+msgstr "Tamaño de fuente"
+
+#: /compat/plugin-js-composer/config.php:1421
+#, fuzzy
+msgid "Icon when toggle is opened"
+msgstr "Icono al abre la palanca"
+
+#: /compat/plugin-js-composer/config.php:1434
+#: /compat/plugin-js-composer/config. php:2472
+#, fuzzy
+msgid "Icon when toggle is closed"
+msgstr "Icono de cuando la palanca se cierra"
+
+#: /compat/plugin-js-composer/config.php:1448
+#: /compat/plugin-js-composer/config. php:1694
+msgid "Icon position"
+msgstr "Posición del Icono"
+
+#: /compat/plugin-js-composer/config.php:1479
+#, fuzzy
+msgid "Full width image"
+msgstr "Imagen de Tamaño Completo"
+
+#: /compat/plugin-js-composer/config.php:1513
+#: /compat/plugin-js-composer/config. php:2900
+#: /compat/plugin-js-composer/config.php:3219
+#, fuzzy
+msgid "Number of items per row"
+msgstr "Número de artículos por fila"
+
+#: /compat/plugin-js-composer/config.php:1532
+msgid "Gap"
+msgstr "Espacio"
+
+#: /compat/plugin-js-composer/config.php:1551
+#, fuzzy
+msgid "Feature Items Grid"
+msgstr "Característica de Artículos"
+
+#: /compat/plugin-js-composer/config.php:1556
+#, fuzzy
+msgid "Easily include elements into a Grid container"
+msgstr "Fácilmente incluir elementos dentro de un contenedor de rejilla"
+
+#: /compat/plugin-js-composer/config.php:1564
+#, fuzzy
+msgid "Select how many items you want per row."
+msgstr "Seleccione el número de articulos por fila"
+
+#: /compat/plugin-js-composer/config.php:1578
+#, fuzzy
+msgid "Animate elements inside the grid one by one"
+msgstr "Animar elementos dentro de la red uno por uno"
+
+#: /compat/plugin-js-composer/config.php:1589
+#, fuzzy
+msgid "Colored icons"
+msgstr "Iconos coloreados"
+
+#: /compat/plugin-js-composer/config.php:1590
+#, fuzzy
+msgid ""
+"Show colored icons. Color will be taken from the Highlight color from Theme "
+"options"
+msgstr ""
+"Mostrar los iconos de color. Color se tomarán desde el color de resaltado de "
+"las opciones de tema"
+
+#: /compat/plugin-js-composer/config.php:1601
+#, fuzzy
+msgid "Bordered icons"
+msgstr "Con los iconos"
+
+#: /compat/plugin-js-composer/config.php:1602
+#, fuzzy
+msgid "Show bordered icons"
+msgstr "Mostrar confinados iconos"
+
+#: /compat/plugin-js-composer/config.php:1614
+#, fuzzy
+msgid "Choose a different style"
+msgstr "Elija un estilo diferente"
+
+#: /compat/plugin-js-composer/config.php:1634
+#, fuzzy
+msgid "Feature Item"
+msgstr "Función del tema"
+
+#: /compat/plugin-js-composer/config.php:1639
+#, fuzzy
+msgid "Include a feature item in your block grid"
+msgstr "Incluir un artículo de la característica en su red de bloque"
+
+#: /compat/plugin-js-composer/config.php:1673
+#, fuzzy
+msgid "Custom icon color"
+msgstr "Color de icono personalizado"
+
+#: /compat/plugin-js-composer/config.php:1712
+msgid "Fancy List"
+msgstr "Lista Fancy"
+
+#: /compat/plugin-js-composer/config.php:1725
+#, fuzzy
+msgid "Select the list type."
+msgstr "Seleccione el tipo de lista."
+
+#: /compat/plugin-js-composer/config.php:1739
+#: /compat/plugin-js-composer/config. php:2089
+msgid "Icon color"
+msgstr "Color icono"
+
+#: /compat/plugin-js-composer/config.php:1755
+#, fuzzy
+msgid "Icon shadow"
+msgstr "Sombra"
+
+#: /compat/plugin-js-composer/config.php:1771
+#, fuzzy
+msgid "Large icon"
+msgstr "Icono grande"
+
+#: /compat/plugin-js-composer/config.php:1787
+msgid "Inline"
+msgstr "En linea"
+
+#: /compat/plugin-js-composer/config.php:1804
+msgid "Divider"
+msgstr "Dividir"
+
+#: /compat/plugin-js-composer/config.php:1817
+#: /compat/plugin-js-composer/config. php:1938
+msgid "Align"
+msgstr "Alinear"
+
+#: /compat/plugin-js-composer/config.php:1818
+#, fuzzy
+msgid "Align the list"
+msgstr "Alinee la lista"
+
+#: /compat/plugin-js-composer/config.php:1842
+msgid "List Item"
+msgstr "Elemento de la lista"
+
+#: /compat/plugin-js-composer/config.php:1870
+#: /compat/plugin-js-composer/config. php:1984
+#: /compat/plugin-js-composer/config.php:2008 /compat/plugin-js-
+#: composer/config.php:2081 /compat/plugin-js-composer/config.php:2222
+#: /compat/plugin-js-composer/config.php:2308 php:2455
+#: /compat/plugin-js-composer/config.php:2540 composer/config.php:2561
+#: /compat/plugin-js-composer/config.php:2711
+#: /compat/plugin-js-composer/config.php:2762 php:2865
+#: /compat/plugin-js-composer/config.php:3183 composer/config.php:3338
+#: /compat/plugin-js-composer/config.php:3450
+#: /compat/plugin-js-composer/config.php:3473 php:3573
+#: /compat/plugin-js-composer/config.php:3652 composer/config.php:3693
+#: /compat/plugin-js-composer/config.php:3805
+#: /compat/plugin-js-composer/config.php:3820 php:4054
+#: /compat/plugin-js-composer/config.php:4120 composer/config.php:4165
+#: /compat/plugin-js-composer/config.php:4201
+msgid "Content"
+msgstr "Contenido de la noticia"
+
+#: /compat/plugin-js-composer/config.php:1994
+#, fuzzy
+msgid "Tabs Position"
+msgstr "Posición de Pestañas"
+
+#: /compat/plugin-js-composer/config.php:2022
+#, fuzzy
+msgid "Icons position"
+msgstr "Posición de los iconos"
+
+#: /compat/plugin-js-composer/config.php:2043
+#, fuzzy
+msgid "Icon when accordion item is opened"
+msgstr "Icono al abre el acordeón artículo"
+
+#: /compat/plugin-js-composer/config.php:2055
+#, fuzzy
+msgid "Icon when accordion item is closed"
+msgstr "Icono elemento acordeón cerrado"
+
+#: /compat/plugin-js-composer/config.php:2082
+#, fuzzy
+msgid "Insert an icon into your content"
+msgstr "Insertar un icono en su contenido"
+
+#: /compat/plugin-js-composer/config.php:2091
+msgid "Select custom icon color."
+msgstr "Seleccionar color de icono personalizado."
+
+#: /compat/plugin-js-composer/config.php:2114
+#, fuzzy
+msgid "Add a text to the icon"
+msgstr "Añadir un texto al icono de"
+
+#: /compat/plugin-js-composer/config.php:2122
+msgid "Text position"
+msgstr "Posición del texto"
+
+#: /compat/plugin-js-composer/config.php:2151
+msgid "Add a link"
+msgstr "Añadir un enlace"
+
+#: /compat/plugin-js-composer/config.php:2152
+#, fuzzy
+msgid "Type a http:// address"
+msgstr "Escriba una dirección http://"
+
+#: /compat/plugin-js-composer/config.php:2160
+#, fuzzy
+msgid "Target window"
+msgstr "Ventana de destino"
+
+#: /compat/plugin-js-composer/config.php:2176
+#, fuzzy
+msgid "Enable smooth scroll to page section."
+msgstr "Permiten el desplazamiento suave a la sección de la página."
+
+#: /compat/plugin-js-composer/config.php:2223
+#, fuzzy
+msgid "Showcase clients logos"
+msgstr "Logotipos de clientes de escaparate"
+
+#: /compat/plugin-js-composer/config.php:2227
+msgid "Animated"
+msgstr "Animado"
+
+#: /compat/plugin-js-composer/config.php:2228
+#, fuzzy
+msgid "Animate the icons when you first view them"
+msgstr "Animar los iconos cuando usted primero ve los"
+
+#: /compat/plugin-js-composer/config.php:2264
+msgid "Open links in new window"
+msgstr "Abrir enlaces en una nueva ventana"
+
+#: /compat/plugin-js-composer/config.php:2276
+#: /compat/plugin-js-composer/config. php:2378
+#, fuzzy
+msgid "Filter by Tags"
+msgstr "Filtrar por etiquetas"
+
+#: /compat/plugin-js-composer/config.php:2309
+#, fuzzy
+msgid "Showcase client testimonials"
+msgstr "Testimonios de escaparate"
+
+#: /compat/plugin-js-composer/config.php:2326
+#, fuzzy
+msgid "By IDs"
+msgstr "Anuncios por IDS"
+
+#: /compat/plugin-js-composer/config.php:2393
+#: /compat/plugin-js-composer/config. php:3058
+#: /compat/plugin-js-composer/config.php:3130
+#, fuzzy
+msgid "Minimum items to show"
+msgstr "Mínimos elementos que mostrar"
+
+#: /compat/plugin-js-composer/config.php:2410
+#: /compat/plugin-js-composer/config. php:3067
+#: /compat/plugin-js-composer/config.php:3139
+#, fuzzy
+msgid "Maximum items to show"
+msgstr "Máximo elementos que mostrar"
+
+#: /compat/plugin-js-composer/config.php:2423
+#, fuzzy
+msgid "Speed between slides"
+msgstr "Velocidad entre diapositivas"
+
+#: /compat/plugin-js-composer/config.php:2436
+#: /compat/plugin-js-composer/config. php:3076
+#, fuzzy
+msgid "Elements height"
+msgstr "Altura de elementos"
+
+#: /compat/plugin-js-composer/config.php:2456
+#, fuzzy
+msgid "Add pins with info"
+msgstr "Añadir pins con información"
+
+#: /compat/plugin-js-composer/config.php:2461
+#, fuzzy
+msgid "Type of pin"
+msgstr "Tipo de"
+
+#: /compat/plugin-js-composer/config.php:2481
+#, fuzzy
+msgid "Choose the icon to display"
+msgstr "Elegir el formulario a usar"
+
+#: /compat/plugin-js-composer/config.php:2541
+#, fuzzy
+msgid "Insert a button in your content"
+msgstr "Inserte un botón en su contenido"
+
+#: /compat/plugin-js-composer/config.php:2562
+#, fuzzy
+msgid "Insert an animated number"
+msgstr "Insertar un número animado"
+
+#: /compat/plugin-js-composer/config.php:2584
+#, fuzzy
+msgid "HTML Element"
+msgstr "Elemento HTML"
+
+#: /compat/plugin-js-composer/config.php:2585
+#, fuzzy
+msgid "What type of HTML tag to render. Default if span"
+msgstr "Qué tipo de etiqueta HTML para representar. Por defecto si palmo"
+
+#: /compat/plugin-js-composer/config.php:2610
+msgid "Font Weight"
+msgstr "Peso de la fuente"
+
+#: /compat/plugin-js-composer/config.php:2632
+msgid "Visibility"
+msgstr "Visibilidad"
+
+#: /compat/plugin-js-composer/config.php:2637
+msgid "Alter content based on screen size"
+msgstr "Alterar el contenido según el tamaño de pantalla"
+
+#: /compat/plugin-js-composer/config.php:2644
+#, fuzzy
+msgid "Visibility Type"
+msgstr "VISIBILIDAD"
+
+#: /compat/plugin-js-composer/config.php:2672
+#, fuzzy
+msgid "Content by user type"
+msgstr "Contenido por tipo de usuario"
+
+#: /compat/plugin-js-composer/config.php:2677
+#, fuzzy
+msgid "Restrict content based on user type"
+msgstr "Restringir contenido basado en el tipo de usuario"
+
+#: /compat/plugin-js-composer/config.php:2685
+msgid "User Type"
+msgstr "Tipo de Usuario"
+
+#: /compat/plugin-js-composer/config.php:2686
+#, fuzzy
+msgid "Show content for user type."
+msgstr "Mostrar contenido por tipo de usuario."
+
+#: /compat/plugin-js-composer/config.php:2712
+msgid "Insert a vertical gap in your content"
+msgstr "Inserta un espacio vertical en tu contenido"
+
+#: /compat/plugin-js-composer/config.php:2717
+msgid ""
+"Enter in the size of your gap. Pixels, ems, and percentages are all valid "
+"units of measurement."
+msgstr ""
+"Introduce el tamaño del espacio. Las unidades válidas son píxeles, ems y "
+"porcentajes."
+
+#: /compat/plugin-js-composer/config.php:2727
+#: /compat/plugin-js-composer/config. php:2844
+#: /compat/plugin-js-composer/config.php:4410 /compat/plugin-js-
+#: composer/config.php:4494 /compat/plugin-js-composer/config.php:4601
+#: /compat/plugin-js-composer/config.php:4714 php:4777
+#: /compat/plugin-js-composer/config.php:4877
+msgid "Class"
+msgstr "Clase"
+
+#: /compat/plugin-js-composer/config.php:2729
+#: /compat/plugin-js-composer/config. php:2846
+#: /compat/plugin-js-composer/config.php:4413 /compat/plugin-js-
+#: composer/config.php:4497 /compat/plugin-js-composer/config.php:4604
+#: /compat/plugin-js-composer/config.php:4717 php:4780
+#: /compat/plugin-js-composer/config.php:4880
+#, fuzzy
+msgid "A class to add to the element for CSS referrences."
+msgstr "Una clase para agregar el elemento de referrences de CSS."
+
+#: /compat/plugin-js-composer/config.php:2734
+#: /compat/plugin-js-composer/config. php:2835
+#, fuzzy
+msgid "Unique id to add to the element for CSS referrences"
+msgstr "Id único para agregar el elemento para referrences CSS"
+
+#: /compat/plugin-js-composer/config.php:2763
+#, fuzzy
+msgid "Insert a vertical divider in your content"
+msgstr "Inserta un espacio vertical en tu contenido"
+
+#: /compat/plugin-js-composer/config.php:2777
+#, fuzzy
+msgid "The type of the divider."
+msgstr "El tipo del divisor."
+
+#: /compat/plugin-js-composer/config.php:2783
+#, fuzzy
+msgid "Double border"
+msgstr "Borde doble"
+
+#: /compat/plugin-js-composer/config.php:2789
+#, fuzzy
+msgid "Have the divider double lined."
+msgstr "Tener el divisor doble forrado."
+
+#: /compat/plugin-js-composer/config.php:2827
+#, fuzzy
+msgid "Text"
+msgstr "abajo de los resultados"
+
+#: /compat/plugin-js-composer/config.php:2829
+#, fuzzy
+msgid "This text wil show inside the divider"
+msgstr "Este espectáculo de wil de texto dentro del divisor"
+
+#: /compat/plugin-js-composer/config.php:2886
+#: /compat/plugin-js-composer/config. php:3046
+msgid "Layout"
+msgstr "Diseño"
+
+#: /compat/plugin-js-composer/config.php:2915
+msgid "Show Layout Switcher"
+msgstr "Mostrar intercambiado de diseño"
+
+#: /compat/plugin-js-composer/config.php:2928
+#, fuzzy
+msgid "Switcher Layouts"
+msgstr "Diseños de Switcher"
+
+#: /compat/plugin-js-composer/config.php:2944
+#, fuzzy
+msgid "Show Thumbnail image"
+msgstr "Imagen miniatura:"
+
+#: /compat/plugin-js-composer/config.php:2964
+msgid "Show post meta"
+msgstr "Mostrar meta de entrada"
+
+#: /compat/plugin-js-composer/config.php:2977
+#, fuzzy
+msgid "Inline post meta"
+msgstr "En línea post meta"
+
+#: /compat/plugin-js-composer/config.php:2994
+msgid "Show post excerpt"
+msgstr "Mostrar extracto del post"
+
+#: /compat/plugin-js-composer/config.php:3007
+#, fuzzy
+msgid "Show post footer"
+msgstr "Mostrar en el pie de página?"
+
+#: /compat/plugin-js-composer/config.php:3098
+msgid "Scroll effect"
+msgstr "Efecto de desplazamiento"
+
+#: /compat/plugin-js-composer/config.php:3156
+msgid "Context"
+msgstr "Contexto"
+
+#: /compat/plugin-js-composer/config.php:3184
+#, fuzzy
+msgid "Insert portfolio items"
+msgstr "Insertar"
+
+#: /compat/plugin-js-composer/config.php:3190
+msgid "Display type"
+msgstr "Tipo de visualización"
+
+#: /compat/plugin-js-composer/config.php:3202
+msgid "Title style"
+msgstr "Estilo del titulo"
+
+#: /compat/plugin-js-composer/config.php:3228
+#, fuzzy
+msgid "Items to show"
+msgstr "Elementos a mostrar:"
+
+#: /compat/plugin-js-composer/config.php:3237
+#, fuzzy
+msgid "Display pagination. Only if is the case it will be showed"
+msgstr "Mostrar la paginación. Sólo si es el caso que será mostrada"
+
+#: /compat/plugin-js-composer/config.php:3249
+#, fuzzy
+msgid "Show filter on top with categories"
+msgstr "Mostrar filtro en la parte superior con las categorías"
+
+#: /compat/plugin-js-composer/config.php:3261
+#, fuzzy
+msgid "Display Subtitle for each item"
+msgstr "Subtítulos de la pantalla para cada elemento"
+
+#: /compat/plugin-js-composer/config.php:3273
+msgid "Images size"
+msgstr "Tamaño de imagen"
+
+#: /compat/plugin-js-composer/config.php:3282
+#, fuzzy
+msgid "Show from Category"
+msgstr "Categoria"
+
+#: /compat/plugin-js-composer/config.php:3291
+msgid "Exclude categories"
+msgstr "Excluir categorías"
+
+#: /compat/plugin-js-composer/config.php:3339
+msgid "Insert search form"
+msgstr "Insertar formulario de búsqueda"
+
+#: /compat/plugin-js-composer/config.php:3346
+#, fuzzy
+msgid "Form Style"
+msgstr "Estilo del formulario:"
+
+#: /compat/plugin-js-composer/config.php:3358
+msgid "Form Type"
+msgstr "Tipo de formulario"
+
+#: /compat/plugin-js-composer/config.php:3371
+#, fuzzy
+msgid "Search context"
+msgstr "Contexto de búsqueda"
+
+#: /compat/plugin-js-composer/config.php:3380
+#: /compat/plugin-js-composer/config. php:3415
+msgid "Placeholder"
+msgstr "Texto de marcador de posición"
+
+#: /compat/plugin-js-composer/config.php:3383
+#: /compat/plugin-js-composer/config. php:3418
+#, fuzzy
+msgid "Placeholder to show when the input is empty"
+msgstr "Marcador de posición para mostrar cuando la entrada está vacía"
+
+#: /compat/plugin-js-composer/config.php:3396
+#, fuzzy
+msgid "bbPress Header Search"
+msgstr "bbPress cabecera búsqueda"
+
+#: /compat/plugin-js-composer/config.php:3399
+msgid "bbPress"
+msgstr "bbPress"
+
+#: /compat/plugin-js-composer/config.php:3406
+#, fuzzy
+msgid "Forum ID"
+msgstr "Foro"
+
+#: /compat/plugin-js-composer/config.php:3409
+#, fuzzy
+msgid ""
+"Enter a Forum ID to search just in that forum. Leave blank to search in all "
+"forums "
+msgstr ""
+"Introduzca un ID de foro a buscar en ese foro. Deje en blanco para buscar en "
+"todos los foros"
+
+#: /compat/plugin-js-composer/config.php:3424
+msgid "Button text color"
+msgstr "Color del texto"
+
+#: /compat/plugin-js-composer/config.php:3433
+msgid "Button background color"
+msgstr "color de fondo del botón"
+
+#: /compat/plugin-js-composer/config.php:3447
+#, fuzzy
+msgid "Count Posts"
+msgstr "Mensajes de la cuenta"
+
+#: /compat/plugin-js-composer/config.php:3457
+msgid "Post type"
+msgstr "Tipo de Entrada"
+
+#: /compat/plugin-js-composer/config.php:3460
+#, fuzzy
+msgid ""
+"Enter a post type to count for. This should be something like: post, page or "
+"portfolio "
+msgstr ""
+"Escribir un post tipo contar para. Esto debe ser algo como: post, página o "
+"cartera"
+
+#: /compat/plugin-js-composer/config.php:3470
+#, fuzzy
+msgid "Let it Snow"
+msgstr "Deje que se"
+
+#: /compat/plugin-js-composer/config.php:3480
+#, fuzzy
+msgid "Where the snowing effect should happen"
+msgstr "Donde debe ocurrir el efecto nevando"
+
+#: /compat/plugin-js-composer/config.php:3486
+#, fuzzy
+msgid ""
+"Add beautiful snow effect. Let it snow only in the container column element "
+"or activate it for the whole site. "
+msgstr ""
+"Añadir efecto de nieve hermosa. Que la nieve sólo en el elemento contenedor "
+"de columna o activar para todo el sitio."
+
+#: /compat/plugin-js-composer/config.php:3497
+msgid "Pricing Table"
+msgstr "Tabla de precios"
+
+#: /compat/plugin-js-composer/config.php:3502
+#, fuzzy
+msgid "Easy to add pricing tables"
+msgstr "Fácil de añadir tablas de precios"
+
+#: /compat/plugin-js-composer/config.php:3512
+msgid "Columns"
+msgstr "Columnas"
+
+#: /compat/plugin-js-composer/config.php:3520
+#, fuzzy
+msgid "Number of pricing table columns."
+msgstr "Número de columnas de la tabla de precios."
+
+#: /compat/plugin-js-composer/config.php:3532
+#, fuzzy
+msgid "Choose a different style."
+msgstr "Elija un estilo diferente."
+
+#: /compat/plugin-js-composer/config.php:3539
+#, fuzzy
+msgid "Custom Heading background"
+msgstr "Imágen de fondo personalizada cabecera"
+
+#: /compat/plugin-js-composer/config.php:3548
+#, fuzzy
+msgid "Custom Price background"
+msgstr "Fondo precio personalizado"
+
+#: /compat/plugin-js-composer/config.php:3557
+#, fuzzy
+msgid "Custom Text color"
+msgstr "Color de texto personalizado"
+
+#: /compat/plugin-js-composer/config.php:3570
+#, fuzzy
+msgid "Pricing table item"
+msgstr "Tabla de precios"
+
+#: /compat/plugin-js-composer/config.php:3592
+msgid "Price"
+msgstr "Precio"
+
+#: /compat/plugin-js-composer/config.php:3601
+#, fuzzy
+msgid "Popular column?"
+msgstr "¿Columna popular?"
+
+#: /compat/plugin-js-composer/config.php:3607
+#, fuzzy
+msgid "Shows this column with a different style"
+msgstr "Muestra esta columna con un estilo diferente"
+
+#: /compat/plugin-js-composer/config.php:3622
+#, fuzzy
+msgid "Features list"
+msgstr "Lista de caracter&iacute;sticas 4"
+
+#: /compat/plugin-js-composer/config.php:3630
+msgid "Button label"
+msgstr "Etiqueta del botón"
+
+#: /compat/plugin-js-composer/config.php:3636
+msgid "URL (Link)"
+msgstr "URL (Link)"
+
+#: /compat/plugin-js-composer/config.php:3638
+#, fuzzy
+msgid "Add link to button"
+msgstr "Añadir enlace al botón."
+
+#: /compat/plugin-js-composer/config.php:3649
+#, fuzzy
+msgid "Galaxy Particles"
+msgstr "Partículas de la galaxia"
+
+#: /compat/plugin-js-composer/config.php:3654
+#, fuzzy
+msgid "Add nice background connected particles"
+msgstr "Añadir partículas lindo fondo conectado"
+
+#: /compat/plugin-js-composer/config.php:3661
+#, fuzzy
+msgid "Particles number"
+msgstr "Partículas (número): …"
+
+#: /compat/plugin-js-composer/config.php:3670
+#, fuzzy
+msgid "Particles size"
+msgstr "Tamaño de las partículas"
+
+#: /compat/plugin-js-composer/config.php:3679
+#, fuzzy
+msgid "Particles color"
+msgstr "Color de las partículas"
+
+#: /compat/plugin-js-composer/config.php:3690
+#, fuzzy
+msgid "Kleo Login"
+msgstr "Iniciar sesión"
+
+#: /compat/plugin-js-composer/config.php:3695
+#, fuzzy
+msgid "Login / Lost Password Forms (Hidden from logged in users.)"
+msgstr ""
+"Inicio de sesión / formas de contraseña perdida (oculta en los usuarios.)"
+
+#: /compat/plugin-js-composer/config.php:3701
+#, fuzzy
+msgid "Show"
+msgstr "Categoria"
+
+#: /compat/plugin-js-composer/config.php:3707
+#, fuzzy
+msgid "Initial form to show."
+msgstr "Forma inicial para mostrar."
+
+#: /compat/plugin-js-composer/config.php:3713
+#, fuzzy
+msgid "Login Title"
+msgstr "Título de Login:"
+
+#: /compat/plugin-js-composer/config.php:3716
+#: /compat/plugin-js-composer/config. php:3725
+#, fuzzy
+msgid "Enter the login title."
+msgstr "Ingrese el título de inicio de sesión."
+
+#: /compat/plugin-js-composer/config.php:3722
+#, fuzzy
+msgid "Lost Password Title"
+msgstr "Título de contraseña perdida"
+
+#: /compat/plugin-js-composer/config.php:3731
+msgid "Login Link"
+msgstr "Enlace de Inicio de Sesión"
+
+#: /compat/plugin-js-composer/config.php:3734
+#: /compat/plugin-js-composer/config. php:3743
+#, fuzzy
+msgid ""
+"Use # or custom url. Using # will allow inline switching between login and "
+"lost password boxes."
+msgstr ""
+"Utilice # o url personalizada. Usando # permitirá en línea conmutación entre "
+"nombre de usuario y contraseña perdida cajas."
+
+#: /compat/plugin-js-composer/config.php:3740
+msgid "Lost Password Link"
+msgstr "Enlace para Recuperar Contraseña"
+
+#: /compat/plugin-js-composer/config.php:3749
+msgid "Register Link"
+msgstr "Link de registro"
+
+#: /compat/plugin-js-composer/config.php:3752
+#, fuzzy
+msgid ""
+"Leave empty for WordPress or BuddyPress default url. Use 'hide' or custom "
+"url. Using 'hide will allow you to hide any registration information."
+msgstr ""
+"Deje en blanco para WordPress o BuddyPress url predeterminada. Utilizar url "
+"personalizado o 'hide'. Usando ' hide te permite ocultar cualquier "
+"información de registro."
+
+#: /compat/plugin-js-composer/config.php:3766
+#: /compat/plugin-js-composer/config. php:4080
+#, fuzzy
+msgid ""
+"Form style. If you don't use this form with a background behind then you "
+"should set the form style to 'Theme Default'"
+msgstr ""
+"Estilo de formulario. Si no utiliza esta forma con un fondo detrás debe "
+"establecer el estilo de forma 'Tema Default'"
+
+#: /compat/plugin-js-composer/config.php:3772
+#: /compat/plugin-js-composer/config. php:4086
+#, fuzzy
+msgid "Input Size"
+msgstr "Tamaño de Fuente de Entrada"
+
+#: /compat/plugin-js-composer/config.php:3778
+#: /compat/plugin-js-composer/config. php:4092
+#, fuzzy
+msgid "Form input sizes."
+msgstr "Forma de entrada tamaños."
+
+#: /compat/plugin-js-composer/config.php:3785
+#: /compat/plugin-js-composer/config. php:4099
+#, fuzzy
+msgid "Show for logged in users too"
+msgstr "只为登录用户显示"
+
+#: /compat/plugin-js-composer/config.php:3802
+#, fuzzy
+msgid "Kleo Social Sharing"
+msgstr "Compartiendo socialmente"
+
+#: /compat/plugin-js-composer/config.php:3807
+#, fuzzy
+msgid "Adds Kleo Likes and social sharing.)"
+msgstr "Agrega Kleo y participación social)."
+
+#: /compat/plugin-js-composer/config.php:3817
+#, fuzzy
+msgid "Kleo Magic Container"
+msgstr "Contenedor de magia KLEO"
+
+#: /compat/plugin-js-composer/config.php:3822
+#, fuzzy
+msgid "Very customizable container element"
+msgstr "Elemento contenedor muy personalizable"
+
+#: /compat/plugin-js-composer/config.php:3831
+#, fuzzy
+msgid "CSS Position"
+msgstr "Posición de CSS"
+
+#: /compat/plugin-js-composer/config.php:3839
+#: /compat/plugin-js-composer/config. php:3853
+#, fuzzy
+msgid "Set the content position."
+msgstr "Establecer la posición de contenido."
+
+#: /compat/plugin-js-composer/config.php:3846
+#, fuzzy
+msgid "CSS Float"
+msgstr "Emitir"
+
+#: /compat/plugin-js-composer/config.php:3860
+#, fuzzy
+msgid "CSS Top"
+msgstr "Parte superior de la CSS"
+
+#: /compat/plugin-js-composer/config.php:3863
+#, fuzzy
+msgid "Css Top value. Use px|em|%|pt|cm"
+msgstr "Valor de la parte superior de la CSS. Utilice px | em | % | PT | cm"
+
+#: /compat/plugin-js-composer/config.php:3870
+#, fuzzy
+msgid "CSS Right"
+msgstr "CSS derecha"
+
+#: /compat/plugin-js-composer/config.php:3873
+#, fuzzy
+msgid "Css RIGHT value. Use px|em|%|pt|cm"
+msgstr "Valor del derecho de CSS. Utilice px | em | % | PT | cm"
+
+#: /compat/plugin-js-composer/config.php:3880
+#, fuzzy
+msgid "CSS Bottom"
+msgstr "Fondo CSS"
+
+#: /compat/plugin-js-composer/config.php:3883
+#, fuzzy
+msgid "Css BOTTOM value. Use px|em|%|pt|cm"
+msgstr "Valor de fondo de CSS. Utilice px | em | % | PT | cm"
+
+#: /compat/plugin-js-composer/config.php:3890
+#, fuzzy
+msgid "CSS Left"
+msgstr "CSS izquierdo"
+
+#: /compat/plugin-js-composer/config.php:3893
+#, fuzzy
+msgid "Css LEFT value. Use px|em|%|pt|cm"
+msgstr "Valor de la izquierda de la CSS. Utilice px | em | % | PT | cm"
+
+#: /compat/plugin-js-composer/config.php:3900
+#, fuzzy
+msgid "Min. width"
+msgstr "Ancho mínimo"
+
+#: /compat/plugin-js-composer/config.php:3903
+#, fuzzy
+msgid "Force a minimum width. Use px|em|%|pt|cm"
+msgstr "Una anchura mínima de la fuerza. Utilice px | em | % | PT | cm"
+
+#: /compat/plugin-js-composer/config.php:3920
+msgid "Fixed width"
+msgstr "Anchura fija"
+
+#: /compat/plugin-js-composer/config.php:3923
+#, fuzzy
+msgid "Force a fixed width. Use px|em|%|pt|cm"
+msgstr "Fuerza un ancho fijo. Utilice px | em | % | PT | cm"
+
+#: /compat/plugin-js-composer/config.php:3940
+#, fuzzy
+msgid "Content vertical position in container"
+msgstr "Posición vertical contenido en envase"
+
+#: /compat/plugin-js-composer/config.php:3947
+#, fuzzy
+msgid ""
+"Set the content position related to the container. Works when you set a "
+"custom container height."
+msgstr ""
+"Establecer la posición contenida relacionado con el contenedor. Funciona "
+"cuando se establece una altura de envase personalizado."
+
+#: /compat/plugin-js-composer/config.php:3954
+#, fuzzy
+msgid "Center text horizontally"
+msgstr "Centrar el texto horizontal"
+
+#: /compat/plugin-js-composer/config.php:3959
+#, fuzzy
+msgid "Enabling this option will center any text inside the container"
+msgstr ""
+"La activación de esta opción se centra cualquier texto dentro del contenedor"
+
+#: /compat/plugin-js-composer/config.php:3966
+#, fuzzy
+msgid "Center the container box horizontally"
+msgstr "Centro horizontal de la caja de envase"
+
+#: /compat/plugin-js-composer/config.php:3971
+#, fuzzy
+msgid "Works when you set a custom container width."
+msgstr "Funciona cuando se establece un ancho del contenedor personalizado."
+
+#: /compat/plugin-js-composer/config.php:3977
+#, fuzzy
+msgid "Full height content"
+msgstr "Altura del contenido"
+
+#: /compat/plugin-js-composer/config.php:3982
+#, fuzzy
+msgid ""
+"Stretch the content to the container height. Works when you set a custom "
+"container height."
+msgstr ""
+"Estirar el contenido a la altura del envase. Funciona cuando se establece "
+"una altura de envase personalizado."
+
+#: /compat/plugin-js-composer/config.php:3988
+msgid "Border Radius"
+msgstr "Radio del borde"
+
+#: /compat/plugin-js-composer/config.php:3991
+#, fuzzy
+msgid "Set container border radius. Use px|em|%|pt|cm"
+msgstr "Radio frontera de envase. Utilice px | em | % | PT | cm"
+
+#: /compat/plugin-js-composer/config.php:4004
+msgid "Css"
+msgstr "Css"
+
+#: /compat/plugin-js-composer/config.php:4051
+#, fuzzy
+msgid "Kleo Register"
+msgstr "Registrar"
+
+#: /compat/plugin-js-composer/config.php:4056
+#, fuzzy
+msgid "Register Form (Hidden from logged in users.)"
+msgstr "Formulario de registro (Hidden de usuarios logueados)."
+
+#: /compat/plugin-js-composer/config.php:4063
+msgid "Register Title"
+msgstr "Título de Registro"
+
+#: /compat/plugin-js-composer/config.php:4066
+#, fuzzy
+msgid "Enter the register title."
+msgstr "Ingrese el título de registro."
+
+#: /compat/plugin-js-composer/config.php:4117
+#, fuzzy
+msgid "NEWS Focus"
+msgstr "Enfoque noticias"
+
+#: /compat/plugin-js-composer/config.php:4122
+#, fuzzy
+msgid "News Posts with big left image"
+msgstr "Entradas de noticias con gran imagen de la izquierda"
+
+#: /compat/plugin-js-composer/config.php:4128
+msgid "Section name"
+msgstr "Nombre de secci&oacute;n"
+
+#: /compat/plugin-js-composer/config.php:4131
+#, fuzzy
+msgid "Enter a section name."
+msgstr "Introduzca un nombre de sección."
+
+#: /compat/plugin-js-composer/config.php:4137
+#, fuzzy
+msgid "Featured posts on left side"
+msgstr "Posts recomendados en lado izquierdo"
+
+#: /compat/plugin-js-composer/config.php:4140
+#, fuzzy
+msgid "Enter the number of post to highlight and show big on the left column."
+msgstr ""
+"Introduzca el número de post para resaltar y mostrar grandes en la columna "
+"de la izquierda."
+
+#: /compat/plugin-js-composer/config.php:4144
+#: /compat/plugin-js-composer/config. php:4180
+#: /compat/plugin-js-composer/config.php:4207
+#, fuzzy
+msgid "Build your query"
+msgstr "Construir la consulta"
+
+#: /compat/plugin-js-composer/config.php:4150
+#, fuzzy
+msgid ""
+"If you refine your posts by category then they will show as tabbed content "
+"in the shortcode"
+msgstr ""
+"Si refinar tus posts por categoría entonces se muestran como pestañas "
+"contenido en el código"
+
+#: /compat/plugin-js-composer/config.php:4162
+#, fuzzy
+msgid "NEWS Highlight"
+msgstr "Resaltado"
+
+#: /compat/plugin-js-composer/config.php:4167
+#, fuzzy
+msgid "News Posts with first post big image"
+msgstr "Entradas de noticias con primera imagen grande post"
+
+#: /compat/plugin-js-composer/config.php:4173
+#, fuzzy
+msgid "Featured posts to show big"
+msgstr "Posts recomendados para mostrar grandes"
+
+#: /compat/plugin-js-composer/config.php:4176
+#, fuzzy
+msgid "Enter the number of post to highlight and show with bigger thumb."
+msgstr ""
+"Introduzca el número de post para resaltar y mostrar con el dedo pulgar más "
+"grande."
+
+#: /compat/plugin-js-composer/config.php:4186
+#, fuzzy
+msgid ""
+"If you refine your posts by category then the first category will show as a "
+"label on first post image"
+msgstr ""
+"Si refinar tus posts por categoría entonces la primera categoría se mostrará "
+"como una etiqueta en la primera imagen de post"
+
+#: /compat/plugin-js-composer/config.php:4198
+#, fuzzy
+msgid "NEWS Ticker"
+msgstr "Desplazamiento de títulos de las noticias"
+
+#: /compat/plugin-js-composer/config.php:4203
+#, fuzzy
+msgid "Auto Scrolling posts"
+msgstr "Auto desplazamiento mensajes"
+
+#: /compat/plugin-js-composer/config.php:4213
+#, fuzzy
+msgid "Refine your posts by specific filters"
+msgstr "Perfeccionar tus mensajes por filtros específicos"
+
+#: /compat/plugin-js-composer/config.php:4225
+#, fuzzy
+msgid "Members Count"
+msgstr "Cuenta de los miembros"
+
+#: /compat/plugin-js-composer/config.php:4228
+#: /compat/plugin-js-composer/config. php:4244
+#: /compat/plugin-js-composer/config.php:4294 /compat/plugin-js-
+#: composer/config.php:4429 /compat/plugin-js-composer/config.php:4513
+#: /compat/plugin-js-composer/config.php:4618 php:4732
+#: /compat/plugin-js-composer/config.php:4797 composer/config.php:4892
+#: /compat/plugin-js-composer/config.php:4989
+#, fuzzy
+msgid "BuddyPress"
+msgstr ""
+"Este plugin es para personalizar la funcionalidad de MediaPress y BuddyPress."
+
+#: /compat/plugin-js-composer/config.php:4230
+#, fuzzy
+msgid "Show the total member count."
+msgstr "Mostrar el número total de miembros."
+
+#: /compat/plugin-js-composer/config.php:4241
+#, fuzzy
+msgid "Members Statistics"
+msgstr "Estadísticas de miembros"
+
+#: /compat/plugin-js-composer/config.php:4251
+msgid "Field Name"
+msgstr "Nombre del campo"
+
+#: /compat/plugin-js-composer/config.php:4254
+#, fuzzy
+msgid "Profile field name."
+msgstr "Nombre del campo de perfil."
+
+#: /compat/plugin-js-composer/config.php:4260
+msgid "Field Value"
+msgstr "Campo Valor"
+
+#: /compat/plugin-js-composer/config.php:4263
+#, fuzzy
+msgid "Profile field value."
+msgstr "Valor de campo de perfil."
+
+#: /compat/plugin-js-composer/config.php:4269
+msgid "Online?"
+msgstr "En línea?"
+
+#: /compat/plugin-js-composer/config.php:4274
+#, fuzzy
+msgid "Only include online members."
+msgstr "Sólo incluir a miembros en línea."
+
+#: /compat/plugin-js-composer/config.php:4277
+#, fuzzy
+msgid "Show the member count by profile field value."
+msgstr "Mostrar la cuenta de miembro por el valor del campo Perfil."
+
+#: /compat/plugin-js-composer/config.php:4291
+#, fuzzy
+msgid "Members Carousel"
+msgstr "Carrusel de miembros"
+
+#: /compat/plugin-js-composer/config.php:4301
+#: /compat/plugin-js-composer/config. php:4436
+#: /compat/plugin-js-composer/config.php:4520
+msgid "Member Type"
+msgstr "Tipo de Miembro"
+
+#: /compat/plugin-js-composer/config.php:4304
+#: /compat/plugin-js-composer/config. php:4439
+#: /compat/plugin-js-composer/config.php:4523
+#, fuzzy
+msgid "The type of members to display."
+msgstr "El tipo de miembros para mostrar."
+
+#: /compat/plugin-js-composer/config.php:4310
+#: /compat/plugin-js-composer/config. php:4445
+#: /compat/plugin-js-composer/config.php:4529
+msgid "Filter"
+msgstr " Filtro"
+
+#: /compat/plugin-js-composer/config.php:4320
+#: /compat/plugin-js-composer/config. php:4455
+#: /compat/plugin-js-composer/config.php:4539
+#, fuzzy
+msgid "Filter the members by."
+msgstr "Filtro de los miembros."
+
+#: /compat/plugin-js-composer/config.php:4326
+#: /compat/plugin-js-composer/config. php:4461
+msgid "Number of members"
+msgstr "Número de miembros"
+
+#: /compat/plugin-js-composer/config.php:4329
+#: /compat/plugin-js-composer/config. php:4464
+#, fuzzy
+msgid "How many members to get."
+msgstr "Cuántos miembros a obtener."
+
+#: /compat/plugin-js-composer/config.php:4335
+#: /compat/plugin-js-composer/config. php:4651
+#, fuzzy
+msgid "Minimum Items"
+msgstr "Mínimo de objetos:"
+
+#: /compat/plugin-js-composer/config.php:4338
+#: /compat/plugin-js-composer/config. php:4654
+#, fuzzy
+msgid "Minimum number of items to show on the screen"
+msgstr "Número mínimo de elementos que mostrar en la pantalla"
+
+#: /compat/plugin-js-composer/config.php:4344
+#: /compat/plugin-js-composer/config. php:4660
+msgid "Maximum Items"
+msgstr "Máximo Número de Sitios"
+
+#: /compat/plugin-js-composer/config.php:4347
+#: /compat/plugin-js-composer/config. php:4663
+#, fuzzy
+msgid "Maximum number of items to show on the screen"
+msgstr "Número máximo de elementos a mostrar en la pantalla"
+
+#: /compat/plugin-js-composer/config.php:4353
+#: /compat/plugin-js-composer/config. php:4669
+msgid "Image Type"
+msgstr "Tipo Imagen"
+
+#: /compat/plugin-js-composer/config.php:4359
+#: /compat/plugin-js-composer/config. php:4675
+#, fuzzy
+msgid "The size to get from buddypress"
+msgstr "El tamaño de buddypress"
+
+#: /compat/plugin-js-composer/config.php:4365
+#: /compat/plugin-js-composer/config. php:4470
+#: /compat/plugin-js-composer/config.php:4576 /compat/plugin-js-
+#: composer/config.php:4693 /compat/plugin-js-composer/config.php:4765
+#: /compat/plugin-js-composer/config.php:4852
+#, fuzzy
+msgid "Avatar type"
+msgstr "Avatar"
+
+#: /compat/plugin-js-composer/config.php:4371
+#: /compat/plugin-js-composer/config. php:4476
+#: /compat/plugin-js-composer/config.php:4582 /compat/plugin-js-
+#: composer/config.php:4699 /compat/plugin-js-composer/config.php:4771
+#: /compat/plugin-js-composer/config.php:4858
+#, fuzzy
+msgid "Rounded or square avatar"
+msgstr "Avatar redondo o cuadrado"
+
+#: /compat/plugin-js-composer/config.php:4377
+#: /compat/plugin-js-composer/config. php:4705
+msgid "Image Width"
+msgstr "Ancho de la imagen"
+
+#: /compat/plugin-js-composer/config.php:4380
+#, fuzzy
+msgid "The size of the member image"
+msgstr "El tamaño de la imagen de miembro"
+
+#: /compat/plugin-js-composer/config.php:4386
+#: /compat/plugin-js-composer/config. php:4681
+msgid "Auto play"
+msgstr "Auto play"
+
+#: /compat/plugin-js-composer/config.php:4392
+#: /compat/plugin-js-composer/config. php:4687
+#, fuzzy
+msgid "If the carousel should play automatically"
+msgstr "Si el carrusel debe reproducir automáticamente"
+
+#: /compat/plugin-js-composer/config.php:4398
+#: /compat/plugin-js-composer/config. php:4482
+#, fuzzy
+msgid "Online status"
+msgstr "Estado de conexión"
+
+#: /compat/plugin-js-composer/config.php:4404
+#: /compat/plugin-js-composer/config. php:4488
+#, fuzzy
+msgid "Show online status"
+msgstr "Mostrar mi estado de conexión:"
+
+#: /compat/plugin-js-composer/config.php:4426
+#, fuzzy
+msgid "Members Masonry"
+msgstr "Miembros de mampostería"
+
+#: /compat/plugin-js-composer/config.php:4510
+#, fuzzy
+msgid "Members Grid"
+msgstr "Los miembros de la red"
+
+#: /compat/plugin-js-composer/config.php:4545
+#: /compat/plugin-js-composer/config. php:4821
+#, fuzzy
+msgid "Maximum members"
+msgstr "Miembros del máximo"
+
+#: /compat/plugin-js-composer/config.php:4548
+#, fuzzy
+msgid "How many members you want to display."
+msgstr "Cuántos miembros desea mostrar."
+
+#: /compat/plugin-js-composer/config.php:4554
+#, fuzzy
+msgid "Members per line"
+msgstr "Miembros por línea"
+
+#: /compat/plugin-js-composer/config.php:4570
+#, fuzzy
+msgid "How many members to show per line"
+msgstr "Cuántos miembros a mostrar por línea"
+
+#: /compat/plugin-js-composer/config.php:4595
+#: /compat/plugin-js-composer/config. php:4871
+#, fuzzy
+msgid "Elements will appear animated"
+msgstr "Elementos aparecerán animados"
+
+#: /compat/plugin-js-composer/config.php:4615
+#, fuzzy
+msgid "Groups Carousel"
+msgstr "Carrusel de grupos"
+
+#: /compat/plugin-js-composer/config.php:4636
+#: /compat/plugin-js-composer/config. php:4750
+#: /compat/plugin-js-composer/config.php:4815
+#, fuzzy
+msgid "The type of groups to display."
+msgstr "El tipo de grupos para mostrar."
+
+#: /compat/plugin-js-composer/config.php:4642
+#: /compat/plugin-js-composer/config. php:4756
+#, fuzzy
+msgid "Number of groups"
+msgstr "Número de grupos"
+
+#: /compat/plugin-js-composer/config.php:4645
+#: /compat/plugin-js-composer/config. php:4759
+#, fuzzy
+msgid "How many groups to get."
+msgstr "Cuántos grupos a obtener."
+
+#: /compat/plugin-js-composer/config.php:4708
+#, fuzzy
+msgid "The size of the group image"
+msgstr "El tamaño de la imagen del grupo"
+
+#: /compat/plugin-js-composer/config.php:4729
+#, fuzzy
+msgid "Groups Masonry"
+msgstr "Mampostería de grupos"
+
+#: /compat/plugin-js-composer/config.php:4794
+#, fuzzy
+msgid "Groups Grid"
+msgstr "Red de grupos"
+
+#: /compat/plugin-js-composer/config.php:4824
+#, fuzzy
+msgid "How many groups you want to display."
+msgstr "Cuántos grupos que desea mostrar."
+
+#: /compat/plugin-js-composer/config.php:4830
+#, fuzzy
+msgid "Groups per line"
+msgstr "Grupos por línea"
+
+#: /compat/plugin-js-composer/config.php:4846
+#, fuzzy
+msgid "How many groups to show per line"
+msgstr "Cuántos grupos mostrar por línea"
+
+#: /compat/plugin-js-composer/config.php:4864
+#, fuzzy
+msgid "Animatione"
+msgstr "Animatione"
+
+#: /compat/plugin-js-composer/config.php:4889
+msgid "Activity Stream"
+msgstr "Flujo de Actividad"
+
+#: /compat/plugin-js-composer/config.php:4899
+#, fuzzy
+msgid "Display"
+msgstr "Tipo de pantalla predeterminado"
+
+#: /compat/plugin-js-composer/config.php:4909
+#, fuzzy
+msgid ""
+"The type of activity to show. It adds the 'object' parameter as in https://"
+"codex.buddypress.org/developer/loops-reference/the-activity-stream-loop/"
+msgstr ""
+"El tipo de actividad que muestra. Añade el parámetro 'objetos' como en "
+"https://codex.buddypress.org/developer/loops-reference/the-activity-stream-"
+"loop/"
+
+#: /compat/plugin-js-composer/config.php:4915
+#, fuzzy
+msgid "Filter action"
+msgstr "Acciones de filtrado"
+
+#: /compat/plugin-js-composer/config.php:4918
+#, fuzzy
+msgid ""
+"Example: activity_update<br> See action parameter from the filters section "
+"from https://codex.buddypress.org/developer/loops-reference/the-activity-"
+"stream-loop/"
+msgstr ""
+"Ejemplo: activity_update<br>Ver parámetro de acción de la sección de filtros "
+"de https://codex.buddypress.org/developer/loops-reference/the-activity-"
+"stream-loop/"
+
+#: /compat/plugin-js-composer/config.php:4924
+#, fuzzy
+msgid "Number"
+msgstr "Cantidad de puntos"
+
+#: /compat/plugin-js-composer/config.php:4927
+#, fuzzy
+msgid "How many activity streams to show"
+msgstr "Cuántas secuencias de actividad para mostrar"
+
+#: /compat/plugin-js-composer/config.php:4933
+#, fuzzy
+msgid "Show post update form"
+msgstr "Post Mostrar formulario de actualización de"
+
+#: /compat/plugin-js-composer/config.php:4939
+#, fuzzy
+msgid "Shows the form to post a new update"
+msgstr "Muestra el formulario para publicar una nueva actualización"
+
+#: /compat/plugin-js-composer/config.php:4945
+#, fuzzy
+msgid "Bottom button"
+msgstr "BOTÓN INFERIOR"
+
+#: /compat/plugin-js-composer/config.php:4951
+#, fuzzy
+msgid "Show a button with link to the activity page"
+msgstr "Mostrar un botón con enlace a la página de la actividad"
+
+#: /compat/plugin-js-composer/config.php:4957
+#, fuzzy
+msgid "Activity Button Label"
+msgstr "Actividad botón etiqueta"
+
+#: /compat/plugin-js-composer/config.php:4964
+msgid "Button text"
+msgstr "Texto del botón"
+
+#: /compat/plugin-js-composer/config.php:4970
+#, fuzzy
+msgid "Activity Button Link"
+msgstr "Actividad botón enlace"
+
+#: /compat/plugin-js-composer/config.php:4977
+#, fuzzy
+msgid "Put here the link to your activity page"
+msgstr "Pongo aquí el enlace a su página de la actividad"
+
+#: /compat/plugin-js-composer/config.php:4986
+#, fuzzy
+msgid "Activity Page"
+msgstr "Actividad"
+
+#: /compat/plugin-js-composer/config.php:5300
+#: /compat/plugin-js-composer/config. php:5394
+#, fuzzy
+msgid "Fontello(theme default)"
+msgstr "Fontello (por defecto del tema)"
+
+#: /compat/plugin-js-composer/config.php:5344
+msgid "Alert"
+msgstr "Alerta"
+
+#: /compat/plugin-js-composer/config.php:5345
+msgid "Info"
+msgstr "Información"
+
+#: /compat/plugin-js-composer/config.php:5346
+msgid "Tick"
+msgstr "Marca"
+
+#: /compat/plugin-js-composer/config.php:5347
+msgid "Explanation"
+msgstr "Explicación"
+
+#: /compat/plugin-js-composer/config.php:5348
+msgid "Address book"
+msgstr "Libreta de direcciones"
+
+#: /compat/plugin-js-composer/config.php:5349
+msgid "Alarm clock"
+msgstr "Despertador"
+
+#: /compat/plugin-js-composer/config.php:5350
+msgid "Anchor"
+msgstr "Ancla"
+
+#: /compat/plugin-js-composer/config.php:5351
+msgid "Application Image"
+msgstr "Imagen de la aplicación"
+
+#: /compat/plugin-js-composer/config.php:5352
+msgid "Arrow"
+msgstr "Flecha"
+
+#: /compat/plugin-js-composer/config.php:5353
+msgid "Asterisk"
+msgstr "Asterisco"
+
+#: /compat/plugin-js-composer/config.php:5354
+msgid "Hammer"
+msgstr "Martillo"
+
+#: /compat/plugin-js-composer/config.php:5355
+msgid "Balloon"
+msgstr "Globo"
+
+#: /compat/plugin-js-composer/config.php:5356
+msgid "Balloon Buzz"
+msgstr "Zumbido de Globo"
+
+#: /compat/plugin-js-composer/config.php:5357
+msgid "Balloon Facebook"
+msgstr "Globo Facebook icono"
+
+#: /compat/plugin-js-composer/config.php:5358
+msgid "Balloon Twitter"
+msgstr "Globo Twitter icon"
+
+#: /compat/plugin-js-composer/config.php:5359
+msgid "Battery"
+msgstr "Batería"
+
+#: /compat/plugin-js-composer/config.php:5360
+msgid "Binocular"
+msgstr "Prismáticos"
+
+#: /compat/plugin-js-composer/config.php:5361
+msgid "Document Excel"
+msgstr "Documento de Excel"
+
+#: /compat/plugin-js-composer/config.php:5362
+msgid "Document Image"
+msgstr "Documento de Imagen"
+
+#: /compat/plugin-js-composer/config.php:5363
+msgid "Document Music"
+msgstr "Documento de Música"
+
+#: /compat/plugin-js-composer/config.php:5364
+msgid "Document Office"
+msgstr "Documento de Office"
+
+#: /compat/plugin-js-composer/config.php:5365
+msgid "Document PDF"
+msgstr "Documento PDF"
+
+#: /compat/plugin-js-composer/config.php:5366
+msgid "Document Powerpoint"
+msgstr "Documento de PowerPoint"
+
+#: /compat/plugin-js-composer/config.php:5367
+msgid "Document Word"
+msgstr "Documento de Word"
+
+#: /compat/plugin-js-composer/config.php:5368
+msgid "Bookmark"
+msgstr "Marcador"
+
+#: /compat/plugin-js-composer/config.php:5369
+msgid "Camcorder"
+msgstr "Videocámara"
+
+#: /compat/plugin-js-composer/config.php:5370
+msgid "Camera"
+msgstr "Cámara"
+
+#: /compat/plugin-js-composer/config.php:5371
+msgid "Chart"
+msgstr "Gráfico"
+
+#: /compat/plugin-js-composer/config.php:5372
+msgid "Chart pie"
+msgstr "Gráfico tipo tarta"
+
+#: /compat/plugin-js-composer/config.php:5373
+msgid "Clock"
+msgstr "Reloj"
+
+#: /compat/plugin-js-composer/config.php:5374
+msgid "Fire"
+msgstr "Fuego"
+
+#: /compat/plugin-js-composer/config.php:5375
+msgid "Heart"
+msgstr "Corazón"
+
+#: /compat/plugin-js-composer/config.php:5376
+#, fuzzy
+msgid "Mail"
+msgstr "notificación por correo electrónico del administrador"
+
+#: /compat/plugin-js-composer/config.php:5377
+msgid "Play"
+msgstr "Jugar"
+
+#: /compat/plugin-js-composer/config.php:5378
+msgid "Shield"
+msgstr "Blindaje"
+
+#: /compat/plugin-js-composer/config.php:5379
+msgid "Video"
+msgstr "Vídeo"
+
+#: /compat/plugin-js-composer/config.php:5392
+msgid "Icon library"
+msgstr "Biblioteca de íconos"
+
+#: /compat/plugin-js-composer/config.php:5395
+msgid "Font Awesome"
+msgstr "Fuente impresionante"
+
+#: /compat/plugin-js-composer/config.php:5396
+msgid "Open Iconic"
+msgstr "Abrir Iconico"
+
+#: /compat/plugin-js-composer/config.php:5397
+msgid "Typicons"
+msgstr "Tipos"
+
+#: /compat/plugin-js-composer/config.php:5398
+msgid "Entypo"
+msgstr "Entypo"
+
+#: /compat/plugin-js-composer/config.php:5399
+msgid "Linecons"
+msgstr "Linecons"
+
+#: /compat/plugin-js-composer/config.php:5400
+msgid "Pixel"
+msgstr "Píxel"
+
+#: /compat/plugin-js-composer/config.php:5403
+msgid "Select icon library."
+msgstr "Seleccione la biblioteca de iconos."
+
+#: /shortcodes/shortcodes.php:1423
+msgid "Search"
+msgstr "Buscar"
+
+#: /shortcodes/shortcodes.php:1442
+#, fuzzy
+msgid "You need to install bbPress plugin to enable this shortcode!"
+msgstr "¡Necesita instalar el plugin bbPress para activar este código!"
+
+#: /shortcodes/templates/kleo_login.php:16
+msgid "Log in with your credentials"
+msgstr "Ingresa con tus credenciales de usuario"
+
+#: /shortcodes/templates/kleo_login.php:17
+msgid "Forgot your details?"
+msgstr "Olvidado tus credenciales?"
+
+#: /shortcodes/templates/kleo_login.php:68
+msgid "or"
+msgstr "o"
+
+#: /shortcodes/templates/kleo_login.php:70
+msgid "Create an account"
+msgstr "Crear una Cuenta"
+
+#: /shortcodes/templates/kleo_login.php:77 /shortcodes/templates/kleo_register.
+#: php:60 /shortcodes/templates/kleo_register.php:80
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: /shortcodes/templates/kleo_login.php:78
+msgid "Password"
+msgstr "Contraseña"
+
+#: /shortcodes/templates/kleo_login.php:80
+msgid "Sign in"
+msgstr "Ingresar"
+
+#: /shortcodes/templates/kleo_login.php:82
+msgid "Remember me"
+msgstr "Recuérdame"
+
+#: /shortcodes/templates/kleo_login.php:84
+msgid "Lost your password?"
+msgstr "¿Perdiste tu contraseña?"
+
+#: /shortcodes/templates/kleo_login.php:99
+msgid "Username or Email"
+msgstr "Nombre de usuario o EMail"
+
+#: /shortcodes/templates/kleo_login.php:101
+msgid "Reset Password"
+msgstr "Restablecer contraseña"
+
+#: /shortcodes/templates/kleo_login.php:102
+msgid "I remember my details"
+msgstr "Recuerdo mis datos"
+
+#: /shortcodes/templates/kleo_news_ticker.php:13
+#, fuzzy
+msgid "Visual composer must be installed"
+msgstr "Compositor visual debe instalarse"
+
+#: /shortcodes/templates/kleo_register.php:15
+msgid "Create Account"
+msgstr "Crear cuenta"
+
+#: /shortcodes/templates/kleo_register.php:63
+msgid "Your full name"
+msgstr "Tu nombre completo"
+
+#: /shortcodes/templates/kleo_register.php:67
+#: /shortcodes/templates/kleo_register. php:83
+msgid "Your email"
+msgstr "Tu correo electrónico"
+
+#: /shortcodes/templates/kleo_register.php:71
+msgid "Desired password"
+msgstr "Contraseña deseada"
+
+#: /shortcodes/templates/kleo_register.php:74
+msgid "Confirm password"
+msgstr "Confirmar contraseña"
+
+#: /shortcodes/templates/kleo_register.php:87
+msgid "Register"
+msgstr "Registrar"
+
+#: /shortcodes/templates/kleo_social_share.php:24
+msgid "Share this"
+msgstr "Comparte"
+
+#: /shortcodes/templates/buddypress/kleo_bp_activity_page.php:37
+#: /shortcodes/templates/buddypress/kleo_bp_activity_stream.php:124
+#, fuzzy
+msgid ""
+"This shortcode must have Buddypress installed and activity component "
+"activated."
+msgstr ""
+"Este código debe tener instalado Buddypress y componente de la actividad "
+"activa."
+
+#: /shortcodes/templates/buddypress/kleo_bp_activity_stream.php:55
+msgid "View Profile"
+msgstr "Ver perfil"
+
+#: /shortcodes/templates/buddypress/kleo_bp_activity_stream.php:73
+msgid "View Conversation"
+msgstr "Ver conversacion"
+
+#: /shortcodes/templates/buddypress/kleo_bp_activity_stream.php:80
+msgid "Mark as Favorite"
+msgstr "Marcar como favorito"
+
+#: /shortcodes/templates/buddypress/kleo_bp_activity_stream.php:82
+msgid "Remove Favorite"
+msgstr "Remover favoritos"
+
+#: /shortcodes/templates/buddypress/kleo_bp_activity_stream.php:101
+msgid "View"
+msgstr "Ver"
+
+#: /shortcodes/templates/buddypress/kleo_bp_activity_stream.php:111
+#, fuzzy
+msgid "Right now there is no activity to show"
+msgstr "En estos momentos no hay actividad para mostrar"
+
+#: /shortcodes/templates/buddypress/kleo_bp_groups_carousel.php:72
+#: /shortcodes/templates/buddypress/kleo_bp_groups_masonry.php:89
+#, fuzzy
+msgid "There are no groups to display. Please try again soon."
+msgstr "No hay ningún grupo a mostrar. Intente por favor otra vez pronto."
+
+#: /shortcodes/templates/buddypress/kleo_bp_groups_carousel.php:78
+#: /shortcodes/templates/buddypress/kleo_bp_groups_grid.php:71
+#: /shortcodes/templates/buddypress/kleo_bp_groups_masonry.php:95
+#: /shortcodes/templates/buddypress/kleo_bp_members_carousel.php:79
+#: /shortcodes/templates/buddypress/kleo_bp_members_grid.php:69
+#: /shortcodes/templates/buddypress/kleo_bp_members_masonry.php:84
+#, fuzzy
+msgid "This shortcode must have Buddypress installed to work."
+msgstr "Este código debe tener Buddypress instalado para funcionar."
+
+#: /shortcodes/templates/buddypress/kleo_bp_groups_grid.php:66
+#, fuzzy
+msgid "No groups were found at the moment. Please come back later."
+msgstr ""
+"Ningún grupo se encontraron en el momento. Por favor, vuelva más tarde."
+
+#: /shortcodes/templates/buddypress/kleo_bp_groups_masonry.php:53
+#, php-format
+msgid "active %s"
+msgstr "activo %s"

@@ -46,7 +46,7 @@ class LD_QuizPro {
 		//add_action("the_content", array( $this, 'certificate_link' ));
 		if ( ! empty( $_GET['ld_fix_permissions'] ) ) {
 			$role = get_role( 'administrator' );
-			if ( ( $role ) && ( $admin_role instanceof WP_Role ) ) {
+			if ( ( $role ) && ( $role instanceof WP_Role ) ) {
 			
 				$role->add_cap( 'wpProQuiz_show' );
 				$role->add_cap( 'wpProQuiz_add_quiz' );
@@ -867,7 +867,7 @@ class LD_QuizPro {
 		/*
 
 		$transient_key = "learndash_quizzes_list";
-		$quizzes_list = get_transient( $transient_key );
+		$quizzes_list = learndash_get_valid_transient( $transient_key );
 		if ( $quizzes_list === false ) {
 
 			$quiz    = new WpProQuiz_Model_QuizMapper();

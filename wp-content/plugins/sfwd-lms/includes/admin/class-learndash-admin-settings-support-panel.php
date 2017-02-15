@@ -1,9 +1,12 @@
 <?php
 if (!class_exists('Learndash_Admin_Settings_Support_Panel')) {
 	class Learndash_Admin_Settings_Support_Panel {
+
+		var $mo_files = array();
 		
 		function __construct() {
 			add_action( 'admin_menu', 			array( $this, 'admin_menu' ) );
+			add_action( 'load_textdomain', array( $this, 'load_textdomain' ), 10, 2 );
 		}
 		
 		/**
@@ -19,6 +22,17 @@ if (!class_exists('Learndash_Admin_Settings_Support_Panel')) {
 				array( $this, 'admin_page' )
 			);
 			add_action( 'load-'. $page_hook, array( $this, 'on_load_panel' ) );
+		}
+		
+		// Track the loaded MO files for our text domain. This is used on Support tab
+		function load_textdomain( $domain = '', $mofile = '' ) {			
+			if ( ( $domain == LEARNDASH_LMS_TEXT_DOMAIN ) || ( $domain == WPPROQUIZ_TEXT_DOMAIN ) ) {
+				if ( ( !empty( $mofile ) ) && ( !isset( $this->mo_files[$mofile] ) ) ) {
+					if ( !isset( $this->mo_files[$domain] ) ) $this->mo_files[$domain] = array();
+					
+					$this->mo_files[$domain][$mofile] = $mofile;
+				}
+			}
 		}
 		
 		function on_load_panel() {
@@ -126,8 +140,23 @@ if (!class_exists('Learndash_Admin_Settings_Support_Panel')) {
 						<tr><td><strong><?php _e('Version', 'learndash') ?></strong></td><td><?php echo LEARNDASH_VERSION; ?></td></tr>
 						<tr><td><strong><?php _e('DB Version', 'learndash') ?></strong></td><td><?php echo LEARNDASH_SETTINGS_DB_VERSION; ?></td></tr>
 						<tr><td><strong><?php _e('Script Debug', 'learndash') ?></strong></td><td><?php if ( defined('LEARNDASH_SCRIPT_DEBUG')) { echo LEARNDASH_SCRIPT_DEBUG; } else { echo _e('not defined', 'learndash'); } ?></td></tr>
-						
-						
+						<tr><td><strong><?php _e('Translations', 'learndash') ?></strong></td><td><?php 
+							if ( !empty( $this->mo_files ) ) {
+								foreach( $this->mo_files as $domain => $mo_files ) {
+									$mo_files_output = '';
+									foreach( $mo_files as $mo_file ) {
+										if ( file_exists( $mo_file ) ) {
+											if ( !empty( $mo_files_output ) ) $mo_files_output .= ', ';
+											$mo_files_output .= str_replace( ABSPATH, '', $mo_file );
+											$mo_files_output .= ' <em>'. learndash_adjust_date_time_display( filectime( $mo_file ) ) .'</em>';
+										}
+									}
+									if ( !empty( $mo_files_output ) ) {
+										echo '<strong>'. $domain .'</strong> - ' . $mo_files_output .'<br />';
+									}
+								}
+							}
+						?></td></tr>
 					</tbody>
 				</table>
 

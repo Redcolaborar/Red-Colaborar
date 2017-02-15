@@ -175,7 +175,8 @@ class LearnDash_Course_Navigation_Widget extends WP_Widget {
 			echo $before_title . $title . $after_title;
 		}
 		
-		learndash_course_navigation( $course_id );
+		learndash_course_navigation( $course_id, $instance );
+		
 		echo $after_widget;
 		
 		$learndash_shortcode_used = true;
@@ -193,7 +194,13 @@ class LearnDash_Course_Navigation_Widget extends WP_Widget {
 	 */
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
-		$instance['title'] = strip_tags( $new_instance['title'] );		
+		
+		$instance['title'] 					= 	strip_tags( $new_instance['title'] );		
+		
+		$instance['show_lesson_quizzes']	= 	isset( $new_instance['show_lesson_quizzes'] ) ? (bool) $new_instance['show_lesson_quizzes'] : false;
+		$instance['show_topic_quizzes'] 	= 	isset( $new_instance['show_topic_quizzes'] ) ? (bool) $new_instance['show_topic_quizzes'] : false;
+		$instance['show_course_quizzes'] 	= 	isset( $new_instance['show_course_quizzes'] ) ? (bool) $new_instance['show_course_quizzes'] : false;
+		
 		return $instance;
 	}
 
@@ -208,11 +215,29 @@ class LearnDash_Course_Navigation_Widget extends WP_Widget {
 	function form( $instance ) {
 		$instance = wp_parse_args( (array) $instance, array( 'title' => '' ) );
 		$title = strip_tags( $instance['title'] );
+		$show_lesson_quizzes 	= isset( $instance['show_lesson_quizzes'] ) ? (bool) $instance['show_lesson_quizzes'] : false;
+		$show_topic_quizzes 	= isset( $instance['show_topic_quizzes'] ) ? (bool) $instance['show_topic_quizzes'] : false;
+		$show_course_quizzes 	= isset( $instance['show_course_quizzes'] ) ? (bool) $instance['show_course_quizzes'] : false;
+		
 		//$text = format_to_edit($instance['text']);		
 		?>
 			<p>
 				<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'learndash' ); ?></label>
 				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+			</p>
+
+
+			<p>
+				<input class="checkbox" type="checkbox"<?php checked( $show_course_quizzes ); ?> id="<?php echo $this->get_field_id( 'show_course_quizzes' ); ?>" name="<?php echo $this->get_field_name( 'show_course_quizzes' ); ?>" />
+				<label for="<?php echo $this->get_field_id( 'show_course_quizzes' ); ?>"><?php _e( 'Show Course Quizzes?', 'learndash' ); ?></label>
+			</p>
+			<p>
+				<input class="checkbox" type="checkbox"<?php checked( $show_lesson_quizzes ); ?> id="<?php echo $this->get_field_id( 'show_lesson_quizzes' ); ?>" name="<?php echo $this->get_field_name( 'show_lesson_quizzes' ); ?>" />
+				<label for="<?php echo $this->get_field_id( 'show_lesson_quizzes' ); ?>"><?php _e( 'Show Lesson Quizzes?', 'learndash' ); ?></label>
+			</p>
+			<p>
+				<input class="checkbox" type="checkbox"<?php checked( $show_topic_quizzes ); ?> id="<?php echo $this->get_field_id( 'show_topic_quizzes' ); ?>" name="<?php echo $this->get_field_name( 'show_topic_quizzes' ); ?>" />
+				<label for="<?php echo $this->get_field_id( 'show_topic_quizzes' ); ?>"><?php _e( 'Show Topic Quizzes?', 'learndash' ); ?></label>
 			</p>
 		<?php
 	}
@@ -231,7 +256,7 @@ add_action( 'widgets_init', create_function( '', 'return register_widget("LearnD
  * @param  int 		$course_id  course id
  * @return string 			 	course navigation output
  */
-function learndash_course_navigation( $course_id ) {
+function learndash_course_navigation( $course_id, $widget_instance ) {
 	$course = get_post( $course_id );
 	
 	if ( empty( $course->ID ) || $course_id != $course->ID ) {
@@ -253,6 +278,7 @@ function learndash_course_navigation( $course_id ) {
 			'course_id' => $course_id, 
 			'course' => $course, 
 			'lessons' => $lessons,
+			'widget' => $widget_instance
 		), 
 		null, 
 		true 

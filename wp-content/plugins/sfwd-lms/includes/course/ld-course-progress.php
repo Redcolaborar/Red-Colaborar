@@ -141,7 +141,7 @@ function learndash_mark_complete( $post ) {
 		$return .= "<form id='sfwd-mark-complete' method='post' action=''>
 					<input type='hidden' value='" . $post->ID . "' name='post'/>
 					<input type='hidden' value='". wp_create_nonce( 'sfwd_mark_complete_'. get_current_user_id() .'_'. $post->ID ) ."' name='sfwd_mark_complete'/>
-					<input type='submit' value='" . LearnDash_Custom_Label::get_label( 'button_mark_complete' ) . "' id='learndash_mark_complete_button' ". $button_disabled ."/>
+					<input type='submit' value='" . esc_html( LearnDash_Custom_Label::get_label( 'button_mark_complete' ) ) . "' id='learndash_mark_complete_button' ". $button_disabled ."/>
 				</form>";
 		if ( !empty( $time ) ) {
 			$return .= "<span id='learndash_timer'></span>";
@@ -597,15 +597,18 @@ function learndash_process_mark_complete( $user_id = null, $postid = null, $only
 	
 	$course_progress = get_user_meta( $user_id, '_sfwd-course_progress', true );
 
-	if ( empty( $course_progress[ $course_id ] ) ) {
+	if ( ( empty( $course_progress ) ) || ( !is_array( $course_progress ) ) )
+		$course_progress = array();
+
+	if ( ( !isset( $course_progress[ $course_id ] ) ) || ( empty( $course_progress[ $course_id ] ) ) ) {
 		$course_progress[ $course_id ] = array( 'lessons' => array(), 'topics' => array() );
 	}
 
-	if ( empty( $course_progress[ $course_id ]['lessons'] ) ) {
+	if ( ( !isset( $course_progress[ $course_id ]['lessons'] ) ) || ( empty( $course_progress[ $course_id ]['lessons'] ) ) ) {
 		$course_progress[ $course_id ]['lessons'] = array();
 	}
 
-	if ( empty( $course_progress[ $course_id ]['topics'] ) ) {
+	if ( ( !isset( $course_progress[ $course_id ]['topics'] ) ) || ( empty( $course_progress[ $course_id ]['topics'] ) ) ) {
 		$course_progress[ $course_id ]['topics'] = array();
 	}
 

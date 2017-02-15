@@ -46,6 +46,14 @@ function learndash_register_essay_post_type() {
 		'read_private_essays' => 'read_private_essays',
 	);
 
+	if ( learndash_is_admin_user() ) {
+		$show_in_admin_bar = false;
+	} else if ( learndash_is_group_leader_user() ) {
+		$show_in_admin_bar = false;
+	} else {
+		$show_in_admin_bar = false;
+	}
+
 	$args = array(
 		'label'               => __( 'sfwd-essays', 'learndash' ),
 		'description'         => __( 'Submitted essays via a quiz question.', 'learndash' ),
@@ -55,6 +63,7 @@ function learndash_register_essay_post_type() {
 		'public'              => true,
 		'show_ui'             => true,
 		'show_in_menu'        => false,
+		'show_in_admin_bar'	  => $show_in_admin_bar,
 		'query_var' 		  => true,
 		'rewrite' 			  => array( 'slug' => 'essay' ), 
 		'menu_position'       => 5,
@@ -69,52 +78,10 @@ function learndash_register_essay_post_type() {
 		'map_meta_cap'        => true,
 	);
 
+	$args = apply_filters( 'learndash-cpt-options', $args, 'sfwd-essays' );
+	
 	register_post_type( 'sfwd-essays', $args );
 	
-	/*
-	$labels = array(
-		'name' 					=> 	__( 'Submitted Essays', 'learndash' ), 
-		'singular_name' 		=> 	__( 'Submitted Essay', 'learndash' ), 
-		'edit_item' 			=> 	__( 'Edit Submitted Essay', 'learndash' ), 
-		'view_item' 			=> 	__( 'View Submitted Essay', 'learndash' ), 
-		'search_items' 			=> 	__( 'Search Submitted Essays', 'learndash' ), 
-		'not_found' 			=> 	__( 'No Submitted Essay found', 'learndash' ), 
-		'not_found_in_trash' 	=> 	__( 'No Submitted Essay found in Trash', 'learndash' ), 
-		'parent_item_colon' 	=> 	__( 'Parent:', 'learndash' ), 
-		'menu_name' 			=> 	__( 'Submitted Essays', 'learndash' ),
-	);
-
-	$args = array(
-		'labels' 				=> 	$labels, 
-		'hierarchical' 			=> 	false, 
-		'supports' 				=> 	array( 'title', 'editor', 'comments', 'author' ), 
-		'public' 				=> 	true, 
-		'show_ui' 				=> 	true, 
-		'show_in_menu' 			=> 	false, 
-		'show_in_nav_menus' 	=> 	false, 
-		'publicly_queryable' 	=> 	true, 
-		'exclude_from_search' 	=> 	true, 
-		'has_archive' 			=> 	true, 
-		'query_var' 			=> 	true,
-		'rewrite' 				=> 	array( 'slug' => 'essay' ), 
-		'capability_type' 		=> 	'essay', 
-		'capabilities' 			=> 	array( 
-										'edit_post'          => 'edit_essay', 
-										'read_post'          => 'read_essay', 
-										'delete_post'        => 'delete_book', 
-										'edit_posts'         => 'edit_essays', 
-										'edit_others_posts'  => 'edit_others_essays', 
-										'publish_posts'      => 'publish_essays',       
-										'read_private_posts' => 'read_private_essays', 
-										'create_posts'       => 'edit_essays', 
-										
-									), 
-		'map_meta_cap' => true,
-		
-	);
-
-	register_post_type( 'sfwd-essays', $args );	
-	*/
 }
 
 add_action( 'init', 'learndash_register_essay_post_type' );
@@ -266,14 +233,24 @@ function learndash_essay_permissions() {
 	if ( ! empty( $post->post_type ) && $post->post_type == 'sfwd-essays' && is_singular() ) {
 		$user_id = get_current_user_id();
 
-		if ( learndash_is_admin_user( ) ) {
-			return;
+		$can_view_file = false;
+		
+		if ( ( learndash_is_admin_user( $user_id ) ) || ( $post->post_author == $user_id ) ) {
+			$can_view_file = true;
+		} else if ( ( learndash_is_group_leader_user( $user_id ) ) && ( learndash_is_group_leader_of_user( $user_id, $post->post_author ) ) ) {
+			
+			$can_view_file = true;
 		}
 		
-		if ( $post->post_author == $user_id ) {
+		if ( $can_view_file == true ) { 
+			$uploaded_file = get_post_meta( $post->ID, 'upload', true );
+			
+			if ( ( !empty( $uploaded_file ) ) && ( !strstr( $post->post_content, $uploaded_file ) ) ) {
+				$post->post_content .= apply_filters( 'learndash-quiz-essay-upload-link', '<p><a target="_blank" href="'. $uploaded_file .'">'. __('View uploaded file', 'learndash' ) .'</a></p>' );
+			}
 			return;
 		} else {
-			wp_redirect( get_bloginfo( 'url' ) );
+			wp_redirect( apply_filters('learndash_essay_permissions_redirect_url', get_bloginfo( 'url' ) ) );
 			exit;
 		}
 	}

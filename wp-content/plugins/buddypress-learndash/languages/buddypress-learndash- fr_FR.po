@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: BuddyPress for LearnDash\n"
-"Report-Msgid-Bugs-To: http://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2016-06-16 03:37:35+00:00\n"
+"Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
+"POT-Creation-Date: 2016-12-29 21:57:24+00:00\n"
 "PO-Revision-Date: 2016-05-01 14:44-0400\n"
 "Last-Translator: jean-pierre michaud <nexialys@yahoo.com>\n"
 "Language-Team: jean-pierre michaud <nexialys@yahoo.com>\n"
@@ -206,56 +206,56 @@ msgstr "Groupe de Cours Caché"
 msgid "%s Discussion"
 msgstr "Groupe de discussion du %s"
 
-#: includes/bp-learndash-loader.php:112 includes/bp-learndash-loader.php:178
+#: includes/bp-learndash-loader.php:117 includes/bp-learndash-loader.php:183
 msgid "%1$s added the %2$s %3$s to the %4$s %5$s"
 msgstr "%1$s ajouté le %2$s %3$s à %4$s %5$s"
 
-#: includes/bp-learndash-loader.php:213
+#: includes/bp-learndash-loader.php:218
 msgid "%1$s started taking the course %2$s"
 msgstr "%1$s a commencé à prendre le cours %2$s"
 
-#: includes/bp-learndash-loader.php:249 includes/bp-learndash-loader.php:286
+#: includes/bp-learndash-loader.php:254 includes/bp-learndash-loader.php:291
 msgid "%1$s completed the %2$s %3$s"
 msgstr "%1$s completé le %2$s %3$s"
 
-#: includes/bp-learndash-loader.php:322
+#: includes/bp-learndash-loader.php:327
 msgid "%1$s completed the course %2$s"
 msgstr "%1$s a complété le cours %2$s"
 
-#: includes/bp-learndash-loader.php:364 includes/bp-learndash-loader.php:405
-#: includes/bp-learndash-loader.php:448
+#: includes/bp-learndash-loader.php:369 includes/bp-learndash-loader.php:410
+#: includes/bp-learndash-loader.php:453
 msgid "%1$s commented on %2$s %3$s"
 msgstr "%1$s commenté sur le %2$s, %3$s"
 
-#: includes/bp-learndash-loader.php:490
+#: includes/bp-learndash-loader.php:495
 msgid "%1$s commented on course %2$s"
 msgstr "%1$s a commenté le cours %2$s"
 
-#: includes/bp-learndash-loader.php:532
+#: includes/bp-learndash-loader.php:537
 msgid "%1$s has passed the %2$s %3$s with score %4$s"
 msgstr "%1$s a passé le %2$s %3$s avec le score %4$s"
 
-#: includes/bp-learndash-loader.php:662
+#: includes/bp-learndash-loader.php:667
 msgid "Students"
 msgstr "Etudiants"
 
-#: includes/bp-learndash-loader.php:663
+#: includes/bp-learndash-loader.php:668
 msgid "Student"
 msgstr "Étudiant(e)"
 
-#: includes/bp-learndash-loader.php:668
+#: includes/bp-learndash-loader.php:673
 msgid "Group Leaders"
 msgstr "Responsables de groupe"
 
-#: includes/bp-learndash-loader.php:669
+#: includes/bp-learndash-loader.php:674
 msgid "Group Leader"
 msgstr "Chef de Groupe"
 
-#: includes/bp-learndash-loader.php:676
+#: includes/bp-learndash-loader.php:681
 msgid "Group Leaders <span>%s</span>"
 msgstr "Chef du Groupe <span>%s</span>"
 
-#: includes/bp-learndash-loader.php:677
+#: includes/bp-learndash-loader.php:682
 msgid "Students <span>%s</span>"
 msgstr "Étudiants de <span>%s</span>"
 
@@ -341,9 +341,19 @@ msgstr ""
 "&quot;%1$s&quot; (ID %2$s) n'a pas réussi à redimensionner. Le message "
 "d'erreur était: %3$s"
 
-#: includes/main-class.php:171 includes/main-class.php:178
+#: includes/main-class.php:183 includes/main-class.php:190
 msgid "Cheatin&#8217; huh?"
 msgstr "On triche, hum?"
+
+#: includes/main-class.php:514
+#, fuzzy
+msgid ""
+"<strong>BuddyPress for Learndash</strong> requires User Groups component to "
+"be enabled. Please enable it in your <a href=\"%s\">BuddyPress Settings</a>."
+msgstr ""
+"<strong>BuddyPress pour LearnDash</strong> nécessite LearnDash v2.1.8 ou "
+"supérieur pour fonctionner. Vous devez <a href=\"http://www.learndash.com/"
+"\">mettre à jour LearnDash</a> en premier."
 
 #: includes/requirements-class.php:22
 msgid ""

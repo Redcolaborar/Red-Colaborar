@@ -972,7 +972,7 @@ function learndash_assignment_permissions() {
 		} else if ( learndash_is_group_leader_of_user( $user_id, $post->post_author ) ) {
 			return;
 		} else {
-			wp_redirect( get_bloginfo( 'url' ) );
+			wp_redirect( apply_filters('learndash_assignment_permissions_redirect_url', get_bloginfo( 'url' ) ) );
 			exit;
 		}
 	}
@@ -1000,6 +1000,15 @@ function learndash_register_assignment_upload_type() {
 		'menu_name' => __( 'Assignments', 'learndash' ),
 	);
 
+	if ( learndash_is_admin_user() ) {
+		$show_in_admin_bar = false;
+	} else if ( learndash_is_group_leader_user() ) {
+		$show_in_admin_bar = false;
+	} else {
+		$show_in_admin_bar = false;
+	}
+	
+
 	$args = array(
 		'labels' => $labels, 
 		'hierarchical' => false, 
@@ -1008,6 +1017,7 @@ function learndash_register_assignment_upload_type() {
 		'show_ui' => true, 
 		'show_in_menu' => true, 
 		'show_in_nav_menus' => true, 
+		'show_in_admin_bar'	=>	$show_in_admin_bar,
 		'publicly_queryable' => true, 
 		'exclude_from_search' => true, 
 		'has_archive' => false, 
@@ -1030,6 +1040,8 @@ function learndash_register_assignment_upload_type() {
 		'map_meta_cap' => true,
 	);
 
+	$args = apply_filters( 'learndash-cpt-options', $args, 'sfwd-assignment' );
+	
 	register_post_type( 'sfwd-assignment', $args );	
 }
 

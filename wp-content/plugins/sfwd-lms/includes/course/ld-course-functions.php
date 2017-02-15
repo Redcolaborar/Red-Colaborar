@@ -1096,7 +1096,7 @@ function learndash_get_open_courses( $bypass_transient = false ) {
 	$transient_key = "learndash_open_courses";
 
 	if (!$bypass_transient) {
-		$courses_ids_transient = get_transient( $transient_key );
+		$courses_ids_transient = learndash_get_valid_transient( $transient_key );
 	} else {
 		$courses_ids_transient = false;
 	}
@@ -1128,7 +1128,7 @@ function learndash_get_paynow_courses( $bypass_transient = false ) {
 	$transient_key = "learndash_paynow_courses";
 
 	if (!$bypass_transient) {
-		$courses_ids_transient = get_transient( $transient_key );
+		$courses_ids_transient = learndash_get_valid_transient( $transient_key );
 	} else {
 		$courses_ids_transient = false;
 	}

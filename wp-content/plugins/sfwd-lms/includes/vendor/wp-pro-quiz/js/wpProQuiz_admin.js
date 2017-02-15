@@ -1963,7 +1963,19 @@ jQuery(document).ready(function($) {
 						var org_tb_remove = tb_remove;
 						
 						window.send_to_editor = function(html) {
-							var img = $('img', html)[0].outerHTML;
+							//var img = $('img', html)[0].outerHTML;
+
+							var img = '';
+							var img_object = $('img', html).get();
+							if ( img_object.length > 0 ) {
+								img = img_object[0].outerHTML;
+							} else {
+								img = html;
+							}
+							
+							if ( ( typeof img === 'undefined' ) || ( img == '' ) ) {
+								img = html;
+							}
 							
 							field.val(field.val() + img);
 							htmlCheck.attr('checked', true);

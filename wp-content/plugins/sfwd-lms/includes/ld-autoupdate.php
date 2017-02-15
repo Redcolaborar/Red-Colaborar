@@ -80,8 +80,6 @@ class nss_plugin_updater_sfwd_lms {
 		add_action( 'in_admin_header', array( &$this, 'check_notice' ) );
 	}
 
-
-
 	/**
 	 * Checks to see if a license administrative notice needs to be displayed, and if so, displays it.
 	 *
@@ -212,8 +210,10 @@ class nss_plugin_updater_sfwd_lms {
 
 		// Get the remote version
 		if ( empty( $remote_version) ) {
-			$remote_version = $this->getRemote_version();
+			$info = $this->getRemote_information();
+			$remote_version = $info->new_version;
 			update_option( 'nss_plugin_remote_version_'.$this->slug, $remote_version );
+			update_option( 'nss_plugin_info_'.$this->slug, $info);
 		}
 
 		if ( empty( $license) ) {
@@ -235,6 +235,7 @@ class nss_plugin_updater_sfwd_lms {
 			$obj->new_version = $remote_version;
 			$obj->url = $this->update_path;
 			$obj->package = $this->update_path;
+			$obj->tested	= $info->tested;
 			$transient->response[ $this->plugin_slug ] = $obj;
 		}
 

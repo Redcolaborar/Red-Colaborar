@@ -1,10 +1,10 @@
 === BuddyPress for LearnDash ===
 Contributors: buddyboss
-Donate link: http://www.buddyboss.com/donate/
+Donate link: https://www.buddyboss.com/donate/
 Tags: buddypress, learndash, lms, learning management system, learning, courses, courseware, education, social networking, activity, profiles, messaging, friends, groups, forums, notifications, settings, social, community, networks, networking
 Requires at least: 3.8
-Tested up to: 4.5.2
-Stable tag: 1.1.0
+Tested up to: 4.7.2
+Stable tag: 1.2.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -48,7 +48,7 @@ If bbPress is enabled, a forum will be tied to every “course group” automati
 
 = Extend LearnDash with 'Social Learner' =
 
-BuddyPress for LearnDash is built by the experienced developers at BuddyBoss who also offer a premium social learning solution called [Social Learner](http://www.buddyboss.com/product/social-learner-learndash "Social Learner for LearnDash").
+BuddyPress for LearnDash is built by the experienced developers at BuddyBoss who also offer a premium social learning solution called [Social Learner](https://www.buddyboss.com/product/social-learner-learndash "Social Learner for LearnDash").
 
 == Installation ==
 
@@ -83,7 +83,7 @@ No, it does not. You will need to purchase [LearnDash](http://www.learndash.com/
 
 = Where can I find documentation and tutorials? =
 
-For help setting up and configuring any BuddyBoss plugin please refer to our [tutorials](http://www.buddyboss.com/tutorials/).
+For help setting up and configuring any BuddyBoss plugin please refer to our [tutorials](https://www.buddyboss.com/tutorials/).
 
 
 = Does this plugin require BuddyPress? =
@@ -100,7 +100,7 @@ Yes. Want to translate BuddyPress for LearnDash into your own language? We'll be
 
 = Where can I request customizations? =
 
-For BuddyPress customizations, submit your request at [BuddyBoss](http://www.buddyboss.com/buddypress-developers/).
+For BuddyPress customizations, submit your request at [BuddyBoss](https://www.buddyboss.com/buddypress-developers/).
 
 == Screenshots ==
 
@@ -108,6 +108,15 @@ For BuddyPress customizations, submit your request at [BuddyBoss](http://www.bud
 2. **Course Group Settings** - Add a course to a BuddyPress group and configure its activity actions.
 
 == Changelog ==
+
+= 1.2.0 =
+* Fix - Hidden groups are not displaying in group meta box on course edit page
+* Fix - Students are not added into the course-group while doing course mass enrollment
+* Fix - Can not upgrade user's group role to Administrator
+* Fix - Member removal from a related course-group happens after a course is updated or changed
+* Fix - Multisites issues
+* Fix - PHP7 compatibility
+* Fix - PHP errors
 
 = 1.1.0 =
 * Fix - Infinite loop on saving course with attached course

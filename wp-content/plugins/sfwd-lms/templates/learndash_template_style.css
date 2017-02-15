@@ -580,7 +580,7 @@ small.notavailable_message {
 	margin: 5px;
 }
 
-#course_navigation .learndash_navigation_lesson_topics_list ul  li{
+#course_navigation .learndash_navigation_lesson_topics_list ul li {
 	margin-left: 0;
 	list-style: none;
 	background: none;
@@ -588,10 +588,19 @@ small.notavailable_message {
 #course_navigation .learndash_navigation_lesson_topics_list .learndash_topic_dots.type-list ul > li {
 	padding-left: 10px;
 }
+
+.widget ul.learndash-topic-quiz-list {
+	margin-left: 15px;
+}
+#course_navigation .learndash-current-menu-item ul li a {
+	font-weight: normal;
+}
+
 #lessons_list > div  h4, #course_list > div  h4, #quiz_list > div  h4, #learndash_lesson_topics_list ul > li > span.topic_item  {
 	display: table-cell;
 	width: 95%;
 	border-top: 1px solid #ddd;
+	padding: 0;
 }
 .widget_course_return,#course_navigation .widget_course_return a{
 	font-size: 12px;

@@ -3,8 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: http://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2016-06-16 03:37:35+00:00\n"
+"Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
+"POT-Creation-Date: 2016-12-29 21:57:24+00:00\n"
 "PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: BuddyBoss <support@buddyboss.com>\n"
@@ -202,56 +202,56 @@ msgstr ""
 msgid "%s Discussion"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:112 includes/bp-learndash-loader.php:178
+#: includes/bp-learndash-loader.php:117 includes/bp-learndash-loader.php:183
 msgid "%1$s added the %2$s %3$s to the %4$s %5$s"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:213
+#: includes/bp-learndash-loader.php:218
 msgid "%1$s started taking the course %2$s"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:249 includes/bp-learndash-loader.php:286
+#: includes/bp-learndash-loader.php:254 includes/bp-learndash-loader.php:291
 msgid "%1$s completed the %2$s %3$s"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:322
+#: includes/bp-learndash-loader.php:327
 msgid "%1$s completed the course %2$s"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:364 includes/bp-learndash-loader.php:405
-#: includes/bp-learndash-loader.php:448
+#: includes/bp-learndash-loader.php:369 includes/bp-learndash-loader.php:410
+#: includes/bp-learndash-loader.php:453
 msgid "%1$s commented on %2$s %3$s"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:490
+#: includes/bp-learndash-loader.php:495
 msgid "%1$s commented on course %2$s"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:532
+#: includes/bp-learndash-loader.php:537
 msgid "%1$s has passed the %2$s %3$s with score %4$s"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:662
+#: includes/bp-learndash-loader.php:667
 msgid "Students"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:663
+#: includes/bp-learndash-loader.php:668
 msgid "Student"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:668
+#: includes/bp-learndash-loader.php:673
 msgid "Group Leaders"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:669
+#: includes/bp-learndash-loader.php:674
 msgid "Group Leader"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:676
+#: includes/bp-learndash-loader.php:681
 msgid "Group Leaders <span>%s</span>"
 msgstr ""
 
-#: includes/bp-learndash-loader.php:677
+#: includes/bp-learndash-loader.php:682
 msgid "Students <span>%s</span>"
 msgstr ""
 
@@ -323,8 +323,14 @@ msgid ""
 "&quot;%1$s&quot; (ID %2$s) failed to resize. The error message was: %3$s"
 msgstr ""
 
-#: includes/main-class.php:171 includes/main-class.php:178
+#: includes/main-class.php:183 includes/main-class.php:190
 msgid "Cheatin&#8217; huh?"
+msgstr ""
+
+#: includes/main-class.php:514
+msgid ""
+"<strong>BuddyPress for Learndash</strong> requires User Groups component to "
+"be enabled. Please enable it in your <a href=\"%s\">BuddyPress Settings</a>."
 msgstr ""
 
 #: includes/requirements-class.php:22

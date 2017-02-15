@@ -170,13 +170,18 @@
   font-size: 0.875em;
   margin-top: 0.5em;
 }
-.h5p-action-bar-settings > div {
+.h5p-action-bar-settings > * {
+  margin-bottom: 0.5em;
+}
+.h5p-action-bar-buttons-settings > *:not(:last-child) {
   margin-bottom: 0.5em;
 }
 .h5p-auto-save-freq {
   padding-top: 0.5em;
 }
-.h5p-auto-save-freq label {
+.h5p-auto-save-freq label,
+.h5p-export-button label,
+.h5p-embed-button label {
   display: block;
 }
 .h5p-auto-save-freq label:after {

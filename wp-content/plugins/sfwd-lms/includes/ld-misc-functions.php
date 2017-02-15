@@ -857,3 +857,46 @@ function array_map_r( $func, $arr) {
 
     return $arr;
 }
+
+
+/**
+ * Utility function to interface with the WordPress get_transient function
+ * There have been resent issue where the transients loose the expire setting
+ * So this function was created and replaces the direct calls to get_transient
+ *
+ * This function also allow checking disregard transients all together (see 
+ * LEARNDASH_TRANSIENTS_DISABLED define). Or selectively disregard via filter
+ * 
+ * @since 2.3.3
+ * 
+ * @param string $transient_key The transient key to retreive.
+ *
+ * @return mixed $transient_data the retreived transient data or false if expired. 
+ */
+function learndash_get_valid_transient( $transient_key = '' ) {
+	
+	$transient_data = false;
+	
+	if ( !empty( $transient_key ) ) {
+		if ( !apply_filters( 'learndash_transients_disabled', LEARNDASH_TRANSIENTS_DISABLED, $transient_key ) ) { 
+			
+			$transient_data = get_transient( $transient_key );
+			if ( $transient_data !== false ) {
+
+				// If the data return is NOT false we double check it has a valid expired data. 
+				$transient_expire_time = get_option( '_transient_timeout_' . $transient_key );
+			
+				// If the expired time is empty then something is not right in the system. So we 
+				// set the return data to false so it will be regenerated. And just to be sure
+				// we also delete the options for the transient and tranient expire. 
+				if ( ( empty( $transient_expire_time ) ) || ( $transient_expire_time < time() ) ) {
+					$transient_data = false;
+					delete_option('_transient_'. $transient_key );
+					delete_option( '_transient_timeout_' . $transient_key );
+				} 
+			}
+		}
+	}
+	
+	return $transient_data;
+}

@@ -452,7 +452,7 @@ if (!class_exists('Learndash_Binary_Selector_Group_Leaders')) {
 			$args['html_name'] 		= 	$args['html_name'].'['. $args['group_id'] .']';
 
 			if ( ( !isset( $args['included_ids'] ) ) || ( empty( $args['included_ids'] ) ) ) {
-				$args['role'] 			= 	'group_leader';
+				$args['role__in'] 	=	array('group_leader', 'administrator');
 			}
 
 			parent::__construct( $args );	
@@ -778,12 +778,12 @@ function learndash_binary_selector_pager_ajax() {
 			$args = $_POST['query_data']['query_vars'];
 
 			if ( ( isset( $args['include'] ) ) && ( !empty( $args['include'] ) ) ) {
-				if ( learndash_isValidJson( $args['include'] ) ) {
+				if ( learndash_isValidJson( stripslashes( $args['include'] ) ) ) {
 					$args['include'] = (array)json_decode( stripslashes( $args['include'] ) );
 				} 
 			} 
 			if ( ( isset( $args['exclude'] ) ) && ( !empty( $args['exclude'] ) ) ) {
-				if ( learndash_isValidJson( $args['exclude'] ) ) {
+				if ( learndash_isValidJson( stripslashes( $args['exclude'] ) ) ) {
 					$args['exclude'] = (array)json_decode( stripslashes( $args['exclude'] ) );
 				}
 			} 

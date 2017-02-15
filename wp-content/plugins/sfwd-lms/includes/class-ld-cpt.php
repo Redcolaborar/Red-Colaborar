@@ -118,6 +118,8 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 			 */			
 			$this->post_options = apply_filters( 'sfwd_cpt_options', $this->post_options, $this->post_type );
 
+			$this->post_options = apply_filters( 'learndash-cpt-options', $this->post_options, $this->post_type );
+
 			register_post_type( $this->post_type, $this->post_options );
 			add_filter( 'sfwd_cpt_register_tax', array( $this, 'register_tax' ), 10 );
 
@@ -147,10 +149,11 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 
 			if ( $learndash_flush_rewrite_rules ) {
 
-				flush_rewrite_rules( false );
-
 				// Set our flag so we know we have already been here. 
 				$rewrite_flushed = true;
+				
+				// We set a transient. This is checked during the 'shutdown' action where the rewrites will then be flushed. 
+				set_transient( 'sfwd_lms_rewrite_flush', true );
 			}
 		}
 
@@ -268,7 +271,11 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 			}
 
 			$posts = get_posts( $query );
-			$buf   = '';
+			if ( $return == 'array' ) {
+				$buf = array();
+			} else {
+				$buf = '';
+			}
 			$sno   = 1;
 
 			if ( empty( $user_id ) ) {

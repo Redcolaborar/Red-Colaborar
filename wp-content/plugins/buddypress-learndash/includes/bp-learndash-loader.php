@@ -21,7 +21,7 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
         /**
          * empty constructor function to ensure a single instance
          */
-        public function __constract(){
+        public function __construct(){
             // leave empty, see singleton below
         }
 
@@ -78,10 +78,15 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
             // if post type not lesson, then return
             if( $post->post_type != 'sfwd-lessons' ) return;
 
-            // return if this lesson is not attached to a course still
-            $course_id_obj = get_post_meta( $lesson_id, '_sfwd-lessons', true );
-			$course_id = $course_id_obj['sfwd-lessons_course'];
-			
+			// return if this lesson is not attached to a course still
+			$course_id = get_post_meta( $lesson_id, 'course_id', true );
+
+			//fallback check into a lesson _sfwd-lessons meta
+			if ( empty( $course_id ) ) {
+				$course_id_obj = get_post_meta( $lesson_id, '_sfwd-lessons', true );
+				$course_id = isset( $course_id_obj['sfwd-lessons_course'] ) ? $course_id_obj['sfwd-lessons_course'] : '0';
+			}
+
             if( ( '0' == $course_id ) ) return;
 
             // if already displayed

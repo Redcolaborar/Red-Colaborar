@@ -240,7 +240,18 @@ class WpProQuiz_View_GobalSettings extends WpProQuiz_View_View {
 						</tr>
 						<tr>
 							<th scope="row">
-								<?php _e('From:', 'wp-pro-quiz'); ?>
+								<?php _e('From Name:', 'wp-pro-quiz'); ?>
+							</th>
+							<td>
+								<label>
+									<input type="text" name="email[from_name]" value="<?php echo $this->email['from_name']; ?>" class="regular-text">
+								</label>
+ 								<p class="description"><?php echo __('This is the email name of the sender. If not provided will default to the system email name.', 'wp-pro-quiz' ); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<?php _e('From Email:', 'wp-pro-quiz'); ?>
 							</th>
 							<td>
 								<?php 
@@ -317,7 +328,20 @@ class WpProQuiz_View_GobalSettings extends WpProQuiz_View_View {
 					<tbody>
 						<tr>
 							<th scope="row">
-								<?php _e('From:', 'wp-pro-quiz'); ?>
+								<?php _e('From Name:', 'wp-pro-quiz'); ?>
+							</th>
+							<td>
+								<label>
+									<input type="text" name="userEmail[from_name]" value="<?php echo $this->userEmail['from_name']; ?>" class="regular-text">
+								</label>
+ 								<p class="description">
+									<?php echo __('This is the email name of the sender. If not provided will default to the system email name.', 'wp-pro-quiz' ); ?>
+ 								</p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<?php _e('From Email:', 'wp-pro-quiz'); ?>
 							</th>
 							<td>
 								<?php 

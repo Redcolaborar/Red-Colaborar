@@ -142,8 +142,26 @@ class WpProQuiz_Controller_QuizCompleted {
 				
 			$headers = '';
 				
-			if(!empty($userEmail['from'])) {
-				$headers = 'From: '.$userEmail['from'];
+			//if(!empty($userEmail['from'])) {
+			//	$headers = 'From: '.$userEmail['from'];
+			//}
+			
+			if ( ( isset( $userEmail['from'] ) ) && ( !empty( $userEmail['from'] ) ) && ( is_email( $userEmail['from'] ) ) ) {
+				if ( ( !isset( $userEmail['from_name'] ) ) || ( empty( $userEmail['from_name'] ) ) ) {
+					$userEmail['from_name'] = '';
+				
+					$email_user = get_user_by('emal', $userEmail['from'] );
+					if ( ( $email_user ) && ( $email_user instanceof WP_User ) ) {
+						$userEmail['from_name'] = $email_user->display_name;
+					}
+				}
+				
+				$headers .= 'From: ';
+				if ( ( isset( $userEmail['from_name'] ) ) && ( !empty( $userEmail['from_name'] ) ) ) {
+					$headers .= $userEmail['from_name'] .' <'. $userEmail['from'] .'>';
+				} else {
+					$headers .= $userEmail['from'];
+				}
 			}
 
 			if($userEmail['html'])
@@ -170,8 +188,32 @@ class WpProQuiz_Controller_QuizCompleted {
 			
 			$headers = '';
 			
-			if(!empty($adminEmail['from'])) {
-				$headers = 'From: '.$adminEmail['from'];
+			//if(!empty($adminEmail['from'])) {
+			//	$headers = 'From: '.$adminEmail['from'];
+			//}
+			
+			if ( ( !isset( $adminEmail['from'] ) ) || ( empty( $adminEmail['from'] ) ) || ( !is_email( $adminEmail['from'] ) ) ) {
+				$adminEmail['from'] = get_option( 'admin_email' );
+			}
+			
+			if ( ( !isset( $adminEmail['from_name'] ) ) || ( empty( $adminEmail['from_name'] ) ) ) {
+				$adminEmail['from_name'] = '';
+				
+				if ( !empty( $adminEmail['from'] ) ) {
+					$email_user = get_user_by('emal', $adminEmail['from'] );
+					if ( ( $email_user ) && ( $email_user instanceof WP_User ) ) {
+						$adminEmail['from_name'] = $email_user->display_name;
+					}
+				}
+			}
+
+			if ( !empty( $adminEmail['from'] ) ) {
+				$headers .= 'From: ';
+				if ( ( isset( $adminEmail['from_name'] ) ) && ( !empty( $adminEmail['from_name'] ) ) ) {
+					$headers .= $adminEmail['from_name'] .' <'. $adminEmail['from'] .'>';
+				} else {
+					$headers .= $adminEmail['from'];
+				}
 			}
 			
 			if(isset($adminEmail['html']) && $adminEmail['html'])

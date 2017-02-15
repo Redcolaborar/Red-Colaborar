@@ -124,9 +124,9 @@ function learndash_quizinfo( $attr ) {
 	}
 
 	if ( isset( $selected_quizinfo[ $show ] ) ) {
-		return $selected_quizinfo[ $show ];
+		return apply_filters( 'learndash_quizinfo', $selected_quizinfo[ $show ], $shortcode_atts );
 	} else {
-		return '';
+		return apply_filters( 'learndash_quizinfo', '', $shortcode_atts );
 	}
 }
 
@@ -152,6 +152,7 @@ function learndash_courseinfo( $attr ) {
 				'user_id'   => '',
 				'course_id' => '',
 				'format'    => 'F j, Y, g:i a',
+				'decimals' 	=> 2
 			), 
 			$attr
 		);
@@ -182,7 +183,7 @@ function learndash_courseinfo( $attr ) {
 	}
 
 	if ( empty( $course_id ) || empty( $user_id ) ) {
-		return '';
+		return apply_filters( 'learndash_courseinfo', '', $shortcode_atts );;
 	}
 
 	$show = strtolower( $show );
@@ -190,7 +191,7 @@ function learndash_courseinfo( $attr ) {
 	switch ( $show ) {
 		case 'course_title':
 			$course = get_post( $course_id );
-			return $course->post_title;
+			return apply_filters( 'learndash_courseinfo', $course->post_title, $shortcode_atts );
 
 		case 'cumulative_score':
 		case 'cumulative_points':
@@ -204,7 +205,7 @@ function learndash_courseinfo( $attr ) {
 			$quizzes = $wpdb->get_col( $wpdb->prepare( 'SELECT post_id FROM ' . $wpdb->postmeta . " WHERE meta_key = 'course_id' AND meta_value = '%d'", $course_id ) );
 			
 			if ( empty( $quizzes) ) {
-				return 0;
+				return apply_filters( 'learndash_courseinfo', 0, $shortcode_atts );
 			}
 
 			$scores = array();
@@ -220,7 +221,7 @@ function learndash_courseinfo( $attr ) {
 			}
 
 			if ( empty( $scores) || ! count( $scores ) ) {
-				return 0;
+				return apply_filters( 'learndash_courseinfo', 0, $shortcode_atts );
 			}
 
 			$sum = 0;
@@ -229,12 +230,12 @@ function learndash_courseinfo( $attr ) {
 				$sum += $score;
 			}
 
-			$return = number_format( $sum / count( $scores ), 2 );
+			$return = number_format( $sum / count( $scores ), $decimals );
 
 			if ( $field == 'timespent' ) {
-				return learndash_seconds_to_time( $return );
+				return apply_filters( 'learndash_courseinfo', learndash_seconds_to_time( $return ), $shortcode_atts );
 			} else {
-				return $return;
+				return apply_filters( 'learndash_courseinfo', $return, $shortcode_atts );
 			}
 
 		case 'aggregate_percentage':
@@ -249,7 +250,7 @@ function learndash_courseinfo( $attr ) {
 			$quizzes = $wpdb->get_col( $wpdb->prepare( 'SELECT post_id FROM ' . $wpdb->postmeta . " WHERE meta_key = 'course_id' AND meta_value = '%d'", $course_id ) );
 			
 			if ( empty( $quizzes) ) {
-				return 0;
+				return apply_filters( 'learndash_courseinfo', 0, $shortcode_atts );
 			}
 
 			$scores = array();
@@ -265,7 +266,7 @@ function learndash_courseinfo( $attr ) {
 			}
 
 			if ( empty( $scores) || ! count( $scores ) ) {
-				return 0;
+				return apply_filters( 'learndash_courseinfo', 0, $shortcode_atts );
 			}
 
 			$sum = 0;
@@ -274,26 +275,26 @@ function learndash_courseinfo( $attr ) {
 				$sum += $score;
 			}
 
-			$return = number_format( $sum, 2 );
+			$return = number_format( $sum, $decimals );
 
 			if ( $field == 'timespent' ) {
-				return learndash_seconds_to_time( $return );
+				return apply_filters( 'learndash_courseinfo', learndash_seconds_to_time( $return ), $show );
 			} else {
-				return $return;
+				return apply_filters( 'learndash_courseinfo', $return, $shortcode_atts );
 			}
 
 		case 'completed_on':
 			$completed_on = get_user_meta( $user_id, 'course_completed_' . $course_id, true );
 
 			if ( empty( $completed_on) ) {
-				return '-';
+				return apply_filters( 'learndash_courseinfo', '-', $shortcode_atts );
 			}
 
 			date_default_timezone_set( get_option( 'timezone_string' ) );
-			return date_i18n( $format, $completed_on );
+			return apply_filters( 'learndash_courseinfo', date_i18n( $format, $completed_on ), $shortcode_atts );
 
 		default:
-			return '';
+			return apply_filters( 'learndash_courseinfo', '', $shortcode_atts );
 	}
 }
 

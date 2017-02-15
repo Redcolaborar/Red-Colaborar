@@ -253,25 +253,12 @@ if (!class_exists('Learndash_Admin_Groups_Edit')) {
 					$gl_included_ids = array();
 					$group_leader_query = new WP_User_Query(
 											array(
-												'role' 		=>	'group_leader',
+												'role__in' 	=>	array('group_leader', 'administrator'),
 												'fields'	=>	'ID'
 											)
 										);
-					$group_leader_results = $group_leader_query->get_results();
-					if (!empty( $group_leader_results ) ) {
-						$gl_included_ids = array_merge( $gl_included_ids, $group_leader_results );
-					}
-					$admin_query = new WP_User_Query(
-											array(
-												'role' 		=>	'administrator',
-												'fields'	=>	'ID'
-											)
-										);
-					$admin_results = $admin_query->get_results();
-					if (!empty( $admin_results ) ) {
-						$gl_included_ids = array_merge( $gl_included_ids, $admin_results );
-					}
-
+					$gl_included_ids = $group_leader_query->get_results();
+					error_log('count['. count($gl_included_ids) .'] <pre>'. print_r($gl_included_ids, true) .'</pre>');
 					if ( !empty( $gl_included_ids ) ) {
 
 						$ld_binary_selector_group_leaders = new Learndash_Binary_Selector_Group_Leaders(
