@@ -309,6 +309,10 @@ if (!class_exists('Mediapresscustomizerfront')) {
             $have_options = false ;
             if(count($posts_array) > 0)
             {
+                if(!empty($group_id))
+                {
+                    $html .= "<input type='hidden' name='red_group_id' value=".$group_id.">";
+                }
                 $html .='<div class="assign_gallery_container"><div class="assign_laggery_label">'.__("Assign Gallery", 'mediapress-customizer').'</div><div class="galley_selection"><select name="mpp_galler_data" id="mpp_gallery_assignment" onchange="getSelectedGallery(this);">';
                 foreach($posts_array as $post_data)
                 {
@@ -324,7 +328,8 @@ if (!class_exists('Mediapresscustomizerfront')) {
                     {
                         $have_options = true ;
                         $g_type = has_term('_members', 'mpp-component', $post_data->ID) ? "user" : "group";
-                        $html .= "<option data-gallerytype='{$g_type}' value='{$post_data->ID}'>{$post_data->post_title}</option>";
+                        $group_id_of_gallery = get_post_meta( $post_data->ID, 'gallery_group_id', true );
+                        $html .= "<option data-gallerytype='{$g_type}' data-gallery_group_id='{$group_id_of_gallery}' value='{$post_data->ID}'>{$post_data->post_title}</option>";
                     }
                 }
 
