@@ -232,11 +232,24 @@ function buddypress_edit_activity_mp_save(link) {
               // console.log("updated inner " + $updated_inner.html());
               $activity_content.html($updated_inner.html());
 
-              $mpp_container.remove();
+              var $reload = false;
+
+              // $mpp_container.remove();
+              $mpp_container.html('');
               $updated_mp.each(function(index) {
-                $activity_content.parent().append( jQuery(this).html() );
+                $mpp_container.append( jQuery(this).html() );
+
+                if( jQuery(this).has(':has(.mpp-audio-content)').length ) {
+                  $reload = true
+                }
               });
 
+              if ($reload) {
+                window.location.reload();
+                return;
+              }
+
+              $activity_content.after($mpp_container);
 
               //button delete media
               var $aid = $link.data('activity_id');

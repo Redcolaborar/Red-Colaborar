@@ -307,6 +307,7 @@ if (!class_exists('Mediapresscustomizerfront')) {
             $posts_array = get_posts( $args );
             $html = "";
             $have_options = false ;
+
             if(count($posts_array) > 0)
             {
                 if(!empty($group_id))
