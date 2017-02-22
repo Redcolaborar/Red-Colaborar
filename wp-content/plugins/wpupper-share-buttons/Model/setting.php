@@ -363,7 +363,7 @@ class WPUSB_Setting {
 	 * @since 1.0
 	 * @var String
 	 */
-	private $buttons_background_color;
+	private $button_bg_color;
 
 	/**
 	 * Minify html output
@@ -372,6 +372,46 @@ class WPUSB_Setting {
 	 * @var String
 	 */
 	private $minify_html;
+
+	/**
+	 * Text color layout fixed default
+	 *
+	 * @since 3.27
+	 * @var String
+	 */
+	private $text_label_fixed_default;
+
+	/**
+	 * Title color layout button
+	 *
+	 * @since 3.27
+	 * @var String
+	 */
+	private $btn_inside_color;
+
+	/**
+	 * Share count text color
+	 *
+	 * @since 3.27
+	 * @var String
+	 */
+	private $counts_text_color;
+
+	/**
+	 * Share count background color
+	 *
+	 * @since 3.27
+	 * @var String
+	 */
+	private $counts_bg_color;
+
+	/**
+	 * Bitly URL shortener domain
+	 *
+	 * @since 3.27
+	 * @var String
+	 */
+	private $bitly_domain;
 
 	/**
 	 * Instance singleton
@@ -390,20 +430,20 @@ class WPUSB_Setting {
 	const PREFIX = 'wpusb';
 
 	/**
-	 * Sharing report db version
-	 *
-	 * @since 1.0
-	 * @var string
-	 */
-	const DB_VERSION = '1.3';
-
-	/**
 	 * Sharing report table name
 	 *
 	 * @since 1.0
 	 * @var string
 	 */
 	const TABLE_NAME = 'wpusb_report';
+
+	/**
+	 * Post meta key
+	 *
+	 * @since 1.0
+	 * @var string
+	 */
+	const META_KEY = 'wpusb_post_meta';
 
 	/**
 	 * Directory separator AND File name

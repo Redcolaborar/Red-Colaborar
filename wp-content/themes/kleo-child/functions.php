@@ -27,7 +27,17 @@ function object_to_array($object) {
 add_action( 'admin_bar_menu', 'remove_wp_logo', 999 );
 
 function remove_wp_logo( $wp_admin_bar ) {
-    if (!current_user_can('administrator')) {
+    
+    if (current_user_can('administrator')) {
+        /*
+        $all_nodes = $wp_admin_bar->get_nodes();
+
+        echo '<pre>';
+        print_r($all_nodes);
+        echo '</pre>';
+        */
+    }
+    else {
         $top_secondary = object_to_array($wp_admin_bar->get_node( 'top-secondary' ));
 
         $my_account = object_to_array($wp_admin_bar->get_node( 'my-account' ));

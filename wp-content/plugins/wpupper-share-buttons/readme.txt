@@ -3,18 +3,18 @@
 Author URL: https://github.com/victorfreitas
 Contributors: victorfreitas
 Donate link: https://www.redcross.org/donate/donation
-Tags: share, social, buttons, share buttons, compartir, botones compartir, free share buttons, whatsapp, facebook, twitter, google plus, compartilhar, redes sociais, social plugin, tweet button, share image, sharebar, sharing, social bookmarking, email form, social media buttons, click to tweet, reddit, viber, telegram, gmail, skype, like, pinterest, linkedin
+Tags: share, social, buttons, share buttons, compartir, botones compartir, free share buttons, whatsapp, facebook, twitter, google plus, compartilhar, redes sociais, social plugin, tweet button, share image, sharebar, sharing, social bookmarking, email, social media buttons, click to tweet, reddit, viber, telegram, gmail, skype, like, pinterest, linkedin, follow us, follow, widget follow, Instagram, YouTube, GitHub, Vimeo, Flickr, Foursquare, SnapChat
 Requires at least: 3.0
-Tested up to: 4.7.1
-Stable tag: 3.26
+Tested up to: 4.7.2
+Stable tag: 3.27
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Implement the Share Buttons of the major social networks, including the Whats App on your website or blog.
+Implement the Social Share and Follow Us Widget of the major social networks, including the WhatsApp on your website or blog.
 
 == Description ==
 
-Implement the Share Buttons of the major social networks, including the Whats App on your website or blog. The buttons are inserted automatically or can be called via shortcode or PHP method.
+Implement the Social Share and Follow Us Widget of the major social networks, including the WhatsApp on your website or blog. The buttons are inserted automatically or can be called via shortcode or PHP method.
 
 > If you like the plugin, feel free to rate it (on the right side of this page) or [donate](https://www.redcross.org/donate/donation). I am very pleased to dedicate myself to this plugin. Thank you so much! :)
 
@@ -52,36 +52,37 @@ Translators who did a great job converting the text of the plugin to their nativ
 
 == Screenshots ==
 
-1. Admin - Options Page. Possibility of ordering social networks
-2. Admin - Options Page. Preview buttons
-3. Admin - Extra settings page
+1. Admin - Settings Page. Drag and drop social networks and Preview buttons
+2. Admin - Extra settings page
+3. Admin - Custom CSS
 4. Admin - Use options page
-5. Admin - Sharing report page
-6. After button click share
-7. Layout: Square Plus with counter
-8. Layout: Square Plus - No counter
-9. Layout: Square Plus - Mobile landscape
-10. Layout: Square Plus - Mobile portrait
-11. Layout: Default
-12. Layout: Default - No counter
-13. Layout: Default - No title and counter
-14. Layout: Buttons
-15. Layout: Buttons - No counter
-16. Layout: Buttons - No tile and counter
-17. Layout: Rounded
-18. Layout: Rounded - No counter
-19. Layout: Rounded - No title and counter
-20. Layout: Rounded - Mobile portrait
-21. Layout: Square
-22. Layout: Square - No counter
-23. Layout: Square - No title and counter
-24. Layout: Square - Mobile portrait
-25. Layout: Buttons - Fixed left with counter
-26. Layout: Buttons - Fixed left toggle
-27. Layout: Buttons - Fixed left no counter
-28. Layout: Buttons - Fixed left mobile portrait
-29. Layout: Buttons - Fixed left mobile landscape
-30. Layout: Buttons - Fixed left tablet portrait
+5. Admin - Widget
+6. Admin - Sharing report page
+7. After button click share
+8. Layout: Square Plus with counter
+9. Layout: Square Plus - No counter
+10. Layout: Square Plus - Mobile landscape
+11. Layout: Square Plus - Mobile portrait
+12. Layout: Default
+13. Layout: Default - No counter
+14. Layout: Default - No title and counter
+15. Layout: Buttons
+16. Layout: Buttons - No counter
+17. Layout: Buttons - No tile and counter
+18. Layout: Rounded
+19. Layout: Rounded - No counter
+20. Layout: Rounded - No title and counter
+21. Layout: Rounded - Mobile portrait
+22. Layout: Square
+23. Layout: Square - No counter
+24. Layout: Square - No title and counter
+25. Layout: Square - Mobile portrait
+26. Layout: Buttons - Fixed left with counter
+27. Layout: Buttons - Fixed left toggle
+28. Layout: Buttons - Fixed left no counter
+29. Layout: Buttons - Fixed left mobile portrait
+30. Layout: Buttons - Fixed left mobile landscape
+31. Layout: Buttons - Fixed left tablet portrait
 
 * Share buttons
 * Settings panel
@@ -94,6 +95,25 @@ The following plugins are recommended
 * ["Remove WP Version"](https://wordpress.org/plugins/jogar-mais-wp-security/) by victorfreitas - Remove version WordPress in WP Generator, Feeds, css and js file.
 
 == Changelog ==
+
+= 3.27 =
+
+* New option: Alter share text on layout fixed rounded
+* New option: Alter count share background color in Dashboard and Widget
+* New option: Alter count share text color in Dashboard and Widget
+* New option: Alter buttons title color in Dashboard and Widget
+* New option: Add Widget Follow Us
+* New option: Deactivate share buttons for specific Post, Page and publics Custom Post Types via metabox
+* New option: Select the Bitly domain
+* New: Update Widget share options
+* New: Real time preview share buttons customization in Dashboard page
+* Update font icons
+* Widget selective preview improvements
+* Update languages
+* Support for PHP version 5.1 is being deprecated
+* Bitly URL shortener improvements performance
+* Bug fixes
+* Code improvements
 
 = 3.26 =
 
@@ -619,13 +639,3 @@ The following plugins are recommended
 = 1.0.0 =
 
 * Initial release
-
-== Upgrade Notice ==
-
-= 3.26 =
-
-* New option: Custom background color buttons
-* Style improvements in admin settings page
-* Bug fixes
-* Improvements performance
-* Update languages

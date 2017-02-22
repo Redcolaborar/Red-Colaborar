@@ -3,12 +3,12 @@
 // ===================================================
 @font-face {
     font-family: 'wpusb';
-    src: url('../fonts/wpusb.eot?n53qy7');  /* IE9 Compat Modes */
-    src: url('../fonts/wpusb.eot?n53qy7#iefix') format('embedded-opentype'), /* IE6-IE8 */
-         url('../fonts/wpusb.woff2?n53qy7') format('woff2'), /* Super Modern Browsers */
-         url('../fonts/wpusb.woff?n53qy7') format('woff'), /* Pretty Modern Browsers */
-         url('../fonts/wpusb.ttf?n53qy7') format('truetype'), /* Safari, Android, iOS */
-         url('../fonts/wpusb.svg?n53qy7#wpusb') format('svg'); /* Legacy iOS */
+    src: url('../fonts/wpusb.eot?hf9owu');  /* IE9 Compat Modes */
+    src: url('../fonts/wpusb.eot?hf9owu#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/wpusb.woff2?hf9owu') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/wpusb.woff?hf9owu') format('woff'), /* Pretty Modern Browsers */
+         url('../fonts/wpusb.ttf?hf9owu') format('truetype'), /* Safari, Android, iOS */
+         url('../fonts/wpusb.svg?hf9owu#wpusb') format('svg'); /* Legacy iOS */
     font-weight: normal;
     font-style: normal;
 }
@@ -17,9 +17,6 @@
     @extend %icon;
 }
 
-.wpusb-icon-like:before {
-  content: "\f088";
-}
 .wpusb-icon-angle-double-left:before {
   content: "\f100";
 }
@@ -32,20 +29,50 @@
 .wpusb-icon-checked:before {
   content: "\e901";
 }
-.wpusb-icon-toggle-off:before {
-  content: "\f204";
-}
-.wpusb-icon-toggle-on:before {
-  content: "\f205";
-}
 .wpusb-icon-share:before {
   content: "\f1e0";
 }
 .wpusb-icon-share-square:before {
-  content: "\f1e1";
+  content: "\e925";
 }
 .wpusb-icon-share-rounded:before {
   content: "\e917";
+}
+.wpusb-icon-vimeo:before {
+  content: "\e92e";
+}
+.wpusb-icon-vimeo-square:before {
+  content: "\f194";
+}
+.wpusb-icon-vimeo-rounded:before {
+  content: "\e92d";
+}
+.wpusb-icon-foursquare:before {
+  content: "\ead6";
+}
+.wpusb-icon-foursquare-square:before {
+  content: "\e905";
+}
+.wpusb-icon-foursquare-rounded:before {
+  content: "\e909";
+}
+.wpusb-icon-instagram:before {
+  content: "\e911";
+}
+.wpusb-icon-instagram-square:before {
+  content: "\e92a";
+}
+.wpusb-icon-instagram-rounded:before {
+  content: "\e92b";
+}
+.wpusb-icon-like:before {
+  content: "\f088";
+}
+.wpusb-icon-like-square:before {
+  content: "\e90b";
+}
+.wpusb-icon-like-rounded:before {
+  content: "\e916";
 }
 .wpusb-icon-facebook:before {
   content: "\ea8c";
@@ -96,7 +123,7 @@
   content: "\e610";
 }
 .wpusb-icon-whatsapp-square:before {
-  content: "\e90b";
+  content: "\e923";
 }
 .wpusb-icon-whatsapp-rounded:before {
   content: "\e908";
@@ -109,12 +136,6 @@
 }
 .wpusb-icon-tumblr-rounded:before {
   content: "\e611";
-}
-.wpusb-icon-instagram-square:before {
-  content: "\e905";
-}
-.wpusb-icon-instagram-rounded:before {
-  content: "\e909";
 }
 .wpusb-icon-gmail:before {
   content: "\e903";
@@ -129,7 +150,7 @@
   content: "\f003";
 }
 .wpusb-icon-email-square:before {
-  content: "\f199";
+  content: "\e927";
 }
 .wpusb-icon-email-rounded:before {
   content: "\ea86";
@@ -177,25 +198,25 @@
   content: "\e915";
 }
 .wpusb-icon-viber-rounded:before {
-  content: "\e916";
+  content: "\e924";
 }
 .wpusb-icon-printer:before {
   content: "\e607";
 }
-.wpusb-icon-vine:before {
-  content: "\e90e";
+.wpusb-icon-printer-square:before {
+  content: "\e928";
 }
-.wpusb-icon-vk-square:before {
-  content: "\e90f";
+.wpusb-icon-printer-rounded:before {
+  content: "\e926";
 }
 .wpusb-icon-rss:before {
   content: "\e910";
 }
 .wpusb-icon-rss-square:before {
-  content: "\e911";
+  content: "\f143";
 }
-.wpusb-icon-plus-square:before {
-  content: "\f0fe";
+.wpusb-icon-rss-rounded:before {
+  content: "\e92c";
 }
 .wpusb-icon-snapchat:before {
   content: "\f2ac";
@@ -206,14 +227,14 @@
 .wpusb-icon-snapchat-rounded:before {
   content: "\f2ab";
 }
-.wpusb-icon-reddit-rounded:before {
-  content: "\f1a1";
-}
-.wpusb-icon-reddit-square:before {
-  content: "\f1a2";
-}
 .wpusb-icon-reddit:before {
   content: "\f281";
+}
+.wpusb-icon-reddit-square:before {
+  content: "\e929";
+}
+.wpusb-icon-reddit-rounded:before {
+  content: "\f1a1";
 }
 .wpusb-icon-flipboard:before {
   content: "\e91b";
@@ -235,4 +256,13 @@
 }
 .wpusb-icon-messenger-rounded:before {
   content: "\e922";
+}
+.wpusb-icon-github:before {
+  content: "\e92f";
+}
+.wpusb-icon-github-square:before {
+  content: "\e90e";
+}
+.wpusb-icon-github-rounded:before {
+  content: "\e90f";
 }

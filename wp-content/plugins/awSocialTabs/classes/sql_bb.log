@@ -1,1 +1,0 @@
-SELECT * FROM  wp_bp_activity WHERE `id` IN('6513','47','6507','2815','4687','4326')

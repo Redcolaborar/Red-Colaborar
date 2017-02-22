@@ -1,28 +1,37 @@
 {{#each this}}
 
 	{{#if first}}
-		<div id="{{prefix}}-container-fixed" class="{{prefix}} {{prefix}}-{{fixed_layout}} {{prefix}}-{{layout}} social-share">
+	<div id="{{prefix}}-container-fixed"
+	     data-preview-layout="{{layout}}"
+		 class="{{prefix}} {{prefix}}-{{fixed_layout}} {{prefix}}-{{layout}} {{prefix}}-fixed {{prefix}}-fixed-{{fixed_layout}} social-share">
+
+		 <div data-element="buttons" class="{{prefix}}-{{layout}}-container">
 
 			<div class="{{prefix}}-item {{prefix}}-total-share">
 				<div class="{{prefix}}-counts">
-					<span data-element="total-share">
+					<span data-element="total-share" data-item="text">
 						{{counter}}
 					</span>
 
 					{{#if is_fixed_2}}
-						<span>Shares</span>
+						<span data-element="fixed-label-text"
+							  data-item="text">Shares</span>
 					{{/if}}
 
 				</div>
 			</div>
 	{{/if}}
 
-	<div class="{{prefix}}-item {{prefix}}-{{item_class}}">
-		<a title="Tweet" class="{{prefix}}-{{btn_class}}" rel="nofollow">
-			<i class="{{prefix}}-icon-{{item_class}}-{{fixed_layout}} "></i>
-		</a>
+			<div class="{{prefix}}-item {{prefix}}-{{item_class}}">
+				<a title="Tweet" class="{{prefix}}-{{btn_class}} {{prefix}}-btn" data-item="bg-color">
+					<i class="{{prefix}}-icon-{{item_class}}-{{fixed_layout}}" data-item="icons-color"></i>
+				</a>
+			</div>
+
+	{{#if last}}
+			<span class="{{prefix}}-toggle"></span>
+		</div>
 	</div>
+	{{/if}}
 
 {{/each}}
-	<span class="wpusb-toggle"></span>
-</div>

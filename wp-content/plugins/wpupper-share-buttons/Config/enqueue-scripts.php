@@ -54,6 +54,7 @@ final class WPUSB_Scripts {
 			'WPUSBVars',
 			array(
 				'ajaxUrl'       => esc_url( admin_url( 'admin-ajax.php' ) ),
+				'homeUrl'       => esc_url( get_home_url() ),
 				'WPLANG'        => get_locale(),
 				'previewTitles' => array(
 					'titleRemove'   => __( 'View Untitled', WPUSB_App::TEXTDOMAIN ),
@@ -92,18 +93,21 @@ final class WPUSB_Scripts {
 	 * @return Void
 	 */
 	public static function add_front_scripts() {
-		$is_active = WPUSB_Utils::is_active();
+		if ( WPUSB_Utils::is_disabled_by_meta() ) {
+			if ( WPUSB_Utils::is_active_widget_follow() ) :
+				self::front_styles();
+			endif;
+			return;
+		}
 
-		if ( ! WPUSB_Utils::is_active_widget() && ! apply_filters( WPUSB_App::SLUG . '-add-scripts', $is_active ) ) {
+		$load_scripts      = apply_filters( WPUSB_App::SLUG . '-add-scripts', WPUSB_Utils::is_active() );
+		$customize_preview = WPUSB_Utils::is_customize_preview();
+
+		if ( ! $customize_preview && ( ! WPUSB_Utils::is_active_widget() && ! $load_scripts ) ) {
 			return;
 		}
 
 		self::front_javascripts();
-
-		if ( 'on' === WPUSB_Utils::option( 'css_footer' ) ) {
-			return add_action( 'wp_footer', array( __CLASS__, 'front_styles' ) );
-		}
-
 		self::front_styles();
 	}
 
@@ -140,17 +144,32 @@ final class WPUSB_Scripts {
 	}
 
 	/**
-	 * Enqueue front styles
+	 * Front styles validate
 	 *
 	 * @since 3.1.0
 	 * @param Null
 	 * @return Void
 	 */
 	public static function front_styles() {
-		if ( 'on' === WPUSB_Utils::option( 'disable_css' ) ) {
+		if ( WPUSB_Utils::is_disabled_css() ) {
 			return;
 		}
 
+		if ( 'on' === WPUSB_Utils::option( 'css_footer' ) ) {
+			return add_action( 'wp_footer', array( __CLASS__, 'add_style_front' ) );
+		}
+
+		self::add_style_front();
+	}
+
+	/**
+	 * Enqueue front styles
+	 *
+	 * @since 3.1.0
+	 * @param Null
+	 * @return Void
+	 */
+	public static function add_style_front() {
 		wp_enqueue_style(
 			WPUSB_App::SLUG . '-style',
 			WPUSB_Utils::plugin_url( self::get_front_css_path() ),

@@ -3,7 +3,7 @@
  * @package WPUpper Share Buttons
  * @subpackage Functions
  * @author  Victor Freitas
- * @since 3.19
+ * @since 1.0
  * @version 2.0
  */
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,6 +18,11 @@ WPUSB_App::uses( 'utils-share', 'Helper' );
 WPUSB_App::uses( 'utils', 'Helper' );
 
 /*
+ * Widget
+ */
+WPUSB_App::uses( 'widget', 'Widget' );
+
+/*
  * Load scripts admin and frontend
  */
 WPUSB_App::uses( 'enqueue-scripts', 'Config' );
@@ -30,9 +35,11 @@ WPUSB_App::uses( 'social-elements', 'Config' );
 /*
  * Controllers frontend
  */
+WPUSB_App::uses( 'url-shortener', 'Controller' );
 WPUSB_App::uses( 'settings', 'Controller' );
 WPUSB_App::uses( 'shares', 'Controller' );
 WPUSB_App::uses( 'widgets', 'Controller' );
+WPUSB_App::uses( 'widget-follow', 'Controller' );
 
 /*
  * Templates
@@ -65,9 +72,16 @@ final class WPUSB_Core {
 		self::init_controllers();
 	}
 
-	public static function add_widgets()
-	{
+	/**
+	 * Widget register
+	 *
+	 * @since 3.25
+	 * @param Null
+	 * @return Void
+	 */
+	public static function add_widgets() {
 		register_widget( 'WPUSB_Widgets_Controller' );
+		register_widget( 'WPUSB_Widget_Follow_Controller' );
 	}
 
 	public static function load_textdomain() {
@@ -163,18 +177,11 @@ final class WPUSB_Core {
 
 		$sites = WPUSB_Utils::get_sites();
 
-		if ( ! $sites ) {
+		if ( empty( $sites ) ) {
 			return;
 		}
 
-		foreach ( $sites as $site ) :
-			$current = (array)$site;
-			$blog_id = (int)$current['blog_id'];
-
-			if ( ! $blog_id || ! $current['public'] ) {
-				continue;
-			}
-
+		foreach ( $sites as $blog_id ) :
 			switch_to_blog( $blog_id );
 			self::delete_settings();
 			restore_current_blog();
@@ -192,6 +199,7 @@ final class WPUSB_Core {
 		self::delete_options();
 		self::delete_transients();
 		self::drop_table();
+		self::delete_metabox();
 	}
 
 	/**
@@ -234,8 +242,32 @@ final class WPUSB_Core {
 	protected static function drop_table() {
 		global $wpdb;
 
-		$table = WPUSB_Utils::get_table_name();
-		$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
+		$table_share_report = WPUSB_Utils::get_table_name();
+		$table_bitly        = $wpdb->prefix . WPUSB_URL_Shortener::TABLE_NAME;
+
+		$wpdb->query( "DROP TABLE IF EXISTS {$table_share_report}" );
+		$wpdb->query( "DROP TABLE IF EXISTS {$table_bitly}" );
+	}
+
+	/**
+	 * Delete metabox plugin on uninstall
+	 *
+	 * @since 3.27
+	 * @global $wpdb
+	 * @param Null
+	 * @return Void
+	 */
+	public static function delete_metabox() {
+		global $wpdb;
+
+		$wpdb->query( $wpdb->prepare(
+			"DELETE FROM
+				`{$wpdb->postmeta}`
+			 WHERE
+			 	`meta_key` = %s
+			",
+			WPUSB_Setting::META_KEY
+		) );
 	}
 
 	/**
@@ -247,22 +279,13 @@ final class WPUSB_Core {
 	 * @return Void
 	 */
 	private static function _create_table_for_network() {
-		global $wpdb;
-
 		$sites = WPUSB_Utils::get_sites();
 
-		if ( ! $sites ) {
+		if ( empty( $sites ) ) {
 			return;
 		}
 
-		foreach ( $sites as $site ) :
-			$current = (array)$site;
-			$blog_id = (int)$current['blog_id'];
-
-			if ( ! $blog_id || ! $current['public'] ) {
-				continue;
-			}
-
+		foreach ( $sites as $blog_id ) :
 			switch_to_blog( $blog_id );
 			self::_create_table();
 			WPUSB_Utils::add_default_options();
@@ -285,18 +308,49 @@ final class WPUSB_Core {
 		$table_name = WPUSB_Utils::get_table_name();
 		$query      = "
 			CREATE TABLE IF NOT EXISTS {$table_name} (
-				id         BIGINT(20) NOT NULL AUTO_INCREMENT,
-				post_id    BIGINT(20) UNSIGNED NOT NULL,
+				id         BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 				post_title TEXT       NOT NULL,
-				facebook   BIGINT(20) UNSIGNED NOT NULL,
-				twitter    BIGINT(20) UNSIGNED NOT NULL,
-				google     BIGINT(20) UNSIGNED NOT NULL,
-				linkedin   BIGINT(20) UNSIGNED NOT NULL,
-				pinterest  BIGINT(20) UNSIGNED NOT NULL,
-				tumblr     BIGINT(20) UNSIGNED NOT NULL,
-				total      BIGINT(20) UNSIGNED NOT NULL,
+				post_id    BIGINT(20) NOT NULL DEFAULT 0,
+				facebook   BIGINT(20) NOT NULL DEFAULT 0,
+				twitter    BIGINT(20) NOT NULL DEFAULT 0,
+				google     BIGINT(20) NOT NULL DEFAULT 0,
+				linkedin   BIGINT(20) NOT NULL DEFAULT 0,
+				pinterest  BIGINT(20) NOT NULL DEFAULT 0,
+				tumblr     BIGINT(20) NOT NULL DEFAULT 0,
+				total      BIGINT(20) NOT NULL DEFAULT 0,
 				PRIMARY KEY id ( id ),
-				UNIQUE( post_id )
+				UNIQUE( post_id ),
+				INDEX( post_id )
+			) {$charset};
+		";
+
+		self::db_delta( $query );
+		self::_create_table_short_url();
+	}
+
+	/**
+	 * Create table short url.
+	 *
+	 * @since 1.1
+	 * @global $wpdb
+	 * @param Null
+	 * @return Void
+	 */
+	private static function _create_table_short_url() {
+		global $wpdb;
+
+		$charset    = $wpdb->get_charset_collate();
+		$table_name = $wpdb->prefix . WPUSB_URL_Shortener::TABLE_NAME;
+		$query      = "
+			CREATE TABLE IF NOT EXISTS {$table_name} (
+				id         BIGINT(20)   UNSIGNED NOT NULL AUTO_INCREMENT,
+				post_id    BIGINT(20)   NOT NULL DEFAULT 0,
+				hash       VARCHAR(32)  NOT NULL,
+				short_url  VARCHAR(100) NOT NULL,
+				expires    INT(11)      NOT NULL DEFAULT 0,
+				PRIMARY KEY id ( id ),
+				UNIQUE( hash, post_id ),
+				INDEX( hash, post_id )
 			) {$charset};
 		";
 
@@ -312,7 +366,6 @@ final class WPUSB_Core {
 	 */
 	public static function db_delta( $query ) {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
 		dbDelta( $query );
 	}
 
@@ -328,12 +381,50 @@ final class WPUSB_Core {
 	public static function alter_table() {
 		global $wpdb;
 
-		$table        = WPUSB_Utils::get_table_name();
-		$table_exists = $wpdb->query( "SHOW TABLES LIKE '{$table}'" );
+		$table = WPUSB_Utils::get_table_name();
 
-		if ( $table_exists && ! $wpdb->get_var( "SHOW COLUMNS FROM {$table} LIKE 'tumblr';" ) ) {
-			$wpdb->query( "ALTER TABLE {$table} ADD tumblr BIGINT(20) UNSIGNED NOT NULL AFTER pinterest;" );
+		if ( ! self::column_exists( 'tumblr' ) ) {
+			$wpdb->query(
+				"ALTER TABLE
+					{$table}
+				 ADD
+					tumblr BIGINT(20) NOT NULL DEFAULT 0
+				 AFTER
+					pinterest;
+				"
+			);
 		}
+
+		self::_create_table_short_url();
+	}
+
+	/**
+	 * Check column exists
+	 *
+	 * @since 3.27
+	 * @param Null
+	 * @return String
+	 */
+	public static function column_exists( $column ) {
+		global $wpdb;
+
+		$table = WPUSB_Utils::get_table_name();
+		$query = $wpdb->prepare(
+			"SELECT
+				COLUMN_NAME
+			 FROM
+			 	information_schema.COLUMNS
+			 WHERE
+			 	TABLE_NAME = %s
+			 	AND TABLE_SCHEMA = %s
+			 	AND COLUMN_NAME = %s;
+			",
+			$table,
+			$wpdb->dbname,
+			$column
+		);
+
+		return $wpdb->get_var( $query );
 	}
 
 	/**
@@ -349,6 +440,7 @@ final class WPUSB_Core {
 		}
 	}
 }
+
 WPUSB_Core::register_actions();
 add_action( 'plugins_loaded', array( 'WPUSB_Core', 'instance' ) );
 add_action( 'init', array( 'WPUSB_Core', 'load_textdomain' ) );

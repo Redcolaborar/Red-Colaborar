@@ -1,70 +1,62 @@
-WPUSB( 'WPUSB.FixedContext', function(FixedContext, $) {
+WPUSB( 'WPUSB.FixedContext', function(Model, $) {
 
-	FixedContext.create = function(container) {
-		this.$el = container;
+	Model.create = function(container) {
+		this.$el = container.find( '#' + this.utils.prefix + '-container-fixed' );
+		this.id  = this.utils.getContext();
 
-		if ( ! this.isLayoutFixed() || ! this.issetContext() ) {
+		if ( !this.id || !this.$el.length ) {
 			return;
 		}
 
         this.init();
 	};
 
-	FixedContext.isLayoutFixed = function() {
-		return this.$el.attr('class').match( '-fixed-' );
-	};
-
-	FixedContext.issetContext = function() {
-		this.id = this.utils.getContext();
-		return this.getContext( true );
-	};
-
-	FixedContext.init = function() {
+	Model.init = function() {
 		this.setContext();
+
+		if ( !this.context ) {
+			return;
+		}
+
+		this.setRect();
+		this.setLeft( this.rect.left );
 		this.alignButtons();
 	};
 
-	FixedContext.setContext = function() {
-		this.context = this.getContext();
-		this.setRect();
+	Model.setContext = function() {
+		this.context = this.getElement();
 	};
 
-	FixedContext.setRect = function() {
+	Model.setRect = function() {
 		this.rect = this.context.getBoundingClientRect();
 		this.top  = this.rect.top;
-
-		this.setLeft( this.rect.left );
 	};
 
-	FixedContext.setLeft = function(left) {
+	Model.setLeft = function(left) {
 		this.left = ( left - this.$el.width() );
 	};
 
-	FixedContext.alignButtons = function() {
+	Model.alignButtons = function() {
 		this.$el.byAction( 'close-buttons' ).remove();
 		this.changeClass();
-		this.$el.css({
-			left : this.left
-		});
+
+		this.$el.css( 'left', this.left );
 
 		this.setLeftMobile();
 	};
 
-	FixedContext.setLeftMobile = function() {
+	Model.setLeftMobile = function() {
 		if ( window.innerWidth > 769 ) {
 			return;
 		}
 
-		this.$el.css({
-			left : 'initial'
-		});
+		this.$el.css( 'left', 'initial' );
 	};
 
-	FixedContext.changeClass = function() {
-		var prefix  = WPUSB.vars.prefix
-		  , classes = this.$el.attr('class');
+	Model.changeClass = function() {
+		var prefix = this.utils.prefix;
 
-		if ( classes.match( '-fixed-left' ) ) {
+		if ( this.$el.hasClass( prefix + '-fixed-left' ) ) {
 			return;
 		}
 
@@ -72,18 +64,19 @@ WPUSB( 'WPUSB.FixedContext', function(FixedContext, $) {
 		this.$el.addClass( prefix + '-fixed-left' );
 	};
 
-	FixedContext.getContext = function(verify) {
+	Model.getElement = function() {
 		var id = this.id.replace( /[^A-Z0-9a-z-_]/g, '' )
-		  , el = document.getElementById( id );
+		  , el = this.utils.getId( id )
+		;
 
-		( verify ) ? this.sendNotice( id, el ) : '';
+		( !el ) ? this.addNotice( el, id ) : '';
 
 		return el;
 	};
 
-	FixedContext.sendNotice = function(id, el) {
-		if ( id && ! el ) {
-			console.warn( 'WPUSB: Context not found.' );
+	Model.addNotice = function(el, id) {
+		if ( !el ) {
+			console.log( 'WPUSB: ID (' + id + ') not found' );
 		}
 	};
 

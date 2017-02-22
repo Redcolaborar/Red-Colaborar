@@ -6,7 +6,7 @@
 
     .#{$prefix}-count {
         display: none;
-        margin-left: 10px;
+        margin-left: 12px;
     }
 
     .#{$prefix}-item,
@@ -21,7 +21,7 @@
 .#{$prefix}-default .#{$prefix}-item,
 .#{$prefix}-square .#{$prefix}-item,
 .#{$prefix}-rounded .#{$prefix}-item {
-    a { box-shadow: none; }
+    .#{$prefix}-btn { box-shadow: none; }
 }
 
 .#{$prefix}-square-plus {
@@ -33,30 +33,35 @@
 // ===================================================
 // --          Items position fixed left
 // ===================================================
-.#{$prefix}-fixed-left,
-.#{$prefix}-fixed-right {
+.#{$prefix}-fixed {
     position: fixed;
     top: 23%;
     z-index: 999;
 
+    &:not(.#{$prefix}-default) {
+        .#{$prefix}-item .#{$prefix}-counts {
+            width: 48px;
+        }
+    }
+
     .#{$prefix}-item {
-        display: block;
+        display: table;
         margin-bottom: 0;
-        margin-left: 0;
         margin-right: 0;
 
         .#{$prefix}-button {
             @extend %brightness;
             @extend %transitionAll;
-            line-height: 48px;
             height: 48px;
+            width: 48px;
         }
 
         .#{$prefix}-button,
+        .#{$prefix}-default,
         .#{$prefix}-counts {
             border-radius: initial;
+            display: table;
             text-align: center;
-            width: 48px;
         }
 
         .#{$prefix}-button span {
@@ -67,13 +72,9 @@
             display: none;
         }
 
-        .#{$prefix}-button i {
-            display: inline;
-            line-height: 48px;
-
-            &:hover {
-                line-height: 48px;
-            }
+        .#{$prefix}-button i,
+        .#{$prefix}-default i {
+            display: table-cell;
         }
 
         .#{$prefix}-default {
@@ -85,7 +86,6 @@
 
             i {
                 font-size: 20px;
-                line-height: 40px;
                 height: 40px;
                 width: 40px;
             }
@@ -101,8 +101,13 @@
 
         span {
             display: block;
-            font-size: 10px;
+            font-size: 14px;
             text-transform: uppercase;
+
+            &:first-child {
+                position: relative;
+                top: 8px;
+            }
 
             &:last-child {
                 font-size: 8px;
@@ -145,6 +150,14 @@
     }
 }
 
+.#{$prefix}-fixed-left .#{$prefix}-item {
+    margin-left: 0;
+}
+
+.#{$prefix}-fixed-right .#{$prefix}-item {
+    margin-left: auto;
+}
+
 .#{$prefix}-fixed-left {
     left: 0;
 
@@ -166,6 +179,10 @@
 
     .#{$prefix}-item {
         text-align: left;
+    }
+
+    &.#{$prefix}-default .#{$prefix}-counts {
+        margin-left: 5px;
     }
 }
 
@@ -199,17 +216,16 @@
         text-align: right;
     }
 
-    .#{$prefix}-total-share {
-        margin-left: 60px;
+    &.#{$prefix}-default .#{$prefix}-counts {
+        margin-right: 5px;
     }
 }
 
-.#{$prefix}-fixed-right,
-.#{$prefix}-fixed-left {
+.#{$prefix}-fixed {
     @media ( min-width: $tablet ) {
         .#{$prefix}-button:hover {
             box-shadow: none;
-            width: 70px;
+            width: 60px;
         }
     }
 }
@@ -244,7 +260,7 @@
     }
 }
 
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  {
+@media only screen and (min-device-width : $tablet) and (max-device-width : $desktop)  {
     .#{$prefix} {
         .#{$prefix}-whatsapp,
         .#{$prefix}-telegram,
@@ -253,18 +269,17 @@
         }
     }
 
-    .#{$prefix}-fixed-left,
-     .#{$prefix}-fixed-right {
+    .#{$prefix}-fixed {
         .#{$prefix}-whatsapp,
         .#{$prefix}-telegram,
         .#{$prefix}-viber {
-            display: block;
+            display: table-cell;
         }
      }
 }
 
 @media ( max-width: $mobile ) {
-    .#{$prefix}-item a span {
+    .#{$prefix}-item .#{$prefix}-btn span {
         display: none;
     }
 }
@@ -315,14 +330,14 @@
 // --        Layout Fixed left Mobile
 //===================================================
 @media ( max-width: $tablet ) {
-    .#{$prefix}-fixed-left,
-    .#{$prefix}-fixed-right {
+    .#{$prefix}-fixed {
         bottom: 0;
-        display: block;
+        display: table;
         left: initial;
         margin: 0;
         padding: 0;
         top: initial;
+        width: 100%;
 
         .#{$prefix}-fixed-left-container,
         .#{$prefix}-fixed-right-container {
@@ -337,8 +352,7 @@
             width: auto;
 
             .#{$prefix}-button {
-                display: block;
-                width: auto;
+                width: 100%;
             }
 
             .#{$prefix}-default {

@@ -4,17 +4,25 @@ class AwstFrontPages {
 
     function content_filter( $content ){
 
-        $post_id = bbp_get_reply_id();
-
-        $poStTyPE = get_post_type($post_id);
-
         global $post;
         $flag = false;
 
-        if($poStTyPE == "reply"){
+        $reset_post_id = false;
+        $post_id_original = 0;
+
+        if( function_exists('bbp_get_reply_id')) {
+
+          $post_id = bbp_get_reply_id();
+          $post_type = get_post_type( $post_id );
+
+          if($post_type == "reply"){
+
+            $reset_post_id = true;
+            $post_id_original = $post->ID;
+
             $post->ID = $post_id;
-        } else {
-            $post->ID = $post->ID;
+          }
+
         }
 
         $type = $post->post_type;
@@ -23,12 +31,12 @@ class AwstFrontPages {
         $course_meta_key    = "course_".$post->ID."_access_from";
         $is_course_enrolled = get_user_meta($user_ID, $course_meta_key, true);
 
-        /*file_put_contents(dirname(__FILE__)."/course_meta_key.log", print_r( $course_meta_key , true),FILE_APPEND );
-        file_put_contents(dirname(__FILE__)."/course_meta_key.log", print_r( "\n" , true),FILE_APPEND );
+        // file_put_contents(dirname(__FILE__)."/course_meta_key.log", print_r( $course_meta_key , true),FILE_APPEND );
+        // file_put_contents(dirname(__FILE__)."/course_meta_key.log", print_r( "\n" , true),FILE_APPEND );
+        //
+        // file_put_contents(dirname(__FILE__)."/course_meta_key.log", print_r( $is_course_enrolled , true),FILE_APPEND );
+        // file_put_contents(dirname(__FILE__)."/course_meta_key.log", print_r( "\n" , true),FILE_APPEND );
 
-        file_put_contents(dirname(__FILE__)."/course_meta_key.log", print_r( $is_course_enrolled , true),FILE_APPEND );
-        file_put_contents(dirname(__FILE__)."/course_meta_key.log", print_r( "\n" , true),FILE_APPEND );
-*/
         $post_like      =   $type.'_like';
         $post_rate      =   $type.'_rate';
         $post_review    =   $type.'_review';
@@ -140,6 +148,10 @@ class AwstFrontPages {
 
         $messageBlock = '<div class="err_msg"><div id="awMessageBlock"></div></div>';
         $clearfix = '<div style="clear:both;"></div>';
+
+        if( $reset_post_id ) {
+          $post->ID = $post_id_original;
+        }
 
         if( $flag && $post->ID > 0){
             return $content." <div class='awst_block'>".$messageBlock." ".$like." ".$rate." ".$review." ".$clearfix."</div>" ;

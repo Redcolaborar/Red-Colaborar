@@ -42,9 +42,9 @@ class AwSocialTabs {
         add_filter('the_content', array('AwstFrontPages', 'content_filter'),20);
 
         add_filter('bbp_get_reply_content', array('AwstFrontPages', 'content_filter'),20,1);
-
+        //
         add_filter('bbp_get_topic_content', array('AwstFrontPages', 'content_filter'),20,1);
-
+        //
         add_filter('bbp_get_forum_content', array('AwstFrontPages', 'content_filter'),20,1);
 
         add_action( 'bp_get_activity_content' , array('AwstFrontPages', 'content_filter'),20,1);

@@ -5,12 +5,24 @@ $_items_mobile : ( whatsapp, telegram, viber );
         display: inline-block;
     }
 
-    .#{$prefix}-fixed-left,
-    .#{$prefix}-fixed-right {
+    .#{$prefix}-fixed {
         .#{$prefix}-#{$item} {
-             display: block;
+             display: table;
          }
     }
+
+    @media ( max-width: $tablet ) {
+        .#{$prefix}-fixed {
+            .#{$prefix}-#{$item} {
+                 display: table-cell;
+             }
+        }
+    }
+}
+
+%close-btn-style {
+    background: $btnColor;
+    color: #fff;
 }
 
 div[data-#{$prefix}-component="share-preview"] {
@@ -18,16 +30,39 @@ div[data-#{$prefix}-component="share-preview"] {
 
     button[data-action="no-title"],
     button[data-action="no-counter"] {
-        margin: 10px;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+
+    .#{$prefix}-preview-close {
+        @extend %close-btn-style;
+        border-radius: 5px;
+        border: 0;
+        box-shadow: none;
+        float: right;
+        font-size: 20px;
+        line-height: 23px;
+        margin-right: 50px;
+        margin-top: 10px;
+
+        &:hover,
+        &:active,
+        &:focus {
+            @extend %close-btn-style;
+        }
     }
 }
 
 .#{$prefix}-preview-container {
     background: #fff;
-    border-radius: 3px;
-    border: 1px solid #ECECEC;
-    margin-top: 10px;
-    padding: 8px 6px 0 6px;
+    border-bottom: 1px solid $btnColor;
+    left: 0;
+    margin: 0;
+    padding: 15px 0 15px 15px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999999;
 
     .#{$prefix} {
         margin: 0;
@@ -37,19 +72,14 @@ div[data-#{$prefix}-component="share-preview"] {
     .#{$prefix}-count {
         padding: 5px 8px;
     }
+
+    @media ( max-width: $tablet ) {
+        padding: 0;
+    }
 }
 
-.#{$prefix}-fixed-left,
-.#{$prefix}-fixed-right {
+.#{$prefix}-fixed {
     z-index: 99999;
-
-    .#{$prefix}-item a {
-        border-radius: initial;
-        height: 48px;
-        line-height: 48px;
-        text-align: center;
-        width: 48px;
-    }
 }
 
 .#{$prefix}-item a span {
