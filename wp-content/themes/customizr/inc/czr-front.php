@@ -856,7 +856,7 @@ if ( ! class_exists( 'CZR_menu' ) ) :
       $_button_label = sprintf( '<span class="menu-label">%s</span>',
         '__sidenav' == current_filter() ? __('Close', 'customizr') : __('Menu' , 'customizr')
       );
-      $_button = sprintf( '<div class="%1$s"><button type="button" class="btn menu-btn" %2$s title="%5$s">%3$s%3$s%3$s </button>%4$s</div>',
+      $_button = sprintf( '<div class="%1$s"><button type="button" class="btn menu-btn" %2$s title="%5$s" aria-label="%5$s">%3$s%3$s%3$s </button>%4$s</div>',
         implode(' ', apply_filters( "tc_{$type}_button_class", $button_class ) ),
         apply_filters( "tc_{$type}_menu_button_attr", $button_attr),
         '<span class="icon-bar"></span>',
@@ -3397,7 +3397,7 @@ if ( ! class_exists( 'CZR_comments' ) ) :
             border: 2px solid {$_custom_bubble_color};
           }
           .comments-link .tc-comment-bubble:before {
-            border-color: {$_custom_bubble_color};
+            border-color: {$_custom_bubble_color} rgba(0, 0, 0, 0);
           }
         ";
       }
@@ -7583,8 +7583,10 @@ class CZR_post_thumbnails {
       //1) must be a non single post context
       //2) user option should be checked in customizer
       $_bool = 0 != esc_attr( CZR_utils::$inst->czr_fn_opt( 'tc_post_list_use_attachment_as_thumb' ) );
-      if ( ! is_admin() )
-        $_bool == ! CZR_post::$instance -> czr_fn_single_post_display_controller() && $_bool;
+      if ( ! is_admin() ) {
+        $_bool = !CZR_post::$instance -> czr_fn_single_post_display_controller() && $_bool;
+      }
+
       if ( ! apply_filters( 'tc_use_attachement_as_thumb' , $_bool ) )
         return;
 

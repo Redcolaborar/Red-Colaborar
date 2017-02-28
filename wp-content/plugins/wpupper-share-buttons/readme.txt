@@ -6,7 +6,7 @@ Donate link: https://www.redcross.org/donate/donation
 Tags: share, social, buttons, share buttons, compartir, botones compartir, free share buttons, whatsapp, facebook, twitter, google plus, compartilhar, redes sociais, social plugin, tweet button, share image, sharebar, sharing, social bookmarking, email, social media buttons, click to tweet, reddit, viber, telegram, gmail, skype, like, pinterest, linkedin, follow us, follow, widget follow, Instagram, YouTube, GitHub, Vimeo, Flickr, Foursquare, SnapChat
 Requires at least: 3.0
 Tested up to: 4.7.2
-Stable tag: 3.27
+Stable tag: 3.28
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,22 @@ The following plugins are recommended
 * ["Remove WP Version"](https://wordpress.org/plugins/jogar-mais-wp-security/) by victorfreitas - Remove version WordPress in WP Generator, Feeds, css and js file.
 
 == Changelog ==
+
+= 3.28 =
+
+* New: Behance follow us
+* New: Buffer share button
+* Share Telegram on desktop available.
+* Bug fix. [related by @ablekinetic]
+
+= 3.27.2 =
+
+* Fix: URLs with query string. It was not returning the query strings on some servers. [Related by @robertkyambo]
+
+= 3.27.1 =
+
+* Fix: URL with space in query string.
+* Fix: Twitter text option. [Related by @robertkyambo]
 
 = 3.27 =
 
@@ -212,7 +228,7 @@ The following plugins are recommended
 = 3.15 =
 
 * Required PHP version 5.2.4 or above
-* Bug fix permalink params
+* Bug fix permalink parameters
 
 = 3.14 =
 
@@ -507,7 +523,7 @@ The following plugins are recommended
 
 = 2.2.2 =
 
-* Bug fix whatsapp UTM Tracking params
+* Bug fix whatsapp UTM Tracking parameters
 
 = 2.2.1 =
 

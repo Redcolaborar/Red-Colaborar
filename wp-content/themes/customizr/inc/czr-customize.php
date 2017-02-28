@@ -213,17 +213,24 @@ if ( ! class_exists( 'CZR_customize' ) ) :
         $_priority = $_priority + 10;
       }//foreach
 
-      //REMOVE CUSTOM CSS ADDED IN 4.7 => IT WILL REPLACE THE CUSTOMIZR BUILT-IN ONE SOON
-      //But the migration is not coded yet
-      $custom_css_setting_id = sprintf( 'custom_css[%s]', get_stylesheet() );
-      if ( is_object( $wp_customize -> get_setting( $custom_css_setting_id ) ) ) {
-        $wp_customize -> remove_setting( $custom_css_setting_id );
-      }
-      if ( is_object( $wp_customize -> get_control( 'custom_css' ) ) ) {
-        $wp_customize -> remove_control( 'custom_css' );
-      }
-      if ( is_object( $wp_customize -> get_section( 'custom_css' ) ) ) {
-        $wp_customize -> remove_section( 'custom_css' );
+      //MOVE THE CUSTOM CSS SECTION (introduced in 4.7) INTO THE ADVANCED PANEL
+      if ( is_object( $wp_customize->get_section( 'custom_css' ) ) ) {
+          $wp_customize -> get_section( 'custom_css' ) -> panel = 'tc-advanced-panel';
+          $wp_customize -> get_section( 'custom_css' ) -> priority = 10;
+
+
+        //CHANGE CUSTOM_CSS DEFAULT
+        $custom_css_setting_id = sprintf( 'custom_css[%s]', get_stylesheet() );
+        if ( is_object( $wp_customize->get_setting( $custom_css_setting_id ) ) ) {
+          $original = $wp_customize->get_setting( $custom_css_setting_id )->default;
+          $new_def = sprintf( "%s\n%s\n%s\n*/",
+              substr( $original, 0, strlen($original) - 2),
+              __( "Use this field to test small chunks of CSS code. For important CSS customizations, it is recommended to modify the style.css file of a child theme." , 'customizr' ),
+              'http' . esc_url( '//codex.wordpress.org/Child_Themes' )
+          );
+          $wp_customize->get_setting( $custom_css_setting_id )->default = $new_def;
+        }
+
       }
 
     }
@@ -862,7 +869,7 @@ if ( ! class_exists( 'CZR_customize_resources' ) ) :
             'themeName'       => CZR___::$theme_name,
 
             'defaultSliderHeight' => 500,//500px, @todo make sure we can hard code it here
-            'translatedStrings'   => $this -> czr_fn_get_translated_strings(),
+            'i18n'   => $this -> czr_fn_get_translated_strings(),
 
             'themeOptions'     => CZR_THEME_OPTIONS,
 
@@ -870,7 +877,7 @@ if ( ! class_exists( 'CZR_customize_resources' ) ) :
 
             'wpBuiltinSettings'=> CZR_customize::$instance -> czr_fn_get_wp_builtin_settings(),
             'css_attr'         => CZR_customize::$instance -> czr_fn_get_controls_css_attr(),
-            'isThemeSwitchOn'  => isset( $_GET['theme']),
+            'isThemeSwitchOn'  => ! CZR___::czr_fn_is_pro(),
             'themeSettingList' => CZR_utils::$_theme_setting_list,
 
             'faviconOptionName' => 'tc_fav_upload',
@@ -921,15 +928,17 @@ if ( ! class_exists( 'CZR_customize_resources' ) ) :
                 'close' => __('Close', 'customizr'),
                 'faviconNote' => __( "Your favicon is currently handled with an old method and will not be properly displayed on all devices. You might consider to re-upload your favicon with the new control below." , 'customizr'),
                 'notset' => __('Not set', 'customizr'),
+
                 'rss' => __('Rss', 'customizr'),
                 'selectSocialIcon' => __('Select a social icon', 'customizr'),
                 'followUs' => __('Follow us on', 'customizr'),
                 'successMessage' => __('Done !', 'customizr'),
                 'socialLinkAdded' => __('New Social Link created ! Scroll down to edit it.', 'customizr'),
-                'readDocumentation' => __('Learn more about this in the documentation', 'customizr'),
+
                 //WP TEXT EDITOR MODULE
                 'textEditorOpen' => __('Edit', 'customizr'),
                 'textEditorClose' => __('Close Editor', 'customizr'),
+
                 //SLIDER MODULE
                 'slideAdded'   => __('New Slide created ! Scroll down to edit it.', 'customizr'),
                 'slideTitle'   => __( 'Slide', 'customizr'),
@@ -943,7 +952,11 @@ if ( ! class_exists( 'CZR_customize_resources' ) ) :
                                         __("Change the header layout", "customizr")
                                       )
                                     )
-                                  )
+                                  ),
+
+                'readDocumentation' => __('Learn more about this in the documentation', 'customizr'),
+                'Settings' => __('Settings', 'customizr'),
+                'Options for' => __('Options for', 'hueman')
           )
       );
     }
@@ -1798,6 +1811,7 @@ function czr_fn_add_social_module_data( $params ) {
         'social_el_params' => array(
             //Social Module
             'defaultSocialColor' => 'rgb(90,90,90)',
+            'defaultSocialSize'  => 14
         )
     )
   );
@@ -1933,10 +1947,9 @@ function czr_fn_print_sektion_module_templates() {
   <?php
 }
 ?><?php
-add_action( 'customize_controls_print_footer_scripts', 'czr_fn_print_social_pre_add_view_template' , 1 );
-add_action( 'customize_controls_print_footer_scripts', 'czr_fn_print_social_item_mod_opt_template' , 1 );
+add_action( 'customize_controls_print_footer_scripts', 'czr_fn_print_social_tmpls' , 1 );
 
-function czr_fn_print_social_pre_add_view_template() {
+function czr_fn_print_social_tmpls() {
   $css_attr = CZR_customize::$instance -> css_attr;
   ?>
 
@@ -1956,21 +1969,7 @@ function czr_fn_print_social_pre_add_view_template() {
       </span>
     </div>
   </script>
-  <?php
-}
 
-
-
-
-
-function czr_fn_print_social_item_mod_opt_template() {
-  $css_attr = CZR_customize::$instance -> css_attr;
-    //the following template is a "sub view"
-    //it's rendered :
-    //1) on customizer start, depending on what is fetched from the db
-    //2) dynamically when designing from the customizer
-    //data looks like : { id : 'sidebar-one', title : 'A Title One' }
-  ?>
   <script type="text/html" id="tmpl-czr-module-social-mod-opt">
     <div class="<?php echo $css_attr['sub_set_wrapper']; ?>" data-input-type="number" data-transport="postMessage">
       <div class="customize-control-title"><?php _e('Size in px', 'customizr'); ?></div>
@@ -2010,7 +2009,7 @@ function czr_fn_print_social_item_mod_opt_template() {
     </div>
 
     <div class="<?php echo $css_attr['sub_set_wrapper']; ?> width-100" data-input-type="color" data-transport="postMessage">
-      <div class="customize-control-title"><?php _e('Icon color', 'customizr'); ?></div>
+      <div class="customize-control-title width-100"><?php _e('Icon color', 'customizr'); ?> <i><?php _e('default:', 'hueman'); ?> rgba(255,255,255,0.7)</i></div>
       <div class="czr-input">
         <input data-type="social-color" type="text" value="{{ data['social-color'] }}"></input>
       </div>

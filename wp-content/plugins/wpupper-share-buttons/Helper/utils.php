@@ -194,13 +194,15 @@ class WPUSB_Utils extends WPUSB_Utils_Share {
 	/**
 	 * Get filtered super global server by key
 	 *
-	 * @since 1.0
+	 * @since 1.2
 	 * @param String $key
 	 * @return String
 	*/
 	public static function get_server( $key ) {
-		$name = strtoupper( $key );
-		return filter_input( INPUT_SERVER, $name, FILTER_SANITIZE_STRING );
+		$name  = strtoupper( $key );
+		$value = self::isset_get( $_SERVER, $name );
+
+		return self::rm_tags( $value, true );
 	}
 
 	/**
@@ -478,25 +480,25 @@ class WPUSB_Utils extends WPUSB_Utils_Share {
 		$has_param = self::indexof( $permalink, '?' );
 
 		if ( ! empty( $tracking ) && empty( $query_string ) && ! $has_param ) {
-			$url = esc_url( $permalink );
-			return rawurlencode( $url . $tracking );
+			$url         = esc_url( $permalink );
+			$build_query = self::build_query( $tracking );
+			return rawurlencode( "{$url}?{$build_query}" );
 		}
 
 		if ( empty( $tracking ) && ! empty( $query_string ) && ! $has_param ) {
-			$url = esc_url( $permalink );
-			return rawurlencode( "{$url}?{$query_string}" );
+			$url         = esc_url( $permalink );
+			$build_query = self::build_query( $query_string );
+			return rawurlencode( "{$url}?{$build_query}" );
 		}
 
-		$args = add_query_arg( $tracking, '', $query_string );
-
-		parse_str( str_replace( '?', '', $args ), $params );
-
-		$build_query = http_build_query( $params );
+		$args        = add_query_arg( $tracking, '', $query_string );
+		$build_query = self::build_query( $args );
 
 		if ( $has_param ) {
-			$url = remove_query_arg( array_keys( $params ), $permalink );
-			$url = esc_url( add_query_arg( $build_query, '', $url ) );
-			$url = str_replace( '&#038;', '&', $url );
+			$params = self::parse_str( $args );
+			$url    = remove_query_arg( array_keys( $params ), $permalink );
+			$url    = esc_url( add_query_arg( $build_query, '', $url ) );
+			$url    = str_replace( '&#038;', '&', $url );
 			return rawurlencode( $url );
 		}
 
@@ -504,6 +506,32 @@ class WPUSB_Utils extends WPUSB_Utils_Share {
 		$url = str_replace( '&#038;', '&', $url );
 
 		return rawurlencode( $url );
+	}
+
+	/**
+	 * Query string parse
+	 *
+	 * @since 3.27.1
+	 * @version 1.0.0
+	 * @param String $query_string
+	 * @return String
+	 */
+	public static function build_query( $query_string ) {
+		$params = self::parse_str( $query_string );
+		return http_build_query( $params );
+	}
+
+	/**
+	 * Parse query string parameters to array
+	 *
+	 * @since 3.28
+	 * @version 1.0.0
+	 * @param String $query_string
+	 * @return Array
+	 */
+	public static function parse_str( $query_string ) {
+		parse_str( str_replace( '?', '', $query_string ), $params );
+		return $params;
 	}
 
 	/**
