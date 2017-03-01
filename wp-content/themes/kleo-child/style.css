@@ -15,9 +15,35 @@ License URI: license.txt
 * Please add your custom styles below
 */
 
+/*group emails subscriptions options*/
+
+.group-sub {
+background-color: #888 !important;
+margin: 4px;
+}
+
+.group-subscription-close {
+background-color: #888 !important;
+margin: 4px;
+}
+
+.group-subscription-options {
+background-color: #ceeefd !important;
+}
+
+
 /* Buddyboss Edit Activity */
 a.awst_like {
   padding-right: 80px !important;
+}
+
+#buddypress div.activity-meta a {
+    margin: 8px;
+}
+
+.action-save { 
+
+background-color: #ceeefd !important;
 }
 
 
