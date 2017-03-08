@@ -53,7 +53,7 @@ EOD;
 	 */
 	public static function items( $args = OBJECT ) {
 		$classes    = self::get_classes_second( $args );
-		$link_type  = WPUSB_Utils::link_type( $args->reference->link );
+		$link_type  = WPUSB_Utils::link_type( $args->reference->link, $args->reference->element );
 		$inside     = self::inside( $args );
 		$referrer   = WPUSB_Utils::get_data_referrer( $args );
 		$ga_event   = ( $args->ga ) ? 'onClick="' . $args->ga . ';"' : '';
@@ -111,8 +111,9 @@ EOD;
 		}
 
 		$share_label = WPUSB_Utils::get_share_count_label();
+		$class_hide  = WPUSB_Utils::get_hide_count_class();
 		$content     = <<<EOD
-			<div class="{$args->prefix}-item {$args->prefix}-total-share">
+			<div class="{$args->prefix}-item {$args->prefix}-total-share {$class_hide}">
 				<div class="{$args->prefix}-shares-count" data-element="total-share"></div>
 				<div class="{$args->prefix}-shares-text" data-title="{$share_label}"></div>
 				<span class="{$args->prefix}-pipe" data-pipe="&#x0007C;"></span>

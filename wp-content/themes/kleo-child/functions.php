@@ -9,7 +9,7 @@
 /**
  * Kleo Child Theme Functions
  * Add custom code below
-*/ 
+*/
 
 
 
@@ -27,7 +27,7 @@ function object_to_array($object) {
 add_action( 'admin_bar_menu', 'remove_wp_logo', 999 );
 
 function remove_wp_logo( $wp_admin_bar ) {
-    
+
     if (current_user_can('administrator')) {
         /*
         $all_nodes = $wp_admin_bar->get_nodes();
@@ -224,7 +224,7 @@ function my_theme_enqueue_styles() {
     wp_enqueue_style ( $parent_style, get_template_directory_uri() . '/style.css' );
     wp_enqueue_style ( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( $parent_style ), wp_get_theme()->get('Version') );
 
-    
+
     wp_enqueue_style ( 'mentions-style', get_stylesheet_directory_uri() . '/mentions/jquery.mentionsInput.css' );
     wp_enqueue_script( 'mentions-elastic-script', get_stylesheet_directory_uri() . '/mentions/lib/jquery.elastic.js' );
     wp_enqueue_script( 'mentions-events-input-script', get_stylesheet_directory_uri() . '/mentions/lib/jquery.events.input.js' );
@@ -270,58 +270,58 @@ add_action('user_register', 'set_user_metaboxes');
 
 
 function set_user_metaboxes($user_id=NULL) {
-    
+
 $post_types= array( 'post', 'page', 'link', 'attachment', 'propuesta_proyecto', 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-certificates', 'sfwd-assignment' );
-    
+
 // add any custom post types here:
-    
+
 foreach ($post_types as $post_type) {
 
-       
+
 // These are the metakeys we will need to update
-       
+
 $meta_key= array(
 'order' => "meta-box-order_$post_type",
 'hidden' => "metaboxhidden_$post_type",
 );
 
-       
+
 // The rest is the same as drebabels's code,
-       
+
 // with '*_user_meta()' changed to '*_user_option()'
 
-       
+
 // So this can be used without hooking into user_register
-       
+
 if ( ! $user_id)
-           
+
 $user_id = get_current_user_id();
 
-       
+
 // Set the default order if it has not been set yet
-       
+
 if ( ! get_user_meta( $user_id, $meta_key['order'], true) ) {
-           
+
 $meta_value = array(
 'side' => 'submitdiv,categorydiv,postimagediv,tagsdiv-post_tag',
  'normal' => '',
  'advanced' => '',
 );
-           
+
 update_user_meta( $user_id, $meta_key['order'], $meta_value );
-       
+
 }
 
-       
+
 // Set the default hiddens if it has not been set yet
-       
+
 if ( ! get_user_meta( $user_id, $meta_key['hidden'], true) ) {
-           
+
 $meta_value = array('postcustom','trackbacksdiv','commentstatusdiv','commentsdiv','slugdiv','authordiv','revisionsdiv','formatdiv','layout_sectionid','postexcerpt','slider_sectionid');
            update_user_meta( $user_id, $meta_key['hidden'], $meta_value );
-       
+
 }
-   
+
 }
 
 }
@@ -335,15 +335,15 @@ add_filter( 'ajax_query_attachments_args', 'show_current_user_attachments', 10, 
 
 
 function show_current_user_attachments( $query = array() ) {
-    
+
     $user_id = get_current_user_id();
-        
+
     if( $user_id ) {
-            
+
         $query['author'] = $user_id;
-            
+
     }
-        
+
     return $query;
 
 }
@@ -354,13 +354,13 @@ function show_current_user_attachments( $query = array() ) {
 
 
 function bp_disable_kses_notices() {
-	
+
     if( current_user_can('manage_options') ) {
-    		
+
         remove_filter( 'bp_get_message_notice_text', 'wp_filter_kses', 1 );
-        		
+
         remove_filter( 'messages_notice_message_before_save', 'wp_filter_kses', 1 );
-    	
+
     }
 
 }
@@ -375,10 +375,10 @@ add_action('init','bp_disable_kses_notices');
 
 
 function bbp_enable_visual_editor( $args = array() ) {
-        
+
     $args['tinymce'] = true;
     $args['quicktags'] = false;
-        
+
     return $args;
 
 }
@@ -391,7 +391,7 @@ add_filter( 'bbp_after_get_the_content_parse_args', 'bbp_enable_visual_editor' )
 
 
 function bbp_tinymce_paste_plain_text( $plugins = array() ) {
-    
+
 $plugins[] = 'paste';
     return $plugins;
 }
@@ -413,5 +413,13 @@ function change_title ($default) {
 
 }
 
+// add_filter( 'mpp_get_gallery_permalink', 'rc_fix_empty_gallery_infinite_redirects', 10, 2 );
+// function rc_fix_empty_gallery_infinite_redirects( $permalink, $gallery  ) {
+//
+//   if( empty( $gallery ) ) {
+//     return site_url();
+//   }
+//
+// }
 
-
+remove_filter( 'bp_activity_get_permalink', 'mpp_filter_activity_permalink', 10 );

@@ -54,7 +54,7 @@ EOD;
 	 */
 	public static function items( $args = OBJECT ) {
 		$classes    = self::get_classes_second( $args );
-		$link_type  = WPUSB_Utils::link_type( $args->reference->link );
+		$link_type  = WPUSB_Utils::link_type( $args->reference->link, $args->reference->element );
 		$layout     = self::$layout;
 		$btn_class  = ( 'buttons' == $layout ) ? 'button' : $layout;
 		$ga_event   = ( $args->ga ) ? 'onClick="' . $args->ga . ';"' : '';
@@ -107,13 +107,14 @@ EOD;
 	 * @return String
 	 */
 	public static function add_count( $args ) {
-		$prefix  = $args->prefix;
-		$content = '';
+		$prefix     = $args->prefix;
+		$content    = '';
+		$class_hide = WPUSB_Utils::get_hide_count_class();
 
 		if ( ! WPUSB_Utils::is_inactive_couter( $args ) ) {
 			$inside  = self::_get_inside_count();
 			$content = <<<EOD
-				<div class="{$prefix}-item {$prefix}-total-share">
+				<div class="{$prefix}-item {$prefix}-total-share {$class_hide}">
 
 					<div class="{$prefix}-counts">
 						<span data-element="total-share"></span>
