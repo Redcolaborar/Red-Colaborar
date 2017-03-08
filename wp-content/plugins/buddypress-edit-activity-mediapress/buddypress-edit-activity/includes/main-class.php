@@ -230,9 +230,9 @@ class BuddyBoss_Edit_Activity {
 		$data = array(
 			'loading_bar_url'	=> home_url( '/wp-includes/js/thickbox/loadingAnimation.gif' ),
 			'button_text'		=> array(
-				'edit'			=> __( 'Edit', 'buddypress-edit-activity' ),
-				'save'			=> __( 'Save', 'buddypress-edit-activity' ),
-				'cancel'		=> __( 'Cancel', 'buddypress-edit-activity' ),
+				'edit'			=> __( 'Editar', 'buddypress-edit-activity' ),
+				'save'			=> __( 'Salvar', 'buddypress-edit-activity' ),
+				'cancel'		=> __( 'Cancelar', 'buddypress-edit-activity' ),
 			),
 		);
 
@@ -278,7 +278,7 @@ class BuddyBoss_Edit_Activity {
 				<input type="hidden" name="buddypress_edit_activity_nonce" value="<?php echo wp_create_nonce( 'buddypress-edit-activity');?>" >
 				<input type="hidden" name="activity_id" value="">
 				<div class="field ac-textarea">
-          <textarea class="bp-suggestions" id="whats-new" cols="50" rows="10" style="height: 50px; margin: 0px; width: 95%;" name="activity_content"></textarea>
+          <textarea class="bp-suggestions" id="whats-new" cols="50" rows="10" style="height: 50px; margin: 0px; width: 95%; min-height: 20vh;" name="activity_content"></textarea>
 				</div>
 			</form>
             <?php do_action( 'bb_after_print_edit_activity_template' ) ?>
@@ -291,7 +291,7 @@ class BuddyBoss_Edit_Activity {
 		if( $this->can_edit_activity() ){
 			?>
 			<a href="#" class="button bp-secondary-action action-edit buddyboss_edit_activity" onclick="return buddypress_edit_activity_initiate(this);" data-activity_id="<?php bp_activity_id() ;?>">
-				<?php _e( 'Edit', 'buddypress-edit-activity' ); ?>
+				<?php _e( 'Editar', 'buddypress-edit-activity' ); ?>
 			</a>
 			<?php
 		}
@@ -303,7 +303,7 @@ class BuddyBoss_Edit_Activity {
 		if( $this->can_edit_activity( $activity ) ){
 			?>
 			<a href="#" class="bp-secondary-action buddyboss_edit_activity_comment" onclick="return buddypress_edit_activity_initiate(this);" data-activity_id="<?php echo $activity->id;?>">
-				<?php _e( 'Edit', 'buddypress-edit-activity' ); ?>
+				<?php _e( 'Editar', 'buddypress-edit-activity' ); ?>
 			</a>
 			<?php
 		}
@@ -406,6 +406,7 @@ class BuddyBoss_Edit_Activity {
 	private function get_activity_content( $activity_id ){
 		// error_log("get_activity_content\n", 3, WP_CONTENT_DIR . '/uploads/bea_debug.log' );
 		$activity = new BP_Activity_Activity( $activity_id );
+		// error_log("get_activity_content :: " . var_export($activity, 1) . "\n", 3, WP_CONTENT_DIR . '/uploads/bea_debug.log' );
 		if( !$activity || is_wp_error( $activity ) )
 			return false;
 

@@ -413,13 +413,4 @@ function change_title ($default) {
 
 }
 
-// add_filter( 'mpp_get_gallery_permalink', 'rc_fix_empty_gallery_infinite_redirects', 10, 2 );
-// function rc_fix_empty_gallery_infinite_redirects( $permalink, $gallery  ) {
-//
-//   if( empty( $gallery ) ) {
-//     return site_url();
-//   }
-//
-// }
-
-remove_filter( 'bp_activity_get_permalink', 'mpp_filter_activity_permalink', 10 );
+include_once(__DIR__ . '/assets/rz-functions.php');

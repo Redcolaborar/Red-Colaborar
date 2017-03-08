@@ -81,68 +81,92 @@ function buddypress_edit_activity_mp_get(link) {
 		'activity_id': $link.data('activity_id'),
 	};
 
-  $link.removeClass('loading').addClass('action-save').html(B_E_A_.button_text.save);
+  jQuery('html, body').animate({
+      scrollTop: $link.closest('.activity-content').find('.activity-header').offset().top - 150
+  }, 300);
 
-  //add cancel button before link
-  var $cancel_button = jQuery("<a href='#'>").addClass('bp-secondary-action buddyboss_edit_activity_cancel').html(B_E_A_.button_text.cancel);
-  $cancel_button.attr('data-activity_id', data['activity_id'] );
-  $link.before($cancel_button);
-  $cancel_button.attr('onclick', 'return buddypress_edit_activity_mp_cancel(this);');
-  $cancel_button.attr('data-target_type', 'activity');
+  jQuery.ajax({
+		type: "POST",
+		url: ajaxurl,
+		data: data,
+		success: function(response) {
+			response = jQuery.parseJSON(response);
+			if (response.status) {
 
-  //editing activity
-  var $activity_content = $link.closest('.activity-content').find('.activity-inner');
-  var $mpp_container = $link.closest('.activity-content').find('.mpp-container');
-  $activity_content.hide().after($form_wrapper);
-  $form.find('.mpp-upload-shortcode').before($mpp_container);
-  $cancel_button.addClass('button');
+        $link.removeClass('loading').addClass('action-save').html(B_E_A_.button_text.save);
 
-  var $text_content = jQuery.trim( $activity_content.text() );
+        //add cancel button before link
+        var $cancel_button = jQuery("<a href='#'>").addClass('bp-secondary-action buddyboss_edit_activity_cancel').html(B_E_A_.button_text.cancel);
+        $cancel_button.attr('data-activity_id', data['activity_id'] );
+        $link.before($cancel_button);
+        $cancel_button.attr('onclick', 'return buddypress_edit_activity_mp_cancel(this);');
+        $cancel_button.attr('data-target_type', 'activity');
 
-  //button delete media
-  var $aid = $link.data('activity_id');
-  jQuery('.mpp-media-list a.beam_delete_media_btn[data-mpp-activity-id="' + $aid + '"]').show();
+        //editing activity
+        var $activity_content = $link.closest('.activity-content').find('.activity-inner');
+        var $mpp_container = $link.closest('.activity-content').find('.mpp-container');
+        $activity_content.hide().after($form_wrapper);
+        $form.find('.mpp-upload-shortcode').before($mpp_container);
+        $cancel_button.addClass('button');
 
-  $form_wrapper.show();
+        // var $text_content = jQuery.trim( $activity_content.text() );
 
-  $form.find('input[name="activity_id"]').val(data.activity_id);
-  var $gid = $form.find('.mpp-container .mpp-media-holder').first().data('mpp-gallery-id');
+        //button delete media
+        var $aid = $link.data('activity_id');
+        jQuery('.mpp-media-list a.beam_delete_media_btn[data-mpp-activity-id="' + $aid + '"]').show();
 
-  // jQuery('select#mpp-shortcode-upload-gallery-id').val($gid);
-  // jQuery('select#mpp-shortcode-upload-gallery-id').remove();
-  // jQuery('select#mpp-shortcode-upload-gallery-id').remove();
-  // jQuery('#mpp-upload-dropzone-shortcode').append(jQuery('<input type="hidden" id="mpp-shortcode-upload-gallery-id" name="mpp-shortcode-upload-gallery-id" value="' + $gid + '" />'));
-  // jQuery('#mpp-upload-dropzone-shortcode').append(jQuery('<input type="hidden" id="mpp-shortcode-upload-gallery-id" name="mpp-shortcode-upload-gallery-id" value="' + $gid + '" />'));
-  // <input type="hidden" name="mpp-uploading-media-type" class="mpp-uploading-media-type" value="video">
-  $form.find('textarea').val($text_content);
+        $form_wrapper.show();
 
-  $link.closest('li.activity-item').removeClass('loading-edit');
+        jQuery('html, body').animate({
+            scrollTop: $link.closest('.activity-content').find('.activity-header').offset().top - 150
+        }, 300);
 
-  jQuery('.beam_delete_media_btn').unbind('click');
-  jQuery('.beam_delete_media_btn').click(function() {
+        $form.find('input[name="activity_id"]').val(data.activity_id);
+        var $gid = $form.find('.mpp-container .mpp-media-holder').first().data('mpp-gallery-id');
 
-    var $ = jQuery;
+        // jQuery('select#mpp-shortcode-upload-gallery-id').val($gid);
+        // jQuery('select#mpp-shortcode-upload-gallery-id').remove();
+        // jQuery('select#mpp-shortcode-upload-gallery-id').remove();
+        // jQuery('#mpp-upload-dropzone-shortcode').append(jQuery('<input type="hidden" id="mpp-shortcode-upload-gallery-id" name="mpp-shortcode-upload-gallery-id" value="' + $gid + '" />'));
+        // jQuery('#mpp-upload-dropzone-shortcode').append(jQuery('<input type="hidden" id="mpp-shortcode-upload-gallery-id" name="mpp-shortcode-upload-gallery-id" value="' + $gid + '" />'));
+        // <input type="hidden" name="mpp-uploading-media-type" class="mpp-uploading-media-type" value="video">
 
-    var $aid = $(this).data('mpp-activity-id');
-    var $mid = $(this).data('mpp-media-id');
-    var $clicked = $(this);
+        // $form.find('textarea').val($text_content);
+        $form.find('textarea').val(response.content);
 
-    alertify
-      .okBtn("Confirm")
-      .cancelBtn("Cancel")
-      .confirm("Estás seguro que quieres borrar esto archivo?", function() {
+        $link.closest('li.activity-item').removeClass('loading-edit');
 
-        var $elem = $('<input type="hidden" name="removedMedia" value="' + $mid + '" />');
-        $elem.insertAfter('#frm_buddypress-edit-activity-mp input[name="activity_id"]');
-        $clicked.parent().addClass('removed');
+        jQuery('.beam_delete_media_btn').unbind('click');
+        jQuery('.beam_delete_media_btn').click(function() {
 
-        alertify.log("The media will be deleted once you save your edition.");
-      }, function() {
-        //cancel
-        alertify.log("Operation cancelled.");
-      });
+          var $ = jQuery;
 
-  });
+          var $aid = $(this).data('mpp-activity-id');
+          var $mid = $(this).data('mpp-media-id');
+          var $clicked = $(this);
+
+          alertify
+            .okBtn("Confirmar")
+            .cancelBtn("Cancelar")
+            .confirm("Estás seguro que quieres borrar esto archivo?", function() {
+
+              var $elem = $('<input type="hidden" name="removedMedia" value="' + $mid + '" />');
+              $elem.insertAfter('#frm_buddypress-edit-activity-mp input[name="activity_id"]');
+              $clicked.parent().addClass('removed');
+
+              alertify.log("El archivo se eliminará una vez que haya guardado su edición.");
+            }, function() {
+              //cancel
+              alertify.log("Operación cancelada.");
+            });
+
+        });
+
+			}
+		},
+	});
+
+
 
 }
 
