@@ -15,6 +15,24 @@ License URI: license.txt
 * Please add your custom styles below
 */
 
+
+/* links RESPONDER, BORRAR y EDITAR on activity reply */
+
+.acomment-reply {
+
+padding-right: 18px !important;
+font-size: 1.1em !important;
+
+}
+
+.acomment-delete {
+
+padding-right: 14px !important;
+
+}
+
+
+
 /*group emails subscriptions options*/
 
 .group-sub {
@@ -653,4 +671,11 @@ display: none !important;
     .mpp-item .awst_like {
         display: none;
     }
+}
+
+
+.pagination-sticky #newer-nav, .pagination-sticky #older-nav {
+    height: inherit;
+    min-height: 90px;
+    padding: 12px 0px;
 }

@@ -1,15 +1,17 @@
 <?php
 /**
  *  WP-SpamShield Admin Settings Page
- *  File Version 1.9.9.8.8
+ *  File Version 1.9.9.9.1
  */
 
+/* Make sure file remains secure if called directly */
 if( !defined( 'ABSPATH' ) || !defined( 'WPSS_VERSION' ) ) {
-	if( !headers_sent() ) { @header($_SERVER['SERVER_PROTOCOL'].' 403 Forbidden',TRUE,403); @header('X-Robots-Tag: noindex',TRUE); }
+	if( !headers_sent() ) { @header( $_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', TRUE, 403 ); @header( 'X-Robots-Tag: noindex', TRUE ); }
 	die( 'ERROR: Direct access to this file is not allowed.' );
 }
+/* Prevents unintentional error display if WP_DEBUG not enabled. */
+if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); }
 
-if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); } /* Prevents error display, but will display errors if WP_DEBUG turned on. */
 
 /** BEGIN **/
 
@@ -19,10 +21,10 @@ if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 )
 
 			echo WPSS_EOL."\t\t\t".'<div class="wrap">'.WPSS_EOL."\t\t\t".'<h2>WP-SpamShield ' . __( 'Settings' ) . '</h2>'.WPSS_EOL;
 
-			$ip = @WP_SpamShield::get_ip_addr();
+			$ip					= @WP_SpamShield::get_ip_addr();
 			$spam_count_raw		= rs_wpss_count();
 			$spamshield_options	= WP_SpamShield::get_option();
-			$admin_email		= get_option('admin_email');
+			$admin_email		= get_option( 'admin_email' );
 			if( empty( $spamshield_options['form_message_recipient'] ) || !is_email( $spamshield_options['form_message_recipient'] ) ) {
 				$spamshield_options['form_message_recipient'] = $admin_email;
 			}

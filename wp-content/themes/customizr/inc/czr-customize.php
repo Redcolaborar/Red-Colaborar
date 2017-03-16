@@ -667,7 +667,7 @@ if ( ! class_exists( 'CZR_customize_resources' ) ) :
       self::$instance =& $this;
 
       $this->_is_debug_mode = ( defined('WP_DEBUG') && true === WP_DEBUG );
-      $this->_is_dev_mode   = ( defined('TC_DEV') && true === TC_DEV );
+      $this->_is_dev_mode   = ( defined('CZR_DEV') && true === CZR_DEV );
 
       //control scripts and style
       add_action( 'customize_controls_enqueue_scripts'        , array( $this, 'czr_fn_customize_controls_js_css' ), 10 );
@@ -873,7 +873,7 @@ if ( ! class_exists( 'CZR_customize_resources' ) ) :
 
             'themeOptions'     => CZR_THEME_OPTIONS,
 
-            'isDevMode'        => ( defined('WP_DEBUG') && true === WP_DEBUG ) || ( defined('TC_DEV') && true === TC_DEV ),
+            'isDevMode'        => ( defined('WP_DEBUG') && true === WP_DEBUG ) || ( defined('CZR_DEV') && true === CZR_DEV ),
 
             'wpBuiltinSettings'=> CZR_customize::$instance -> czr_fn_get_wp_builtin_settings(),
             'css_attr'         => CZR_customize::$instance -> czr_fn_get_controls_css_attr(),
@@ -956,7 +956,7 @@ if ( ! class_exists( 'CZR_customize_resources' ) ) :
 
                 'readDocumentation' => __('Learn more about this in the documentation', 'customizr'),
                 'Settings' => __('Settings', 'customizr'),
-                'Options for' => __('Options for', 'hueman')
+                'Options for' => __('Options for', 'customizr')
           )
       );
     }
@@ -2009,15 +2009,14 @@ function czr_fn_print_social_tmpls() {
     </div>
 
     <div class="<?php echo $css_attr['sub_set_wrapper']; ?> width-100" data-input-type="color" data-transport="postMessage">
-      <div class="customize-control-title width-100"><?php _e('Icon color', 'customizr'); ?> <i><?php _e('default:', 'hueman'); ?> rgba(255,255,255,0.7)</i></div>
+      <div class="customize-control-title width-100"><?php _e('Icon color', 'customizr'); ?> <i><?php _e('default:', 'customizr'); ?> rgba(255,255,255,0.7)</i></div>
       <div class="czr-input">
         <input data-type="social-color" type="text" value="{{ data['social-color'] }}"></input>
       </div>
       <span class="czr-notice"><?php _e('Set a unique color for your icon.', 'customizr'); ?></span>
     </div>
     <div class="<?php echo $css_attr['sub_set_wrapper']; ?>" data-input-type="check">
-      <# //the previous hueman option system was storing this option in an array
-        data['social-target'] = _.isArray( data['social-target'] ) ? data['social-target'][0] : data['social-target'];
+      <#
         var _checked = ( false != data['social-target'] ) ? "checked=checked" : '';
       #>
       <div class="customize-control-title"><?php _e('Link target', 'customizr'); ?></div>

@@ -37,6 +37,8 @@ body {
     unicode-bidi: embed;
   }
 }
+
+
 /* LINKS HOVER EFFECT */
 .tc-fade-hover-links a:not([class*=round-div]), .tc-fade-hover-links a:visited, .tc-fade-hover-links button, .tc-fade-hover-links input[type="button"], .tc-fade-hover-links input[type="submit"] {
   -webkit-transition-property: border, background, color;
@@ -1513,6 +1515,7 @@ footer#footer .colophon .credits a[class*=icon-] {
   z-index: 99;/*less than the default sticky-header z-index */
   background: #FAFAFA;
 }
+
 .tc-img-gif-loader {
   width: 100%;
   display: inline-block;
@@ -1819,7 +1822,10 @@ h1 a:hover, h2 a:hover {
 .edit-link a {
   color: white;
 }
-
+.edit-link a:hover{
+  color: white;
+  text-decoration: underline;
+}
 article .tc-content {
   margin-bottom: 30px;
 }

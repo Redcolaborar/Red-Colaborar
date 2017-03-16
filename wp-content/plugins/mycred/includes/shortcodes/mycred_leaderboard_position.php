@@ -6,7 +6,7 @@ if ( ! defined( 'myCRED_VERSION' ) ) exit;
  * @see http://codex.mycred.me/shortcodes/mycred_leaderboard_position/
  * Replaces the mycred_my_ranking shortcode.
  * @since 1.7
- * @version 1.1.1
+ * @version 1.1.3
  */
 if ( ! function_exists( 'mycred_render_shortcode_leaderbaord_position' ) ) :
 	function mycred_render_shortcode_leaderbaord_position( $atts, $content = '' ) {
@@ -101,7 +101,7 @@ if ( ! function_exists( 'mycred_render_shortcode_leaderbaord_position' ) ) :
 
 				// Filter: Monthly
 				elseif ( $timeframe == 'this-month' )
-					$time_filter = $wpdb->prepare( "AND time BETWEEN %d AND %d", strtotime( 'Y-m-01', $now ), $now );
+					$time_filter = $wpdb->prepare( "AND time BETWEEN %d AND %d", strtotime( date( 'Y-m-01', $now ) ), $now );
 
 				else
 					$time_filter = $wpdb->prepare( "AND time BETWEEN %d AND %d", strtotime( $timeframe, $now ), $now );
@@ -114,7 +114,7 @@ if ( ! function_exists( 'mycred_render_shortcode_leaderbaord_position' ) ) :
 				SELECT rank FROM (
 					SELECT s.*, @rank := @rank + 1 rank FROM (
 						SELECT t.user_id, sum(t.creds) TotalPoints FROM {$mycred->log_table} t 
-						WHERE t.ref != 'manual' AND t.creds > 0 AND t.ctype = %s AND t.ref = %s {$time}
+						WHERE t.ref != 'manual' AND t.creds > 0 AND t.ctype = %s AND t.ref = %s {$time_filter}
 						GROUP BY t.user_id
 					) s, (SELECT @rank := 0) init
 					ORDER BY TotalPoints DESC, s.user_id ASC 

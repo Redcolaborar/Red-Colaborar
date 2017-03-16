@@ -227,6 +227,18 @@ If you have any further questions, please submit them on the main [WP-SpamShield
 
 == Changelog ==
 
+= 1.9.9.9.2 =
+*released 03/15/17*
+
+* Fixed a JavaScript bug in the `jscripts.php` file that affected certain sites.
+* Maintenance: Updated the spam filters.
+
+= 1.9.9.9.1 =
+*released 03/13/17*
+
+* Made various minor code enhancements and improvements.
+* Maintenance: Updated the spam filters.
+
 = 1.9.9.9 =
 *released 02/09/17*
 
@@ -346,7 +358,7 @@ If you have any further questions, please submit them on the main [WP-SpamShield
 = 1.9.9.2 =
 *released 08/29/16*
 
-* Fixed a bug in the `jscripts.php` file that affects PHP versions 5.4 and below.
+* Fixed a bug in the `jscripts.php` file that affected PHP versions 5.4 and below.
 * Updated the spam filters.
 
 = 1.9.9.1 =
@@ -595,7 +607,7 @@ If you have any further questions, please submit them on the main [WP-SpamShield
 = 1.9.5.7 =
 *released 08/22/15*
 
-* Compatibility fix for a new issue starting in WordPress 4.3 that affects notification emails sent to new users after registering. In WordPress 4.3, some changes were made to the functionality of the notifications sent to new users after they registered. This prevented the password information from being shown in the notification emails when WP-SpamShield was active. This release fixes the issue while maintaining backwards compatibility with previous versions of WordPress.
+* Compatibility fix for a new issue starting in WordPress 4.3 that affected notification emails sent to new users after registering. In WordPress 4.3, some changes were made to the functionality of the notifications sent to new users after they registered. This prevented the password information from being shown in the notification emails when WP-SpamShield was active. This release fixes the issue while maintaining backwards compatibility with previous versions of WordPress.
 * Updated the anti-spam filters.
 
 = 1.9.5.6 =
@@ -903,7 +915,7 @@ If you have any further questions, please submit them on the main [WP-SpamShield
 For a complete list of changes to the plugin, view the [Changelog](https://www.redsandmarketing.com/plugins/wp-spamshield/changelog/).
 
 == Upgrade Notice ==
-= 1.9.9.9 =
+= 1.9.9.9.2 =
 
-* Made various code enhancements/improvements, and improved some filters in the anti-spam algorithm. Please see Changelog for details.
+* Fixed a JavaScript bug, and updated the anti-spam filters. Please see Changelog for details.
 

@@ -1,22 +1,26 @@
 <?php
 /*
-Plugin Name: WP-SpamShield
-Plugin URI: https://www.redsandmarketing.com/plugins/wp-spamshield/
-Description: An extremely powerful and user-friendly all-in-one anti-spam plugin that <strong>eliminates comment spam, trackback spam, contact form spam, and registration spam</strong>. No CAPTCHA's, challenge questions, or other inconvenience to website visitors. Enjoy running a WordPress site without spam! Includes a spam-blocking contact form feature.
-Author: Scott Allen
-Version: 1.9.9.9
-Author URI: https://www.redsandmarketing.com/
-Text Domain: wp-spamshield
-Domain Path: /languages
-License: GPLv2
+Plugin Name:	WP-SpamShield
+Plugin URI:		https://www.redsandmarketing.com/plugins/wp-spamshield/
+Description:	An extremely powerful and user-friendly all-in-one anti-spam plugin that <strong>eliminates comment spam, trackback spam, contact form spam, and registration spam</strong>. No CAPTCHA's, challenge questions, or other inconvenience to website visitors. Enjoy running a WordPress site without spam! Includes a spam-blocking contact form feature.
+Version:		1.9.9.9.2
+Author:			Scott Allen
+Author URI:		https://www.redsandmarketing.com/
+License:		GPL2+
+License URI:	https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain:	wp-spamshield
+Domain Path:	/languages
 */
 
-/*  Copyright 2007-2017 Scott Allen ( https://www.redsandmarketing.com/contact/ )
+/*
+	Copyright © 2007-2017 Scott Allen				https://www.redsandmarketing.com/contact/
+	Copyright © 2014-2017 Red Sand Media Group		https://www.redsandmarketing.com/
+	Copyright © 2016-2017 Blackhawk Cybersecurity	https://blackhawkcybersec.com/
 
-    This program is free software; you can redistribute it and/or modify
+    This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    the Free Software Foundation, either version 2 of the License, or
+    any later version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,11 +28,10 @@ License: GPLv2
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
+    along with this program. If not, see
+	https://www.gnu.org/licenses/gpl-2.0.html or write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-
 
 /* PLUGIN - BEGIN */
 
@@ -37,15 +40,19 @@ if( !defined( 'ABSPATH' ) ) {
 	if( !headers_sent() ) { @header( $_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', TRUE, 403 ); }
 	die( 'ERROR: This plugin requires WordPress and will not function if called directly.' );
 }
+/* WPSS_DEBUG - Do not change value unless developer asks you to - for debugging only. Change in wp-config.php. */
+if( !defined( 'WPSS_DEBUG' ) ) { define( 'WPSS_DEBUG', FALSE ); }
+/* Prevents unintentional error display if WP_DEBUG not enabled. */
+if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); }
 
-define( 'WPSS_VERSION',					'1.9.9.9'	);
-define( 'WPSS_REQUIRED_WP_VERSION',		'4.0'		);
-define( 'WPSS_REQUIRED_PHP_VERSION',	'5.3'		);
-define( 'WPSS_PHP_TEST_MAX',			'7.1'		); /* MAX PHP VERSION TESTED */
+define( 'WPSS_VERSION',					'1.9.9.9.2'				);
+define( 'WPSS_WP_VERSION',				$GLOBALS['wp_version']	);
+define( 'WPSS_REQUIRED_WP_VERSION',		'4.0'					);
+define( 'WPSS_REQUIRED_PHP_VERSION',	'5.3'					);
+define( 'WPSS_PHP_TEST_MAX',			'7.1'					); /* MAX PHP VERSION TESTED */
 
 if( !defined( 'WPSS_DEBUG' ) ) 					{ define( 'WPSS_DEBUG', FALSE ); } /* Do not change value unless developer asks you to - for debugging only. Change in wp-config.php. */
 if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG )	{ @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); } /* Prevents error display, but will display errors if WP_DEBUG turned on. */
-
 
 
 /**
@@ -56,7 +63,6 @@ rs_wpss_getenv();
 /**
  *  Setting essential PATH, URL, and other constants required by plugin
  */
-if( !defined( 'WPSS_WP_VERSION' ) ) 			{ define( 'WPSS_WP_VERSION', $GLOBALS['wp_version'] ); }
 if( !defined( 'WPSS_EDGE' ) ) 					{ define( 'WPSS_EDGE', FALSE ); }
 if( !defined( 'WPSS_DEBUG_SERVER_NAME' ) )		{ define( 'WPSS_DEBUG_SERVER_NAME', '.redsandmarketing.com' ); }
 if( !defined( 'WPSS_DEBUG_SERVER_NAME_REV' ) )	{ define( 'WPSS_DEBUG_SERVER_NAME_REV', strrev( WPSS_DEBUG_SERVER_NAME ) ); }
@@ -113,7 +119,7 @@ if( !defined( 'WPSS_RGX_IPCSTR' ) ) 			{ define( 'WPSS_RGX_IPCSTR', "([0-9]{1,3}
 if( !defined( 'WPSS_RGX_IP' ) ) 				{ define( 'WPSS_RGX_IP', "([0-9]{1,3}[x\.\-]){3}[0-9]{1,3}" ); }
 if( !defined( 'WPSS_RGX_IPCVAL' ) ) 			{ define( 'WPSS_RGX_IPCVAL', "(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}" ); }
 if( !defined( 'WPSS_RGX_IPVAL' ) ) 				{ define( 'WPSS_RGX_IPVAL', WPSS_RGX_IPCVAL."([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])" ); }
-if( !defined( 'WPSS_RGX_FREEMAIL' ) ) 			{ define( 'WPSS_RGX_FREEMAIL', "(g(oogle)?mail|hotmail|outlook|yahoo|mail|gmx|inbox|myway|rediffmail|yandex|rambler|arcor|163|aol|lycos|zoho(mail)?|protonmail|hushmail)" ); }
+if( !defined( 'WPSS_RGX_FREEMAIL' ) ) 			{ define( 'WPSS_RGX_FREEMAIL', "((163|aim|aol|arcor|care2|fastmail|g(oogle)?mail|gmx|hotmail|hushmail|inbox|live|lycos|mail|myway|outlook|protonmail|rambler|rediffmail|yahoo|yandex|ymail|zoho(mail)?)".WPSS_RGX_TLD."|(150ml|(150|16|2|50)mail|cluemail|deliveredbysent|fast(\-email|em(ailer)?|imap|messaging)|fmailbox|fmgirl|fmguy|icloud|imap\-mail|india|inoutbox|internet\-e\-mail|mac|mail(\-central|\-page|andftp|as|bolt|can|ftp|haven|ite|might|new|reflect)|me|moose\-mail|my(fast|mac)mail|petml|postinbox|pro(inbox|message)|rocketmail|rushpost|sent|ssl\-mail|swift\-mail|the\-quickest|theinternetemail|wildmail|xsmail|your\-mail)\.com|(4email|airpost|allmail|email(corner|engine|groups|user)|fastmailbox|ftml|hailmail|internet(emails|mailing)|jetemail|justemail|mail(c|force|sent|up)|ml1|nospammail|ownmail|postpro|realemail|speedpost|the\-fastest|usa|veryspeedy|warpmail|yepmail)\.net|(123mail|elitemail|email(engine|plus)|fast\-mail|imapmail|internet\-mail|letterboxes|mail(ingaddress|works)|speedymail)\.org|(sent)\.as|(sent)\.at|(reallyfast|veryfast)\.biz|(eml|fastest|imap).cc|(fmail)\.co\.uk|(freenet|web)\.de|(f\-m)\.fm|(reallyfast)\.info|(mailservice)\.ms|(fea|mm)\.st|(bestmail|fastemail|h\-mail)\.us)" ); }
 if( !defined( 'WPSS_DATE_BASIC' ) ) 			{ define( 'WPSS_DATE_BASIC', 'Y-m-d' ); }
 if( !defined( 'WPSS_DATE_FULL' ) ) 				{ define( 'WPSS_DATE_FULL', 'Y-m-d H:i:s' ); }
 if( !defined( 'WPSS_DATE_LONG' ) ) 				{ define( 'WPSS_DATE_LONG', 'Y-m-d (D) H:i:s e' ); }
@@ -174,8 +180,9 @@ else {
 unset( $wpss_ecom_urls );
 
 
-/* Early Security Check */
-
+/**
+ *	Early Security Check
+ */
 if( !empty( $_SERVER['WPSS_SEC_THREAT'] ) || !empty( $_SERVER['BHCS_SEC_THREAT'] ) ) {
 	$_SERVER['WPSS_SEC_THREAT'] = TRUE;
 	if( TRUE === WP_DEBUG && TRUE === WPSS_DEBUG && strpos( WPSS_SERVER_NAME_REV, WPSS_MDBUG_SERVER_NAME_REV ) === 0 ) {
@@ -199,12 +206,13 @@ function rs_wpss_ps() {
 	global $is_IIS; return !empty( $is_IIS ) ? ';' : ':';
 }
 
+/**
+ *	Get Environment Variables, or load a specific one.
+ *	Ensures compatibility with servers (ie IIS) that aren't set to populate $_ENV[] automatically.
+ *	@dependencies	...
+ *	@since			1.9.6.2
+ */
 function rs_wpss_getenv( $e = FALSE, $add_vars = array() ) {
-	/**
-	 *  Get Environment Variables, or load a specific one.
-	 *  Ensures compatibility with servers (ie IIS) that aren't set to populate $_ENV[] automatically.
-	 *  @since 1.9.6.2
-	 */
 	global $_WPSS_ENV; if( empty( $_WPSS_ENV ) || !is_array( $_WPSS_ENV ) ) { $_WPSS_ENV = array(); }
 	$_WPSS_ENV = (array) $_WPSS_ENV + (array) $_ENV;
 	$vars = array( 'REMOTE_ADDR', 'SERVER_ADDR', 'LOCAL_ADDR', 'HTTP_HOST', 'SERVER_NAME', );
@@ -289,10 +297,10 @@ function rs_wpss_update_user_ip( $user_id = NULL, $add_admin_ip = FALSE, $admin_
 	extract( $wpss_ip_proxy_info );
 	/* IP / PROXY INFO - END */
 	if( !WP_SpamShield::is_valid_ip( $ip ) ) { return; }
-	$timenow = time();
-	$user_ip = get_user_meta( $user_id, 'wpss_user_ip', TRUE );
+	$timenow		= time();
+	$user_ip		= get_user_meta( $user_id, 'wpss_user_ip', TRUE );
 	if( empty( $user_ip ) ) { $user_ip = array(); }
-	$user_ip[$ip] = array( 'server' => $reverse_dns, 'time' => $timenow );
+	$user_ip[$ip]	= array( 'server' => $reverse_dns, 'time' => $timenow );
 	update_user_meta( $user_id, 'wpss_user_ip', $user_ip );
 	if( !empty( $add_admin_ip ) ) {
 		if( empty( $admin_ips ) ) { $admin_ips = get_option( 'spamshield_admins' ); }
@@ -303,11 +311,13 @@ function rs_wpss_update_user_ip( $user_id = NULL, $add_admin_ip = FALSE, $admin_
 	}
 }
 
+/**
+ *	Boost memory limits
+ *	WordPress' default is 40M, but it requires at least 64M to run smoothly on many sites. 128M+ is better.
+ *	@dependencies	...
+ *	@since			...
+ */
 function rs_wpss_set_memory() {
-	/**
-	 *  Boost memory limits
-	 *  WordPress' default is 40M, but it requires at least 64M to run smoothly on many sites. 128M+ is better.
-	 */
 	if( function_exists( 'memory_get_usage' ) && rs_wpss_is_function_enabled( 'ini_set' ) ) {
 		$current_limit		= ini_get( 'memory_limit' );
 		$current_limit_int	= intval( $current_limit );
@@ -320,27 +330,38 @@ function rs_wpss_set_memory() {
 	}
 }
 
-function rs_wpss_sanitize_string( $string ) {
-	/**
-	 *  Sanitize a string. Much faster than sanitize_text_field()
-	 *  @since ...
-	 */
-	return trim( addslashes( htmlentities( stripslashes( strip_tags( $string ) ) ) ) );
+/**
+ *	Sanitize a string. Much faster than sanitize_text_field()
+ *	@dependencies	...
+ *	@since			...
+ */
+function rs_wpss_sanitize_string( $str ) {
+	return rs_wpss_filter_null( trim( addslashes( htmlentities( stripslashes( strip_tags( $str ) ) ) ) ) );
 }
 
 /**
- *	Sanitize input from a form textarea
- *	Like sanitize_text_field() but this preserves the line breaks
- *  Use for contact forms or similar processes
- *  @since 1.9.7.8
+ *	Sanitize input from a form textarea field
+ *	Like 'sanitize_text_field()' but this preserves the line breaks
+ *	Use for contact forms or similar processes
+ *	WordPress core finally added similar function 'sanitize_textarea_field()' in 4.7.0, but this is still better.
+ *	@dependencies	...
+ *	@used_by		...
+ *	@since			1.9.7.8
+ *	@modified		1.9.9.9.2	Added sanitize_textarea_field() if WP version is 4.7.0+. Backward compatible.
  */
-function rs_wpss_sanitize_textarea( $string ) {
-	$string = str_replace( array( "\r\n" ), array( "\n" ), $string );
-	return implode( "\n", array_map( 'sanitize_text_field', explode( "\n", $string ) ) );
+function rs_wpss_sanitize_textarea( $str ) {
+	$str = str_replace( array( "\r\n", "\r", "\f", "\v", "\n\n\n", "\n\n" ), "\n", $str );
+	$str = str_replace( '<'."\n", '&lt;'."\n", $str );
+	$str = ( WP_SpamShield::is_wp_ver( '4.7' ) ) ? sanitize_textarea_field( $str ) : implode( "\n", array_map( 'sanitize_text_field', explode( "\n", $str ) ) );
+	return $str;
 }
 
+/**
+ *	Sanitize an options string. ie. Contact Form Drop Down Menu...
+ *	@dependencies	...
+ *	@since			...
+ */
 function rs_wpss_sanitize_opt_string( $string ) {
-	/* Sanitize an options string. ie. Contact Form Drop Down Menu... */
 	$string = trim( addslashes( htmlentities( stripslashes( strip_tags( $string ) ), ENT_QUOTES, get_bloginfo( 'charset' ), FALSE ) ) );
 	if( FALSE !== strpos( $string, "\'" ) || FALSE !== strpos( $string, '\"' ) ) {
 		$string = preg_replace( "~\\+'~", '&rsquo;', $string );
@@ -352,12 +373,13 @@ function rs_wpss_sanitize_opt_string( $string ) {
 /**
  *	Prepare form data before emailing.
  *	TO DO: Possibly integrate htmlspecialchars_decode() & nl2br()
- *  @since	...
+ *	@dependencies	...
+ *	@since			...
  */
-function rs_wpss_prep_cf_email( $string ) {
-	$string = preg_replace( "~(\\*['’]|&(apos|#x0+27|#0?39|rsquo);)~i", '’', $string );
-	$string = str_replace( array( "\\'", '\’', "'", '’', '&apos;', '&rsquo;', '&#x00027;', '&#039;', '&#39;', ), '’', $string );
-	return $string;
+function rs_wpss_prep_cf_email( $str ) {
+	$str = preg_replace( "~(\\*['’]|&(apos|#x0+27|#0?39|rsquo);)~i", '’', $str );
+	$str = str_replace( array( "\\'", '\’', "'", '’', '&apos;', '&rsquo;', '&#x00027;', '&#039;', '&#39;', ), '’', $str );
+	return $str;
 }
 
 function rs_wpss_is_function_enabled( $func ) {
@@ -365,8 +387,8 @@ function rs_wpss_is_function_enabled( $func ) {
 	$d = strtolower( trim( @ini_get( 'disable_functions' ), ", \t\n\r\0\x0B" ) );
     $s = strtolower( trim( @ini_get( 'suhosin.executor.func.blacklist' ), ", \t\n\r\0\x0B" ) );
 	if( empty( $d ) && empty( $s ) ) { return TRUE; }
-	$ds = str_replace( array( '  ', ' ', ',,' ), array( '', '', ',' ), $d.','.$s);
-	$arr = !empty($ds) ? (array) explode( ',', $ds ) : array(); $arr = array_filter( $arr );
+	$ds = str_replace( array( '  ', ' ', ',,' ), array( '', '', ',' ), $d.','.$s );
+	$arr = !empty( $ds ) ? (array) explode( ',', $ds ) : array(); $arr = array_filter( $arr );
 	if( !empty( $arr ) && in_array( $func, $arr, TRUE ) ) { return FALSE; }
 	return TRUE;
 }
@@ -441,7 +463,7 @@ function rs_wpss_substr_count( $haystack, $needle, $offset = 0, $length = NULL )
 
 function rs_wpss_sort_unique( $arr ) {
 	/* Removes duplicates and orders the array. */
-	$arr_tmp = array_unique( $arr ); natcasesort( $arr_tmp ); $new_arr = array_values( $arr_tmp );
+	$arr_tmp = array_unique( $arr ); sort( $arr_tmp, SORT_REGULAR ); $new_arr = array_values( $arr_tmp );
 	return $new_arr;
 }
 
@@ -1157,12 +1179,13 @@ function rs_wpss_domain_exists( $domain ) {
 }
 
 function rs_wpss_adv_validate_email( $is_email, $email, $message = NULL ) {
-	/**
-	 *  This adds some additional validation to the built-in WordPress is_email() function.
-	 *  Adds: Max length checks according to RFC, validation for Yahoo and Gmail
-	 *  Not adding DNS checks
-	 *  @since 1.9.5.6
-	 */
+/**
+ *  This adds some additional validation to the built-in WordPress is_email() function.
+ *  Adds: Max length checks (according to RFC), ESP-specific validation for Yahoo and Gmail
+ *  Note: Not adding DNS checks in this function -- it does these later, during anti-spam checks.
+ *  @dependencies	...
+ *  @since			1.9.5.6
+ */
 	if( empty( $email ) || FALSE === $is_email ) { return FALSE; }
 	if( !empty( $message ) ) { return $is_email; }
 	$email = rs_wpss_sanitize_gmail( $email, FALSE, FALSE );
@@ -1185,7 +1208,7 @@ function rs_wpss_adv_validate_email( $is_email, $email, $message = NULL ) {
 }
 
 function rs_wpss_is_free_email( $email ) {
-	if( WP_SpamShield::preg_match( "~\@(".WPSS_RGX_FREEMAIL.WPSS_RGX_TLD."|usa\.net)$~i", $email ) ) { return TRUE; }
+	if( WP_SpamShield::preg_match( "~\@".WPSS_RGX_FREEMAIL."$~i", $email ) ) { return TRUE; }
 	return FALSE;
 }
 
@@ -2168,7 +2191,8 @@ function rs_wpss_log_reset( $admin_ips = NULL, $get_fws = FALSE, $clr_hta = FALS
 	}
 	$wpss_htaccess_data .= '<Files '.$wpss_log_filnm.'>'.WPSS_EOL;
 	$wpss_htaccess_data .= "\t".'# Apache 2.2'.WPSS_EOL."\t".'<IfModule !mod_authz_core.c>'.WPSS_EOL."\t\t".'Order deny,allow'.WPSS_EOL."\t\t".'Deny from all'.WPSS_EOL.$wpss_access_ap22."\t".'</IfModule>'.WPSS_EOL.WPSS_EOL;
-	$wpss_htaccess_data .= "\t".'# Apache 2.4'.WPSS_EOL."\t".'<IfModule mod_authz_core.c>'.WPSS_EOL."\t\t".$wpss_access_ap24."\t".'</IfModule>'.WPSS_EOL;
+	$wpss_htaccess_data .= "\t".'# Apache 2.4'.WPSS_EOL."\t".'<IfModule mod_authz_core.c>'.WPSS_EOL."\t\t".$wpss_access_ap24."\t".'</IfModule>'.WPSS_EOL.WPSS_EOL;
+	$wpss_htaccess_data .= "\t".'ForceType "text/plain; charset=UTF-8"'.WPSS_EOL;
 	$wpss_htaccess_data .= '</Files>'.WPSS_EOL;
 	$wpss_htaccess_fp = @fopen( $wpss_log_files[3],'a+' );
 	@fwrite( $wpss_htaccess_fp, $wpss_htaccess_data );
@@ -2327,9 +2351,15 @@ function rs_wpss_get_log_key( $update = TRUE ) {
 }
 
 /**
- *  Remove null bytes from a string
+ *	Remove null bytes from a string
+ *	Similar to wp_kses_no_null()
+ *	@dependencies	none
+ *	@since			...
+ *	@modified		1.9.9.9.1	Added wp_kses_no_null() filters
  */
 function rs_wpss_filter_null( $str ) {
+	$str = preg_replace( '~[\x00-\x08\x0B\x0C\x0E-\x1F]~', '', $str );
+	$str = preg_replace( '~\\\\+0+~', '', $str );
 	return str_replace( chr(0), '', $str );
 }
 
@@ -2437,13 +2467,12 @@ function rs_wpss_log_data( $wpss_log_data_array, $wpss_log_data_errors, $wpss_lo
 	 */
 
 	global $current_user,$wpss_active_plugins,$wpss_active_network_plugins,$wpss_cl_active,$wpss_cache_check,$wpss_geolocation;
-	$wpss_log_session_data = rs_wpss_get_log_session_data();
-	extract( $wpss_log_session_data );
+	$wpss_log_session_data = rs_wpss_get_log_session_data(); extract( $wpss_log_session_data );
 
-	$noda = '[No Data]'; $thick_line = str_repeat('═',100); $thin_line = str_repeat('─',100);
+	$noda = '[No Data]'; $thick_line = str_repeat( '═', 100 ); $thin_line = str_repeat( '─', 100 );
 
 	/* Timer - BEGIN*/
-	$wpss_time_end					= microtime(TRUE);
+	$wpss_time_end					= microtime( TRUE );
 	if( empty( $wpss_time_init ) && !empty( $wpss_timestamp_init ) ) { $wpss_time_init = $wpss_timestamp_init; }
 	if( !empty( $wpss_time_init ) ) {
 		$wpss_time_on_site			= rs_wpss_timer( $wpss_time_init, $wpss_time_end, TRUE, 2 );
@@ -2463,10 +2492,10 @@ function rs_wpss_log_data( $wpss_log_data_array, $wpss_log_data_errors, $wpss_lo
 	$wpss_log_key				= rs_wpss_get_log_key();
 	$wpss_log_filnm				= strpos( WPSS_SERVER_NAME_REV, WPSS_MDBUG_SERVER_NAME_REV ) === 0 ? 'temp-comments-log.txt' : 'temp-comments-log-'.$wpss_log_key.'.txt';
 	$wpss_log_file				= WPSS_PLUGIN_DATA_PATH.'/'.$wpss_log_filnm;
-	$wpss_log_max_filesize		= strpos( WPSS_SERVER_NAME_REV, WPSS_MDBUG_SERVER_NAME_REV ) === 0 ? 20*1048576 : 2*1048576; /* 2 MB */
+	$wpss_log_max_filesize		= strpos( WPSS_SERVER_NAME_REV, WPSS_MDBUG_SERVER_NAME_REV ) === 0 ? 20*MB_IN_BYTES : 2*MB_IN_BYTES; /* 2 MB */
 
 	if( empty( $wpss_log_comment_type ) ) { $wpss_log_comment_type = 'comment'; }
-	$wpss_log_comment_type_display 			= rs_wpss_casetrans('upper',$wpss_log_comment_type);
+	$wpss_log_comment_type_display 			= ( $wpss_log_comment_type === 'misc form' && WPSS_Utils::is_csp_report() ) ? 'CSP REPORT' : WPSS_Func::upper( $wpss_log_comment_type );
 	$wpss_log_comment_type_display_len		= rs_wpss_strlen($wpss_log_comment_type_display);
 	$wpss_log_comment_type_display_len_begin= $wpss_log_comment_type_display_len + 6;
 	$wpss_log_comment_type_display_len_end	= $wpss_log_comment_type_display_len + 4;
@@ -2873,9 +2902,8 @@ function rs_wpss_log_data( $wpss_log_data_array, $wpss_log_data_errors, $wpss_lo
 		$wpss_log_data		 .= $thick_line.WPSS_EOL;
 		$wpss_log_data .= WPSS_EOL.WPSS_EOL;
 		$wpss_log_data	= rs_wpss_filter_null( $wpss_log_data );
-		$wpss_log_fp = @fopen( $wpss_log_file,'a+' );
-		@fwrite( $wpss_log_fp, $wpss_log_data );
-		@fclose( $wpss_log_fp );
+
+		@file_put_contents( $wpss_log_file, $wpss_log_data, FILE_APPEND | LOCK_EX );
 	}
 }
 
@@ -3120,7 +3148,7 @@ function rs_wpss_contact_form( $content = NULL, $atts = array(), $shortcode_chec
 			/* PROCESSING CONTACT FORM - BEGIN */
 			$wpss_contact_name = $wpss_contact_email = $wpss_contact_website = $wpss_contact_phone = $wpss_contact_company = $wpss_contact_drop_down_menu = $wpss_contact_subject = $wpss_contact_message = $wpss_raw_contact_message = '';
 
-			$wpss_contact_time	= microtime(TRUE);
+			$wpss_contact_time	= microtime( TRUE );
 			$cf_author_data		= array();
 
 			if( strpos( WPSS_SERVER_NAME_REV, WPSS_DEBUG_SERVER_NAME_REV ) === 0 ) {
@@ -3481,40 +3509,37 @@ function rs_wpss_contact_form( $content = NULL, $atts = array(), $shortcode_chec
 				}
 			}
 			if( !is_email( $wpss_contact_email ) ) {
-				$invalid_value=1;
-				$bad_email=1;
+				$invalid_value = 1;
+				$bad_email = 1;
 				$wpss_error_code .= ' CF-INVAL-EMAIL';
 				$contact_response_status_message_addendum .= '&bull; ' . __( 'Please enter a valid email address.' ) . '<br />&nbsp;<br />';
 			}
 			if( empty( $bad_email ) && !rs_wpss_email_domain_exists( $wpss_contact_email ) ) {
-				$invalid_value=1;
-				$bad_email=1;
+				$invalid_value = 1;
+				$bad_email = 1;
 				$wpss_error_code .= ' CF-INVAL-EMAIL-D';
 				$contact_response_status_message_addendum .= '&bull; ' . __( 'Please enter a valid email address.' ) . '<br />&nbsp;<br />';
 			}
 
 			/* TO DO: RE-WORK THIS SECTION */
-			$wpss_contact_phone_clean = preg_replace( "~[^0-9]+~", "", $wpss_contact_phone );
-			$phone_length = rs_wpss_strlen($wpss_contact_phone_clean); /* Min = 5 */
-			$phone_1c = isset( $wpss_contact_phone_clean[0] ) ? $wpss_contact_phone_clean[0] : '0';
-			$wpss_contact_phone_zero = str_replace( array( '0120120120', '0130130130', '123456', ' ', $phone_1c, '-', '(', ')', '+', 'N/A', 'NA', 'n/a', 'na' ), '', $wpss_contact_phone );
+			$wpss_contact_phone_clean	= preg_replace( "~\D+~", '', $wpss_contact_phone );
+			$phone_length				= rs_wpss_strlen( $wpss_contact_phone_clean );	/* Min = 5 */
+			$phone_1c					= isset( $wpss_contact_phone_clean[0] ) ? $wpss_contact_phone_clean[0] : '0';	/* 1st character */
+			$wpss_contact_phone_zero	= preg_replace( "~(0?((01){3,}|(10){3,}|(012){3,}|(013){3,}|(120){3,}|(130){3,}|1234567?|2345678?)0?|[\+\-\(\)\s]|n/?a|none|".$phone_1c.")~i", '', $wpss_contact_phone );
 			if( !empty( $form_require_phone ) && !empty( $form_include_phone ) && ( empty( $wpss_contact_phone_zero ) || !empty( $bad_phone_spammer ) || $phone_length < 5 || strpos( $wpss_contact_phone, '123456' ) === 0 || strpos( $wpss_contact_phone, '0123456' ) === 0 || strpos( $wpss_contact_phone, '1234567' ) !== FALSE ) ) {
-				$invalid_value=1;
-				$bad_phone=1;
+				$invalid_value = 1; $bad_phone = 1;
 				$wpss_error_code .= ' CF-INVAL-PHONE';
 				$contact_response_status_message_addendum .= '&bull; ' . __( 'Please enter a valid phone number.', 'wp-spamshield' ) . '<br />&nbsp;<br />';
 			}
-			$wpss_contact_company_zero = str_replace( array( ' ', '0', '-', '(', ')', '+', 'N/A', 'NA', 'n/a', 'na', ), '', $wpss_contact_company_lc );
+			$wpss_contact_company_zero	= preg_replace( "~([0\+\-\(\)\s]|n/?a)~i", '', $wpss_contact_company_lc );
 			if( !empty( $form_require_company ) && !empty( $form_include_company ) && ( empty( $wpss_contact_company_zero ) || WP_SpamShield::preg_match( "~(^https?\:/+|^(0+|compan(y|ie)|confidential|empty|expert|fuck([\s\.\-_]*(off|you))?|hack(er|ing)?|invalid|it|na|n/a|nada|negative|nein|no|none?|nothing|null?|nyet|private?|personal|restricted|secret|seo|(un|not\s*)employed|unknown|void|web)$)~", $wpss_contact_company_lc ) ) ) {
-				$invalid_value=1;
-				$bad_company=1;
+				$invalid_value = 1;	$bad_company = 1;
 				$wpss_error_code .= ' CF-INVAL-COMPANY';
 				$contact_response_status_message_addendum .= '&bull; ' . __( 'Please enter a valid company.', 'wp-spamshield' ) . '<br />&nbsp;<br />';
 			}
 			/* Spammers using one of Google's official domains as their URL */
 			if( !empty( $form_include_website ) && ( !empty( $generic_spam_company ) && strpos( $reverse_dns_lc, 'google' ) === FALSE  && strpos( $reverse_dns_lc, 'blogger' ) === FALSE && !WP_SpamShield::is_google_ip( $ip) ) && rs_wpss_is_google_domain($wpss_contact_domain) ) {
-				$invalid_value=1;
-				$bad_website=1;
+				$invalid_value = 1; $bad_website = 1;
 				$wpss_error_code .= ' CF-INVAL-URL-G';
 				/* TO DO: TRANSLATE */
 				$contact_response_status_message_addendum .= '&bull; ' . __( 'Please enter a valid website.', 'wp-spamshield' ) . ' ' . __( 'Please use <em>your</em> company website URL, not Google\'s.', 'wp-spamshield' ) . '<br />&nbsp;<br />';
@@ -3525,8 +3550,7 @@ function rs_wpss_contact_form( $content = NULL, $atts = array(), $shortcode_chec
 				$_SESSION['form_require_website_'.WPSS_HASH] = 1;
 			}
 			if( !empty( $form_include_website ) && !empty( $wpss_contact_website ) && ( !rs_wpss_is_valid_url( $wpss_contact_website_lc ) || $cf_baseurl === $wpss_contact_website_lc ) ) {
-				$invalid_value=1;
-				$bad_website=1;
+				$invalid_value = 1;	$bad_website = 1;
 				$wpss_error_code .= ' CF-INVAL-URL';
 				/* TO DO: TRANSLATE */
 				$contact_response_status_message_addendum .= '&bull; ' . __( 'Please enter a valid website.', 'wp-spamshield' ) . '<br />&nbsp;<br />';
@@ -3536,8 +3560,7 @@ function rs_wpss_contact_form( $content = NULL, $atts = array(), $shortcode_chec
 				$_SESSION['form_require_website_'.WPSS_HASH] = 1;
 			}
 			if( empty( $bad_website ) && !empty( $form_include_website ) && !empty( $wpss_contact_website ) && !rs_wpss_domain_exists( $wpss_contact_domain ) ) {
-				$invalid_value=1;
-				$bad_website=1;
+				$invalid_value = 1;	$bad_website = 1;
 				$wpss_error_code .= ' CF-INVAL-URL-D';
 				/* TO DO: TRANSLATE */
 				$contact_response_status_message_addendum .= '&bull; ' . __( 'Please enter a valid website.', 'wp-spamshield' ) . '<br />&nbsp;<br />';
@@ -3548,12 +3571,12 @@ function rs_wpss_contact_form( $content = NULL, $atts = array(), $shortcode_chec
 			}
 
 			if( $message_length < $form_message_min_length ) {
-				$message_short=1;
+				$message_short = 1;
 				$wpss_error_code .= ' CF-MSG-SHORT';
 				$contact_response_status_message_addendum .= '&bull; ' . __( 'Message too short. Please enter a complete message.', 'wp-spamshield' ) . '<br />&nbsp;<br />';
 			}
 			if( $message_length > $form_message_max_length ) {
-				$message_long=1;
+				$message_long = 1;
 				$wpss_error_code .= ' CF-MSG-LONG';
 				$contact_response_status_message_addendum .= '&bull; ' . __( 'Message too long. Please enter a shorter message.', 'wp-spamshield' ) . '<br />&nbsp;<br />';
 			}
@@ -3740,8 +3763,8 @@ function rs_wpss_contact_form( $content = NULL, $atts = array(), $shortcode_chec
 					@WP_SpamShield::append_log_data( NULL, NULL, 'Duplicate contact form submission. Message not sent. WPSSMID: '.$wpss_contact_form_mid.' WPSSMCID: '.$wpss_contact_form_mcid.' [D]' );
 				}
 
-				$contact_response_status = 'thank-you';
-				$wpss_error_code = 'No Error';
+				$contact_response_status	= 'thank-you';
+				$wpss_error_code			= 'No Error';
 				rs_wpss_update_accept_status( $cf_author_data, 'a', 'Line: '.__LINE__ );
 				if( !empty( $spamshield_options['comment_logging'] ) && !empty( $spamshield_options['comment_logging_all'] ) ) {
 					rs_wpss_log_data( $cf_author_data, $wpss_error_code, 'contact form', $wpss_contact_form_msg, $wpss_contact_form_mid, $wpss_contact_form_mcid );
@@ -3786,8 +3809,8 @@ function rs_wpss_contact_form( $content = NULL, $atts = array(), $shortcode_chec
 					@WP_SpamShield::append_log_data( NULL, NULL, '$cf_content: "'.$cf_content.'" Line: '.__LINE__.' | Func: '.__FUNCTION__.' | MEM USED: ' . WP_SpamShield::wp_memory_used() . ' | VER: ' . WPSS_VERSION );
 				}
 			}
-			$content_new = str_replace($content, $cf_content, $content);
-			$content_shortcode = $cf_content;
+			$content_new		= str_replace( $content, $cf_content, $content );
+			$content_shortcode	= $cf_content;
 			/* CONTACT FORM BACK END - END */
 		} else {
 			/**
@@ -3843,7 +3866,7 @@ function rs_wpss_contact_form( $content = NULL, $atts = array(), $shortcode_chec
 			$cf_content .= '<p>&nbsp;</p>'.WPSS_EOL;
 			if( !empty( $promote_plugin_link ) ) {
 				$sip5c = '0';
-				$sip5c = substr(WPSS_SERVER_ADDR, 4, 1); /* Server IP 5th Char */
+				$sip5c = substr( WPSS_SERVER_ADDR, 4, 1 ); /* Server IP 5th Char */
 				$ppl_code = array( '0' => 2, '1' => 2, '2' => 2, '3' => 2, '4' => 2, '5' => 2, '6' => 1, '7' => 0, '8' => 2, '9' => 2, '.' => 2 );
 				if( WP_SpamShield::preg_match( "~^[0-9\.]$~", $sip5c ) ) {
 					$int = $ppl_code[$sip5c];
@@ -3957,7 +3980,7 @@ function rs_wpss_remove_expired_admins( $admin_ips = NULL ) {
 	$admin_ips = empty( $admin_ips ) ? get_option( 'spamshield_admins' ) : $admin_ips;
 	if( empty( $admin_ips ) || !is_array( $admin_ips ) ) { $admin_ips = array(); }
 	$timenow = time();
-	$timelim = 1209600; /* Time limit: 2 weeks (60*60*24*14) */
+	$timelim = 2 * WEEK_IN_SECONDS;	/* Time limit: 2 weeks */
 	foreach( $admin_ips as $ip => $t ) {
 		$time_since_active = rs_wpss_timer( $t, $timenow, FALSE, NULL, TRUE, TRUE );
 		if( $time_since_active > $timelim || !WP_SpamShield::is_valid_ip( $ip ) ) { unset( $admin_ips[$ip] ); }
@@ -4019,17 +4042,17 @@ function rs_wpss_regex_alpha_replace( $string ) {
 	return $new_string;
 }
 
+/**
+ *	The Magic Parser
+ *	Magically parse a large string of text for a number of keyphrases
+ *	The "magic" is that this will check for all kinds of text variations, accents, plurals, 1337 (LEET), etc.
+ *	Extremely accurate...same mechanism used in the WPSS_Filters::anchortxt_blacklist_chk() function
+ *	@since			1.9.7.8
+ *	@param			array	$keyphrase_needles	The array containing keyphrases to search haystack for
+ *	@param			string	$haystack			The string of text to search. This works well for large chunks of text such as contact form submissions.
+ *	@return			bool	TRUE if haystack contains any of the keyphrase needles, FALSE if it does not
+ */
 function rs_wpss_magic_parser( $keyphrase_needles = array(), $haystack = NULL ) {
-	/**
-	 *  The Magic Parser
-	 *  Magically parse a large string of text for a number of keyphrases
-	 *  The "magic" is that this will check for all kinds of text variations, accents, plurals, 1337 (LEET), etc.
-	 *  Extremely accurate...same mechanism used in the WPSS_Filters::anchortxt_blacklist_chk() function
-	 *  @since 1.9.7.8
-	 *  @param array $keyphrase_needles	The array containing keyphrases to search haystack for
-	 *  @param string $haystack			The string of text to search. This works well for large chunks of text such as contact form submissions.
-	 *  @return bool TRUE if haystack contains any of the keyphrase needles, FALSE if it does not
-	 */
 	if( empty( $keyphrase_needles ) || empty( $haystack ) || !is_array( $keyphrase_needles ) || !is_string( $haystack ) ) { return FALSE; }
 	foreach( $keyphrase_needles as $i => $keyphrase_needle ) {
 		$keyphrase_needle_rgx = rs_wpss_regexify( $keyphrase_needle );
@@ -4107,7 +4130,7 @@ function rs_wpss_precheck_pingback_spam( $pagelinkedfrom, $pagelinkedto ) {
 
 function rs_wpss_check_comment_spam( $commentdata ) {
 	/* Timer Start - Comment Processing */
-	$commentdata['start_time_comment_processing'] = microtime(TRUE);
+	$commentdata['start_time_comment_processing'] = microtime( TRUE );
 
 	$spamshield_options = WP_SpamShield::get_option();
 
@@ -4224,7 +4247,7 @@ function rs_wpss_check_comment_spam( $commentdata ) {
 		/* $wpss_error_code .= $wpss_error_code_addendum; */
 	}
 	/* Timer End - Part 1 */
-	$wpss_end_time_part_1 = microtime(TRUE);
+	$wpss_end_time_part_1 = microtime( TRUE );
 	$wpss_total_time_part_1 = rs_wpss_timer( $commentdata['start_time_comment_processing'], $wpss_end_time_part_1, FALSE, 6, TRUE );
 	$commentdata['total_time_part_1'] = $wpss_total_time_part_1;
 	/* User Authorization - END */
@@ -4243,8 +4266,8 @@ function rs_wpss_check_comment_spam( $commentdata ) {
 			global $wpss_comment_inprog; $wpss_comment_inprog = TRUE;
 
 			/* Timer Start - JS/Cookies Filter */
-			$wpss_start_time_jsck_filter = microtime(TRUE);
-			$commentdata['start_time_jsck_filter'] = $wpss_start_time_jsck_filter;
+			$wpss_start_time_jsck_filter			= microtime( TRUE );
+			$commentdata['start_time_jsck_filter']	= $wpss_start_time_jsck_filter;
 
 			$wpss_ck_key_bypass = $wpss_js_key_bypass = FALSE;
 			if( TRUE === WPSS_COMPAT_MODE || defined( 'WPSS_SOFT_COMPAT_MODE' ) ) { $wpss_ck_key_bypass = TRUE; }
@@ -4313,9 +4336,9 @@ function rs_wpss_check_comment_spam( $commentdata ) {
 				}
 			}
 			/* Timer End - JS/Cookies Filter */
-			$wpss_end_time_jsck_filter		= microtime( TRUE );
-			$wpss_total_time_jsck_filter	= rs_wpss_timer( $wpss_start_time_jsck_filter, $wpss_end_time_jsck_filter, FALSE, 6, TRUE );
-			$commentdata['total_time_jsck_filter'] = $wpss_total_time_jsck_filter;
+			$wpss_end_time_jsck_filter				= microtime( TRUE );
+			$wpss_total_time_jsck_filter			= rs_wpss_timer( $wpss_start_time_jsck_filter, $wpss_end_time_jsck_filter, FALSE, 6, TRUE );
+			$commentdata['total_time_jsck_filter']	= $wpss_total_time_jsck_filter;
 			if( !empty( $wpss_error_code ) ) {
 				$commentdata['wpss_error_code'] = trim( $wpss_error_code );
 				rs_wpss_exit_jsck_filter( $commentdata, $spamshield_options, $wpss_error_code );
@@ -4784,7 +4807,7 @@ function rs_wpss_trackback_content_filter( $commentdata, $spamshield_options ) {
 	if( !empty( $wpss_error_code ) ) {
 		$wpss_error_code = trim( $wpss_error_code );
 		/* Timer End - Content Filter */
-		$wpss_end_time_content_filter 				= microtime(TRUE);
+		$wpss_end_time_content_filter 				= microtime( TRUE );
 		$wpss_total_time_content_filter 			= rs_wpss_timer( $commentdata['start_time_content_filter'], $wpss_end_time_content_filter, FALSE, 6, TRUE );
 		$commentdata['total_time_content_filter']	= $wpss_total_time_content_filter;
 	}
@@ -4836,8 +4859,8 @@ function rs_wpss_trackback_ip_filter( $commentdata, $spamshield_options ) {
 		$commentdata['total_time_content_filter']	= $wpss_total_time_content_filter;
 	}
 
-	$commentdata['wpss_error_code']			= trim( $wpss_error_code );
-	$commentdata['content_filter_status']	= $content_filter_status;
+	$commentdata['wpss_error_code']					= trim( $wpss_error_code );
+	$commentdata['content_filter_status']			= $content_filter_status;
 	return $commentdata;
 }
 
@@ -5238,9 +5261,9 @@ function rs_wpss_comment_content_filter( $commentdata, $spamshield_options ) {
 		return rs_wpss_exit_content_filter( $commentdata, $spamshield_options, $wpss_error_code, $content_filter_status );
 	}
 	/* More complex test for invalid 'HTTP_ACCEPT' */
-	$http_accept_mod_1 = preg_replace( "~([\s\;]+)~", ",", $http_accept );
-	$http_accept_elements = explode( ',', $http_accept_mod_1 );
-	$http_accept_elements_count = count($http_accept_elements);
+	$http_accept_mod_1			= preg_replace( "~([\s\;]+)~", ",", $http_accept );
+	$http_accept_elements		= explode( ',', $http_accept_mod_1 );
+	$http_accept_elements_count	= count($http_accept_elements);
 	$i = 0;
 	/* The following line to prevent exploitation: */
 	$i_max = 20;
@@ -5267,9 +5290,9 @@ function rs_wpss_comment_content_filter( $commentdata, $spamshield_options ) {
 		return rs_wpss_exit_content_filter( $commentdata, $spamshield_options, $wpss_error_code, $content_filter_status );
 	}
 	/* More complex test for invalid 'HTTP_ACCEPT_LANGUAGE' */
-	$http_accept_language_mod_1 = preg_replace( "~([\s\;]+)~", ",", $http_accept_language );
-	$http_accept_language_elements = explode( ',', $http_accept_language_mod_1 );
-	$http_accept_language_elements_count = count($http_accept_language_elements);
+	$http_accept_language_mod_1				= preg_replace( "~([\s\;]+)~", ",", $http_accept_language );
+	$http_accept_language_elements			= explode( ',', $http_accept_language_mod_1 );
+	$http_accept_language_elements_count	= count($http_accept_language_elements);
 	$i = 0;
 	/* The following line to prevent exploitation: */
 	$i_max = 20;
@@ -5487,8 +5510,8 @@ function rs_wpss_misc_form_spam_check() {
 		if( $form_type === 'mailchimp form' ) {
 			foreach( $_POST as $k => $v ) {
 				if( !is_string( $v ) ) { continue; }
-				$k_lc = rs_wpss_casetrans('lower',$k);
-				$v_lc = rs_wpss_casetrans('lower',trim(stripslashes($v)));
+				$k_lc = WPSS_Func::lower( $k );
+				$v_lc = WPSS_Func::lower( trim( stripslashes( $v ) ) );
 				if( strpos( $k_lc, 'email' ) !== FALSE ) {
 					if( !is_email( $v_lc ) ) {
 						$wpss_error_code .= ' '.$pref.'9200E-BL';
@@ -5499,7 +5522,7 @@ function rs_wpss_misc_form_spam_check() {
 						}
 						break;							
 					} elseif( is_email( $v_lc ) ) {
-						$email_domain = rs_wpss_parse_email($v_lc,'domain');
+						$email_domain = rs_wpss_parse_email( $v_lc, 'domain' );
 						if( $email_domain === $server_email_domain ) { continue; }
 						if( WPSS_Filters::email_blacklist_chk( $v_lc ) ) {
 							$wpss_error_code .= ' '.$pref.'9200E-BL';
@@ -5517,10 +5540,10 @@ function rs_wpss_misc_form_spam_check() {
 		} else {
 			foreach( $_POST as $k => $v ) {
 				if( !is_string( $v ) ) { continue; }
-				$k_lc = rs_wpss_casetrans('lower',$k);
-				$v_lc = rs_wpss_casetrans('lower',trim(stripslashes($v)));
+				$k_lc = WPSS_Func::lower( $k );
+				$v_lc = WPSS_Func::lower( trim( stripslashes( $v ) ) );
 				if( strpos( $k_lc, 'email' ) !== FALSE && is_email( $v_lc ) ) {
-					$email_domain = rs_wpss_parse_email($v_lc,'domain');
+					$email_domain = rs_wpss_parse_email( $v_lc, 'domain' );
 					if( $email_domain === $server_email_domain ) { continue; }
 					if( WPSS_Filters::email_blacklist_chk( $v_lc ) ) {
 						$wpss_error_code .= ' '.$pref.'9200E-BL';
@@ -5540,14 +5563,14 @@ function rs_wpss_misc_form_spam_check() {
 			/* CONTACT FORM CONTENT BLACKLIST */
 			foreach( $_POST as $k => $v ) {
 				if( !is_string( $v ) ) { continue; }
-				$k_lc = rs_wpss_casetrans('lower',$k);
-				$v_lc = rs_wpss_casetrans('lower',trim(stripslashes($v)));
+				$k_lc = WPSS_Func::lower( $k );
+				$v_lc = WPSS_Func::lower( trim( stripslashes( $v ) ) );
 				if( ( FALSE !== strpos( $k_lc, 'message' ) || FALSE !== strpos( $k_lc, 'comment' ) ) && WPSS_Filters::cf_content_blacklist_chk( $v_lc ) ) {
 					$wpss_error_code .= ' '.$pref.'10400C-BL';
 					if( $msc_jsck_error !== TRUE ) {
-						$err_cod = 'blacklist_content_error';
-						$err_msg = __( 'Message appears to be spam.', 'wp-spamshield' );
-						$errors_3p[$err_cod] = $err_msg;
+						$err_cod				= 'blacklist_content_error';
+						$err_msg				= __( 'Message appears to be spam.', 'wp-spamshield' );
+						$errors_3p[$err_cod]	= $err_msg;
 					}
 					break;
 				}
@@ -5690,10 +5713,10 @@ function rs_wpss_cf7_spam_check( $spam ) {
 	$collected_emails = array();
 	foreach( $_POST as $k => $v ) {
 		if( !is_string( $v ) ) { continue; }
-		$k_lc = rs_wpss_casetrans('lower',$k);
-		$v_lc = rs_wpss_casetrans('lower',trim(stripslashes($v)));
+		$k_lc = WPSS_Func::lower( $k );
+		$v_lc = WPSS_Func::lower( trim( stripslashes( $v ) ) );
 		if( strpos( $k_lc, 'email' ) !== FALSE && is_email( $v_lc ) ) {
-			$email_domain = rs_wpss_parse_email($v_lc,'domain');
+			$email_domain = rs_wpss_parse_email( $v_lc, 'domain' );
 			if( $email_domain === $server_email_domain ) { continue; }
 			if( WPSS_Filters::email_blacklist_chk( $v_lc ) ) {
 				if( empty( $wpss_error_code ) ) {
@@ -5709,8 +5732,8 @@ function rs_wpss_cf7_spam_check( $spam ) {
 	/* CONTACT FORM CONTENT BLACKLIST */
 	foreach( $_POST as $k => $v ) {
 		if( !is_string( $v ) ) { continue; }
-		$k_lc = rs_wpss_casetrans('lower',$k);
-		$v_lc = rs_wpss_casetrans('lower',trim(stripslashes($v)));
+		$k_lc = WPSS_Func::lower( $k );
+		$v_lc = WPSS_Func::lower( trim( stripslashes( $v ) ) );
 		if( FALSE !== strpos( $k_lc, 'message' ) && WPSS_Filters::cf_content_blacklist_chk( $v_lc ) ) {
 			if( empty( $wpss_error_code ) ) {
 				add_filter( 'wpcf7_display_message', 'rs_wpss_cf7_spam_message_cf_content_bl', 10, 2 );
@@ -5877,28 +5900,28 @@ function rs_wpss_gf_spam_check( $form ) {
 	}
 	$wpss_jsck_jquery_val	= !empty( $_POST[$wpss_jq_key] ) ? $_POST[$wpss_jq_key] : '';
 	if( $wpss_jsck_jquery_val !== $wpss_jq_val ) {
-		$wpss_error_code .= ' '.$pref.'JQHFT-7';
-		$gf_jsck_error = TRUE;
-		$err_cod = 'jsck_error';
-		$err_msg = __( 'Sorry, there was an error. Please be sure JavaScript and Cookies are enabled in your browser and try again.', 'wp-spamshield' );
-		$errors_3p[$err_cod] = $err_msg;
+		$wpss_error_code		.= ' '.$pref.'JQHFT-7';
+		$gf_jsck_error			= TRUE;
+		$err_cod				= 'jsck_error';
+		$err_msg				= __( 'Sorry, there was an error. Please be sure JavaScript and Cookies are enabled in your browser and try again.', 'wp-spamshield' );
+		$errors_3p[$err_cod]	= $err_msg;
 	}
 
 	/* EMAIL BLACKLIST */
 	$collected_emails = array();
 	foreach( $_POST as $k => $v ) {
 		if( !is_string( $v ) ) { continue; }
-		$k_lc = rs_wpss_casetrans('lower',$k);
-		$v_lc = rs_wpss_casetrans('lower',trim(stripslashes($v)));
+		$k_lc = WPSS_Func::lower( $k );
+		$v_lc = WPSS_Func::lower( trim( stripslashes( $v ) ) );
 		if( is_email( $v_lc ) ) {
-			$email_domain = rs_wpss_parse_email($v_lc,'domain');
+			$email_domain = rs_wpss_parse_email( $v_lc, 'domain' );
 			if( $email_domain === $server_email_domain ) { continue; }
 			if( WPSS_Filters::email_blacklist_chk( $v_lc ) ) {
 				$wpss_error_code .= ' '.$pref.'9200E-BL';
 				if( $gf_jsck_error !== TRUE ) {
-					$err_cod = 'blacklist_email_error';
-					$err_msg = __( 'Sorry, that email address is not allowed!' ) . ' ' . __( 'Please enter a valid email address.' );
-					$errors_3p[$err_cod] = $err_msg;
+					$err_cod				= 'blacklist_email_error';
+					$err_msg				= __( 'Sorry, that email address is not allowed!' ) . ' ' . __( 'Please enter a valid email address.' );
+					$errors_3p[$err_cod]	= $err_msg;
 				}
 				break;
 			}
@@ -5909,14 +5932,14 @@ function rs_wpss_gf_spam_check( $form ) {
 	/* CONTACT FORM CONTENT BLACKLIST */
 	foreach( $_POST as $k => $v ) {
 		if( !is_string( $v ) ) { continue; }
-		/* $k_lc = rs_wpss_casetrans('lower',$k); */
-		$v_lc = rs_wpss_casetrans('lower',trim(stripslashes($v)));
+		/* $k_lc = WPSS_Func::lower( $k ); */
+		$v_lc = WPSS_Func::lower( trim( stripslashes( $v ) ) );
 		if( FALSE !== strpos( $k_lc, 'message' ) && WPSS_Filters::cf_content_blacklist_chk( $v_lc ) ) {
 			$wpss_error_code .= ' '.$pref.'10400C-BL';
 			if( $gf_jsck_error !== TRUE ) {
-				$err_cod = 'blacklist_content_error';
-				$err_msg = __( 'Message appears to be spam.', 'wp-spamshield' );
-				$errors_3p[$err_cod] = $err_msg;
+				$err_cod				= 'blacklist_content_error';
+				$err_msg				= __( 'Message appears to be spam.', 'wp-spamshield' );
+				$errors_3p[$err_cod]	= $err_msg;
 			}
 			break;
 		}
@@ -5930,9 +5953,9 @@ function rs_wpss_gf_spam_check( $form ) {
 		$wpss_error_code .= $bad_robot_filter_data['error_code'];
 		$gf_badrobot_error = TRUE;
 		if( $gf_jsck_error !== TRUE ) {
-			$err_cod = 'badrobot_error';
-			$err_msg = __( 'That action is currently not allowed.' );
-			$errors_3p[$err_cod] = $err_msg;
+			$err_cod				= 'badrobot_error';
+			$err_msg				= __( 'That action is currently not allowed.' );
+			$errors_3p[$err_cod]	= $err_msg;
 		}
 	}
 
@@ -5941,17 +5964,17 @@ function rs_wpss_gf_spam_check( $form ) {
 		if( empty( $collected_emails ) ) {
 			if( rs_wpss_blacklist_check() ) {
 				$wpss_error_code .= ' '.$pref.'0-ECBL';
-				$err_cod = 'blacklist_ecbl_error';
-				$err_msg = __( 'That action is currently not allowed.' );
-				$errors_3p[$err_cod] = $err_msg;
+				$err_cod				= 'blacklist_ecbl_error';
+				$err_msg				= __( 'That action is currently not allowed.' );
+				$errors_3p[$err_cod]	= $err_msg;
 			}
 		} else {
 			foreach( $collected_emails as $k => $v ) {
 				if( rs_wpss_blacklist_check( '', $v ) ) {
 					$wpss_error_code .= ' '.$pref.'0-ECBL';
-					$err_cod = 'blacklist_ecbl_error';
-					$err_msg = __( 'That action is currently not allowed.' );
-					$errors_3p[$err_cod] = $err_msg;
+					$err_cod				= 'blacklist_ecbl_error';
+					$err_msg				= __( 'That action is currently not allowed.' );
+					$errors_3p[$err_cod]	= $err_msg;
 					break;
 				}
 			}
@@ -5961,9 +5984,9 @@ function rs_wpss_gf_spam_check( $form ) {
 	/* BLACKLISTED USER */
 	if( empty( $wpss_error_code ) && rs_wpss_ubl_cache() ) {
 		$wpss_error_code .= ' '.$pref.'0-BL';
-		$err_cod = 'blacklisted_user_error';
-		$err_msg = __( 'That action is currently not allowed.' );
-		$errors_3p[$err_cod] = $err_msg;
+		$err_cod				= 'blacklisted_user_error';
+		$err_msg				= __( 'That action is currently not allowed.' );
+		$errors_3p[$err_cod]	= $err_msg;
 	}
 
 	$wpss_error_code = trim( $wpss_error_code );
@@ -6078,7 +6101,7 @@ function rs_wpss_extra_notification_data( $text, $spamshield_options = NULL, $cf
 
 	$eml_eol = "\r\n"; /* Added 1.9.7 */
 	if( !empty( $cf7 ) ) { $text .= $eml_eol; }
-	$thin_line = str_repeat('─',78);
+	$thin_line = str_repeat( '─', 78 );
 
 	/* IP / PROXY INFO - BEGIN */
 	global $wpss_ip_proxy_info; if( empty( $wpss_ip_proxy_info ) ) { $wpss_ip_proxy_info = rs_wpss_ip_proxy_info(); }
@@ -6109,7 +6132,7 @@ function rs_wpss_extra_notification_data( $text, $spamshield_options = NULL, $cf
 				extract( $wpss_log_session_data );
 				$noda = '[No Data]';
 				/* Timer - BEGIN*/
-				$wpss_time_end					= microtime(TRUE);
+				$wpss_time_end					= microtime( TRUE );
 				if( empty( $wpss_time_init ) && !empty( $wpss_timestamp_init ) ) {
 					$wpss_time_init = $wpss_timestamp_init;
 				}
@@ -6143,7 +6166,7 @@ function rs_wpss_extra_notification_data( $text, $spamshield_options = NULL, $cf
 				$ref2xJS = str_replace( '%3A', ':', $ref2xJS );
 				$ref2xJS = str_replace( ' ', '+', $ref2xJS );
 				$ref2xJS = esc_url_raw( $ref2xJS );
-				$text .= $eml_eol . __( 'Page Referrer Check.', 'wp-spamshield' ) . ': '.$ref2xJS.$eml_eol;
+				$text .= $eml_eol . __( 'Page Referrer Check', 'wp-spamshield' ) . ': '.$ref2xJS.$eml_eol;
 			}
 		}
 		$text .= $eml_eol;
@@ -6177,8 +6200,8 @@ function rs_wpss_extra_notification_data( $text, $spamshield_options = NULL, $cf
 	return $text;
 }
 
-function rs_wpss_add_ip_to_blacklist($ip_to_blacklist) {
-	$blacklist_keys 		= trim(stripslashes(get_option('blacklist_keys')));
+function rs_wpss_add_ip_to_blacklist( $ip_to_blacklist ) {
+	$blacklist_keys 		= trim( stripslashes( get_option( 'blacklist_keys' ) ) );
 	$blacklist_keys_update	= $blacklist_keys.WPSS_EOL.$ip_to_blacklist;
 	rs_wpss_update_bw_list_keys( 'black', $blacklist_keys_update );
 }
@@ -6215,7 +6238,7 @@ function rs_wpss_blacklist_check( $author = NULL, $email = NULL, $url = NULL, $c
 	 *  @param string $user_server	Comment | Contact Form | Registration | CF7 | GF | Misc Form: author's server (reverse DNS of IP).
 	 */
 
-	$blacklist_keys = trim(stripslashes(get_option('blacklist_keys')));
+	$blacklist_keys = trim( stripslashes( get_option( 'blacklist_keys' ) ) );
 	if( empty( $blacklist_keys ) ) { return FALSE; } /* If blacklist keys are empty */
 
 	if( empty( $user_ip ) || empty( $user_server ) ) {
@@ -6285,14 +6308,15 @@ function rs_wpss_blacklist_check( $author = NULL, $email = NULL, $url = NULL, $c
 	return FALSE;
 }
 
+/**
+ *	Fires at beginning of contact form, comment content, and other filters.
+ *	Bypasses filters if TRUE.
+ *	Still subject to cookies test on contact form to prevent potential abuse by bots.
+ *	@since			1.7.4
+ *	@param			string	$email	Comment or Contact Form author's email.
+ *	@return			bool	TRUE if submission contains blacklisted content, FALSE if submission does not
+ */
 function rs_wpss_whitelist_check( $email = NULL, $ip = NULL, $ignore_ip = FALSE ) {
-	/**
-	 *  Fires at beginning of contact form, comment content, and other filters.
-	 *  Bypasses filters if TRUE.
-	 *  Still subject to cookies test on contact form to prevent potential abuse by bots.
-	 *  @since 1.7.4
-	 *  @param string $email      	Comment or Contact Form author's email.
-	 */
 	if( empty( $email ) && !empty( $ip ) || ( FALSE === $ignore_ip && rs_wpss_is_admin_ip( $ip ) ) || ( TRUE === $ignore_ip && WP_SpamShield::is_email_admin( $email ) ) ) { return TRUE; }
 	$whitelist_enabled = WP_SpamShield::get_option( 'enable_whitelist' );
 	if( empty( $whitelist_enabled ) ) { return FALSE; }
@@ -6301,6 +6325,7 @@ function rs_wpss_whitelist_check( $email = NULL, $ip = NULL, $ignore_ip = FALSE 
 	}
 	$whitelist_keys = trim( stripslashes( get_option( 'spamshield_whitelist_keys' ) ) );
 	if( empty( $whitelist_keys ) ) { return FALSE; } /* If whitelist keys are empty */
+	$whitelist_keys		= str_replace( array( "\r\n", "\r", "\f", "\v", "\n\n\n", "\n\n" ), "\n", $whitelist_keys );
 	$whitelist_keys_arr = explode( WPSS_EOL, $whitelist_keys );
 	foreach( (array) $whitelist_keys_arr as $key ) {
 		$key = trim( $key );
@@ -6318,10 +6343,11 @@ function rs_wpss_get_bw_list_keys( $list ) {
 	 *  $list - 'white' or 'black'
 	 */
 	$opname = array( 'white' => 'spamshield_whitelist_keys', 'black' => 'blacklist_keys' );
-	$keys	= trim(stripslashes(get_option($opname[$list])));
-	$arr	= explode(WPSS_EOL,$keys);
-	$tmp	= rs_wpss_sort_unique($arr);
-	$keys	= implode(WPSS_EOL,$tmp);
+	$keys	= trim( stripslashes( get_option( $opname[$list] ) ) );
+	$keys	= str_replace( array( "\r\n", "\r", "\f", "\v", "\n\n\n", "\n\n" ), "\n", $keys );
+	$arr	= explode( "\n", $keys );
+	$tmp	= rs_wpss_sort_unique( $arr );
+	$keys	= implode( "\n", $tmp );
 	return $keys;
 }
 
@@ -6331,9 +6357,10 @@ function rs_wpss_update_bw_list_keys( $list, $keys ) {
 	 *  $list - 'white' or 'black'
 	 */
 	$opname = array( 'white' => 'spamshield_whitelist_keys', 'black' => 'blacklist_keys' );
-	$arr	= explode(WPSS_EOL,$keys);
-	$tmp	= rs_wpss_sort_unique($arr);
-	$keys	= implode(WPSS_EOL,$tmp);
+	$keys	= str_replace( array( "\r\n", "\r", "\f", "\v", "\n\n\n", "\n\n" ), "\n", $keys );
+	$arr	= explode( "\n", $keys );
+	$tmp	= rs_wpss_sort_unique( $arr );
+	$keys	= implode( "\n", $tmp );
 	update_option( $opname[$list], $keys, FALSE );
 }
 
@@ -6342,7 +6369,7 @@ function rs_wpss_update_bw_list_keys( $list, $keys ) {
 
 function rs_wpss_wc_before_register( ) {
 	$wc_reg_enabled = get_option( 'woocommerce_enable_myaccount_registration' );
-	if( $wc_reg_enabled !== 'yes' && $wc_reg_enabled != TRUE ) { return; }
+	if( 'yes' !== $wc_reg_enabled && TRUE != $wc_reg_enabled ) { return; }
 	global $wpss_wc_reg_form_active; $wpss_wc_reg_form_active = TRUE;
 }
 
@@ -6471,10 +6498,15 @@ if( !function_exists('wp_new_user_notification') ) {
 
 	/* WPSS Added */
 
+
+
+
 	function rs_wpss_modify_signup_notification_admin( $text, $user_id, $user ) {
 		/* Check if registration spam shield is disabled - Added in 1.6.9 */
 		$spamshield_options = WP_SpamShield::get_option();
 		if( !empty( $spamshield_options['registration_shield_disable'] ) ) { return $text; }
+
+
 
 		$wpss_display_name 		= $user->display_name;
 		$wpss_user_firstname 	= $user->user_firstname;
@@ -6502,12 +6534,11 @@ if( !function_exists('wp_new_user_notification') ) {
 	}
 
 	function rs_wpss_modify_signup_notification_user( $text, $user_id, $user ) {
-
 		/* Check if registration spam shield is disabled - Added in 1.6.9 */
 		$spamshield_options = WP_SpamShield::get_option();
 		if( !empty( $spamshield_options['registration_shield_disable'] ) ) { return $text; }
 
-		/* Add three new fields */
+	/* Add three new fields */
 		$wpss_display_name 		= $user->display_name;
 		$wpss_user_firstname 	= $user->user_firstname;
 		$wpss_user_lastname 	= $user->user_lastname;
@@ -7446,7 +7477,9 @@ class WP_SpamShield {
 	 */
 	static public function get_headers( $url = NULL, $type = 'default' ) {
 		$response	= wp_remote_head( $url );
-		if( is_wp_error( $response ) || empty( $response['headers'] ) ) { return array(); }
+		if( is_wp_error( $response ) || empty( $response['headers'] ) ) {
+			return ( 'status' === $type ) ? 200 : array();
+		}
 		$headers	= ( self::is_wp_ver( '4.6' )					)	? $response['headers']->getAll()	: $response['headers']	;
 		$code		= ( !empty( $response['response']['code'] )		)	? $response['response']['code']		: ''					;
 		foreach( $headers as $k => $v ) {
@@ -7463,9 +7496,9 @@ class WP_SpamShield {
 			}
 			$headers = $std_headers;
 			if( 'status' === $type || 'all' === $type ) {
-				$status = ( !empty( $code ) && ( is_numeric( $code ) || is_string( $code ) ) && WP_SpamShield::preg_match( "~^[1-5][0-9]{2}$~", $code ) ) ? $code : 200;
+				$status		= ( !empty( $code ) && ( is_numeric( $code ) || is_string( $code ) ) && WP_SpamShield::preg_match( "~^[1-5][0-9]{2}$~", $code ) ) ? $code : 200;
 				if( 'status' === $type ) { return $status; }
-				$hdr_data = compact( 'headers', 'status' );
+				$hdr_data	= compact( 'headers', 'status' );
 				return $hdr_data;
 			}
 			return $headers;
@@ -7793,7 +7826,7 @@ class WP_SpamShield {
 	}
 
 	function admin_notices() {
-		$admin_notices = get_option('spamshield_admin_notices');
+		$admin_notices = get_option( 'spamshield_admin_notices' );
 		if( !empty( $admin_notices ) ) {
 			$style 	= $admin_notices['style']; /* 'error', 'updated', 'is-dismissible', 'updated notice is-dismissible' */
 			$notice	= $admin_notices['notice'];
@@ -8331,7 +8364,7 @@ class WP_SpamShield {
 		remove_filter( 'status_header', 'rs_wpss_mod_status_header', 100 );
 		$error_txt	= '<strong>'.rs_wpss_error_txt().':</strong> ';
 		$error_txt	= ( !empty( $cust_error_txt ) && !empty( $error_msg ) ) ? '' : $error_txt;
-		$error_msg	= empty( $error_msg ) ? __('You do not have sufficient permissions to access this page.') : $error_msg;
+		$error_msg	= empty( $error_msg ) ? __( 'Sorry, you are not allowed to access this page.' ) : $error_msg;
 		$error_str	= $error_txt.$error_msg.WPSS_EOL;
 		$args		= array( 'response' => $status_code );
 		wp_die( $error_str, '', $args );
@@ -8356,7 +8389,7 @@ class WP_SpamShield {
 	 */
 	static public function get_db_size() {
 		global $wpdb; $db_size = 0;
-		$query = $wpdb->get_results("SHOW table STATUS", ARRAY_A);
+		$query = $wpdb->get_results( "SHOW table STATUS", ARRAY_A );
 		foreach( $query as $row ) {
 			$db_size += $row['Data_length'] + $row['Index_length'];
 		}
@@ -8520,6 +8553,26 @@ class WPSS_Filters extends WP_SpamShield {
 	 *  @since 1.9.9.8.2
 	 */
 
+	/* Initialize Class Variables */
+	static private		$bl_anchortxt		= array();
+	static private		$bl_domain			= array();
+	static private		$bl_tld				= array();
+	static private		$bl_host_ns			= array();
+	static private		$bl_email			= array();
+	static private		$bl_anchortxt_lite	= array();
+	static private		$bl_spam_domain		= array();
+	static private		$bl_sm_domain		= array();
+	static private		$bl_sm_ext_domain	= array();
+	static private		$bl_urlshort		= array();
+	static private		$bl_referrer		= array();
+	static private		$bl_cf_content		= array();
+	static private		$bl_iapdat			= array();
+
+	/**
+	 *	Constructor
+	 *	@dependencies	...
+	 *	@since			...
+	 */
 	function __construct() {
 		/**
 		 *  Do nothing...for now
@@ -8830,15 +8883,19 @@ class WPSS_Filters extends WP_SpamShield {
 		$regex_phrases_other_checks = array(
 			/* Payday Loan Spammers - Keywords in Domain */
 			"~((payday|short-?term|instant|quick|fast|speedy|(personal\-?)?cash|credit)\-?loans?|(cash|payday)\-?advance|(instant|quick|fast|speedy)\-?cash)~i",
-			/* "plan cul" Spammers */
-			"~(plan\-?cul|tonplanq)~i",
+			/* Scrapers/Scraping Service Spammers */
+			"~scrap(er?|ing|[y1i])~i",
 			/* Offshore IT Spammers */
 			"~info(tech|soft)".WPSS_RGX_TLD."$~i",
-			/* SEO Spammers */
-			"~se[om](lead|prospect)s?~i",
+			/* SEO/Internet Marketing/Lead Spammers */
+			"~(agency|best|buy|cheap|discover|exclusive|feed|get|give|local|marketing|more|pay\-?per|reputation\-?management|se[mo]|web)[0-9a-z\.\-]*(lead|prospect)s?~i",
+			"~(^(1\-?)?(se[mo]|india)(\-|[a-z0-9]*(india|delhi)|local|rank|services?|web)|((india|delhi)[a-z0-9]*|local|rank|services?|web|\-)(se[mo]|india)[\.\-$])~i",
+			/* Disposable Email */
+			"~((\d+day|\d+hour|abyss|alias|anon(ym?(ous)?)?|(anti|de|no)?spam|catch|clean|destruct(ing)?|devnull|discard|dispose?a?(ble)?|drop|dumpy?|easy|explode|fake[drs]?|(get)?air|grandm?as?|guer+il+a|hide|inat[eo]r|incog(nito)?|instant|[lf]ast|minute[ndrs]?|proxs?(y|ie)|recon|smash|tempo?(ra((ry|rio)?|ire|l|nea)?)?|throwaway|\w{0,3}trash(can)?|yop)[\-\.]?([eoiy]?[\-\.]?mail|amil|(in)?box|address)|([eoiy]?[\-\.]?mail|amil|(in)?box|address)[\-\.]?(\d+day|\d+hour|abyss|alias|anon(ym?(ous)?)?|(anti|de|no)?spam|catch|clean|destruct(ing)?|devnull|discard|dispose?a?(ble)?|drop|dumpy?|easy|explode|fake[drs]?|(get)?air|grandm?as?|guer+il+a|hide|inat[eo]r|incog(nito)?|instant|[lf]ast|minute[ndrs]?|proxs?(y|ie)|recon|smash|tempo?(ra((ry|rio)?|ire|l|nea)?)?|throwaway|\w{0,3}trash(can)?|yop))~i",
 			/* Misc */
 			"~^((ww[w0-9]|m)\.)?whereto(buy|get)cannabisoil~i",
 			"~(cheap|quick)".WPSS_RGX_TLD."$~i",
+			"~(plan\-?cul|ton\-?plan\-?q)~i",
 			"~^((ww[w0-9]|m)\.)?(buy|get|play|hack|unlock)\-[a-z0-9\.\-]+\-(online|now|quick|fast)".WPSS_RGX_TLD."$~i",
 			"~^(accounts|cloud|code|developers|docs|feedproxy|firebase|get|groups|hangouts|images|mail|news|photos|picasa|sites|talkgadget|translate)\.google".WPSS_RGX_TLD."$~i",
 		);
@@ -8877,7 +8934,7 @@ class WPSS_Filters extends WP_SpamShield {
 		$blacklisted_email_prefixes =
 			array(
 				/* The beginning part of the email */
-				"anonymous@", "fuckyou@", "root@", "spam@", "spambot@", "spammer@", "suckadick@", "yourmom@", 
+				"anonymous@", "nope@", "fuckyou@", "root@", "seo@", "spam@", "spambot@", "spammer@", "suckadick@", "yourmom@", 
 			);
 		if( TRUE === $get_pref_list_arr ) { return $blacklisted_email_prefixes; }
 
@@ -8892,11 +8949,11 @@ class WPSS_Filters extends WP_SpamShield {
 			array(
 				/* Custom regex strings that occur in the email address */
 				"spinfilel?namesdat", "^name\-[0-9]{5}\@g(oogle)?mail".WPSS_RGX_TLD."$", 
-				"\.((marketing|business|web)manager|seo(services?)?)[0-9]*\@(".WPSS_RGX_FREEMAIL.WPSS_RGX_TLD."|usa\.net)$", 
-				"^((marketing|business|web)manager|seo(services?)?)\..*\@(".WPSS_RGX_FREEMAIL.WPSS_RGX_TLD."|usa\.net)$",  
-				"\.((marketing|business|web)manager|seo(services?)?).*\@(".WPSS_RGX_FREEMAIL.WPSS_RGX_TLD."|usa\.net)$", 
-				".*((payday|short-?term|instant|(personal-?)?cash|credit)-?loans?|(cash|payday)-?advance|quick-?cash).*\@(".WPSS_RGX_FREEMAIL.WPSS_RGX_TLD."|usa\.net)$", 
-				"(dr.*(temple|shrine|home|cent(er|re)|curer?)(curer?)?|.*(6{3}|il+uminati|(healing|individual|love|powerful|solution)(healing|powerful|spell|e?spiritu?(uale?)?)|(healing|powerful|spell|e?spiritu?(uale?)?)(temple|shrine|home|cent(er|re))).*)\@(".WPSS_RGX_FREEMAIL.WPSS_RGX_TLD."|usa\.net)$", 
+				"\.((marketing|business|web)manager|seo(services?)?)[0-9]*\@".WPSS_RGX_FREEMAIL."$",
+				"^((marketing|business|web)manager|seo(services?)?)\..*\@".WPSS_RGX_FREEMAIL."$",  
+				"\.((marketing|business|web)manager|seo(services?)?).*\@".WPSS_RGX_FREEMAIL."$", 
+				".*((payday|short-?term|instant|(personal-?)?cash|credit)-?loans?|(cash|payday)-?advance|quick-?cash).*\@".WPSS_RGX_FREEMAIL."$", 
+				"(dr.*(temple|shrine|home|cent(er|re)|curer?)(curer?)?|.*((\D|\b)6{3}(\D|\b)|il+uminati|(healing|individual|love|powerful|solution)(healing|powerful|spell|e?spiritu?(uale?)?)|(healing|powerful|spell|e?spiritu?(uale?)?)(temple|shrine|home|cent(er|re))).*)\@".WPSS_RGX_FREEMAIL."$", 
 			);
 		if( TRUE === $get_str_rgx_list_arr ) { return $blacklisted_email_strings_rgx; }
 
@@ -9357,7 +9414,7 @@ class WPSS_Filters extends WP_SpamShield {
 			if( wp_is_mobile() || $is_waterfox || $is_firefox || $is_chrome || $is_IE || $is_gecko || $is_opera || $is_safari || $is_iphone || $is_lynx || $is_NS4 ) { $_SERVER['WPSS_SEC_THREAT'] = TRUE; $wpss_skiddie_ua = TRUE; return TRUE; }
 		}
 
-		if( rs_wpss_is_xmlrpc() || rs_wpss_is_doing_rest() ) {
+		if( FALSE === strpos( $user_agent_lc, 'wp-android/' ) && FALSE === strpos( $user_agent_lc, 'wp-iphone/' ) && ( rs_wpss_is_xmlrpc() || rs_wpss_is_doing_rest() ) ) {
 			if( WP_SpamShield::preg_match( "~\b(chrome|firefox|internet\s*explorer|iphone|lynx|midori|mozilla|netscape|safari|trident|waterfox|webkit)\b~i", $user_agent_lc ) ) { $_SERVER['WPSS_SEC_THREAT'] = TRUE; $wpss_skiddie_ua = TRUE; return TRUE; }
 		}
 
@@ -9413,11 +9470,13 @@ class WPSS_Filters extends WP_SpamShield {
 		$ip_dcba	= @WPSS_Utils::get_ipv4_dcba( $ip );
 		$ip_rev		= strrev( $ip );
 		$ip_str		= str_replace( array( '.', '::', ':' ), '-', $ip );
+		$dom_rgx	= "~^([01a]\-|(?:1\-)?(?:8(?:00|44|55|66|77|88)\-))[^-]+~i";
 		if( $hyphens >= 2 && FALSE === strpos( $domain, '--' ) && FALSE === strpos( $domain, $ip_dcba ) && FALSE === strpos( $domain, $ip ) && FALSE === strpos( $domain, $ip_rev ) && !WP_SpamShield::preg_match( "~[x\.\-](a?dsl|broadband|cable(modem)?|dhcp([x\.\-]dyn(amic)?)?|dial(up)?|mobile|pool|cluster|defen[cs]e)[x\.\-]~i", $domain ) && ! @WPSS_Utils::substr_ipv4_blocks( $ip, $domain ) ) {
+			if( WP_SpamShield::preg_match( $dom_rgx, $domain ) ) { return TRUE; }
 			$dom_els = explode( '.', $domain ); /* Domain elements */
 			foreach( $dom_els as $i => $e ) {
 				$l = rs_wpss_strlen( $e );
-				if( $l < 17 || FALSE === strpos( $e, '-') ) { continue; }
+				if( $l < 17 || FALSE === strpos( $e, '-' ) ) { continue; }
 				if( FALSE !== strpos( $e, $ip_str ) ) { continue; }
 				if( !WP_SpamShield::preg_match( "~[a-z]+~i", $e ) ) { continue; }
 				$h = rs_wpss_substr_count( $e, '-' );

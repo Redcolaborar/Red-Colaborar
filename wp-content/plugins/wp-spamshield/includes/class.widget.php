@@ -1,15 +1,17 @@
 <?php
 /**
  *  WP-SpamShield Widgets
- *  File Version 1.9.9.9
+ *  File Version 1.9.9.9.1
  */
 
+/* Make sure file remains secure if called directly */
 if( !defined( 'ABSPATH' ) || !defined( 'WPSS_VERSION' ) ) {
 	if( !headers_sent() ) { @header( $_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', TRUE, 403 ); @header( 'X-Robots-Tag: noindex', TRUE ); }
 	die( 'ERROR: Direct access to this file is not allowed.' );
 }
+/* Prevents unintentional error display if WP_DEBUG not enabled. */
+if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); }
 
-if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); } /* Prevents error display, but will display errors if WP_DEBUG turned on. */
 
 class WP_SpamShield_Counter_CG extends WP_Widget {
 

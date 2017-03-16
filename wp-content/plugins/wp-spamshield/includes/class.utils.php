@@ -1,19 +1,19 @@
 <?php
 /**
  *  WP-SpamShield Utilities
- *  File Version 1.9.9.9
+ *  File Version 1.9.9.9.1
  */
 
+/* Make sure file remains secure if called directly */
 if( !defined( 'ABSPATH' ) || !defined( 'WPSS_VERSION' ) ) {
-	if( !headers_sent() ) { @header($_SERVER['SERVER_PROTOCOL'].' 403 Forbidden',TRUE,403); @header('X-Robots-Tag: noindex',TRUE); }
+	if( !headers_sent() ) { @header( $_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', TRUE, 403 ); @header( 'X-Robots-Tag: noindex', TRUE ); }
 	die( 'ERROR: Direct access to this file is not allowed.' );
 }
+/* Prevents unintentional error display if WP_DEBUG not enabled. */
+if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); }
 
-if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); } /* Prevents error display, but will display errors if WP_DEBUG turned on. */
 
-
-
-class WPSS_Utils {
+class WPSS_Utils extends WP_SpamShield {
 
 	/**
 	 *  WP-SpamShield Utility Class
@@ -23,9 +23,9 @@ class WPSS_Utils {
 	 */
 
 	/* Initialize Class Variables */
-	static private		$pref				= 'WPSS_';
-	static private		$debug_server		= '.redsandmarketing.com';
-	static private		$dev_url			= 'https://www.redsandmarketing.com/';
+	static protected	$pref				= 'WPSS_';
+	static protected	$debug_server		= '.redsandmarketing.com';
+	static protected	$dev_url			= 'https://www.redsandmarketing.com/';
 	static public		$_ENV				= array();
 	static protected	$ip_dns_params		= array( 'server_hostname' => WPSS_SERVER_HOSTNAME, 'server_addr' => WPSS_SERVER_ADDR, 'server_name' => WPSS_SERVER_NAME, 'domain' => WPSS_SITE_DOMAIN );
 	static protected	$php_version		= PHP_VERSION;
@@ -324,18 +324,19 @@ class WPSS_Utils {
 
 	/**
 	 *  Removes duplicates and orders the array. Single-dimensional Numeric Arrays only.
-	 *	@dependencies	WPSS_Utils::obj_to_arr(), WPSS_Utils::is_array_multi(), WPSS_Utils::msort_array()
+	 *	@dependencies	WPSS_Utils::obj_to_arr(), WPSS_Utils::is_array_multi(), WPSS_Utils::msort_array(), ...
 	 *	@used by		...
-	 *	@func_ver		RSSD.20170111.01
+	 *	@func_ver		WPSS.20170219.01
 	 *	@since			WPSS 1.9.9.8.2, RSSD 1.0.4
 	 */
 	static public function sort_unique( $arr = array() ) {
-		if( empty( $arr ) ) { return $arr; }
-		if( !is_array( $arr ) && !is_object( $arr ) ) { return (array) $arr; }
+		if( empty( $arr ) ) { return array(); }
+		if( is_string( $arr ) || is_numeric( $arr ) ) { return (array) $arr; }
+		if( !is_array( $arr ) && !is_object( $arr ) ) { return array(); }
 		if( is_object( $arr ) ) { $arr = self::obj_to_arr( $arr ); }
 		$arr_tmp = array_unique( $arr );
 		if( self::is_array_multi( $arr_tmp ) ) { $arr_tmp = self::msort_array( $arr_tmp ); }
-		@natcasesort( $arr_tmp );
+		@sort( $arr_tmp, SORT_REGULAR );
 		$new_arr = array_values( $arr_tmp );
 		return $new_arr;
 	}
@@ -353,7 +354,7 @@ class WPSS_Utils {
 		if( is_object( $arr ) ) { $arr = self::obj_to_arr( $arr ); }
 		$arr_tmp = (array) $arr;
 		if( self::is_array_multi( $arr_tmp ) ) { $arr_tmp = self::msort_array( $arr_tmp ); }
-		@natcasesort( $arr_tmp );
+		@sort( $arr_tmp, SORT_REGULAR );
 		$new_arr = array_values( $arr_tmp );
 		return $new_arr;
 	}
@@ -372,7 +373,7 @@ class WPSS_Utils {
 		$arr_tmp = (array) $arr;
 		if( self::is_php_ver( '5.4' ) ) {
 			if( self::is_array_multi( $arr_tmp ) ) { $arr_tmp = self::msort_array( $arr_tmp ); }
-			@ksort( $arr_tmp, SORT_NATURAL | SORT_FLAG_CASE );
+			@ksort( $arr_tmp, SORT_REGULAR | SORT_FLAG_CASE );
 		} else {
 			if( self::is_array_multi( $arr_tmp ) ) { $arr_tmp = self::msort_array( $arr_tmp ); }
 			@ksort( $arr_tmp, SORT_REGULAR );
@@ -384,7 +385,7 @@ class WPSS_Utils {
 	/**
 	 *  Sorts the array, multidimensional.
 	 *  Sorts Numeric arrays by Value, and Associative arrays by Key
-	 *	@dependencies	WPSS_Utils::obj_to_arr(), WPSS_Utils::wp_memory_used(), WPSS_Utils::is_array_num(), WPSS_Utils::vsort_array(), WPSS_Utils::ksort_array()
+	 *	@dependencies	WPSS_Utils::obj_to_arr(), WP_SpamShield::wp_memory_used(), WPSS_Utils::is_array_num(), WPSS_Utils::vsort_array(), WPSS_Utils::ksort_array()
 	 *	@used by		...
 	 *	@func_ver		RSSD.20170111.01
 	 *	@since			WPSS 1.9.9.8.2, RSSD 1.0.4
@@ -395,7 +396,7 @@ class WPSS_Utils {
 		if( is_object( $arr ) ) { $arr = self::obj_to_arr( $arr ); }
 		$arr_tmp = $arr;
 		$i++; $m = 5; /* $m = max */
-		if( $i === $m || self::wp_memory_used( FALSE, TRUE ) > 64 * MB_IN_BYTES ) {
+		if( $i === $m || WP_SpamShield::wp_memory_used( FALSE, TRUE ) > 64 * MB_IN_BYTES ) {
 			$new_arr = array_multisort( $arr_tmp );
 		} else {
 			if( self::is_array_num( $arr_tmp ) ) { /* Numeric Arrays - Orders the array, by value. */
@@ -438,10 +439,10 @@ class WPSS_Utils {
 
 	/**
 	 *	Attempt to detect and identify web host
-	 *	As of RSSD.20170122.01, web hosts detected: 97+
+	 *	As of RSSD.20170228.01, web hosts detected: 97+
 	 *	@dependencies	WPSS_Utils::get_option(), WPSS_Utils::update_option(), WPSS_Utils::get_server_hostname(), WPSS_Utils::get_ip_dns_params(), WPSS_Utils::get_reverse_dns(), WP_SpamShield::is_valid_ip(), WPSS_Utils::get_ns(), WPSS_Utils::sort_unique()
 	 *	@used by		...
-	 *	@func_ver		RSSD.20170122.01
+	 *	@func_ver		RSSD.20170228.01
 	 *	@since			WPSS 1.9.9.8.2, RSSD 1.0.3
 	 */
 	static public function get_web_host( $params = array() ) {
@@ -456,6 +457,7 @@ class WPSS_Utils {
 		$web_hosts_ev = array(
 			'DreamHost'					=> array( 'slug' => 'dreamhost', 'webhost' => 'DreamHost', 'envars' => 'DH_USER', 'deps' => 'ABSPATH', ), 
 			'GoDaddy'					=> array( 'slug' => 'godaddy', 'webhost' => 'GoDaddy', 'envars' => 'GD_PHP_HANDLER,GD_ERROR_DOC', ), 
+			'WP Engine'					=> array( 'slug' => 'wp-engine', 'webhost' => 'WP Engine', 'envars' => 'IS_WPE', ), 
 		);
 		/* PHP Constants */
 		$web_hosts_cn = array(
@@ -737,54 +739,10 @@ class WPSS_Utils {
 			}
 		}
 		if( !empty( self::$web_host_proxy ) ) {
-			$options = array( 'surrogate' => TRUE, 'ubl_cache_disable' => TRUE, 'web_proxy' => self::$web_host_proxy, );
+			$options = array( 'surrogate' => 1, 'ubl_cache_disable' => 1, 'web_proxy' => self::$web_host_proxy, );
 			self::update_option( $options );
 		}
 		return self::$web_host_proxy;
-	}
-
-	/**
-	 *  Detect https/http
-	 *  Use instead of WP function is_ssl(), as this is more accurate
-	 *  @dependencies	none
-	 *  @used by		rs_wpss_get_url(), rs_wpss_get_rewrite_base(), rs_wpss_gf_spam_check(), WPSS_Compatibility::misc_form_bypass()
-	 *  @since			...
-	 */
-	static public function is_https() {
-		if( !empty( $_SERVER['HTTPS'] )						&& 'off'	!==	$_SERVER['HTTPS'] )						{ return TRUE; }
-		if( !empty( $_SERVER['SERVER_PORT'] )				&& '443'	 ==	$_SERVER['SERVER_PORT'] )				{ return TRUE; }
-		if( !empty( $_SERVER['HTTP_X_FORWARDED_PROTO'] )	&& 'https'	===	$_SERVER['HTTP_X_FORWARDED_PROTO'] )	{ return TRUE; }
-		if( !empty( $_SERVER['HTTP_X_FORWARDED_SSL'] )		&& 'off'	!==	$_SERVER['HTTP_X_FORWARDED_SSL'] )		{ return TRUE; }
-		return FALSE;
-	}
-
-	/**
-	 *  Get the URL of current page/post/etc
-	 *	@dependencies	WPSS_Utils::is_https()
-	 *	@used by		constant 'WPSS_THIS_URL'
-	 *	@since			1.9.9.8.2, replaced rs_wpss_get_url()
-	 */
-	static public function get_url( $safe = FALSE, $server_name = WPSS_SERVER_NAME ) {
-		$url  = self::is_https() ? 'https://' : 'http://';
-		$url .= $server_name.$_SERVER['REQUEST_URI'];
-		if( TRUE === $safe ) { $url = esc_url( $url ); }
-		return $url;
-	}
-
-	/**
-	 *  Get the amount of memory currently used by WordPress
-	 *	@dependencies	WPSS_Utils::format_bytes()
-	 *	@used by		...
-	 *	@since			1.9.9.8.2, replaced rs_wpss_wp_memory_used()
-	 */
-	static public function wp_memory_used( $peak = FALSE, $raw = FALSE ) {
-		$mem = 0;
-		if( TRUE === $peak && function_exists( 'memory_get_peak_usage' ) ) {
-			$mem = memory_get_peak_usage( TRUE );
-		} elseif( function_exists( 'memory_get_usage' ) ) {
-			$mem = memory_get_usage();
-		}
-		return ( !empty( $mem ) && FALSE === $raw ) ? self::format_bytes( $mem ) : $mem;
 	}
 
 	/**
@@ -801,7 +759,7 @@ class WPSS_Utils {
 	 *  Get HTTP Headers of a URL
 	 *  Can return an array of headers, an associative array of headers, status code, or all
 	 *  @usage			"RS_System_Diagnostic::get_headers( $url )" mimics behavior of native PHP "get_headers( $url )"
-	 *  @params			$url, 	$type	default|assoc|status|all
+	 *  @param			$url, 	$type	default|assoc|status|all
 	 *	@dependencies	...
 	 *	@used by		...
 	 *  @since			... as 
@@ -835,14 +793,28 @@ class WPSS_Utils {
 		}
 	}
 
-	static public function is_csp_report() {
 	/**
 	 *	Check if current request is a CSP Report
 	 *	@dependencies	...
 	 *	@used by		...
 	 *	@since			1.9.9.8.2
 	 */
-		return ( 'POST' === $_SERVER['REQUEST_METHOD'] && !empty( $_SERVER['CONTENT_TYPE'] ) && 'application/csp-report' === $_SERVER['CONTENT_TYPE'] ) ? TRUE : FALSE;
+	static public function is_csp_report() {
+		return ( 'POST' === $_SERVER['REQUEST_METHOD'] && !empty( $_SERVER['CONTENT_TYPE'] ) && 'application/csp-report' === $_SERVER['CONTENT_TYPE'] );
+	}
+
+	/**
+	 *	Check if specific ini value can be changed at runtime
+	 *	Conditional alias for WP Core function 'wp_is_ini_value_changeable( $setting )'
+	 *	@dependencies	...
+	 *	@used by		WPSS_Security::security_init(), ...
+	 *	@since			1.9.9.9.2
+	 */
+	static public function is_ini_value_changeable( $setting ) {
+		if( WP_SpamShield::is_wp_ver( '4.6' ) ) {
+			return wp_is_ini_value_changeable( $setting ) ? TRUE : FALSE;
+		}
+		return TRUE;
 	}
 
 }
@@ -856,7 +828,7 @@ class WPSS_PHP extends WPSS_Utils {
 	 *  Child class of WPSS_Util
 	 *  Replacements for certain PHP functions
 	 *  Child classes: WPSS_Func, 
-	 *  @since	1.9.9.8.2
+	 *  @since			1.9.9.8.2
 	 */
 
 	function __construct() {
@@ -869,36 +841,36 @@ class WPSS_PHP extends WPSS_Utils {
 	 *  Convert case using multibyte version (superior) if available, if not, use defaults
 	 *  Replaces PHP functions strtolower(), strtoupper(), ucfirst(), ucwords()
 	 *  Usage:
-	 *  - WPSS_PHP::casetrans( 'lower', $string ); // Ver 1.9.9.8.2+
+	 *  - WPSS_PHP::casetrans( 'lower', $str ); // Ver 1.9.9.8.2+
 	 *  Replaces:
-	 *  - rs_wpss_casetrans( 'lower', $string ); // Ver 1.8.4 - 1.9.9.8.1
+	 *  - rs_wpss_casetrans( 'lower', $str ); // Ver 1.8.4 - 1.9.9.8.1
 	 *	@dependencies	...
 	 *	@used by		...
-	 *  @since		1.8.4 as rs_wpss_casetrans()
-	 *  @moved		1.9.9.8.2 to WPSS_PHP class
+	 *  @since			1.8.4 as rs_wpss_casetrans()
+	 *  @moved			1.9.9.8.2 to WPSS_PHP class
 	 */
-	static public function casetrans( $type, $string ) {
-		if( empty( $string ) || empty( $type ) || !is_string( $string ) || !is_string( $type ) ) { return $string; }
+	static public function casetrans( $type, $str ) {
+		if( empty( $str ) || empty( $type ) || !is_string( $str ) || !is_string( $type ) ) { return $str; }
 		switch( $type ) {
 			case 'upper':
-				return function_exists( 'mb_strtoupper' ) ? mb_strtoupper( $string, 'UTF-8' ) : strtoupper( $string );
+				return function_exists( 'mb_strtoupper' ) ? mb_strtoupper( $str, 'UTF-8' ) : strtoupper( $str );
 			case 'lower':
-				return function_exists( 'mb_strtolower' ) ? mb_strtolower( $string, 'UTF-8' ) : strtolower( $string );
+				return function_exists( 'mb_strtolower' ) ? mb_strtolower( $str, 'UTF-8' ) : strtolower( $str );
 			case 'ucfirst':
 				if( function_exists( 'mb_strtoupper' ) && function_exists( 'mb_substr' ) ) {
-					$strtmp = mb_strtoupper( mb_substr( $string, 0, 1, 'UTF-8' ), 'UTF-8' ) . mb_substr( $string, 1, NULL, 'UTF-8' );
+					$strtmp = mb_strtoupper( mb_substr( $str, 0, 1, 'UTF-8' ), 'UTF-8' ) . mb_substr( $str, 1, NULL, 'UTF-8' );
 					/* 1.9.5.1 - Added workaround for strange PHP bug in mb_substr() on some servers */
-					return rs_wpss_strlen( $string ) === rs_wpss_strlen( $strtmp ) ? $strtmp : ucfirst( $string );
-				} else { return ucfirst( $string ); }
+					return rs_wpss_strlen( $str ) === rs_wpss_strlen( $strtmp ) ? $strtmp : ucfirst( $str );
+				} else { return ucfirst( $str ); }
 			case 'ucwords':
-				return function_exists( 'mb_convert_case' ) ? mb_convert_case( $string, MB_CASE_TITLE, 'UTF-8' ) : ucwords( $string );
+				return function_exists( 'mb_convert_case' ) ? mb_convert_case( $str, MB_CASE_TITLE, 'UTF-8' ) : ucwords( $str );
 				/**
 				 *  Note differences in results between ucwords() and this.
 				 *  ucwords() will capitalize first characters without altering other characters, whereas this will lowercase everything, but capitalize the first character of each word.
 				 *  This works better for our purposes, but be aware of differences.
 				 */
 			default:
-				return $string;
+				return $str;
 		}
 	}
 
@@ -911,7 +883,11 @@ class WPSS_PHP extends WPSS_Utils {
 	 *  @since			1.9.9.8.8
 	 *  @reference		http://php.net/manual/en/function.chmod.php
 	 */
-	static public function chmod( $file, $mode ) {
+	static public function chmod( $file, $mode, $check_exists = FALSE ) {
+		if( TRUE === $check_exists ) {
+			@clearstatcache;
+			if( ! file_exists( $file ) ) { return; }
+		}
 		@chmod( $file, octdec( $mode ) );
 	}
 
@@ -944,6 +920,21 @@ class WPSS_PHP extends WPSS_Utils {
 		return ( function_exists( 'wp_json_encode' ) && self::is_wp_ver('4.1') ) ? wp_json_encode( $data, $options, $depth ) : json_encode( $data, $options );
 	}
 
+	/**
+	 *  Use this function instead of in_array() as it's *much* faster.
+	 *  Equivalent of 'in_array( $needle, $haystack, TRUE )' ($strict = TRUE)
+	 *  @dependencies	...
+	 *  @used by		...
+	 *  @since			1.9.9.9.1
+	 *  @reference		http://php.net/manual/en/function.in-array.php
+	 *  @param			string	$needle
+	 *  @param			array	$haystack
+	 */
+	static public function in_array( $needle, $haystack ) {
+		$haystack_flip = array_flip( $haystack );
+		return ( isset( $haystack_flip[$needle] ) );
+	}
+
 }
 
 
@@ -965,7 +956,7 @@ class WPSS_Func extends WPSS_PHP {
 	}
 
 	/**
-	 *  Alias of WPSS_PHP::casetrans( 'lower', $string )
+	 *  Alias of WPSS_PHP::casetrans( 'lower', $str )
 	 *  Replaces PHP function strtolower()
 	 *  @dependencies	WPSS_PHP::casetrans()
 	 *  @used by		...
@@ -977,7 +968,7 @@ class WPSS_Func extends WPSS_PHP {
 	}
 
 	/**
-	 *  Alias of WPSS_PHP::casetrans( 'upper', $string )
+	 *  Alias of WPSS_PHP::casetrans( 'upper', $str )
 	 *  Replaces PHP function strtoupper()
 	 *  @dependencies	WPSS_PHP::casetrans()
 	 *  @used by		...
@@ -989,7 +980,7 @@ class WPSS_Func extends WPSS_PHP {
 	}
 
 	/**
-	 *  Alias of WPSS_PHP::casetrans( 'upper', $string )
+	 *  Alias of WPSS_PHP::casetrans( 'upper', $str )
 	 *  Replaces PHP function ucfirst()
 	 *  @dependencies	WPSS_PHP::casetrans()
 	 *  @used by		...
@@ -1001,7 +992,7 @@ class WPSS_Func extends WPSS_PHP {
 	}
 
 	/**
-	 *  Alias of WPSS_PHP::casetrans( 'upper', $string )
+	 *  Alias of WPSS_PHP::casetrans( 'upper', $str )
 	 *  Replaces PHP function ucwords()
 	 *  @dependencies	WPSS_PHP::casetrans()
 	 *  @used by		...

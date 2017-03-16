@@ -1,19 +1,20 @@
 <?php
 /**
  *  WP-SpamShield Security
- *  File Version 1.9.9.9
+ *  File Version 1.9.9.9.1
  */
 
+/* Make sure file remains secure if called directly */
 if( !defined( 'ABSPATH' ) || !defined( 'WPSS_VERSION' ) ) {
 	if( !headers_sent() ) { @header( $_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', TRUE, 403 ); @header( 'X-Robots-Tag: noindex', TRUE ); }
 	die( 'ERROR: Direct access to this file is not allowed.' );
 }
+/* Prevents unintentional error display if WP_DEBUG not enabled. */
+if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); }
 
-if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); } /* Prevents error display, but will display errors if WP_DEBUG turned on. */
 
 
-
-class WPSS_Security {
+class WPSS_Security extends WP_SpamShield {
 
 	/**
 	 *  WP-SpamShield Security Class
@@ -40,7 +41,7 @@ class WPSS_Security {
 		$plug_url	= WPSS_PLUGINS_DIR_URL.'/';
 		$post_count	= count( $_POST );
 		$user_agent = rs_wpss_get_user_agent();
-		$req_url	= rs_wpss_casetrans( 'lower', WPSS_THIS_URL );
+		$req_url	= WPSS_Func::lower( WPSS_THIS_URL );
 		$req_ajax	= rs_wpss_is_ajax_request();
 		$req_404	= rs_wpss_is_404( TRUE ); /* Not all WP sites return proper 404 status. The fact this security check even got activated means it was a 404. */
 		$req_hal	= rs_wpss_get_http_accept( TRUE, TRUE, TRUE );
@@ -56,7 +57,7 @@ class WPSS_Security {
 		$rgx_sig_arr = array( '-e*5l?*B-@yZ_-,8_-lSZ98BC[', '+25-Z9dCZ,87C-7CBlSZ=-C[', 'q-e*5lq?*B-@yZ_-,8_-l', );
 
 		foreach( $_POST as $k => $v ) {
-			$v = rs_wpss_casetrans( 'lower', $v );
+			$v = WPSS_Func::lower( $v );
 			foreach( $rgx_sig_arr as $i => $s ) { /* Switch to single preg_match as this expands, replace nested foreach() */
 				$sd = rs_wpss_rbkmd( $s, 'de' );
 				if( FALSE !== strpos( $v, $sd ) ) { $_SERVER['WPSS_SEC_THREAT'] = TRUE; return TRUE; }
@@ -254,7 +255,6 @@ class WPSS_Security {
 		}
 		return FALSE;
 	}
-
 
 	/**
 	 *  Ban users by IP address or check if they have been banned

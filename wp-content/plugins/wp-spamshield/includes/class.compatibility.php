@@ -1,30 +1,31 @@
 <?php
 /**
  *  WP-SpamShield Compatibility
- *  File Version 1.9.9.8.8
+ *  File Version 1.9.9.9.1
  */
 
+/* Make sure file remains secure if called directly */
 if( !defined( 'ABSPATH' ) || !defined( 'WPSS_VERSION' ) ) {
-	if( !headers_sent() ) { @header($_SERVER['SERVER_PROTOCOL'].' 403 Forbidden',TRUE,403); @header('X-Robots-Tag: noindex',TRUE); }
+	if( !headers_sent() ) { @header( $_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', TRUE, 403 ); @header( 'X-Robots-Tag: noindex', TRUE ); }
 	die( 'ERROR: Direct access to this file is not allowed.' );
 }
+/* Prevents unintentional error display if WP_DEBUG not enabled. */
+if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); }
 
-if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); } /* Prevents error display, but will display errors if WP_DEBUG turned on. */
 
 
-
-class WPSS_Compatibility {
+class WPSS_Compatibility extends WP_SpamShield {
 
 	/**
-	 *  WP-SpamShield Compatibility Class
-	 *  Plugin detection
-	 *  Compatibility deconfliction for some of the plugins listed in the Known Issues and Plugin Conflicts ( http://www.redsandmarketing.com/plugins/wp-spamshield/known-conflicts/ )
-	 *  Where possible, apply compatibility fixes or workarounds
+	 *	WP-SpamShield Compatibility Class
+	 *	Plugin detection
+	 *	Compatibility deconfliction for some of the plugins listed in the Known Issues and Plugin Conflicts ( http://www.redsandmarketing.com/plugins/wp-spamshield/known-conflicts/ )
+	 *	Where possible, apply compatibility fixes or workarounds
 	 */
 
 	function __construct() {
 		/**
-		 *  Do nothing...for now
+		 *	Do nothing...for now
 		 */
 	}
 
@@ -66,13 +67,21 @@ class WPSS_Compatibility {
 		return FALSE;
 	}
 
+	/**
+	 *	Add plugins to PHP Compatibility Checker Plugin whitelist to prevent false positives
+	 *	All our plugins are fully PHP 7+ compatible
+	 *	@dependencies	...
+	 *	@since			1.9.9.8.2
+	 */
 	static public function php_compat( $ignored = array() ) {
-		/**
-		 *	Add plugin to whitelist for PHP Compatibility Checker Plugin
-		 *	@since 1.9.9.8.2
-		 */
-		if( empty( $ignored ) || !is_array( $ignored ) ) { return $ignored; }
-		$ignored['*/'.WPSS_PLUGIN_NAME.'/*'] = WPSS_PHP_TEST_MAX;
+		if( !is_array( $ignored ) ) { return $ignored; }
+		$rsmg_plugins = array( 'rs-feedburner', 'rs-head-cleaner', 'rs-head-cleaner-lite', 'rs-nofollow-blogroll', 'rs-system-diagnostic', 'scrapebreaker', 'wp-spamshield' );
+		foreach( $rsmg_plugins as $i => $p ) {
+			$plugin = '*/'.$p.'/*';
+			if( !in_array( $plugin, $ignored ) ) {
+				$ignored[] = $plugin;
+			}
+		}
 		return $ignored;
 	}
 
@@ -180,59 +189,75 @@ class WPSS_Compatibility {
 		update_option( 'PO_plugin_order', array() );
 	}
 
+	/**
+	 *	Comment Form Compatibility
+	 *	@dependencies	...
+	 *	@since			...
+	 */
 	static public function comment_form() {
-		/**
-		 *  Comment Form Compatibility
-		 */
-
 		if( rs_wpss_is_admin_sproc() ) { return; }
 
 		/* Vantage Theme by Appthemes ( https://www.appthemes.com/themes/vantage/ ) */
-		global $wpss_theme_vantage; if( !empty( $wpss_theme_vantage ) ) { return TRUE; } elseif( defined( 'APP_FRAMEWORK_DIR_NAME' ) && defined( 'VA_VERSION' ) ) { $wpss_theme_vantage = TRUE; return TRUE; }
-		else {
-			$wpss_theme = wp_get_theme();
-			if( !empty( $wpss_theme ) && is_object( $wpss_theme ) ) {
-				$theme_name = $wpss_theme->get( 'Name' );
-				$theme_author = $wpss_theme->get( 'Author' );
-				if( 'Vantage' === $theme_name && 'AppThemes' === $theme_author ) { $wpss_theme_vantage = TRUE; return TRUE; }
+		global $wpss_theme_vantage;
+		if( !empty( $wpss_theme_vantage ) || ( defined( 'APP_FRAMEWORK_DIR_NAME' ) && defined( 'VA_VERSION' ) ) ) {
+			$wpss_theme_vantage = TRUE;
+			return TRUE;
+		} else {
+			$theme				= wp_get_theme();
+			if( !empty( $theme ) && is_object( $theme ) ) {
+				$theme_name		= $theme->get( 'Name' );
+				$theme_author	= $theme->get( 'Author' );
+				if( 'Vantage' === $theme_name && 'AppThemes' === $theme_author ) {
+					$wpss_theme_vantage = TRUE;
+					return TRUE;
+				}
 			}
 		}
 
-		/* Add next here... */
+		/* Add next plugin here... */
 
 		return FALSE;
 	}
 
+	/**
+	 *	Footer JS Compatibility
+	 *	@dependencies	...
+	 *	@since			...
+	 */
 	static public function footer_js() {
-		/**
-		 *  Footer JS Compatibility
-		 */
-
 		if( rs_wpss_is_admin_sproc() ) { return; }
-
 		$js = '';
 
 		/* Vantage Theme by Appthemes ( https://www.appthemes.com/themes/vantage/ ) */
 		global $wpss_theme_vantage;
 		$v_js = ', #add-review-form';
-		if( !empty( $wpss_theme_vantage ) ) { $wpss_theme_vantage = TRUE; $js .= $v_js; }
-		elseif( defined( 'APP_FRAMEWORK_DIR_NAME' ) && defined( 'VA_VERSION' ) ) { $wpss_theme_vantage = TRUE; $js .= $v_js; }
-		else {
-			$wpss_theme = wp_get_theme();
-			$theme_name = $wpss_theme->get( 'Name' );
-			$theme_author = $wpss_theme->get( 'Author' );
-			if( 'Vantage' === $theme_name && 'AppThemes' === $theme_author ) { $wpss_theme_vantage = TRUE; $js .= $v_js; }
+		if( !empty( $wpss_theme_vantage ) || ( defined( 'APP_FRAMEWORK_DIR_NAME' ) && defined( 'VA_VERSION' ) ) ) {
+			$wpss_theme_vantage = TRUE;
+			$js .= $v_js;
+		} else {
+			$theme				= wp_get_theme();
+			if( !empty( $theme ) && is_object( $theme ) ) {
+				$theme_name		= $theme->get( 'Name' );
+				$theme_author	= $theme->get( 'Author' );
+				if( 'Vantage' === $theme_name && 'AppThemes' === $theme_author ) {
+					$wpss_theme_vantage = TRUE;
+					$js .= $v_js;
+				}
+			}
 		}
 
-		/* Add next here... */
+		/* Add next plugin here... */
 
 		return $js;
 	}
 
+	/**
+	 *	Miscellaneous Form Spam Check Bypass
+	 *	Check if Anti-Spam for Miscellaneous Forms should be bypassed
+	 *	@dependencies	...
+	 *	@since			...
+	 */
 	static public function misc_form_bypass() {
-		/**
-		 *  Miscellaneous Form Spam Check Bypass
-		 */
 
 		/* Setup necessary variables */
 		$url		= WPSS_THIS_URL;
@@ -256,8 +281,8 @@ class WPSS_Compatibility {
 		if( defined( 'WPRP_PLUGIN_SLUG' ) && !empty( $_POST['wpr_verify_key'] ) && WP_SpamShield::preg_match( "~\ WP\-Remote$~", $user_agent ) && WP_SpamShield::preg_match( "~\.amazonaws\.com$~", $rev_dns ) ) { return TRUE; }
 
 		/* Ecommerce Plugins */
-		if( ( rs_wpss_is_https() || !empty( $_POST['add-to-cart'] ) || !empty( $_POST['add_to_cart'] ) || !empty( $_POST['addtocart'] ) || !empty( $_POST['product-id'] ) || !empty( $_POST['product_id'] ) || !empty( $_POST['productid'] ) || ( $user_agent === 'PayPal IPN ( https://www.paypal.com/ipn )' && WP_SpamShield::preg_match( "~(^|\.)paypal\.com$~", $rev_dns ) && $fcrdns === '[Verified]' ) ) && self::is_ecom_enabled() ) { return TRUE; }
-		if( ( rs_wpss_is_https() || self::is_ecom_enabled() ) && $fcrdns === '[Verified]' ) {
+		if( ( WP_SpamShield::is_https() || !empty( $_POST['add-to-cart'] ) || !empty( $_POST['add_to_cart'] ) || !empty( $_POST['addtocart'] ) || !empty( $_POST['product-id'] ) || !empty( $_POST['product_id'] ) || !empty( $_POST['productid'] ) || ( $user_agent === 'PayPal IPN ( https://www.paypal.com/ipn )' && WP_SpamShield::preg_match( "~(^|\.)paypal\.com$~", $rev_dns ) && $fcrdns === '[Verified]' ) ) && self::is_ecom_enabled() ) { return TRUE; }
+		if( ( WP_SpamShield::is_https() || self::is_ecom_enabled() ) && $fcrdns === '[Verified]' ) {
 			/* PayPal, Stripe, Authorize.net, Worldpay, etc */
 			if(
 				( $user_agent === 'PayPal IPN ( https://www.paypal.com/ipn )' && WP_SpamShield::preg_match( "~(^|\.)paypal\.com$~", $rev_dns ) ) ||
@@ -266,13 +291,18 @@ class WPSS_Compatibility {
 			) { return TRUE; }
 		}
 
-		/* WooCommerce Payment Gateways */
+		/* WooCommerce Payment Gateways / Endpoints */
 		if( self::is_woocom_enabled() ) {
 			if( ( $user_agent === 'PayPal IPN ( https://www.paypal.com/ipn )' && WP_SpamShield::preg_match( "~^(ipn|ipnpb|notify|reports)(\.sandbox)?\.paypal\.com$~", $rev_dns ) ) || strpos( $req_uri, 'WC_Gateway_Paypal' ) !== FALSE ) { return TRUE; }
-			if( WP_SpamShield::preg_match( "~(^|\.)payfast\.co\.za$~", $rev_dns ) || ( strpos( $req_uri, 'wc-api' ) !== FALSE && strpos( $req_uri, 'WC_Gateway_PayFast' ) !== FALSE ) ) { return TRUE; }
 			/* Plugin: 'woocommerce-gateway-payfast/gateway-payfast.php' */
-			if( WP_SpamShield::preg_match( "~((\?|\&)wc\-api\=WC_(Addons_)?Gateway_|/wc\-api/.*WC_(Addons_)?Gateway_)~", $req_uri ) ) { return TRUE; }
+			if( WP_SpamShield::preg_match( "~(^|\.)payfast\.co\.za$~", $rev_dns ) || ( strpos( $req_uri, 'wc-api' ) !== FALSE && strpos( $req_uri, 'WC_Gateway_PayFast' ) !== FALSE ) ) { return TRUE; }
 			/* $wc_gateways = array( 'WC_Gateway_BACS', 'WC_Gateway_Cheque', 'WC_Gateway_COD', 'WC_Gateway_Paypal', 'WC_Addons_Gateway_Simplify_Commerce', 'WC_Gateway_Simplify_Commerce' ); */
+			if( WP_SpamShield::preg_match( "~((\?|\&)wc\-api\=WC_(Addons_)?Gateway_|/wc\-api/.*WC_(Addons_)?Gateway_)~", $req_uri ) ) { return TRUE; }
+			/* See: woocommerce/includes/wc-conditional-functions.php */
+			$wc_funcs = array( 'is_wc_endpoint_url', 'is_shop', 'is_product_taxonomy', 'is_product', 'is_cart', 'is_checkout', );
+			foreach( $wc_funcs as $i => $f ) {
+				if( function_exists( $f ) && (bool) @$f() ) { return TRUE; }
+			}
 		}
 
 		/* Easy Digital Downloads Payment Gateways */
@@ -331,23 +361,25 @@ class WPSS_Compatibility {
 		return FALSE;
 	}
 
+	/**
+	 *	Detect if site is ecommerce (store), or using an ecommerce plugin
+	 *	@dependencies	...
+	 *	@since			...
+	 */
 	static public function is_ecom_enabled() {
-		/**
-		 *  Detect if ecommerce is enabled
-		 */
 		global $wpss_ecom_enabled,$wpss_woocom_enabled;
 		if( !empty( $wpss_ecom_enabled ) || !empty( $wpss_woocom_enabled ) ) { $wpss_ecom_enabled = TRUE; return TRUE; }
 		/**
-		 *  Users can manually to TRUE in wp-config.php (For example, if user has a custom or unknown ecommerce package)
-		 *  Plugin Developers can use WP-SpamShield filter hook 'wpss_misc_form_spam_check_bypass'
+		 *	Users can manually set to TRUE in wp-config.php (For example, if user has a custom or unknown ecommerce package)
+		 *	Plugin Developers can use WP-SpamShield filter hook 'wpss_misc_form_spam_check_bypass'
 		 */
-		if( defined('WPSS_CUSTOM_ECOM') && WPSS_CUSTOM_ECOM ) { $wpss_ecom_enabled = TRUE; return TRUE; }
+		if( defined( 'WPSS_CUSTOM_ECOM' ) && WPSS_CUSTOM_ECOM ) { $wpss_ecom_enabled = TRUE; return TRUE; }
 		/**
-		 *  Detect popular e-commerce plugins
+		 *	Detect popular e-commerce plugins
 		 */
 		$ecom_plug_constants = array(
 			'AFFILIATES_CORE_VERSION', 'AL_BASE_PATH', 'CFCORE_VER', 'EC_CURRENT_VERSION', 'ECWID_PLUGIN_DIR', 'EDD_VERSION', 'EME_DB_VERSION', 'ESHOP_VERSION', 'GF_AUTHORIZENET_VERSION', 'GF_PAYFAST_VERSION', 'GF_PAYPAL_VERSION', 'GF_STRIPE_VERSION', 'GFP_STRIPE_FILE', 'GIVE_VERSION', 'JIGOSHOP_VERSION', 'MEPR_VERSION', 'MP_LITE', 'PMPRO_VERSION', 'SIMPAY_VERSION', 'SIMPLE_WP_MEMBERSHIP_VER', 'UPCP_CD_PLUGIN_PATH', 'USCES_VERSION', 'WC_PP_PRO_ADDON_VERSION', 'wcv_plugin_dir', 'WOOCOMMERCE_VERSION', 'WC_VERSION', 'WP_CART_VERSION', 'WPDM_Version', 'WPPIZZA_VERSION', 'WPSC_VERSION', 'WPSHOP_DIR', 'WS_PLUGIN__S2MEMBER_VERSION', 'WUSPSC_VERSION', 'xoousers_url', 'uultraxoousers_pro_url', 'YITH_WCSTRIPE_VERSION',
-			);
+		);
 		foreach( $ecom_plug_constants as $k => $p ) { if( defined( $p ) ) { $wpss_ecom_enabled = TRUE; return TRUE; } }
 		$ecom_plug_classes = array(
 			'Easy_Digital_Downloads', 'eCommerce_Product_Catalog', 'GF_AuthorizeNet_Bootstrap', 'GF_PayFast_Bootstrap', 'GF_PayPal_Bootstrap', 'GF_Stripe_Bootstrap', 'Give', 'IT_Exchange', 'MarketPress', 'ShoppLoader', 'WC_Paypal_Pro_Gateway_Addon', 'WC_Vendors', 'WooCommerce', 'WP_eCommerce',
@@ -358,46 +390,51 @@ class WPSS_Compatibility {
 		);
 		foreach( $ecom_plugs as $k => $p ) { if( self::is_plugin_active( $p ) ) { $wpss_ecom_enabled = TRUE; return TRUE; } }
 		/**
-		 *  $ecom_plug_str = array();
-		 *  $ecom_plug_regex = array();
+		 *	$ecom_plug_str = array();
+		 *	$ecom_plug_rgx = array();
 		 */
 		return FALSE;
 	}
 
+	/**
+	 *	Detect WooCommerce plugin
+	 *	@dependencies	...
+	 *	@since			...
+	 */
 	static public function is_woocom_enabled() {
-		/**
-		 *  Detect WooCommerce plugin
-		 */
 		global $wpss_ecom_enabled,$wpss_woocom_enabled;
 		if( !empty( $wpss_woocom_enabled ) ) { $wpss_ecom_enabled = TRUE; return TRUE; }
-		$ecom_plug_constants = array( 'WC_VERSION', 'WOOCOMMERCE_VERSION' );
-		foreach( $ecom_plug_constants as $k => $p ) { if( defined( $p ) ) { $wpss_ecom_enabled = TRUE; $wpss_woocom_enabled = TRUE; return TRUE; } }
+		$wc_plug_constants = array( 'WC_VERSION', 'WOOCOMMERCE_VERSION' );
+		foreach( $wc_plug_constants as $k => $p ) { if( defined( $p ) ) { $wpss_ecom_enabled = $wpss_woocom_enabled = TRUE; return TRUE; } }
 		$ecom_plugs = array( 'woocommerce/woocommerce.php' );
-		foreach( $ecom_plugs as $k => $p ) { if( self::is_plugin_active( $p ) ) { $wpss_ecom_enabled = TRUE; $wpss_woocom_enabled = TRUE; return TRUE; } }
+		foreach( $ecom_plugs as $k => $p ) { if( self::is_plugin_active( $p ) ) { $wpss_ecom_enabled = $wpss_woocom_enabled = TRUE; return TRUE; } }
 		return FALSE;
 	}
 
+	/**
+	 *	Detect if conflicting page builder plugins are active
+	 *	@dependencies	...
+	 *	@since			...
+	 */
 	static public function is_builder_active() {
-		/**
-		 *  Detect if conflicting page builder plugins are active
-		 */
 		global $wpss_builder_active; if( !empty( $wpss_builder_active ) ) { return TRUE; }
 		$builder_plugs = array( 'beaver-builder-lite-version/fl-builder.php', 'bb-plugin/fl-builder.php' );
 		foreach( $builder_plugs as $k => $p ) {
 			if( self::is_plugin_active( $p ) ) {
-				if( class_exists( 'FLBuilderModel' ) && FLBuilderModel::is_builder_active() ) { $wpss_builder_active = TRUE; return TRUE; }
+				if( method_exists( 'FLBuilderModel', 'is_builder_active' ) && FLBuilderModel::is_builder_active() ) { $wpss_builder_active = TRUE; return TRUE; }
 			}
 		}
 		return FALSE;
 	}
 
+	/**
+	 *	Check for Surrogates
+	 *	- Server Caching, Reverse Poxies, WAFS: Varnish, Cloudflare (Rocket Loader), Sucuri WAF, Incapsula, etc.
+	 *	- Specific web hosts that use Varnish: WP Engine, Dreamhost, SiteGround, Bluehost, GoDaddy...
+	 *	@dependencies	WPSS_Utils::get_ip_dns_params(), WPSS_Utils::get_web_host(), WP_SpamShield::update_option(), WP_SpamShield::is_varnish_active()(), WP_SpamShield::get_option(), ...
+	 *	@since			1.9.9.5
+	 */
 	static public function is_surrogate() {
-		/**
-		 *  Check for Surrogates
-		 *  - Server Caching, Reverse Poxies, WAFS: Varnish, Cloudflare (Rocket Loader), Sucuri WAF, Incapsula, etc.
-		 *	- Specific web hosts that use Varnish: WP Engine, Dreamhost, SiteGround, Bluehost, GoDaddy...
-		 *  @since 1.9.9.5
-		 */
 		global $wpss_surrogate; if( isset( $wpss_surrogate ) && is_bool( $wpss_surrogate ) ) { return TRUE; }
 		$wpss_surrogate = FALSE; $web_host = WPSS_Utils::get_web_host( WPSS_Utils::get_ip_dns_params() );
 		if( !empty( $web_host ) && ( $web_host === 'WP Engine' || $web_host === 'Dreamhost' || $web_host === 'SiteGround' || $web_host === 'Bluehost'  || $web_host === 'GoDaddy' ) ) { $wpss_surrogate = TRUE; WP_SpamShield::update_option( array( 'surrogate' => $wpss_surrogate ) ); return TRUE; }
@@ -408,11 +445,12 @@ class WPSS_Compatibility {
 		return $wpss_surrogate;
 	}
 
+	/**
+	 *	Varnish detection
+	 *	@dependencies	WP_SpamShield::update_option(), WP_SpamShield::is_plugin_active(), 
+	 *	@since			1.9.9.5
+	 */
 	static public function is_varnish_active() {
-		/**
-		 *  Varnish detection
-		 *  @since 1.9.9.5
-		 */
 		global $wpss_varnish_active,$wpss_surrogate,$_WPSS_ENV; if( isset( $wpss_varnish_active ) && is_bool( $wpss_varnish_active ) ) { $wpss_surrogate = TRUE; return TRUE; }
 		if( function_exists( 'get_loaded_extensions' ) ) { $ext_loaded = @get_loaded_extensions(); }
 		$ext_loaded	= ( !empty( $ext_loaded ) && is_array( $ext_loaded ) ) ? $ext_loaded : array();

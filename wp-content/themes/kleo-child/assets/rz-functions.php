@@ -61,5 +61,39 @@ function rc_remove_hooks() {
 
 }
 
+/*
+BuddyPress Group Email Subscription v 3.7.0 is not querying activity_comment properly.
+Add item_id to the list of arguments of activity_obj to create a proper link
+ */
+add_filter( 'bp_activity_get_permalink', 'rc_fix_group_email_notifications_links', 10, 2);
+function rc_fix_group_email_notifications_links( $link, $activity_obj ) {
+
+  if( ( 'activity_comment' != $activity_obj->type ) || !empty( $activity_obj->item_id ) ) return $link;
+
+  // send it again to the function and let it populate the object
+  $link = bp_activity_get_permalink( $activity_obj->id );
+
+  return $link;
+
+}
+
+/*
+[TAIGA-107] removes selection from previously invited users
+*/
+// add_action('wp_footer', 'rc_deselect_users_invite', 99);
+function rc_deselect_users_invite() {
+?>
+  <script>
+
+    if( jQuery('body.invite-anyone').length ) {
+      jQuery('#invite-anyone-member-list').ready(function() {
+        jQuery('#invite-anyone-member-list input[name="friends[]"]').prop('checked', false);
+      });
+    };
+
+  </script>
+<?php
+}
+
 //debug Filters
-// add_action('wp', function(){ echo '<pre>'; print_r( $GLOBALS['wp_filter']['bp_get_activity_content_body'] ); echo '</pre>'; exit; } );
+// add_action('wp', function(){ echo '<pre>'; print_r( $GLOBALS['wp_filter']['wc_autoship_notify_10day'] ); echo '</pre>'; exit; } );

@@ -404,6 +404,10 @@ add_action( 'wp_head', 'invite_anyone_access_test' );
 function invite_anyone_catch_send() {
 	global $bp;
 
+	if ( ! is_user_logged_in() || ! bp_is_my_profile() ) {
+		return;
+	}
+
 	if ( ! bp_is_current_component( $bp->invite_anyone->slug ) ) {
 		return;
 	}
@@ -422,7 +426,7 @@ function invite_anyone_catch_send() {
 
 	bp_core_redirect( bp_displayed_user_domain() . $bp->invite_anyone->slug . '/sent-invites' );
 }
-add_action( 'wp', 'invite_anyone_catch_send' );
+add_action( 'bp_actions', 'invite_anyone_catch_send' );
 
 function invite_anyone_catch_clear() {
 	global $bp;
@@ -921,7 +925,7 @@ function invite_anyone_invitation_message( $returned_message = false ) {
 	global $bp;
 
 	if ( !$returned_message ) {
-		$inviter_name = $bp->loggedin_user->userdata->display_name;
+		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
 		$blogname = get_bloginfo('name');
 
 		$iaoptions = invite_anyone_options();
@@ -965,7 +969,7 @@ function invite_anyone_process_footer( $email ) {
 function invite_anyone_wildcard_replace( $text, $email = false ) {
 	global $bp;
 
-	$inviter_name = $bp->loggedin_user->userdata->display_name;
+	$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
 	$site_name    = get_bloginfo( 'name' );
 	$inviter_url  = bp_loggedin_user_domain();
 
@@ -1104,6 +1108,8 @@ function invite_anyone_parse_addresses( $address_string ) {
 function invite_anyone_process_invitations( $data ) {
 	global $bp;
 
+	$options = invite_anyone_options();
+
 	$emails = false;
 	// Parse out the individual email addresses
 	if ( !empty( $data['invite_anyone_email_addresses'] ) ) {
@@ -1117,14 +1123,26 @@ function invite_anyone_process_invitations( $data ) {
 	$returned_data = array(
 		'error_message' => false,
 		'error_emails'  => array(),
-		'subject' 	=> $data['invite_anyone_custom_subject'],
-		'message' 	=> $data['invite_anyone_custom_message'],
 		'groups' 	=> isset( $data['invite_anyone_groups'] ) ? $data['invite_anyone_groups'] : ''
 	);
 
-	// Check against the max number of invites. Send back right away if there are too many
-	$options 	= invite_anyone_options();
-	$max_invites 	= !empty( $options['max_invites'] ) ? $options['max_invites'] : 5;
+	if ( 'yes' === $options['subject_is_customizable'] ) {
+		$data['invite_anyone_custom_subject'] = $data['invite_anyone_custom_subject'];
+	} else {
+		$data['invite_anyone_custom_subject'] = invite_anyone_invitation_subject();
+	}
+
+	if ( 'yes' === $options['message_is_customizable'] ) {
+		$data['invite_anyone_custom_message'] = $data['invite_anyone_custom_message'];
+	} else {
+		$data['invite_anyone_custom_message'] = invite_anyone_invitation_message();
+	}
+
+	$returned_data['subject'] = $data['invite_anyone_custom_subject'];
+	$returned_data['message'] = $data['invite_anyone_custom_message'];
+
+	// Check against the max number of invites. Send back right away if there are too many.
+	$max_invites = ! empty( $options['max_invites'] ) ? $options['max_invites'] : 5;
 
 	if ( count( $emails ) > $max_invites ) {
 
