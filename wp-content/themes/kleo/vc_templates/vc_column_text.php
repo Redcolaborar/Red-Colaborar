@@ -64,20 +64,20 @@ $text_data = '';
 if ( $responsive_font == 'yes' ) {
 	$text_id = uniqid();
 	$text_css = '';
-	$text_el = '[data-uid="'. $text_id .'"]';
+	$text_el = '[data-uid="' . $text_id . '"]';
 
 	if ( $font_size_xs != '' || $line_height_xs != '' ) {
 		$text_css .= '@media (max-width: 767px) { ' .
 		             $text_el . '{';
 
 		if ($font_size_xs != '') {
-			$text_css .= 'font-size: '. kleo_set_default_unit( $font_size_xs ). ' !important;';
+			$text_css .= 'font-size: ' . kleo_set_default_unit( $font_size_xs ) . ' !important;';
 		}
 
 		if ( $line_height_xs != '' ) {
-			$text_css .= 'line-height: '. kleo_set_default_unit( $line_height_xs ). ' !important;';
+			$text_css .= 'line-height: ' . kleo_set_default_unit( $line_height_xs ) . ' !important;';
 		}
-		$text_css .=  '} }';
+		$text_css .= '} }';
 	}
 
 	if ( $font_size_sm != '' || $line_height_sm != '' ) {
@@ -85,27 +85,27 @@ if ( $responsive_font == 'yes' ) {
 		             $text_el . '{';
 
 		if ($font_size_sm != '') {
-			$text_css .= 'font-size: '. kleo_set_default_unit( $font_size_sm ). ' !important;';
+			$text_css .= 'font-size: ' . kleo_set_default_unit( $font_size_sm ) . ' !important;';
 		}
 
 		if ( $line_height_sm != '' ) {
-			$text_css .= 'line-height: '. kleo_set_default_unit( $line_height_sm ). ' !important;';
+			$text_css .= 'line-height: ' . kleo_set_default_unit( $line_height_sm ) . ' !important;';
 		}
-		$text_css .=  '} }';
+		$text_css .= '} }';
 	}
 
 	if ( $font_size_md != '' || $line_height_md != '' ) {
 		$text_css .= '@media (min-width: 992px) and (max-width: 1199px) { ' .
 		             $text_el . '{';
 
-		if ($font_size_md != '') {
-			$text_css .= 'font-size: '. kleo_set_default_unit( $font_size_md ). ' !important;';
+		if ( $font_size_md != '' ) {
+			$text_css .= 'font-size: ' . kleo_set_default_unit( $font_size_md ) . ' !important;';
 		}
 
 		if ( $line_height_md != '' ) {
-			$text_css .= 'line-height: '. kleo_set_default_unit( $line_height_md ). ' !important;';
+			$text_css .= 'line-height: ' . kleo_set_default_unit( $line_height_md ) . ' !important;';
 		}
-		$text_css .=  '} }';
+		$text_css .= '} }';
 	}
 
 	$text_data = ' data-uid="' . $text_id . '"';

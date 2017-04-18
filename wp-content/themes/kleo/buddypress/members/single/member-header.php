@@ -27,16 +27,16 @@ do_action( 'bp_before_member_header' ); ?>
   <?php do_action('bp_member_online_status', bp_displayed_user_id()); ?>
 </div><!-- #item-header-avatar -->
 
-<div id="item-header-content" <?php if (isset($_COOKIE['bp-profile-header']) && $_COOKIE['bp-profile-header'] == 'small') {echo 'style="display:none;"';} ?>>
+<div id="item-header-content">
 
 	<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) : ?>
-		<h4 class="user-nicename">@<?php bp_displayed_user_mentionname(); ?></h4>
+		<h4 class="user-nicename hover-tip click-tip" data-toggle="tooltip" data-container="body" data-title="<?php bp_last_activity( bp_displayed_user_id() ); ?>" data-placement="bottom">@<?php bp_displayed_user_mentionname(); ?></h4>
 	<?php endif; ?>
 
-	<?php if(function_exists( 'bp_core_iso8601_date' )) : ?>
-		<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_user_last_activity( bp_displayed_user_id() ) ); ?>"><?php bp_last_activity( bp_displayed_user_id() ); ?></span>
-	<?php else: ?>
-		<span class="activity"><?php bp_last_activity( bp_displayed_user_id() ); ?></span>
+	<?php if ( function_exists( 'bp_core_iso8601_date' ) ) : ?>
+		<!--<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_user_last_activity( bp_displayed_user_id() ) ); ?>"><?php bp_last_activity( bp_displayed_user_id() ); ?></span> -->
+	<?php else : ?>
+	<!--<span class="activity"><?php bp_last_activity( bp_displayed_user_id() ); ?></span> -->
 	<?php endif; ?>
 
 	<?php
@@ -60,18 +60,14 @@ do_action( 'bp_before_member_header' ); ?>
 
 		<?php endif; ?>
 
-		<div id="item-buttons">
-
-			<?php
+		<div id="item-buttons"><?php
 
 			/**
 			 * Fires in the member header actions section.
 			 *
 			 * @since 1.2.6
 			 */
-			do_action( 'bp_member_header_actions' ); ?>
-
-		</div><!-- #item-buttons -->
+			do_action( 'bp_member_header_actions' ); ?></div><!-- #item-buttons -->
 
 		<?php
 

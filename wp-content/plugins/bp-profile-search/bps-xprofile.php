@@ -1,6 +1,6 @@
 <?php
 
-add_filter ('bps_fields_setup', 'bps_xprofile_setup');
+add_filter ('bps_fields', 'bps_xprofile_setup');
 function bps_xprofile_setup ($fields)
 {
 	global $group, $field;
@@ -42,7 +42,7 @@ function bps_xprofile_setup ($fields)
 				$f->display = bps_displayXsearch_form ($f);
 				$f->search = 'bps_xprofile_search';
 
-				if ($field->type != 'checkbox' && $field->type != 'multiselectbox')
+				if ($f->format != 'serialized')
 				{
 					$f->sort_directory = 'bps_xprofile_sort_directory';
 					$f->get_value = 'bps_xprofile_get_value';
@@ -204,22 +204,18 @@ function bps_xprofile_format ($type, $field_id)
 	return in_array ($format, $formats)? $format: $default;
 }
 
-function bps_xprofile_options ($id)
+function bps_xprofile_options ($field_id)
 {
-	static $options = array ();
-
-	if (isset ($options[$id]))  return $options[$id];
-
-	$field = new BP_XProfile_Field ($id);
+	$field = new BP_XProfile_Field ($field_id);
 	if (empty ($field->id))  return array ();
 
-	$options[$id] = array ();
+	$options = array ();
 	$rows = $field->get_children ();
 	if (is_array ($rows))
 		foreach ($rows as $row)
-			$options[$id][stripslashes (trim ($row->name))] = stripslashes (trim ($row->name));
+			$options[stripslashes (trim ($row->name))] = stripslashes (trim ($row->name));
 
-	return $options[$id];
+	return $options;
 }
 
 function bps_xprofile_filters ($type, $f)
@@ -310,17 +306,16 @@ function bps_displayXsearch_form ($f)
 	return $type;
 }
 
-add_filter ('bps_fields_setup', 'bps_anyfield_setup', 99);
+add_filter ('bps_fields', 'bps_anyfield_setup', 99);
 function bps_anyfield_setup ($fields)
 {
 	$f = new stdClass;
 
 	$f->group = __('Other', 'bp-profile-search');
-//	$f->id = 'any';
 	$f->code = 'field_any';
 	$f->name = __('Any field', 'bp-profile-search');
 	$f->description = __('Search every BP Profile Field', 'bp-profile-search');
-	$f->type = 'anyfield';
+	$f->type = '';
 	$f->options = array ();
 	$f->filters = array ('' => 'normal');
 	$f->display = 'textbox';
@@ -348,7 +343,7 @@ function bps_anyfield_search ($f)
 	return $results;
 }
 
-add_filter ('bps_fields_setup', 'bps_membertype_setup');
+add_filter ('bps_fields', 'bps_membertype_setup');
 function bps_membertype_setup ($fields)
 {
 	global $wpdb;
@@ -356,11 +351,10 @@ function bps_membertype_setup ($fields)
 	$f = new stdClass;
 
 	$f->group = __('Other', 'bp-profile-search');
-//	$f->id = 'type';
 	$f->code = 'membertype';
 	$f->name = __('Member type', 'bp-profile-search');
 	$f->description = __('Select the member type', 'bp-profile-search');
-	$f->type = 'membertype';
+	$f->type = '';
 
 	$f->options = array ();
 	$member_types = bp_get_member_types (array (), 'objects');

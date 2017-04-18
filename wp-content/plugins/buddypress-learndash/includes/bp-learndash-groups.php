@@ -77,8 +77,9 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Groups' ) ) {
 			$course_group = get_post_meta( $post->ID, 'bp_course_group', true );
 
 			$groups_arr = BP_Groups_Group::get( array(
-							'type' => 'alphabetical',
-							'per_page' => 999
+							'type' 			=> 'alphabetical',
+							'per_page' 		=> 999,
+							'show_hidden' 	=> true,
 						) );
 			?>
 
@@ -125,17 +126,18 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Groups' ) ) {
 					return;
 				} else {
 					$old_group_id = get_post_meta( $post_id, 'bp_course_group', true );
-					
-					update_post_meta( $post_id, 'bp_course_group', $_POST[ 'bp_course_group' ] );
-					
-					if ( !empty( $old_group_id ) ) {
-						groups_delete_groupmeta( $old_group_id, 'bp_course_attached' );
-						//Remove members to group
-						bp_learndash_remove_members_group($post_id, $old_group_id );
-					}
-					if ( $_POST[ 'bp_course_group' ] != '-1' ) {
+
+					if ( isset( $_POST[ 'bp_course_group' ] ) && $_POST[ 'bp_course_group' ] != '-1' ) {
+
+						if ( ! empty( $old_group_id ) && $old_group_id != $_POST['bp_course_group'] ) {
+							groups_delete_groupmeta( $old_group_id, 'bp_course_attached' );
+							bp_learndash_remove_members_group($post_id, $old_group_id ); //Remove members to group
+						}
+
 						groups_add_groupmeta( $_POST[ 'bp_course_group' ], 'bp_course_attached', $post_id );
-						//Add members to group
+						update_post_meta( $post_id, 'bp_course_group', $_POST[ 'bp_course_group' ] );
+
+						//Add members to group, we are doing this with ajax batches to prevent timeout
 						//bp_learndash_add_members_group($post_id, $_POST[ 'bp_course_group' ] );
 						
 						//Adding teacher as admin of group
@@ -149,6 +151,9 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Groups' ) ) {
 						
 						//Update Group avatar
 						bp_learndash_update_group_avatar( $post_id, $_POST[ 'bp_course_group' ] );
+					} else {
+						delete_post_meta($post_id, 'bp_course_group');
+						groups_delete_groupmeta( $old_group_id, 'bp_course_attached' );
 					}
 				}
 			}

@@ -1,0 +1,88 @@
+# Copyright (C) 2017 AnsPress to BuddyPress Loader
+# This file is distributed under the same license as the AnsPress to BuddyPress Loader package.
+msgid ""
+msgstr ""
+"Project-Id-Version: AnsPress to BuddyPress Loader 1.1.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/"
+"anspresstobuddypressloader\n"
+"POT-Creation-Date: 2017-04-18 10:29+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-04-18 10:30+0200\n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es_ES\n"
+
+#: Helper/Config.php:68
+msgid "You are not allowed to access this part of the site"
+msgstr "No se le permite acceder a esta parte del sitio"
+
+#: Helper/Config.php:183
+msgid "Answers"
+msgstr "Respuestas"
+
+#: Helper/Config.php:253
+msgid "Questions"
+msgstr "Preguntas"
+
+#: Viewer/plugin.options.php:4
+msgid "AnsPress and BBPress Mapping Relationship"
+msgstr "Enlazar la categoría AnsPress a la categoría BuddyPress"
+
+#: Viewer/plugin.options.php:10
+msgid "Select All"
+msgstr "Selecionar Todo"
+
+#: Viewer/plugin.options.php:13 Viewer/plugin.options.php:42
+#: Viewer/plugin.options.php:43
+msgid "AnsPress Category"
+msgstr "Categoría AnsPress"
+
+#: Viewer/plugin.options.php:15 Viewer/plugin.options.php:44
+#: Viewer/plugin.options.php:45
+msgid "BBPress Category"
+msgstr "Categoría BuddyPress"
+
+#: Viewer/plugin.options.php:21
+msgid "Select"
+msgstr "Seleccionar"
+
+#: Viewer/plugin.options.php:33
+msgid "Delete"
+msgstr "Borrar"
+
+#: Viewer/plugin.options.php:38
+msgid "Map AnsPress Category to BBPress Category"
+msgstr "Enlazar la categoría AnsPress a la categoría BuddyPress"
+
+#: Viewer/plugin.options.php:40
+msgid ""
+"For multilple AnsPress category, add comma to seperate each category e.g. "
+"(AnsPress1,AnsPress2,AnsPress3,AnsPres(n))"
+msgstr ""
+"Para agregar mas categorias separar cada categoría por coma eg "
+"(categoría1, categoría2, categoría3, etc.)"
+
+#: Viewer/plugin.options.php:46
+msgid "Add Mapping"
+msgstr "Guardar"
+
+#. Plugin Name of the plugin/theme
+msgid "AnsPress to BuddyPress Loader"
+msgstr "Enlazar la categoría AnsPress a la categoría BuddyPress"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "http://mywebsolutions.us/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "A plugin to Load AnsPress to BuddyPress that matches the category"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Cristopher Perando"
+msgstr ""

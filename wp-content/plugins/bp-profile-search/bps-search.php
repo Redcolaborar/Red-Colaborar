@@ -3,24 +3,26 @@
 add_action ('wp', 'bps_set_cookie');
 function bps_set_cookie ()
 {
+	$cookie = apply_filters ('bps_cookie_name', 'bps_request');
 	if (isset ($_REQUEST['bp_profile_search']))
 	{
-		setcookie ('bps_request', json_encode ($_REQUEST), 0, COOKIEPATH);
+		setcookie ($cookie, json_encode ($_REQUEST), 0, COOKIEPATH);
 	}
-	else if (isset ($_COOKIE['bps_request']) && apply_filters ('bps_clear_search', true))
+	else if (isset ($_COOKIE[$cookie]) && apply_filters ('bps_clear_search', true))
 	{
-		setcookie ('bps_request', '', 0, COOKIEPATH);
-		unset ($_COOKIE['bps_request']);
+		setcookie ($cookie, '', 0, COOKIEPATH);
+		unset ($_COOKIE[$cookie]);
 	}
 }
 
 function bps_get_request ()
 {
+	$cookie = apply_filters ('bps_cookie_name', 'bps_request');
 	$request = array ();
 	if (isset ($_REQUEST['bp_profile_search']))
 		$request = $_REQUEST;
-	else if (isset ($_COOKIE['bps_request']))
-		$request = json_decode (stripslashes ($_COOKIE['bps_request']), true);
+	else if (isset ($_COOKIE[$cookie]))
+		$request = json_decode (stripslashes ($_COOKIE[$cookie]), true);
 
 	return apply_filters ('bps_request', $request);
 }
@@ -78,13 +80,13 @@ function bps_search ()
 	{
 		if (!isset ($f->filter))  continue;
 
-		do_action ('bps_before_search', $f);
+		do_action ('bps_field_before_query', $f);
 		if (is_callable ($f->search))
 			$found = call_user_func ($f->search, $f);
 		else
-			$found = apply_filters ('bps_field_query', array (), $f, $f->code, $f->value);
+			$found = apply_filters ('bps_field_query', array (), $f, $f->code, $f->value);  // to be removed
 
-		do_action ('bps_after_search', $f, $found);
+		do_action ('bps_field_after_query', $f, $found);
 
 		$match_all = apply_filters ('bps_match_all', true);
 		if ($match_all)

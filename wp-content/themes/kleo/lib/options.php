@@ -955,6 +955,12 @@ $sections[] = array(
 			'title'    => __( 'News Ticker shortcode', 'kleo_framework' ),
 			'subtitle' => __( 'Enable if you use [kleo_news_ticker] shortcode', 'kleo_framework' ),
 			'default'  => '1' // 1 = checked | 0 = unchecked
+		),		array(
+			'id'       => 'sh_news_puzzle',
+			'type'     => 'switch',
+			'title'    => __( 'News Puzzle shortcode', 'kleo_framework' ),
+			'subtitle' => __( 'Enable if you use [kleo_news_puzzle] shortcode', 'kleo_framework' ),
+			'default'  => '1' // 1 = checked | 0 = unchecked
 		),
 		array(
 			'id'       => 'sh_poi',
@@ -1130,13 +1136,6 @@ $sections[] = array(
 			'default'  => '0' // 1 = checked | 0 = unchecked
 		),
 		array(
-			'id'       => 'menu_size',
-			'type'     => 'text',
-			'title'    => __( 'Main Menu Font size', 'kleo_framework' ),
-			'subtitle' => __( 'Font size in pixels. Default: 12', 'kleo_framework' ),
-			'default'  => ''
-		),
-		array(
 			'id'       => 'header_flexmenu',
 			'type'     => 'switch',
 			'title'    => __( 'Compact overflowing menu items ', 'kleo_framework' ),
@@ -1195,10 +1194,75 @@ $sections[] = array(
 			'data'     => 'callback',
 			'args'     => array( 'kleo_search_scope_post_types' ),
 			'default'  => ''
-		)
+		),
+		array(
+			'id'       => 'header_custom_search',
+			'type'     => 'switch',
+			'title'    => __( 'Replace search form content', 'kleo_framework' ),
+			'subtitle' => __( 'Advanced users only. You could break HTML', 'kleo_framework' ),
+			'description' => __( 'You can put Google Custom Search box.', 'kleo_framework' ),
+			'default'  => '0', // 1 = checked | 0 = unchecked
+		),
+		array(
+			'id'       => 'header_search_form',
+			'type'     => 'textarea',
+			'title'    => __( 'Custom Search form HTML', 'kleo_framework' ),
+			'subtitle' => __( 'Be careful when modifying this', 'kleo_framework' ),
+			'description' => sprintf( __( 'See tutorial for setting up Google Custom Search box <a target="_blank" href="%s">here</a>', 'kleo_framework' ), 'https://seventhqueen.com/support/kleo/article/add-google-custom-search-box-replace-wordpress-search-header'),
+			'default'  => '',
+			'required' => array( 'header_custom_search', 'equals', '1' ),
+		),
 
 	)
 );
+
+
+$sections[] = array(
+	'icon'            => 'el-icon-chevron-up',
+	'icon_class'      => 'icon-large',
+	'title'           => __( 'Header Fonts', 'kleo_framework' ),
+	'desc'            => '',
+	'fields'          => array(
+		array(
+			'id'          => 'font_header',
+			'type'        => 'typography',
+			'title'       => __( 'Font settings', 'kleo_framework' ),
+			//'compiler'=>true, // Use if you want to hook in your own CSS compiler
+			'google'      => true, // Disable google fonts. Won't work if you haven't defined your google api key
+			'font-backup' => true, // Select a backup non-google font in addition to a google font
+			'font-style'  => true, // Includes font-style and weight. Can use font-style or font-weight to declare
+			//'subsets'=>false, // Only appears if google is true and subsets not set to false
+			'font-size'=>false,
+			'line-height'=>false,
+			//'word-spacing'=>true, // Defaults to false
+			'letter-spacing'=>true, // Defaults to false
+			'color'       => false,
+			//'preview'=>false, // Disable the previewer
+			'all_styles'  => true, // Enable all Google Font style/weight variations to be added to the page
+			'output'      => array(), // An array of CSS selectors to apply this font style to dynamically
+			'units'       => 'px', // Defaults to px
+			'subtitle'    => "",
+			/*'default'     => array(
+				'font-weight' => '',
+				'font-family' => '',
+				'google'      => 'true',
+				'font-size'   => '',
+				'line-height' => ''
+			),*/
+		),
+		array(
+			'id'       => 'menu_size',
+			'type'     => 'text',
+			'title'    => __( 'Main Menu Font size', 'kleo_framework' ),
+			'subtitle' => __( 'Font size in pixels. Default: 12', 'kleo_framework' ),
+			'default'  => ''
+		),
+	),
+	'customizer'      => false,
+	'kleo_customizer' => false,
+	'subsection'      => true
+);
+
 
 $sections[] = array(
 	'icon'            => 'el-icon-chevron-up',
@@ -1293,6 +1357,147 @@ $sections[] = array(
 		),
 	)
 );
+
+
+
+$font_fields   = array();
+$font_sections = array(
+	'h1'   => array( 'size' => '36', 'height' => '48', 'font' => 'Roboto Condensed', 'weight' => '300' ),
+	'h2'   => array( 'size' => '28', 'height' => '36', 'font' => 'Roboto Condensed', 'weight' => '300' ),
+	'h3'   => array( 'size' => '22', 'height' => '28', 'font' => 'Roboto Condensed', 'weight' => '300' ),
+	'h4'   => array( 'size' => '18', 'height' => '28', 'font' => 'Roboto Condensed', 'weight' => '300' ),
+	'h5'   => array( 'size' => '17', 'height' => '27', 'font' => 'Roboto Condensed', 'weight' => '300' ),
+	'h6'   => array( 'size' => '16', 'height' => '24', 'font' => 'Roboto Condensed', 'weight' => '300' ),
+	'body' => array( 'size' => '13', 'height' => '20', 'font' => 'Open Sans', 'weight' => '400' )
+);
+
+foreach ( $font_sections as $k => $font ) {
+	$font_fields[] = array(
+		'id'          => 'font_' . $k,
+		'type'        => 'typography',
+		'title'       => ucwords( $k ),
+		//'compiler'=>true, // Use if you want to hook in your own CSS compiler
+		'google'      => true, // Disable google fonts. Won't work if you haven't defined your google api key
+		'font-backup' => true, // Select a backup non-google font in addition to a google font
+		'font-style'  => true, // Includes font-style and weight. Can use font-style or font-weight to declare
+		//'subsets'=>false, // Only appears if google is true and subsets not set to false
+		//'font-size'=>false,
+		//'line-height'=>false,
+		//'word-spacing'=>true, // Defaults to false
+		//'letter-spacing'=>true, // Defaults to false
+		'color'       => false,
+		//'preview'=>false, // Disable the previewer
+		'all_styles'  => true, // Enable all Google Font style/weight variations to be added to the page
+		'output'      => array(), // An array of CSS selectors to apply this font style to dynamically
+		'units'       => 'px', // Defaults to px
+		'subtitle'    => "",
+		'default'     => array(
+			'font-weight' => $font['weight'],
+			'font-family' => $font['font'],
+			'google'      => 'true',
+			'font-size'   => $font['size'] . 'px',
+			'line-height' => $font['height'] . 'px'
+		),
+	);
+}
+
+$style_fields   = array();
+$style_sections = array();
+
+$sections[] = $style_sections[] = array(
+	'icon'            => 'el-icon-adjust',
+	'icon_class'      => 'icon-large',
+	'title'           => __( 'Styling options', 'kleo_framework' ),
+	'customizer'      => false,
+	'kleo_customizer' => true,
+	'desc'            => '',
+	'fields'          => array(
+		array(
+			'id'     => 'styling-info',
+			'type'   => 'info',
+			'notice' => true,
+			'style'  => 'success',
+			'desc'   => __( 'Style colors and backgrounds for each section of your site.<br>' .
+			                'Start by selecting a sub-menu from the left.', 'kleo_framework' ) . "<br>" . $customizer_teaser,
+		),
+	)
+);
+
+
+/* Generate the Styling options sections */
+foreach ( $style_sets as $set ) {
+	$style_fields = array();
+
+	foreach ( $style_elements as $elem ) {
+		if ( $elem['type'] == 'color' ) {
+
+			/*if ( $set == 'header' && $elem['slug'] == 'headings' ) {
+                continue;
+            }*/
+
+			$style_fields[] = array(
+				'id'       => 'st__' . $set . '__' . $elem['slug'],
+				'type'     => $elem['type'],
+				'title'    => $elem['title'],
+				'subtitle' => $elem['subtitle'],
+				'desc'     => $elem['desc'],
+				'default'  => $style_defaults[ $set ][ $elem['slug'] ]
+			);
+		} elseif ( $elem['type'] == 'background' ) {
+			$style_fields[] = array(
+				'id'               => 'st__' . $set . '__' . $elem['slug'],
+				'type'             => $elem['type'],
+				'title'            => $elem['title'],
+				'subtitle'         => $elem['subtitle'],
+				'desc'             => $elem['desc'],
+				'default'          => $elem['default'],
+				'background-color' => false,
+				'preview'          => false,
+				'preview_media'    => true
+			);
+		} elseif ( $elem['type'] == 'info' ) {
+			$style_fields[] = array(
+				'id'     => 'st__' . $set . '__' . $elem['slug'],
+				'type'   => 'info',
+				'notice' => true,
+				'style'  => 'success',
+				'desc'   => $style_defaults[ $set ]['desc']
+			);
+		} elseif ( $elem['type'] == 'preset' ) {
+			$style_fields[] = array(
+				'id'       => 'st__' . $set . '__' . $elem['slug'],
+				'type'     => 'image_select',
+				'title'    => 'Color presets',
+				'subtitle' => 'Change section colors based on these presets',
+				'presets'  => true,
+				'default'  => 0,
+				'options'  => kleo_get_color_presets_array( 'st__' . $set . '__' )
+			);
+		}
+	}
+
+	$sections[] = $style_sections[] = array(
+		'icon'            => 'el-icon-adjust',
+		'icon_class'      => 'icon-large',
+		'title'           => ucfirst( ( $set == 'alternate' ? 'Title section(Alternate)' : $set ) ),
+		'desc'            => '',
+		'fields'          => $style_fields,
+		'customizer'      => false,
+		'kleo_customizer' => true,
+		'subsection'      => true
+	);
+}
+
+
+$sections[] = array(
+	'icon'       => 'el-icon-fontsize',
+	'icon_class' => 'icon-large',
+	'title'      => __( 'Fonts', 'kleo_framework' ),
+	'desc'       => __( '<p class="description">Customize font options for body text and headings.</p>', 'kleo_framework' ),
+	'fields'     => $font_fields
+);
+
+
 
 $sections[] = array(
 	'icon'       => 'el-icon-chevron-right',
@@ -1898,143 +2103,6 @@ $sections[] = array(
 );
 
 
-$font_fields   = array();
-$font_sections = array(
-	'h1'   => array( 'size' => '36', 'height' => '48', 'font' => 'Roboto Condensed', 'weight' => '300' ),
-	'h2'   => array( 'size' => '28', 'height' => '36', 'font' => 'Roboto Condensed', 'weight' => '300' ),
-	'h3'   => array( 'size' => '22', 'height' => '28', 'font' => 'Roboto Condensed', 'weight' => '300' ),
-	'h4'   => array( 'size' => '18', 'height' => '28', 'font' => 'Roboto Condensed', 'weight' => '300' ),
-	'h5'   => array( 'size' => '17', 'height' => '27', 'font' => 'Roboto Condensed', 'weight' => '300' ),
-	'h6'   => array( 'size' => '16', 'height' => '24', 'font' => 'Roboto Condensed', 'weight' => '300' ),
-	'body' => array( 'size' => '13', 'height' => '20', 'font' => 'Open Sans', 'weight' => '400' )
-);
-
-foreach ( $font_sections as $k => $font ) {
-	$font_fields[] = array(
-		'id'          => 'font_' . $k,
-		'type'        => 'typography',
-		'title'       => ucwords( $k ),
-		//'compiler'=>true, // Use if you want to hook in your own CSS compiler
-		'google'      => true, // Disable google fonts. Won't work if you haven't defined your google api key
-		'font-backup' => true, // Select a backup non-google font in addition to a google font
-		'font-style'  => true, // Includes font-style and weight. Can use font-style or font-weight to declare
-		//'subsets'=>false, // Only appears if google is true and subsets not set to false
-		//'font-size'=>false,
-		//'line-height'=>false,
-		//'word-spacing'=>true, // Defaults to false
-		//'letter-spacing'=>true, // Defaults to false
-		'color'       => false,
-		//'preview'=>false, // Disable the previewer
-		'all_styles'  => true, // Enable all Google Font style/weight variations to be added to the page
-		'output'      => array(), // An array of CSS selectors to apply this font style to dynamically
-		'units'       => 'px', // Defaults to px
-		'subtitle'    => "",
-		'default'     => array(
-			'font-weight' => $font['weight'],
-			'font-family' => $font['font'],
-			'google'      => 'true',
-			'font-size'   => $font['size'] . 'px',
-			'line-height' => $font['height'] . 'px'
-		),
-	);
-}
-
-$style_fields   = array();
-$style_sections = array();
-
-$sections[] = $style_sections[] = array(
-	'icon'            => 'el-icon-adjust',
-	'icon_class'      => 'icon-large',
-	'title'           => __( 'Styling options', 'kleo_framework' ),
-	'customizer'      => false,
-	'kleo_customizer' => true,
-	'desc'            => '',
-	'fields'          => array(
-		array(
-			'id'     => 'styling-info',
-			'type'   => 'info',
-			'notice' => true,
-			'style'  => 'success',
-			'desc'   => __( 'Style colors and backgrounds for each section of your site.<br>' .
-			                'Start by selecting a sub-menu from the left.', 'kleo_framework' ) . "<br>" . $customizer_teaser,
-		),
-	)
-);
-
-
-/* Generate the Styling options sections */
-foreach ( $style_sets as $set ) {
-	$style_fields = array();
-
-	foreach ( $style_elements as $elem ) {
-		if ( $elem['type'] == 'color' ) {
-
-			/*if ( $set == 'header' && $elem['slug'] == 'headings' ) {
-                continue;
-            }*/
-
-			$style_fields[] = array(
-				'id'       => 'st__' . $set . '__' . $elem['slug'],
-				'type'     => $elem['type'],
-				'title'    => $elem['title'],
-				'subtitle' => $elem['subtitle'],
-				'desc'     => $elem['desc'],
-				'default'  => $style_defaults[ $set ][ $elem['slug'] ]
-			);
-		} elseif ( $elem['type'] == 'background' ) {
-			$style_fields[] = array(
-				'id'               => 'st__' . $set . '__' . $elem['slug'],
-				'type'             => $elem['type'],
-				'title'            => $elem['title'],
-				'subtitle'         => $elem['subtitle'],
-				'desc'             => $elem['desc'],
-				'default'          => $elem['default'],
-				'background-color' => false,
-				'preview'          => false,
-				'preview_media'    => true
-			);
-		} elseif ( $elem['type'] == 'info' ) {
-			$style_fields[] = array(
-				'id'     => 'st__' . $set . '__' . $elem['slug'],
-				'type'   => 'info',
-				'notice' => true,
-				'style'  => 'success',
-				'desc'   => $style_defaults[ $set ]['desc']
-			);
-		} elseif ( $elem['type'] == 'preset' ) {
-			$style_fields[] = array(
-				'id'       => 'st__' . $set . '__' . $elem['slug'],
-				'type'     => 'image_select',
-				'title'    => 'Color presets',
-				'subtitle' => 'Change section colors based on these presets',
-				'presets'  => true,
-				'default'  => 0,
-				'options'  => kleo_get_color_presets_array( 'st__' . $set . '__' )
-			);
-		}
-	}
-
-	$sections[] = $style_sections[] = array(
-		'icon'            => 'el-icon-adjust',
-		'icon_class'      => 'icon-large',
-		'title'           => ucfirst( ( $set == 'alternate' ? 'Title/Breadcrumb' : $set ) ),
-		'desc'            => '',
-		'fields'          => $style_fields,
-		'customizer'      => false,
-		'kleo_customizer' => true,
-		'subsection'      => true
-	);
-}
-
-
-$sections[] = array(
-	'icon'       => 'el-icon-fontsize',
-	'icon_class' => 'icon-large',
-	'title'      => __( 'Fonts', 'kleo_framework' ),
-	'desc'       => __( '<p class="description">Customize font options for body text and headings.</p>', 'kleo_framework' ),
-	'fields'     => $font_fields
-);
-
 if ( sq_option( 'module_portfolio', 1 ) == 1 ) {
 	$sections[] = array(
 		'icon'       => 'el-icon-th-large',
@@ -2365,12 +2433,31 @@ $sections[] = array(
 			'subtitle' => __( 'If enabled it will show the profile Photo in full width', 'kleo_framework' ),
 			'default'  => '0' // 1 = checked | 0 = unchecked
 		),
+		/*array(
+			'id'       => 'bp_nav_overlay',
+			'type'     => 'switch',
+			'title'    => __( 'Profile &amp; Group menu over cover image', 'kleo_framework' ),
+			'subtitle' => __( 'Put navigation menu over the cover image like an overlay', 'kleo_framework' ),
+			'default'  => '0' // 1 = checked | 0 = unchecked
+		),*/
 		array(
 			'id'       => 'bp_full_group',
 			'type'     => 'switch',
 			'title'    => __( 'Enable Full width Group Header', 'kleo_framework' ),
 			'subtitle' => __( 'If enabled it will show the Group Photo section in full width', 'kleo_framework' ),
 			'default'  => '0' // 1 = checked | 0 = unchecked
+		),
+		array(
+			'id'       => 'bp_icons_style',
+			'type'     => 'image_select',
+			'compiler' => true,
+			'title'    => __( 'Profile &amp; Group Icons style', 'kleo_framework' ),
+			'subtitle' => __( 'Choose between normal or light icons.', 'kleo_framework' ),
+			'options'  => array(
+				'normal'    => array( 'alt' => 'Normal icons', 'img' => KLEO_LIB_URI . '/assets/images/normal-profile.png' ),
+				'light'  => array( 'alt' => 'Light icons', 'img' => KLEO_LIB_URI . '/assets/images/light-profile.png' ),
+			),
+			'default'  => 'normal'
 		),
 		array(
 			'id'       => 'bp_online_status',
@@ -3182,6 +3269,7 @@ if ( ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] == 'true'
 
 add_action( 'kleo-opts-saved', 'kleo_write_dynamic_css_file' );
 add_action( 'kleo-opts-saved', 'kleo_check_rewrite_permalinks', 10, 2 );
+add_action( 'kleo-opts-saved', 'kleo_after_save_opts' );
 add_action( 'customize_save_after', 'kleo_write_dynamic_css_file', 100 );
 add_action( 'customize_save_after', 'kleo_save_customizer_options' );
 
@@ -3206,6 +3294,17 @@ function kleo_check_rewrite_permalinks( $options, $saved_options ) {
 			global $wp_rewrite;
 			$wp_rewrite->flush_rules( false );
 		}
+	}
+}
+
+
+function kleo_after_save_opts() {
+	$current_options = get_option( 'kleo_' . KLEO_DOMAIN );
+	$current_options['stime'] = time();
+	update_option( 'kleo_' . KLEO_DOMAIN, $current_options );
+
+	if ( function_exists( 'wp_cache_clear_cache' ) ) {
+		wp_cache_clear_cache();
 	}
 }
 
@@ -3261,7 +3360,12 @@ function kleo_save_customizer_options( $wp_customize ) {
 		}
 
 		if ( $changed ) {
+			$old_options['stime'] = time();
 			update_option( $opt_name, $old_options );
+		}
+
+		if ( function_exists( 'wp_cache_clear_cache' ) ) {
+			wp_cache_clear_cache();
 		}
 	}
 }

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyPress for LearnDash\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2016-12-29 21:57:24+00:00\n"
+"POT-Creation-Date: 2017-03-06 14:01:07+00:00\n"
 "PO-Revision-Date: 2016-05-01 14:44-0400\n"
 "Last-Translator: jean-pierre michaud <nexialys@yahoo.com>\n"
 "Language-Team: jean-pierre michaud <nexialys@yahoo.com>\n"
@@ -83,15 +83,15 @@ msgstr "Réglages mis à jour."
 msgid "Save Changes"
 msgstr "Enregistrer les modifications"
 
-#: includes/admin.php:307
+#: includes/admin.php:306
 msgid "Display <em>Profile > %s</em> content publicly"
 msgstr "afficher le contenue du <em>Profile > %s</em> en public"
 
-#: includes/admin.php:320
+#: includes/admin.php:319
 msgid "Convert subscribers to user role Student"
 msgstr "Convertir des abonnés au rôle d'utilisateur étudiant"
 
-#: includes/admin.php:333
+#: includes/admin.php:332
 msgid "Convert group leaders to user role Group Leader"
 msgstr "Convertir les chefs de groupe au rôle d'utilisateur Chef de groupe"
 
@@ -145,7 +145,7 @@ msgid "Group %s"
 msgstr "Groupe de %s"
 
 #: includes/bp-learndash-group-settings.php:43
-#: includes/bp-learndash-groups.php:87
+#: includes/bp-learndash-groups.php:88
 msgid "--Select--"
 msgstr "--Sélectionner--"
 
@@ -186,23 +186,23 @@ msgstr "Commentaires d'utilisateurs sur une seule page %s"
 msgid "%s Group"
 msgstr "Groupe du %s"
 
-#: includes/bp-learndash-groups.php:85
+#: includes/bp-learndash-groups.php:86
 msgid "Add this %s to a BuddyPress group."
 msgstr "Ajouter ce %s à un groupe BuddyPress."
 
-#: includes/bp-learndash-groups.php:99
+#: includes/bp-learndash-groups.php:100
 msgid "&#43; Create New Group"
 msgstr "&#43; Créer un Nouveau Groupe"
 
-#: includes/bp-learndash-groups.php:230
+#: includes/bp-learndash-groups.php:235
 msgid "Private Course Group"
 msgstr "Groupe de Cours Privé"
 
-#: includes/bp-learndash-groups.php:233
+#: includes/bp-learndash-groups.php:238
 msgid "Hidden Course Group"
 msgstr "Groupe de Cours Caché"
 
-#: includes/bp-learndash-groups.php:265
+#: includes/bp-learndash-groups.php:270
 msgid "%s Discussion"
 msgstr "Groupe de discussion du %s"
 
@@ -259,11 +259,11 @@ msgstr "Chef du Groupe <span>%s</span>"
 msgid "Students <span>%s</span>"
 msgstr "Étudiants de <span>%s</span>"
 
-#: includes/bp-learndash-member-mass-enrollment.php:104
+#: includes/bp-learndash-member-mass-enrollment.php:101
 msgid "Mass Group Enrollment"
 msgstr "Inscription de Masse"
 
-#: includes/bp-learndash-member-mass-enrollment.php:110
+#: includes/bp-learndash-member-mass-enrollment.php:107
 msgid ""
 "Please be patient while the mass enrollment process. This can take a while "
 "if your server is slow (inexpensive hosting) or if you have many "
@@ -275,11 +275,11 @@ msgstr ""
 "(hébergement bon marché) ou si vous avez de nombreux étudiants (membres). Ne "
 "quittez pas cette boîte de dialogue jusqu'à ce que ce script ait terminé."
 
-#: includes/bp-learndash-member-mass-enrollment.php:125
+#: includes/bp-learndash-member-mass-enrollment.php:127
 msgid "To go back to the previous page, <a href=\"%s\">click here</a>."
 msgstr "Pour revenir à la page précédente, <a href=\"%s\">cliquez ici</a>."
 
-#: includes/bp-learndash-member-mass-enrollment.php:126
+#: includes/bp-learndash-member-mass-enrollment.php:128
 msgid ""
 "All done! %1$s image(s) were successfully resized in %2$s seconds and there "
 "were %3$s failure(s). To try regenerating the failed images again, <a href="
@@ -289,7 +289,7 @@ msgstr ""
 "échecs. Tentez de reprendre la retaille des images manquées, <a href=\"%4$s"
 "\">clicker ici</a>. %5$s"
 
-#: includes/bp-learndash-member-mass-enrollment.php:127
+#: includes/bp-learndash-member-mass-enrollment.php:129
 msgid ""
 "All done! %1$s image(s) were successfully resized in %2$s seconds and there "
 "were 0 failures. %3$s"
@@ -297,35 +297,35 @@ msgstr ""
 "Terminé! %1$s image(s) ont été retaillées en %2$s secondes et il n'y a aucun "
 "échec. %3$s"
 
-#: includes/bp-learndash-member-mass-enrollment.php:129
+#: includes/bp-learndash-member-mass-enrollment.php:131
 msgid "You must enable Javascript in order to proceed!"
 msgstr "Vous devez activer Javascript afin d'aller de l'avant !"
 
-#: includes/bp-learndash-member-mass-enrollment.php:135
+#: includes/bp-learndash-member-mass-enrollment.php:137
 msgid "Abort Joining Members"
 msgstr "Annuler l'inscription des Membres"
 
-#: includes/bp-learndash-member-mass-enrollment.php:137
+#: includes/bp-learndash-member-mass-enrollment.php:139
 msgid "Debugging Information"
 msgstr "Rapport de Debogage"
 
-#: includes/bp-learndash-member-mass-enrollment.php:140
+#: includes/bp-learndash-member-mass-enrollment.php:142
 msgid "Total Members: %s"
 msgstr "Total des membres: %s"
 
-#: includes/bp-learndash-member-mass-enrollment.php:141
+#: includes/bp-learndash-member-mass-enrollment.php:143
 msgid "Members Joined: %s"
 msgstr "Membres Inscrit: %s"
 
-#: includes/bp-learndash-member-mass-enrollment.php:142
+#: includes/bp-learndash-member-mass-enrollment.php:144
 msgid "Join Failures: %s"
 msgstr "Echecs de Connection: %s"
 
-#: includes/bp-learndash-member-mass-enrollment.php:175
+#: includes/bp-learndash-member-mass-enrollment.php:177
 msgid "Stopping..."
 msgstr "Arrêt…"
 
-#: includes/bp-learndash-member-mass-enrollment.php:231
+#: includes/bp-learndash-member-mass-enrollment.php:215
 msgid ""
 "The resize request was abnormally terminated (ID %s). This is likely due to "
 "the image exceeding available memory or some other type of fatal error."
@@ -334,7 +334,7 @@ msgstr ""
 "Cela est probablement dû à l'image dépassant la mémoire disponible ou un "
 "autre type d'erreur fatale."
 
-#: includes/bp-learndash-member-mass-enrollment.php:306
+#: includes/bp-learndash-member-mass-enrollment.php:280
 msgid ""
 "&quot;%1$s&quot; (ID %2$s) failed to resize. The error message was: %3$s"
 msgstr ""
@@ -345,7 +345,7 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr "On triche, hum?"
 
-#: includes/main-class.php:514
+#: includes/main-class.php:513
 #, fuzzy
 msgid ""
 "<strong>BuddyPress for Learndash</strong> requires User Groups component to "
@@ -371,33 +371,44 @@ msgstr ""
 "Merci d’installer le plugin <a href=\"http://www.learndash.com/\">LearnDash</"
 "a> avant tout."
 
-#: templates/courses.php:75
-msgid "%s Progress Overview"
-msgstr "Aperçu %s"
-
-#: templates/courses.php:78
+#: templates/courses.php:127
 msgid "%s out of %s steps completed"
 msgstr "%s sur %s étapes complétées"
 
-#: templates/courses.php:84
+#: templates/courses.php:132
 msgid "%s%% Complete"
 msgstr "%s%% Completé"
 
-#: templates/courses.php:92
+#: templates/courses.php:141
 msgid "Certificate"
 msgstr "Certificat"
 
-#: templates/courses.php:93
+#: templates/courses.php:142
 msgid "Score"
 msgstr "Score"
 
-#: templates/courses.php:94
+#: templates/courses.php:143
+msgid "Statistics"
+msgstr ""
+
+#: templates/courses.php:144
 msgid "Date"
 msgstr "Date"
 
-#: templates/courses.php:120
+#: templates/courses.php:217
 msgid "No %s found."
 msgstr "Aucun %s trouvé"
+
+#: templates/courses.php:124
+#, fuzzy
+msgctxt "Course Progress Overview Label"
+msgid "%s Progress Overview"
+msgstr "Aperçu %s"
+
+#: templates/courses.php:181
+msgctxt "Pending Certificate Status Label"
+msgid "Pending"
+msgstr ""
 
 #~ msgid "BuddyPress for LearnDash"
 #~ msgstr "BuddyPress pour LearnDash"

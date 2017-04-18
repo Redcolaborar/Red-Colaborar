@@ -140,7 +140,7 @@ class BP_Legacy extends BP_Theme_Compat {
 			add_action( 'wp_footer', array( $this, 'sitewide_notices' ), 9999 );
 		}
 
-		$calback_for_saving_bp_data = (is_plugin_active('mediapress_customizer/mediapress_customizer.php') ? 'red_legacy_theme_post_update' : 'bp_legacy_theme_post_update');
+		$calback_for_saving_bp_data = ( function_exists('is_plugin_active') && is_plugin_active('mediapress_customizer/mediapress_customizer.php') ? 'red_legacy_theme_post_update' : 'bp_legacy_theme_post_update');
 
 		/** Ajax **************************************************************/
 
@@ -169,7 +169,7 @@ class BP_Legacy extends BP_Theme_Compat {
 			'delete_activity_comment'     => 'bp_legacy_theme_delete_activity_comment',
 			'get_single_activity_content' => 'bp_legacy_theme_get_single_activity_content',
 			'new_activity_comment'        => 'bp_legacy_theme_new_activity_comment',
-			'post_update'                 =>  $calback_for_saving_bp_data, 
+			'post_update'                 =>  $calback_for_saving_bp_data,
 			'bp_spam_activity'            => 'bp_legacy_theme_spam_activity',
 			'bp_spam_activity_comment'    => 'bp_legacy_theme_spam_activity',
 

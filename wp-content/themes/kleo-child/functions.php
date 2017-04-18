@@ -414,3 +414,45 @@ function change_title ($default) {
 }
 
 include_once(__DIR__ . '/assets/rz-functions.php');
+
+
+
+if ( ! function_exists( 'kleo_post_nav_redcolaborar' ) ) :
+    /**
+     * Display navigation to next/previous post when applicable.
+     *
+     * @since Kleo 1.0
+     *
+     * @return void
+     */
+    function kleo_post_nav_redcolaborar( $same_cat = false ) {
+        // Don't print empty markup if there's nowhere to navigate.
+        $previous = ( is_attachment() ) ? get_post( get_post()->post_parent ) : get_adjacent_post( $same_cat, '', true );
+        $next     = get_adjacent_post( $same_cat, '', false );
+
+        if ( ! $next && ! $previous ) {
+            return;
+        }
+        ?>
+
+        <nav class="pagination-sticky member-navigation" role="navigation">
+            <?php
+            if ( is_attachment() ) :
+                previous_post_link( '%link', __( '<span id="older-nav">Go to article</span>', 'kleo_framework' ) );
+            else :
+                if ( $previous ) {
+                    $avatar = get_avatar( $previous->post_author );
+                    previous_post_link( '%link', '<span id="older-nav" '.((!empty($avatar)) ? 'class="has-avatar"' : '').'><span class="outter-title"><span class="entry-title"><span class="avatar-container">'.$avatar.'</span>'. substr($previous->post_title, 0, 50) . ((strlen($previous->post_title) > 50) ? '...' : '') . '</span></span></span>', $same_cat );
+                }
+                if ( $next ) {
+                    $avatar = get_avatar( $next->post_author );
+                    next_post_link( '%link', '<span id="newer-nav" '.((!empty($avatar)) ? 'class="has-avatar"' : '').'><span class="outter-title"><span class="entry-title"><span class="avatar-container">'.$avatar.'</span>' . substr($next->post_title, 0, 50) . ((strlen($next->post_title) > 50) ? '...' : '') . '</span>', $same_cat );
+                }
+            endif;
+            ?>
+        </nav><!-- .navigation -->
+
+        <?php
+    }
+endif;
+

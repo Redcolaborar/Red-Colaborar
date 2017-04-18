@@ -42,14 +42,17 @@ if ( ! is_admin() ) {
 function kleo_load_dynamic_css()
 {
 	/* If remove query option is ON */
-	if ( sq_option('perf_remove_query', 0 ) == 1 ) {
-		$version = NULL;
+	if ( sq_option( 'perf_remove_query', 0 ) == 1 ) {
+		$version = null;
 	} else {
 		$version = KLEO_THEME_VERSION;
+		if ( sq_option( 'stime', '' ) ) {
+			$version .= '.' . sq_option( 'stime', '' );
+		}
 	}
 
 	global $kleo_config;
-	wp_register_style( 'kleo-colors', trailingslashit($kleo_config['custom_style_url']) . 'dynamic.css', array(), $version, 'all' );
+	wp_register_style( 'kleo-colors', trailingslashit( $kleo_config['custom_style_url'] ) . 'dynamic.css', array(), $version, 'all' );
 	wp_enqueue_style( 'kleo-colors' );
 }
 
@@ -61,16 +64,16 @@ function kleo_load_dynamic_css()
  */
 function kleo_custom_head_css()
 {
-	global $kleo_theme;
+	$kleo_theme = Kleo::instance();
 	$dynamic_css = get_template_directory() . '/assets/css/dynamic.php';
 
 	echo "\n<style>";
 	ob_start(); // Capture all output (output buffering)
 	//add fonts styles
-	add_filter('kleo_add_dynamic_style', array($kleo_theme,'add_font_css'));
+	add_filter( 'kleo_add_dynamic_style', array( $kleo_theme, 'add_font_css' ) );
 
-	require($dynamic_css); // Generate CSS
+	require( $dynamic_css ); // Generate CSS
 	$css = ob_get_clean(); // Get generated CSS
-	echo kleo_compress($css);
+	echo kleo_compress( $css );
 	echo '</style>';
 }

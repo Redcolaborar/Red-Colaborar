@@ -49,7 +49,12 @@ if ( 'thumbs' == $type ) {
 	$slides_wrap_end   = '</div>';
 } elseif ( 'grid' == $type ) {
 	wp_enqueue_script( 'isotope' );
-	$slides_wrap_start = '<ul class="responsive-cols per-row-' . $grid_number . ' kleo-masonry animate-when-almost-visible one-by-one-general">';
+	if ( '' != $enable_animation ) {
+		$main_css_animation = ' animate-when-almost-visible one-by-one-general';
+	} else {
+		$main_css_animation = '';
+	}
+	$slides_wrap_start = '<ul class="responsive-cols per-row-' . $grid_number . $main_css_animation . ' kleo-masonry">';
 	$slides_wrap_end   = '</ul>';
 }
 
@@ -77,8 +82,15 @@ switch ( $source ) {
 }
 
 if ( 'thumbs' == $type ) {
-	$gal_images_thumb .= '<div class="kleo-gallery kleo-carousel-container animate-when-almost-visible">'
-	                     . '<div class="kleo-thumbs-carousel kleo-thumbs-animated th-fade" data-min-items=6 data-max-items=6>';
+
+	if ( '' != $enable_animation && 'yes' != $thumbs_over_img ) {
+		$main_css_animation = ' th-fade';
+	} else {
+		$main_css_animation = '';
+	}
+
+	$gal_images_thumb .= '<div class="kleo-gallery kleo-no-popup kleo-carousel-container animate-when-almost-visible">'
+	                     . '<div class="kleo-thumbs-carousel kleo-thumbs-animated' . $main_css_animation . '" data-min-items=6 data-max-items=6>';
 }
 
 $elem_id = kleo_vc_elem_increment();
@@ -97,12 +109,21 @@ foreach ( $images as $attach_id ) {
 				if ( null != $img_path ) {
 					$post_thumbnail = wpb_getImageBySize( array(
 						'attach_id'  => $attach_id,
-				         'thumb_size' => $img_size,
+                        'thumb_size' => $img_size,
 					) );
-				}
+                }
 			}
+
 			$thumbnail   = $post_thumbnail['thumbnail'];
 			$p_img_large = $post_thumbnail['p_img_large'][0];
+
+            $data_attr_show_caption = '';
+
+            $post = get_post( $attach_id );
+
+            if( $show_caption != '' ){
+                $data_attr_show_caption = ' data-caption="' .  esc_attr($post->post_excerpt). '"';
+            }
 
 			break;
 
@@ -120,12 +141,17 @@ foreach ( $images as $attach_id ) {
 	if ( 'thumbs' == $type ) {
 		$link_start .= '<div id="gall_' . $elem_id . '_' . $i . '">';
 	} elseif ( 'grid' == $type ) {
-		$link_start .= '<li class="el-zero-fade"><div class="kleo-gallery-inner">';
+		if ( '' != $enable_animation ) {
+			$main_css_animation = 'el-zero-fade';
+		} else {
+			$main_css_animation = '';
+		}
+		$link_start .= '<li class="' . $main_css_animation . '"><div class="kleo-gallery-inner">';
 	}
 
 	switch ( $onclick ) {
 		case 'img_link_large':
-			$link_start .= '<a href="' . $p_img_large . '" target="' . $custom_links_target . '">';
+			$link_start .= '<a href="' . $p_img_large . '" target="' . $custom_links_target . '"' . $data_attr_show_caption . '>';
 			if ( 'grid' == $type ) {
 				$link_start .= kleo_get_img_overlay();
 			}
@@ -133,7 +159,7 @@ foreach ( $images as $attach_id ) {
 			break;
 
 		case 'link_image':
-			$link_start .= '<a class="prettyphoto" href="' . $p_img_large . '"' . $pretty_rel_random . 'data-caption="">';
+			$link_start .= '<a class="prettyphoto" href="' . $p_img_large . '"' . $pretty_rel_random . $data_attr_show_caption . '>';
 			$link_end .= '</a>';
 			break;
 
@@ -150,12 +176,10 @@ foreach ( $images as $attach_id ) {
 
 	if ( 'thumbs' == $type ) {
 		$link_end .= '</div>';
-
 		$gal_images .= $link_start . '<img src="' . $p_img_large . '">' . $link_end;
 		$gal_images_thumb .= '<a href="#gall_' . $elem_id . '_' . $i . '">' . $thumbnail . kleo_get_img_overlay() . '</a>';
 	} elseif ( 'grid' == $type ) {
 		$link_end .= '</div></li>';
-
 		$gal_images .= $link_start . $thumbnail . $link_end;
 	}
 }
@@ -168,6 +192,11 @@ if ( 'thumbs' == $type ) {
 }
 
 $class_to_filter = 'wpb_gallery wpb_content_element vc_clearfix';
+
+if ( 'thumbs' == $type && 'yes' == $thumbs_over_img ) {
+	$class_to_filter .= ' thumbs-over-img';
+}
+
 $class_to_filter .= vc_shortcode_custom_css_class( $css, ' ' ) . $this->getExtraClass( $el_class );
 $css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter, $this->settings['base'], $atts );
 
@@ -177,7 +206,13 @@ $output .= wpb_widget_title( array( 'title' => $title, 'extraclass' => 'wpb_gall
 
 $gap = '' != $gap ? ' kleo-' . $gap . '-gap' : '';
 
-$output .= '<div class="kleo-gallery-container kleo-gallery-' . $type . $gap . '">' . $slides_wrap_start . $gal_images . $slides_wrap_end . $gal_images_thumb . '</div>';
+if ( 'thumbs' == $type && '' != $enable_animation && 'yes' == $thumbs_over_img ) {
+	$main_css_animation = ' animated animate-when-almost-visible el-fade';
+} else {
+	$main_css_animation = '';
+}
+
+$output .= '<div class="kleo-gallery-container kleo-gallery-' . $type . $gap . $main_css_animation . '">' . $slides_wrap_start . $gal_images . $slides_wrap_end . $gal_images_thumb . '</div>';
 $output .= "\n\t\t" . '</div> ';
 $output .= "\n\t" . '</div> ';
 

@@ -1970,6 +1970,10 @@ div .logo {
     padding-right: 0;
 }
 
+.kleo-main-header.header-normal .logo > a {
+    text-align: right;
+}
+
 /* Center Logo & Menu */
 
 /* Right Logo */

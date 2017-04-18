@@ -32,7 +32,7 @@ Tags: clean, responsive, creative, minimal, modern, landing page, bootstrap 3
 16. Mycred
 
 18. BuddyPress Group Email Subscription
-19. Revolution Slider
+19. Mediaelement.js
 */
 /* --------------------------------------------------
     WPML Multilingual CMS - KLEO Compatibility
@@ -491,6 +491,29 @@ body[class*="rtm-3.7"] #rtm-gallery-title-container #rtm-media-options > span:la
 #buddypress div.rtmedia-activity-container .drag-drop .drag-drop-info {
   font-size: inherit;
 }
+.drag-drop #drag-drop-area {
+  /* v.4.1.9 */
+  border: 2px dashed #bad481;
+  background: #f9ffec;
+}
+.drag-drop-inside p.drag-drop-info {
+  /* v.4.1.9 */
+  font-size: inherit;
+}
+p.drag-drop-buttons input#bp-browse-button {
+  /* v.4.1.9 */
+  width: 12em;
+  font-size: 16px;
+  border: 0;
+  background: #6fb74e;
+  color: #fff !important;
+  height: 40px;
+}
+p.drag-drop-buttons input#bp-browse-button:hover {
+  /* v.4.1.9 */
+  background: #84d284 !important;
+  border: 0;
+}
 .rtm-primary-button,
 .rtmedia-container .drag-drop .start-media-upload,
 .rtmedia-activity-container .drag-drop .start-media-upload,
@@ -820,6 +843,8 @@ body[class*="rtm-3.7"] .rtmedia_next_prev {
 ----------------------------------------------------- */
 .wpcf7 input[type="text"],
 .wpcf7 input[type="email"],
+.wpcf7 input[type="tel"],
+.wpcf7 input[type="date"],
 .wpcf7 input[type="password"] {
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: rgba(255, 255, 255, 0.1);
@@ -864,6 +889,22 @@ div.wpcf7-validation-errors {
 }
 div.wpcf7-response-output {
   margin: 0;
+}
+/* See through style */
+.kleo-line-form select {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  width: 100%;
+}
+.kleo-line-form {
+  text-align: center;
+}
+.kleo-line-form input[type="submit"] {
+  padding: 8px 40px;
+  font-size: 14px;
+  background: transparent;
+  border-radius: 20px;
+  margin-top: 30px;
 }
 /* --------------------------------------------------
     Paid memberships Pro - KLEO compatibility
@@ -949,10 +990,14 @@ form.pmpro_form select {
   border-style: solid;
   border-width: 1px;
   margin: 1%;
-  padding: 10px;
   display: inline-block;
   width: 48%;
   float: left;
+  /* v.4.1.9 */
+  border-color: transparent !important;
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 6px;
 }
 #articles-dir-list article.article-container:nth-of-type(2n+1) {
   clear: left;
@@ -1008,7 +1053,9 @@ form.pmpro_form select {
 .article-content .article-metadata .author-options {
   position: absolute;
   right: 0;
-  top: 10px;
+  /*top: 10px;*/
+  /* v.4.1.9 */
+  top: 18px;
 }
 .article-content .article-categories {
   padding-left: 0;
@@ -1062,12 +1109,23 @@ form.pmpro_form select {
   height: 20px;
   margin-bottom: 5px;
   width: 21px;
+  /* v.4.1.9 */
+  background-color: transparent !important;
 }
 .article-content .author-options .edit:before,
 .article-content .author-options .delete:before {
-  font: 18px "fontello";
   content: " ";
   transition: all 0.3s ease-in-out 0s;
+  /* v.4.1.9 */
+  color: #fafafa !important;
+  font: 20px "fontello";
+  background-color: #bbb;
+  border-radius: 50%;
+}
+.article-content .author-options .edit:hover:before,
+.article-content .author-options .delete:hover:before {
+  /* v.4.1.9 */
+  background-color: #777;
 }
 .article-content .author-options .edit:before {
   content: "\e99c";
@@ -1340,6 +1398,28 @@ form.pmpro_form select {
   height: auto;
   margin-top: 0 !important;
   padding-left: 0 !important;
+}
+body.is-user-profile #item-header-avatar {
+  background: transparent;
+}
+#buddypress .social-articles-main .article-categories {
+  width: 60%;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+#buddypress .social-articles-main .article-likes,
+#buddypress .social-articles-main .article-comments,
+#buddypress .social-articles-main .date,
+#buddypress .social-articles-main .likes-count {
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+.more-articles-button-container input.button {
+  height: 40px !important;
+  font-size: small;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.1em;
 }
 /* --------------------------------------------------
     YITH WooCommerce Wishlist - KLEO Compatibility
@@ -1877,6 +1957,42 @@ i.icon {
   opacity: 1;
   filter: alpha(opacity=1);
 }
+/* ZoomIn & Shadow Style for Single Image */
+.zoomin-shd-singleimg .vc_figure {
+  transition: box-shadow 0.4s;
+}
+.zoomin-shd-singleimg .vc_figure:hover {
+  box-shadow: 0 12px 42px 12px rgba(0, 0, 0, 0.08);
+}
+.zoomin-shd-singleimg .vc_figure .vc_single_image-img {
+  transition: transform 0.4s;
+}
+.zoomin-shd-singleimg .vc_figure:hover .vc_single_image-img {
+  transform: scale(1.05);
+}
+.zoomin-shd-singleimg.wpb_single_image .vc_figure {
+  overflow: hidden;
+}
+/* Progress bar slim style */
+.slim-style .vc_single_bar {
+  border-radius: 10px;
+  height: 10px;
+  margin-bottom: 54px;
+  margin-top: 50px;
+}
+.slim-style .vc_single_bar .vc_label {
+  position: absolute;
+  top: -40px;
+  left: 0;
+}
+.slim-style .vc_single_bar .vc_bar {
+  border-radius: 10px;
+  height: 10px;
+}
+.kleo-transform .vc_editor .animated.animate-when-visible,
+.kleo-transform .vc_editor .animated.animate-when-almost-visible {
+  opacity: 1;
+}
 /* --------------------------------------------------
     Ultimate Addons for Visual Composer - KLEO Compatibility
 ----------------------------------------------------- */
@@ -1908,6 +2024,14 @@ i.icon {
 .mc4wp-form-fields input[type="email"].input-lg {
   padding: 14px 20px;
 }
+.mc4wp-form .input-special {
+  /* v.4.1.9 */
+  border-radius: 30px;
+  text-align: center;
+  width: 50%;
+  margin-right: 20px !important;
+  margin-left: 20px !important;
+}
 /* --------------------------------------------------
 	Events manager - KLEO Compatibility
 ----------------------------------------------------- */
@@ -1935,7 +2059,8 @@ div.css-search select {
   left: 10px;
   top: 10px;
   z-index: 4;
-  transition: all 0.5s ease-in-out 0s;
+  /* v.4.1.9 */
+  transition: top 0.5s, margin-top 0.5s;
 }
 .buddypress.bp-header-small .profile-cover-action {
   top: 67px;
@@ -1963,7 +2088,7 @@ div.css-search select {
 .buddypress .profile-cover-action a.button:before {
   display: inline-block;
   font: 16px 'fontello';
-  content: "\e81c";
+  /*content: "\e81c";*/
   float: left;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
@@ -1978,10 +2103,12 @@ div.css-search select {
   -ms-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
+  /* v.4.1.9 */
+  content: "\e9c3";
 }
 .buddypress.is-user-profile .profile-cover-action a.button:before {
-  background: rgba(0, 0, 0, 0.1);
-  color: rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(255, 255, 255, 0.6);
 }
 .buddypress.is-user-profile .profile-cover-action a.button:hover:before {
   color: rgba(255, 255, 255, 0.9);
@@ -2001,6 +2128,8 @@ body.is-user-profile div#item-header div#item-meta {
 }
 body.is-user-profile #item-header-avatar {
   box-shadow: none;
+  /* v.4.1.9 */
+  border-color: rgba(255, 255, 255, 0.2) !important;
 }
 body.bp-header-small .bp-full-width-profile div#item-header {
   padding-bottom: 40px;
@@ -2012,6 +2141,20 @@ body.is-user-profile .bp-full-width-profile div#item-header {
 body.is-user-profile.bp-header-small .bp-full-width-profile div#item-header {
   padding-bottom: 40px;
   padding-top: 40px;
+}
+.buddypress div.generic-button a {
+  /* v.4.1.9 */
+  display: inline-block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  height: 35px;
+  line-height: 35px;
+}
+.bp-full-width-profile div.generic-button a {
+  /* v.4.1.9 */
+  border: 0 !important;
+  background: rgba(255, 255, 255, 0.2);
 }
 body.is-user-profile #item-header div#message {
   position: absolute;
@@ -2135,13 +2278,6 @@ ul.multiselect-container {
   .bps-form .input-range {
     width: 100%;
   }
-}
-/* --------------------------------------------------
-	Revolution Slider - KLEO Compatibility
------------------------------------------------------ */
-body.offcanvas-left .rev_slider_wrapper.fullscreen-container,
-body.offcanvas-right .rev_slider_wrapper.fullscreen-container {
-  left: 0 !important;
 }
 /* --------------------------------------------------
     Mediaelement - KLEO Compatibility

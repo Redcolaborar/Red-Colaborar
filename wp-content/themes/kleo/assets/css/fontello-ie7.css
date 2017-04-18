@@ -473,5 +473,14 @@
 .icon-streamline-account-circle { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe9cc;&nbsp;'); }
 .icon-streamline-add { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe9cd;&nbsp;'); }
 .icon-streamline-bookmark-article { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe9ce;&nbsp;'); }
+.icon-streamline-alarm { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea02;&nbsp;'); }
+.icon-streamline-box { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea03;&nbsp;'); }
+.icon-streamline-compatible-devices { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea04;&nbsp;'); }
+.icon-streamline-email-send { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea05;&nbsp;'); }
+.icon-streamline-friends { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea06;&nbsp;'); }
+.icon-streamline-group-global { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea07;&nbsp;'); }
+.icon-streamline-group { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea08;&nbsp;'); }
+.icon-streamline-hierarchy-business { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea09;&nbsp;'); }
+.icon-streamline-shopping-cart-1 { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea0a;&nbsp;'); }
 .icon-toggle-off { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf204;&nbsp;'); }
 .icon-toggle-on { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf205;&nbsp;'); }

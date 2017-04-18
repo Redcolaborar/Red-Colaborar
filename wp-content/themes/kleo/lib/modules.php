@@ -7,66 +7,74 @@ class Modules_Data {
 	static $shortcodes = array(
 		'kleo_grid' => array(
 			'option_name' => 'sh_feature_item',
-			'css_file' => 'feature_item'
+			'css_file' => 'feature_item',
 		),
 		'kleo_feature_item' => array(
 			'option_name' => 'sh_feature_item',
-			'css_file' => 'feature_item'
+			'css_file' => 'feature_item',
 		),
 		'kleo_register' => array(
 			'option_name' => 'sh_kleo_register',
-			'css_file' => 'kleo_register'
+			'css_file' => 'kleo_register',
 		),
 		'kleo_news_focus' => array(
 			'option_name' => 'sh_news_focus',
-			'css_file' => 'news_focus'
+			'css_file' => 'news_focus',
 		),
 		'kleo_news_highlight' => array(
 			'option_name' => 'sh_news_highlight',
-			'css_file' => 'news_highlight'
+			'css_file' => 'news_highlight',
 		),
 		'kleo_news_ticker' => array(
 			'option_name' => 'sh_news_ticker',
-			'css_file' => 'news_ticker'
+			'css_file' => 'news_ticker',
+		),
+		'kleo_news_puzzle' => array(
+			'option_name' => 'sh_news_puzzle',
+			'css_file' => 'news_puzzle',
 		),
 		'kleo_pin' => array(
 			'option_name' => 'sh_poi',
-			'css_file' => 'poi_pins'
+			'css_file' => 'poi_pins',
 		),
 		'kleo_pricing_table' => array(
 			'option_name' => 'sh_pricing_table',
-			'css_file' => 'pricing_table'
+			'css_file' => 'pricing_table',
 		),
 		'kleo_pricing_table_item' => array(
 			'option_name' => 'sh_pricing_table',
-			'css_file' => 'pricing_table'
+			'css_file' => 'pricing_table',
 		),
 	);
 
+	/**
+	 * Modules that can be disabled from theme options
+	 * @var array
+	 */
 	static $modules = array(
 		'kleo_clients' => array(
-			'option_name' => 'module_clients'
+			'option_name' => 'module_clients',
 		),
 		'kleo_testimonials' => array(
-			'option_name' => 'module_testimonials'
+			'option_name' => 'module_testimonials',
 		),
 		'kleo_portfolio' => array(
-			'option_name' => 'module_portfolio'
-		)
+			'option_name' => 'module_portfolio',
+		),
 	);
 
 	public static function remove_shortcodes( $shortcodes ) {
-		if ( ! empty(self::$modules )) {
-			foreach( self::$modules as $k => $module ) {
-				if ( sq_option($module['option_name'], 1 ) == 0 ) {
+		if ( ! empty( self::$modules ) ) {
+			foreach ( self::$modules as $k => $module ) {
+				if ( sq_option( $module['option_name'], 1 ) == 0 ) {
 					unset( $shortcodes[ $k ] );
 				}
 			}
 		}
 
-		if ( ! empty( self::$shortcodes )) {
-			foreach( self::$shortcodes as $k => $shortcode ) {
-				if ( sq_option($shortcode['option_name'], 1 ) == 0 ) {
+		if ( ! empty( self::$shortcodes ) ) {
+			foreach ( self::$shortcodes as $k => $shortcode ) {
+				if ( sq_option( $shortcode['option_name'], 1 ) == 0 ) {
 					unset( $shortcodes[ $k ] );
 				}
 			}
@@ -108,7 +116,7 @@ class SQ_Modules_Config {
 		add_action( 'init', array( $this, 'register_plugins' ), 12 );
 		add_action( 'activated_plugin', array( $this, 'detect_plugin_change' ), 10 );
 		add_action( 'deactivated_plugin', array( $this, 'detect_plugin_change' ), 10 );
-		
+
 	}
 
 	public function set_data() {
@@ -165,7 +173,7 @@ class SQ_Modules_Config {
 		$this->sq_modules->add_mod( $app, 'base' );
 
 		// Contact form functionality
-		if( sq_option( 'contact_form', 1 ) == 1 ) {
+		if ( sq_option( 'contact_form', 1 ) == 1 ) {
 			$this->sq_modules->add_mod( $app, 'quick-contact-form' );
 			SQ_Modules::add_option( 'contact_form' );
 		}
@@ -251,7 +259,7 @@ class SQ_Modules_Config {
 				$this->sq_modules->add_mod( $plugins_scope ,'mc4wp' );
 			}
 			/* MyCred */
-			if (defined('myCRED_VERSION')) {
+			if ( defined( 'myCRED_VERSION' ) ) {
 				$this->sq_modules->add_mod( $plugins_scope ,'mycred' );
 			}
 
@@ -261,17 +269,17 @@ class SQ_Modules_Config {
 			}
 
 			/* Revslider */
-			if ( class_exists( 'RevSliderBase' ) ) {
+			/*if ( class_exists( 'RevSliderBase' ) ) {
 				$this->sq_modules->add_mod( $plugins_scope ,'revslider' );
-			}
+			}*/
 
 			/* RtMedia */
-			if (class_exists( 'RTMedia' )) {
+			if ( class_exists( 'RTMedia' ) ) {
 				$this->sq_modules->add_mod( $plugins_scope ,'rtmedia' );
 			}
 
 			/* Social Articles */
-			if (class_exists( 'SocialArticles' )) {
+			if ( class_exists( 'SocialArticles' ) ) {
 				$this->sq_modules->add_mod( $plugins_scope ,'social-articles' );
 			}
 

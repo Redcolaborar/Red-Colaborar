@@ -334,6 +334,47 @@ i.icon {
     filter: alpha(opacity=1);
 }
 
+/* ZoomIn & Shadow Style for Single Image */
+.zoomin-shd-singleimg .vc_figure {
+  transition: box-shadow 0.4s;
+}
+.zoomin-shd-singleimg .vc_figure:hover {
+  box-shadow: 0 12px 42px 12px rgba(0,0,0,0.08);
+}
+.zoomin-shd-singleimg .vc_figure .vc_single_image-img {
+  transition: transform 0.4s;
+}
+.zoomin-shd-singleimg .vc_figure:hover .vc_single_image-img {
+  transform: scale(1.05);
+}
+
+.zoomin-shd-singleimg.wpb_single_image .vc_figure {
+  overflow: hidden;
+}
+
+/* Progress bar slim style */
+.slim-style .vc_single_bar {
+  border-radius:10px;
+  height:10px;
+  margin-bottom: 54px;
+  margin-top: 50px;
+}
+.slim-style .vc_single_bar .vc_label {
+  position: absolute;
+  top: -40px;
+  left: 0;
+}
+.slim-style .vc_single_bar .vc_bar {
+  border-radius:10px;
+  height:10px;
+}
+
+
+.kleo-transform .vc_editor .animated.animate-when-visible,
+.kleo-transform .vc_editor .animated.animate-when-almost-visible {
+  opacity: 1;
+}
+
 /* --------------------------------------------------
     Ultimate Addons for Visual Composer - KLEO Compatibility
 ----------------------------------------------------- */

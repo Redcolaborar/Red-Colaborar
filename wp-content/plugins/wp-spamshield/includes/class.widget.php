@@ -1,7 +1,7 @@
 <?php
 /**
  *  WP-SpamShield Widgets
- *  File Version 1.9.9.9.1
+ *  File Version 1.9.9.9.4
  */
 
 /* Make sure file remains secure if called directly */
@@ -322,14 +322,14 @@ class WP_SpamShield_Counter_CG extends WP_Widget {
 		$title	= !empty( $instance['title'] ) ? sanitize_text_field( $instance['title'] ) : rs_wpss_blocked_txt('UCW');
 		$count	= rs_wpss_number_format( rs_wpss_count() );
 		/* $count	= rs_wpss_number_format( 1000000 ); // FOR TESTING & SCREEN SHOTS ONLY */
-		$byline	= str_replace( WPSS_PLUGIN_NAME, '<strong>WP-SpamShield</strong>', rs_wpss_casetrans( 'lower', WPSS_Promo_Links::promo_text(1) ) );
+		$byline	= str_replace( WPSS_PLUGIN_NAME, '<strong>WP-SpamShield</strong>', WPSS_Func::lower( WPSS_Promo_Links::promo_text(1) ) );
 		global $wpss_wid_inst;
 		if( !isset( $wpss_wid_inst ) ) { $wpss_wid_inst = 0; }
 		++$wpss_wid_inst;
-		
+
 		echo $args['before_widget'];
 		echo $args['before_title'] . $title . $args['after_title'];
-		
+
 		$this->css( $instance, $wpss_wid_inst );
 ?>
 
@@ -553,16 +553,16 @@ class WP_SpamShield_End_Blog_Spam extends WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
-		$title = !empty( $instance['title'] ) ? sanitize_text_field( $instance['title'] ) : __('End Blog Spam', WPSS_PLUGIN_NAME);
+		$title = !empty( $instance['title'] ) ? sanitize_text_field( $instance['title'] ) : __( 'End Blog Spam', WPSS_PLUGIN_NAME );
 		$style	= !empty( $instance['style'] ) ? sanitize_text_field( $instance['style'] ) : '1';
 		global $wpss_wid_inst;
 		if( !isset( $wpss_wid_inst ) ) { $wpss_wid_inst = 0; }
 		++$wpss_wid_inst;
 		$style_max = 5; $style_min = 1;
 		if( empty( $style ) || $style > $style_max || $style < $style_min ) { $style = 1; }
-		$sip1c = substr(WPSS_SERVER_ADDR, 0, 1);
+		$sip1c = substr( WPSS_SERVER_ADDR, 0, 1 );
 		$ht_x = $sip1c > '5' ? 2 : 3;
-		$hreftitle_txt = WPSS_Promo_Links::promo_text($ht_x);
+		$hreftitle_txt = WPSS_Promo_Links::promo_text( $ht_x );
 
 		echo $args['before_widget'];
 		echo $args['before_title'] . $title . $args['after_title'];
@@ -587,7 +587,7 @@ class WP_SpamShield_End_Blog_Spam extends WP_Widget {
 class WPSS_Old_Counters {
 	/* Old counter functions */
 
-	public static function counter_short( $atts = array() ) {
+	static public function counter_short( $atts = array() ) {
 		if( rs_wpss_is_admin_sproc() ) { return NULL; }
 		global $wpss_wid_inst;
 		if( !isset( $wpss_wid_inst ) ) { $wpss_wid_inst = 0; }
@@ -648,7 +648,7 @@ class WPSS_Old_Counters {
 		return $wpss_shortcode_content;
 	}
 
-	public static function counter_sm_short( $atts = array() ) {
+	static public function counter_sm_short( $atts = array() ) {
 		if( rs_wpss_is_admin_sproc() ) { return NULL; }
 		global $wpss_wid_inst;
 		if( !isset( $wpss_wid_inst ) ) { $wpss_wid_inst = 0; }

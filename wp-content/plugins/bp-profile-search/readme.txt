@@ -1,9 +1,9 @@
 === BP Profile Search ===
 Contributors: dontdream
 Tags: buddypress, directory, members, users, profile, search, filter
-Requires at least: 4.2
+Requires at least: 4.3
 Tested up to: 4.7
-Stable tag: 4.7.2
+Stable tag: 4.7.3
 
 Custom members search forms and results pages, and custom members directories for your BuddyPress site.
 
@@ -25,7 +25,7 @@ To build a Members directory, use the shortcode:
 
 A detailed documentation is available on the plugin's site, see for instance [BP Profile Search](http://www.dontdream.it/bp-profile-search/), and the [Custom Directories](http://dontdream.it/bp-profile-search/custom-directories/) tutorial.
 
-Requires at least BuddyPress 2.2 -- Tested up to BuddyPress 2.7
+Requires at least BuddyPress 2.2 -- Tested up to BuddyPress 2.8
 
 == Installation ==
 
@@ -41,6 +41,8 @@ Follow the standard plugin installation procedure.
 
 == Changelog ==
 
+= 4.7.3 =
+* Added filter to change the cookie name
 = 4.7.2 =
 * Fixed bug with custom field types introduced in 4.7.1
 = 4.7.1 =

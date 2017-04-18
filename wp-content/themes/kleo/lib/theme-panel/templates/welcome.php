@@ -298,7 +298,6 @@
 
 					<input type="hidden" name="kleo_import_nonce" value="<?php echo wp_create_nonce( 'import_nonce' ); ?>" />
 					<?php
-					$kleoImport->generate_boxes_css();
 					$kleoImport->generate_boxes_html();
 					?>
 				</form>

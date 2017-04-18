@@ -2868,7 +2868,6 @@ var TCParams = TCParams || {};
  *
  * (c) 2016 Nicolas Guillaume, Nice, France
  *
- *
  * Example of gif 1px x 1px placeholder :
  * 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
  *
@@ -2879,167 +2878,168 @@ var TCParams = TCParams || {};
  * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
  * =================================================== */
 ;(function ( $, window, document, undefined ) {
-  //defaults
-  var pluginName = 'imgSmartLoad',
-      defaults = {
-        load_all_images_on_first_scroll : false,
-        attribute : [ 'data-src', 'data-srcset', 'data-sizes' ],
-        excludeImg : '',
-        threshold : 200,
-        fadeIn_options : { duration : 400 },
-        delaySmartLoadEvent : 0
+      //defaults
+      var pluginName = 'imgSmartLoad',
+          defaults = {
+                load_all_images_on_first_scroll : false,
+                attribute : [ 'data-src', 'data-srcset', 'data-sizes' ],
+                excludeImg : '',
+                threshold : 200,
+                fadeIn_options : { duration : 400 },
+                delaySmartLoadEvent : 0
+          };
+
+
+      function Plugin( element, options ) {
+            this.element = element;
+            this.options = $.extend( {}, defaults, options) ;
+            this._defaults = defaults;
+            this._name = pluginName;
+            this.init();
+      }
+
+
+      //can access this.element and this.option
+      Plugin.prototype.init = function () {
+            var self        = this,
+                $_imgs   = $( 'img[' + this.options.attribute[0] + ']:not('+ this.options.excludeImg.join() +')' , this.element );
+
+            this.increment  = 1;//used to wait a little bit after the first user scroll actions to trigger the timer
+            this.timer      = 0;
+
+            //attach action to the load event
+            $_imgs.bind( 'load_img', {}, function() { self._load_img(this); });
+
+            $(window).scroll( function( _evt ) { self._better_scroll_event_handler( $_imgs, _evt ); } );
+            $(window).resize( _.debounce( function( _evt ) { self._maybe_trigger_load( $_imgs, _evt ); }, 100 ) );
+            //on load
+            this._maybe_trigger_load( $_imgs );
       };
 
 
-  function Plugin( element, options ) {
-    this.element = element;
-    this.options = $.extend( {}, defaults, options) ;
-    this._defaults = defaults;
-    this._name = pluginName;
-    this.init();
-  }
+      /*
+      * @param : array of $img
+      * @param : current event
+      * @return : void
+      * scroll event performance enhancer => avoid browser stack if too much scrolls
+      */
+      Plugin.prototype._better_scroll_event_handler = function( $_imgs , _evt ) {
+            var self = this;
+            if ( ! this.doingAnimation ) {
+                  this.doingAnimation = true;
+                  window.requestAnimationFrame(function() {
+                        self._maybe_trigger_load( $_imgs , _evt );
+                        self.doingAnimation = false;
+                  });
+            }
+      };
 
 
-  //can access this.element and this.option
-  Plugin.prototype.init = function () {
-    var self        = this,
-        $_imgs   = $( 'img[' + this.options.attribute[0] + ']:not('+ this.options.excludeImg.join() +')' , this.element );
-
-    this.increment  = 1;//used to wait a little bit after the first user scroll actions to trigger the timer
-    this.timer      = 0;
-
-    //attach action to the load event
-    $_imgs.bind( 'load_img', {}, function() { self._load_img(this); });
-
-    $(window).scroll( function( _evt ) { self._better_scroll_event_handler( $_imgs, _evt ); });
-    $(window).resize( function( _evt ) { self._maybe_trigger_load( $_imgs, _evt ); });
-    //on load
-    this._maybe_trigger_load( $_imgs );
-  };
+      /*
+      * @param : array of $img
+      * @param : current event
+      * @return : void
+      */
+      Plugin.prototype._maybe_trigger_load = function( $_imgs , _evt ) {
+            var self = this;
+                //get the visible images list
+                _visible_list = $_imgs.filter( function( ind, _img ) { return self._is_visible( _img ,  _evt ); } );
+            //trigger load_img event for visible images
+            _visible_list.map( function( ind, _img ) { $(_img).trigger( 'load_img' );  } );
+      };
 
 
-  /*
-  * @param : array of $img
-  * @param : current event
-  * @return : void
-  * scroll event performance enhancer => avoid browser stack if too much scrolls
-  */
-  Plugin.prototype._better_scroll_event_handler = function( $_imgs , _evt ) {
-    var self = this;
+      /*
+      * @param single $img object
+      * @param : current event
+      * @return bool
+      * helper to check if an image is the visible ( viewport + custom option threshold)
+      */
+      Plugin.prototype._is_visible = function( _img, _evt ) {
+            var $_img       = $(_img),
+                wt = $(window).scrollTop(),
+                wb = wt + $(window).height(),
+                it  = $_img.offset().top,
+                ib  = it + $_img.height(),
+                th = this.options.threshold;
 
-    if ( ! this.doingAnimation ) {
-      this.doingAnimation = true;
-      window.requestAnimationFrame(function() {
-        self._maybe_trigger_load( $_imgs , _evt );
-        self.doingAnimation = false;
-      });
-    }
-  };
+            //force all images to visible if first scroll option enabled
+            if ( _evt && 'scroll' == _evt.type && this.options.load_all_images_on_first_scroll )
+              return true;
 
-
-  /*
-  * @param : array of $img
-  * @param : current event
-  * @return : void
-  */
-  Plugin.prototype._maybe_trigger_load = function( $_imgs , _evt ) {
-    var self = this;
-        //get the visible images list
-        _visible_list = $_imgs.filter( function( ind, _img ) { return self._is_visible( _img ,  _evt ); } );
-    //trigger load_img event for visible images
-    _visible_list.map( function( ind, _img ) { $(_img).trigger( 'load_img' );  } );
-  };
+            return ib >= wt - th && it <= wb + th;
+      };
 
 
-  /*
-  * @param single $img object
-  * @param : current event
-  * @return bool
-  * helper to check if an image is the visible ( viewport + custom option threshold)
-  */
-  Plugin.prototype._is_visible = function( _img, _evt ) {
-    var $_img       = $(_img),
-        wt = $(window).scrollTop(),
-        wb = wt + $(window).height(),
-        it  = $_img.offset().top,
-        ib  = it + $_img.height(),
-        th = this.options.threshold;
+      /*
+      * @param single $img object
+      * @return void
+      * replace src place holder by data-src attr val which should include the real src
+      */
+      Plugin.prototype._load_img = function( _img ) {
+            var $_img    = $(_img),
+                _src     = $_img.attr( this.options.attribute[0] ),
+                _src_set = $_img.attr( this.options.attribute[1] ),
+                _sizes   = $_img.attr( this.options.attribute[2] ),
+                self = this;
 
-    //force all images to visible if first scroll option enabled
-    if ( _evt && 'scroll' == _evt.type && this.options.load_all_images_on_first_scroll )
-      return true;
+            $_img.parent().addClass('smart-loading');
 
-    return ib >= wt - th && it <= wb + th;
-  };
+            $_img.unbind('load_img')
+                  .hide()
+                  //https://api.jquery.com/removeAttr/
+                  //An attribute to remove; as of version 1.7, it can be a space-separated list of attributes.
+                  //minimum supported wp version (3.4+) embeds jQuery 1.7.2
+                  .removeAttr( this.options.attribute.join(' ') )
+                  .attr( 'sizes' , _sizes )
+                  .attr( 'srcset' , _src_set )
+                  .attr('src', _src )
+                  .load( function () {
+                        //prevent executing this twice on an already smartloaded img
+                        if ( ! $_img.hasClass('tc-smart-loaded') ) {
+                              $_img.fadeIn(self.options.fadeIn_options).addClass('tc-smart-loaded');
+                        }
 
+                        //Following would be executed twice if needed, as some browsers at the
+                        //first execution of the load callback might still have not actually loaded the img
 
-  /*
-  * @param single $img object
-  * @return void
-  * replace src place holder by data-src attr val which should include the real src
-  */
-  Plugin.prototype._load_img = function( _img ) {
-    var $_img    = $(_img),
-        _src     = $_img.attr( this.options.attribute[0] ),
-        _src_set = $_img.attr( this.options.attribute[1] ),
-        _sizes   = $_img.attr( this.options.attribute[2] ),
-        self = this;
+                        //jetpack's photon commpability (seems to be unneeded since jetpack 3.9.1)
+                        //Honestly to me this makes no really sense but photon does it.
+                        //Basically photon recalculates the image dimension and sets its
+                        //width/height attribute once the image is smartloaded. Given the fact that those attributes are "needed" by the browser to assign the images a certain space so that when loaded the page doesn't "grow" it's height .. what's the point doing it so late?
+                        if ( ( 'undefined' !== typeof $_img.attr('data-tcjp-recalc-dims')  ) && ( false !== $_img.attr('data-tcjp-recalc-dims') ) ) {
+                              var _width  = $_img.originalWidth();
+                                  _height = $_img.originalHeight();
 
-    $_img.parent().addClass('smart-loading');
+                              if ( 2 != _.size( _.filter( [ _width, _height ], function(num){ return _.isNumber( parseInt(num, 10) ) && num > 1; } ) ) )
+                                return;
 
-    $_img.unbind('load_img')
-    .hide()
-    //https://api.jquery.com/removeAttr/
-    //An attribute to remove; as of version 1.7, it can be a space-separated list of attributes.
-    //minimum supported wp version (3.4+) embeds jQuery 1.7.2
-    .removeAttr( this.options.attribute.join(' ') )
-    .attr( 'sizes' , _sizes )
-    .attr( 'srcset' , _src_set )
-    .attr('src', _src )
-    .load( function () {
-      //prevent executing this twice on an already smartloaded img
-      if ( ! $_img.hasClass('tc-smart-loaded') )
-        $_img.fadeIn(self.options.fadeIn_options).addClass('tc-smart-loaded');
+                              //From photon.js: Modify given image's markup so that devicepx-jetpack.js will act on the image and it won't be reprocessed by this script.
+                              $_img.removeAttr( 'data-tcjp-recalc-dims scale' );
 
-      //Following would be executed twice if needed, as some browsers at the
-      //first execution of the load callback might still have not actually loaded the img
+                              $_img.attr( 'width', _width );
+                              $_img.attr( 'height', _height );
+                        }
 
-      //jetpack's photon commpability (seems to be unneeded since jetpack 3.9.1)
-      //Honestly to me this makes no really sense but photon does it.
-      //Basically photon recalculates the image dimension and sets its
-      //width/height attribute once the image is smartloaded. Given the fact that those attributes are "needed" by the browser to assign the images a certain space so that when loaded the page doesn't "grow" it's height .. what's the point doing it so late?
-      if ( ( 'undefined' !== typeof $_img.attr('data-tcjp-recalc-dims')  ) && ( false !== $_img.attr('data-tcjp-recalc-dims') ) ) {
-        var _width  = $_img.originalWidth();
-            _height = $_img.originalHeight();
-
-        if ( 2 != _.size( _.filter( [ _width, _height ], function(num){ return _.isNumber( parseInt(num, 10) ) && num > 1; } ) ) )
-          return;
-
-        //From photon.js: Modify given image's markup so that devicepx-jetpack.js will act on the image and it won't be reprocessed by this script.
-        $_img.removeAttr( 'data-tcjp-recalc-dims scale' );
-
-        $_img.attr( 'width', _width );
-        $_img.attr( 'height', _height );
-      }
-
-      $_img.trigger('smartload');
-    });//<= create a load() fn
-    //http://stackoverflow.com/questions/1948672/how-to-tell-if-an-image-is-loaded-or-cached-in-jquery
-    if ( $_img[0].complete )
-      $_img.load();
-    $_img.parent().removeClass('smart-loading');
-  };
+                        $_img.trigger('smartload');
+                  });//<= create a load() fn
+            //http://stackoverflow.com/questions/1948672/how-to-tell-if-an-image-is-loaded-or-cached-in-jquery
+            if ( $_img[0].complete ) {
+                  $_img.load();
+            }
+            $_img.parent().removeClass('smart-loading');
+      };
 
 
-  // prevents against multiple instantiations
-  $.fn[pluginName] = function ( options ) {
-    return this.each(function () {
-        if (!$.data(this, 'plugin_' + pluginName)) {
-            $.data(this, 'plugin_' + pluginName,
-            new Plugin( this, options ));
-        }
-    });
-  };
+      // prevents against multiple instantiations
+      $.fn[pluginName] = function ( options ) {
+            return this.each(function () {
+                  if (!$.data(this, 'plugin_' + pluginName)) {
+                        $.data(this, 'plugin_' + pluginName,
+                        new Plugin( this, options ));
+                  }
+            });
+      };
 })( jQuery, window, document );
 //Target the first letter of the first element found in the wrapper
 ;(function ( $, window, document, undefined ) {
@@ -3248,30 +3248,44 @@ var TCParams = TCParams || {};
       };
 
   function Plugin( element, options ) {
-    this.container = element;
-    this.options = $.extend( {}, defaults, options) ;
-    this._defaults = defaults;
-    this._name = pluginName;
+    var self = this;
+    this.container  = element;
+    this.options    = $.extend( {}, defaults, options) ;
+    this._defaults  = defaults;
+    this._name      = pluginName;
+    this._customEvt = $.isArray(self.options.oncustom) ? self.options.oncustom : self.options.oncustom.split(' ');
     this.init();
   }
 
   //can access this.element and this.option
   //@return void
   Plugin.prototype.init = function () {
-    var self = this;
+    var self = this,
+        _do = function() {
+            //applies golden ratio to all containers ( even if there are no images in container )
+            self._maybe_apply_golden_r();
 
-    //applies golden ratio to all containers ( even if there are no images in container )
-    this._maybe_apply_golden_r();
+            //parses imgs ( if any ) in current container
+            var $_imgs = $( self.options.imgSel , self.container );
 
-    //parses imgs ( if any ) in current container
-    var $_imgs = $( this.options.imgSel , this.container );
+            //if no images or centering is not active, only handle the golden ratio on resize event
+            if ( ! $_imgs.length || ! self.options.enableCentering ) {
+              //creates a golden ratio fn on resize
+              $(window).bind( 'resize' , {} , function( evt ) { self._maybe_apply_golden_r( evt ); });
+            } else {
+              self._parse_imgs($_imgs);
+            }
+        };
 
-    //if no images or centering is not active, only handle the golden ratio on resize event
-    if ( ! $_imgs.length || ! this.options.enableCentering ) {
-      //creates a golden ratio fn on resize
-      $(window).bind( 'resize' , {} , function( evt ) { self._maybe_apply_golden_r( evt ); });
-    } else {
-      this._parse_imgs($_imgs);
+    //fire
+    _do();
+
+    //bind the container element with custom events if any
+    //( the images will also be bound )
+    if ( $.isArray( self._customEvt ) ) {
+          self._customEvt.map( function( evt ) {
+              $( self.container ).bind( evt, {} , _do );
+          } );
     }
   };
 
@@ -3313,8 +3327,8 @@ var TCParams = TCParams || {};
     var self = this;
 
     $_imgs.each(function ( ind, img ) {
-      self._pre_img_cent( $(img) );
-      self._bind_evt ( $(img) );
+        self._pre_img_cent( $(img) );
+        self._bind_evt ( $(img) );
     });
   };
 
@@ -3322,25 +3336,27 @@ var TCParams = TCParams || {};
   //@return void
   //map custom events if any
   Plugin.prototype._bind_evt = function( $_img ) {
-    var self = this,
-        _customEvt = $.isArray(this.options.oncustom) ? this.options.oncustom : this.options.oncustom.split(' ');
+    var self = this;
 
     //WINDOW RESIZE EVENT ACTIONS
     //GOLDEN RATIO (before image centering)
     $(window).bind( 'resize' , {} , function( evt ) { self._maybe_apply_golden_r( evt ); });
 
     //IMG CENTERING FN
-    if ( this.options.onresize )
-      $(window).resize(function() {
-        self._pre_img_cent( $_img );
-      });
-
+    if ( this.options.onresize ) {
+        $(window).resize(function() {
+            self._pre_img_cent( $_img );
+        });
+    }
     //CUSTOM EVENTS ACTIONS
-    _customEvt.map( function( evt ) {
-      $_img.bind( evt, {} , function( evt ) {
-        self._pre_img_cent( $_img );
-      } );
-    } );
+    //bind img
+    if ( $.isArray( self._customEvt ) ) {
+        self._customEvt.map( function( evt ) {
+            $_img.bind( evt, {} , function( evt ) {
+                self._pre_img_cent( $_img );
+            } );
+        } );
+    }
   };
 
 
@@ -3470,147 +3486,157 @@ var TCParams = TCParams || {};
  *
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
- * Requires requestAnimationFrame polyfill:
- * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+ *
  *
  * =================================================== */
 ;(function ( $, window, document, undefined ) {
-  //defaults
-  var pluginName = 'czrParallax',
-      defaults = {
-        parallaxRatio : 0.5,
-        parallaxDirection : 1,
-        parallaxOverflowHidden : true,
-        oncustom : [],//list of event here
-        backgroundClass : 'image'
-      };
+        //defaults
+        var pluginName = 'czrParallax',
+            defaults = {
+                  parallaxRatio : 0.5,
+                  parallaxDirection : 1,
+                  parallaxOverflowHidden : true,
+                  oncustom : [],//list of event here
+                  backgroundClass : 'image',
+                  matchMedia : 'only screen and (max-width: 768px)'
+            };
 
-  function Plugin( element, options ) {
-    this.element = $(element);
-    this.options = $.extend( {}, defaults, options, this.parseElementDataOptions() ) ;
-    this._defaults = defaults;
-    this._name = pluginName;
-    this.init();
-  }
-
-  Plugin.prototype.parseElementDataOptions = function () {
-    return this.element.data();
-  };
-
-  //can access this.element and this.option
-  //@return void
-  Plugin.prototype.init = function () {
-    //cache some element
-    this.$_document   = $(document);
-    this.$_window     = czrapp ? czrapp.$_window : $(window);
-    this.doingAnimation = false;
-
-    this.initWaypoints();
-    this.stageParallaxElements();
-    this._bind_evt();
-  };
-
-  //@return void
-  //map custom events if any
-  Plugin.prototype._bind_evt = function() {
-    var self = this,
-        _customEvt = $.isArray(this.options.oncustom) ? this.options.oncustom : this.options.oncustom.split(' ');
-
-    _.bindAll( this, 'maybeParallaxMe', 'parallaxMe' );
-    /* TODO: custom events? */
-  };
-
-  Plugin.prototype.stageParallaxElements = function() {
-
-    this.element.css( 'position', this.element.hasClass( this.options.backgroundClass ) ? 'absolute' : 'relative' );
-    if ( this.options.parallaxOverflowHidden ){
-      var $_wrapper = this.element.closest( '.parallax-wrapper' );
-      if ( $_wrapper.length )
-        $_wrapper.css( 'overflow', 'hidden' );
-    }
-  };
-
-  Plugin.prototype.initWaypoints = function() {
-    var self = this;
-
-      this.way_start = new Waypoint({
-        element: self.element,
-        handler: function() {
-          self.maybeParallaxMe();
-          if ( ! self.element.hasClass('parallaxing') ){
-            self.$_window.on('scroll', self.maybeParallaxMe );
-            self.element.addClass('parallaxing');
-          }else{
-            self.element.removeClass('parallaxing');
-            self.$_window.off('scroll', self.maybeParallaxMe );
-            self.doingAnimation = false;
-            self.element.css('top', 0 );
-          }
+        function Plugin( element, options ) {
+              this.element = $(element);
+              this.options = $.extend( {}, defaults, options, this.parseElementDataOptions() ) ;
+              this._defaults = defaults;
+              this._name = pluginName;
+              this.init();
         }
-      });
 
-      this.way_stop = new Waypoint({
-        element: self.element,
-        handler: function() {
-          self.maybeParallaxMe();
-          if ( ! self.element.hasClass('parallaxing') ) {
-            self.$_window.on('scroll', self.maybeParallaxMe );
-            self.element.addClass('parallaxing');
-          }else {
-            self.element.removeClass('parallaxing');
-            self.$_window.off('scroll', self.maybeParallaxMe );
-            self.doingAnimation = false;
-          }
-        },
-        offset: function(){
-          //offset = this.context.innerHeight() - this.adapter.outerHeight();
-          //return - (  offset > 20 /* possible wrong h scrollbar */ ? offset : this.context.innerHeight() );
-          return - this.adapter.outerHeight();
-        }
-      });
-  };
+        Plugin.prototype.parseElementDataOptions = function () {
+              return this.element.data();
+        };
 
-  /*
-  * In order to handle a smooth scroll
-  */
-  Plugin.prototype.maybeParallaxMe = function() {
-      var self = this;
+        //can access this.element and this.option
+        //@return void
+        Plugin.prototype.init = function () {
+              //cache some element
+              this.$_document   = $(document);
+              this.$_window     = czrapp ? czrapp.$_window : $(window);
+              this.doingAnimation = false;
 
-      if ( !this.doingAnimation ) {
-        this.doingAnimation = true;
-        window.requestAnimationFrame(function() {
-          self.parallaxMe();
-          self.doingAnimation = false;
-        });
-      }
-  };
+              this.initWaypoints();
+              this.stageParallaxElements();
+              this._bind_evt();
+        };
 
-  Plugin.prototype.parallaxMe = function() {
-      //parallax only the current slide if in slider context?
-      /*
-      if ( ! ( this.element.hasClass( 'is-selected' ) || this.element.parent( '.is-selected' ).length ) )
-        return;
-      */
+        //@return void
+        //map custom events if any
+        Plugin.prototype._bind_evt = function() {
+              var self = this,
+                  _customEvt = $.isArray(this.options.oncustom) ? this.options.oncustom : this.options.oncustom.split(' ');
 
-      var ratio = this.options.parallaxRatio,
-          parallaxDirection = this.options.parallaxDirection,
+              _.bindAll( this, 'maybeParallaxMe', 'parallaxMe' );
+              /* TODO: custom events? */
+        };
 
-          value = ratio * parallaxDirection * ( this.$_document.scrollTop() - this.way_start.triggerPoint );
+        Plugin.prototype.stageParallaxElements = function() {
+              this.element.css( 'position', this.element.hasClass( this.options.backgroundClass ) ? 'absolute' : 'relative' );
+              if ( this.options.parallaxOverflowHidden ){
+                    var $_wrapper = this.element.closest( '.parallax-wrapper' );
+                    if ( $_wrapper.length )
+                      $_wrapper.css( 'overflow', 'hidden' );
+              }
+        };
 
-       this.element.css('top', parallaxDirection * value < 0 ? 0 : value );
-  };
+        Plugin.prototype.initWaypoints = function() {
+              var self = this;
+
+              this.way_start = new Waypoint({
+                    element: self.element,
+                    handler: function() {
+                          self.maybeParallaxMe();
+                          if ( ! self.element.hasClass('parallaxing') ){
+                                self.$_window.on('scroll', self.maybeParallaxMe );
+                                self.element.addClass('parallaxing');
+                          } else{
+                                self.element.removeClass('parallaxing');
+                                self.$_window.off('scroll', self.maybeParallaxMe );
+                                self.doingAnimation = false;
+                                self.element.css('top', 0 );
+                          }
+                    }
+              });
+
+              this.way_stop = new Waypoint({
+                    element: self.element,
+                    handler: function() {
+                          self.maybeParallaxMe();
+                          if ( ! self.element.hasClass('parallaxing') ) {
+                                self.$_window.on('scroll', self.maybeParallaxMe );
+                                self.element.addClass('parallaxing');
+                          }else {
+                                self.element.removeClass('parallaxing');
+                                self.$_window.off('scroll', self.maybeParallaxMe );
+                                self.doingAnimation = false;
+                          }
+                    },
+                    offset: function(){
+                          //offset = this.context.innerHeight() - this.adapter.outerHeight();
+                          //return - (  offset > 20 /* possible wrong h scrollbar */ ? offset : this.context.innerHeight() );
+                          return - this.adapter.outerHeight();
+                    }
+              });
+        };
+
+        /*
+        * In order to handle a smooth scroll
+        */
+        Plugin.prototype.maybeParallaxMe = function() {
+              var self = this;
+              //options.matchMedia is set to 'only screen and (max-width: 768px)' by default
+              //if a match is found, then reset the top position
+              if ( _.isFunction( window.matchMedia ) && matchMedia( self.options.matchMedia ).matches )
+                return this.setTopPosition();
+
+              if ( ! this.doingAnimation ) {
+                    this.doingAnimation = true;
+                    window.requestAnimationFrame(function() {
+                          self.parallaxMe();
+                          self.doingAnimation = false;
+                    });
+              }
+        };
+
+        //@see https://www.paulirish.com/2012/why-moving-elements-with-translate-is-better-than-posabs-topleft/
+        Plugin.prototype.setTopPosition = function( _top_ ) {
+              _top_ = _top_ || 0;
+              this.element.css({
+                    'transform' : 'translate3d(0px, ' + _top_  + 'px, .01px)',
+                    '-webkit-transform' : 'translate3d(0px, ' + _top_  + 'px, .01px)'
+                    //top: _top_
+              });
+        };
+
+        Plugin.prototype.parallaxMe = function() {
+              //parallax only the current slide if in slider context?
+              /*
+              if ( ! ( this.element.hasClass( 'is-selected' ) || this.element.parent( '.is-selected' ).length ) )
+                return;
+              */
+
+              var ratio = this.options.parallaxRatio,
+                  parallaxDirection = this.options.parallaxDirection,
+                  value = ratio * parallaxDirection * ( this.$_document.scrollTop() - this.way_start.triggerPoint );
+              this.setTopPosition( parallaxDirection * value < 0 ? 0 : value );
+        };
 
 
-  // prevents against multiple instantiations
-  $.fn[pluginName] = function ( options ) {
-      return this.each(function () {
-          if (!$.data(this, 'plugin_' + pluginName)) {
-              $.data(this, 'plugin_' + pluginName,
-              new Plugin( this, options ));
-          }
-      });
-  };
-
+        // prevents against multiple instantiations
+        $.fn[pluginName] = function ( options ) {
+            return this.each(function () {
+                if (!$.data(this, 'plugin_' + pluginName)) {
+                    $.data(this, 'plugin_' + pluginName,
+                    new Plugin( this, options ));
+                }
+            });
+        };
 })( jQuery, window, document );// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 
@@ -3639,6 +3665,55 @@ var TCParams = TCParams || {};
         window.cancelAnimationFrame = function(id) {
             clearTimeout(id);
         };
+}());/*! matchMedia() polyfill - Test a CSS media type/query in JS. Authors & copyright (c) 2012: Scott Jehl, Paul Irish, Nicholas Zakas, David Knight. Dual MIT/BSD license */
+
+window.matchMedia || (window.matchMedia = function() {
+    "use strict";
+
+    // For browsers that support matchMedium api such as IE 9 and webkit
+    var styleMedia = (window.styleMedia || window.media);
+
+    // For those that don't support matchMedium
+    if (!styleMedia) {
+        var style       = document.createElement('style'),
+            script      = document.getElementsByTagName('script')[0],
+            info        = null;
+
+        style.type  = 'text/css';
+        style.id    = 'matchmediajs-test';
+
+        if (!script) {
+          document.head.appendChild(style);
+        } else {
+          script.parentNode.insertBefore(style, script);
+        }
+
+        // 'style.currentStyle' is used by IE <= 8 and 'window.getComputedStyle' for all other browsers
+        info = ('getComputedStyle' in window) && window.getComputedStyle(style, null) || style.currentStyle;
+
+        styleMedia = {
+            matchMedium: function(media) {
+                var text = '@media ' + media + '{ #matchmediajs-test { width: 1px; } }';
+
+                // 'style.styleSheet' is used by IE <= 8 and 'style.textContent' for all other browsers
+                if (style.styleSheet) {
+                    style.styleSheet.cssText = text;
+                } else {
+                    style.textContent = text;
+                }
+
+                // Test if media query is true or false
+                return info.width === '1px';
+            }
+        };
+    }
+
+    return function(media) {
+        return {
+            matches: styleMedia.matchMedium(media || 'all'),
+            media: media || 'all'
+        };
+    };
 }());// Customizr version of Galambosi's SmoothScroll
 
 // SmoothScroll for websites v1.3.8 (Balazs Galambosi)
@@ -5161,8 +5236,8 @@ var czrapp = czrapp || {};
                   - > CUSTOM REFRESH CACHE EVENT on partial content rendered (customizer preview)
                   ------------------------------------------------------*/
                   if ( 'undefined' !== typeof wp && 'undefined' !== typeof wp.customize && 'undefined' !== typeof wp.customize.selectiveRefresh ) {
-                        wp.customize.selectiveRefresh.bind( 'partial-content-rendered', function(placement) {
-                              czrapp.cacheInnerElements().$_body.trigger('partialRefresh.czr', placement);
+                        wp.customize.selectiveRefresh.bind( 'partial-content-rendered', function( placement ) {
+                              czrapp.cacheInnerElements().$_body.trigger( 'partialRefresh.czr', placement );
                         });
                   }
 
@@ -5603,8 +5678,8 @@ var czrapp = czrapp || {};
         oncustom : ['smartload', 'refresh-height', 'simple_load'] //bind 'refresh-height' event (triggered to the the customizer preview frame)
       });
 
-      //SINGLE POST THUMBNAILS
-      $('.tc-rectangular-thumb' , '.single').centerImages( {
+      //SINGLE POST/PAGE THUMBNAILS
+      $('.tc-rectangular-thumb' , '.tc-singular-thumbnail-wrapper').centerImages( {
         enableCentering : 1 == TCParams.centerAllImg,
         enableGoldenRatio : false,
         disableGRUnder : 0,//<= don't disable golden ratio when responsive
@@ -6086,28 +6161,28 @@ var czrapp = czrapp || {};
         this._manageMenuSeparator( _locationOnDomReady , userOption)._moveSecondMenu( _locationOnDomReady , userOption );
 
       //fire on custom resize event
-      czrapp.$_body.on( 'tc-resize partialRefresh.czr', function( e, param ) {
-        var _force = false;
+      czrapp.$_body.on( 'tc-resize partialRefresh.czr', function( ev, param ) {
+            var _force = false;
 
-        if ( 'partialRefresh' == e.type && 'czr' === e.namespace && param.container.hasClass('tc-header')  ) {
-          //clean old moved elements and separator
-          _maybeClean();
-          //re-cache elements
-          _cacheElements();
-          //setup params for the move to
-          param   = { to: czrapp.current_device, current: czrapp.current_device };
-          //force actions
-          _force  = true;
-        }
+            if ( 'partialRefresh' == ev.type && 'czr' === ev.namespace && param.container && param.container.hasClass('tc-header')  ) {
+                  //clean old moved elements and separator
+                  _maybeClean();
+                  //re-cache elements
+                  _cacheElements();
+                  //setup params for the move to
+                  param   = { to: czrapp.current_device, current: czrapp.current_device };
+                  //force actions
+                  _force  = true;
+            }
 
-        param = _.isObject(param) ? param : {};
-        var _to = 'desktop' != param.to ? 'side_nav' : 'navbar',
-            _current = 'desktop' != param.current ? 'side_nav' : 'navbar';
+            param = _.isObject(param) ? param : {};
+            var _to = 'desktop' != param.to ? 'side_nav' : 'navbar',
+                _current = 'desktop' != param.current ? 'side_nav' : 'navbar';
 
-        if ( _current == _to && !_force )
-          return;
+            if ( _current == _to && !_force )
+              return;
 
-        that._manageMenuSeparator( _to, userOption)._moveSecondMenu( _to, userOption );
+            that._manageMenuSeparator( _to, userOption)._moveSecondMenu( _to, userOption );
       } );//.on()
 
     },
@@ -6225,10 +6300,10 @@ var czrapp = czrapp || {};
 
       //PARTIAL REFRESH ACTIONS
       czrapp.$_body.on( 'partialRefresh.czr', function( e, placement ) {
-        if ( placement.container.hasClass('tc-header') ) {
-          self.stickyHeaderCacheElements();
-          self.stickyHeaderEventHandler('resize');
-        }
+            if ( placement.container && placement.container.hasClass( 'tc-header' )  ) {
+                  self.stickyHeaderCacheElements();
+                  self.stickyHeaderEventHandler('resize');
+            }
       });
 
       //SCROLLING ACTIONS
@@ -6794,16 +6869,16 @@ var czrapp = czrapp || {};
     * DOM EVENT LISTENERS AND HANDLERS
     ***********************************************/
     dropdownPlaceEventListener : function() {
-      var self    = this,
-          _events = 'tc-resize sn-open sn-close tc-sticky-enabled tc-place-dropdowns partialRefresh.czr';
+          var self    = this,
+              _events = 'tc-resize sn-open sn-close tc-sticky-enabled tc-place-dropdowns partialRefresh.czr';
 
-      //Any event which may have resized the header
-      czrapp.$_body.on( _events, function( evt, data ) {
-        if ( 'partialRefresh' === evt.type && 'czr' === evt.namespace && data.container.hasClass('tc-header')  ) {
-          self.dropdownPlaceCacheElements();
-        }
-        self.dropdownPlaceEventHandler( evt, 'resize' );
-      });
+          //Any event which may have resized the header
+          czrapp.$_body.on( _events, function( evt, data ) {
+                if ( 'partialRefresh' === evt.type && 'czr' === evt.namespace && data.container && data.container.hasClass( 'tc-header' )  ) {
+                      self.dropdownPlaceCacheElements();
+                }
+                self.dropdownPlaceEventHandler( evt, 'resize' );
+          });
     },
 
 

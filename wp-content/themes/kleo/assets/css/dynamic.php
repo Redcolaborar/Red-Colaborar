@@ -171,7 +171,6 @@ border-top-color: <?php echo $section['border']; ?>;
 .<?php echo $name; ?>-color #buddypress div.activity-comments form textarea,
 
 .<?php echo $name; ?>-color #buddypress div#item-nav ul li a:hover:before,
-.<?php echo $name; ?>-color #buddypress div#item-nav ul li.current a:before,
 
 .<?php echo $name; ?>-color #buddypress button,
 .<?php echo $name; ?>-color #buddypress a.button,
@@ -313,7 +312,6 @@ border-top-color: <?php echo $section['border']; ?>;
 .<?php echo $name; ?>-color #buddypress input[type=submit],
 .<?php echo $name; ?>-color #buddypress #friend-list .friend-inner-list,
 .<?php echo $name; ?>-color #buddypress #member-list .member-inner-list,
-.<?php echo $name; ?>-color #buddypress #members-list .member-inner-list,
 .<?php echo $name; ?>-color #buddypress #groups-list .group-inner-list,
 .<?php echo $name; ?>-color #buddypress .activity-list .activity-avatar,
 
@@ -463,7 +461,6 @@ $bg_fallback = $section['bg'] == 'transparent' ? '#ffffff' : $section['bg'];
 
 /* Buddypress */
 .<?php echo $name; ?>-color .activity-timeline,
-.<?php echo $name; ?>-color #buddypress div.item-list-tabs ul li a span,
 .<?php echo $name; ?>-color #buddypress button,
 .buddypress .<?php echo $name; ?>-color a.button,
 .<?php echo $name; ?>-color #buddypress a.button,
@@ -939,6 +936,7 @@ $bg_fallback = $section['bg'] == 'transparent' ? '#ffffff' : $section['bg'];
     .<?php echo $name; ?>-color .news-highlight .posts-listing .label,
 
 /* Buddypress */
+/*.bp-overlay-menu .<?php echo $name; ?>-color #buddypress div.item-list-tabs ul.responsive-tabs li a span,*/
 .<?php echo $name; ?>-color #buddypress li span.unread-count,
 .<?php echo $name; ?>-color #buddypress #groups-list .item-avatar .member-count,
 .<?php echo $name; ?>-color #buddypress div.generic-button a.add,
@@ -1002,6 +1000,7 @@ $bg_fallback = $section['bg'] == 'transparent' ? '#ffffff' : $section['bg'];
     .<?php echo $name; ?>-color .news-highlight .posts-listing .label,
 
 /* Buddypress */
+/*.bp-overlay-menu .<?php echo $name; ?>-color #buddypress div.item-list-tabs ul.responsive-tabs li a span,*/
 .<?php echo $name; ?>-color input[type="radio"]:checked + .radiobox-mark span,
 .buddypress .<?php echo $name; ?>-color .kleo-online-status.high-bg,
 .<?php echo $name; ?>-color #buddypress div.generic-button a.add,
@@ -1159,6 +1158,8 @@ $bg_fallback = $section['bg'] == 'transparent' ? '#ffffff' : $section['bg'];
 .<?php echo $name; ?>-color #buddypress div.item-list-tabs#subnav ul li.selected a,
 .<?php echo $name; ?>-color #buddypress div.item-list-tabs#subnav ul li a:hover,
 .<?php echo $name; ?>-color #buddypress div.item-list-tabs li.selected a,
+.<?php echo $name; ?>-color #buddypress div#item-nav .tabdrop .dropdown-menu li.selected a:before,
+.<?php echo $name; ?>-color #buddypress div#item-nav ul li.current a:before,
 .manage-members .<?php echo $name; ?>-color .member-name,
 .manage-members .<?php echo $name; ?>-color .member-name a,
 
@@ -1487,7 +1488,7 @@ foreach( $style_sets as $set ) {
 }
 
 if ( sq_option( 'menu_size', '' ) != '' ) {
-  echo '.kleo-main-header .navbar-nav > li > a { font-size: ' . sq_option( 'menu_size', '' ) . 'px; }';
+  echo '.kleo-main-header .navbar-nav > li > a { font-size: ' . kleo_set_default_unit( sq_option( 'menu_size', '' ) ) . '; }';
 }
 
 if ( sq_option( 'boxed_size', '1440' ) != '1440' ) {

@@ -333,13 +333,15 @@ jq(document).ready( function() {
 			type      = target.hasClass('fav') ? 'fav' : 'unfav';
 			parent    = target.closest('.activity-item');
 			parent_id = parent.attr('id').substr( 9, parent.attr('id').length );
+			nonce     = bp_get_query_var( '_wpnonce', target.attr( 'href' ) );
 
 			target.addClass('loading');
 
 			jq.post( ajaxurl, {
 				action: 'activity_mark_' + type,
 				'cookie': bp_get_cookies(),
-				'id': parent_id
+				'id': parent_id,
+				nonce: nonce
 			},
 			function(response) {
 				target.removeClass('loading');
@@ -1489,7 +1491,7 @@ jq(document).ready( function() {
 	);
 
 	/* Marking private messages as read and unread */
-	jq('#mark_as_read, #mark_as_unread').click(function() {
+	/*jq('#mark_as_read, #mark_as_unread').click(function() {
 		var checkboxes_tosend = '',
 			checkboxes = jq('#message-threads li .mark-item input[type="checkbox"]'),
 			currentClass, newClass, unreadCount, inboxCount, unreadCountDisplay, action,
@@ -1537,7 +1539,7 @@ jq(document).ready( function() {
 			'thread_ids': checkboxes_tosend
 		});
 		return false;
-	});
+	});*/
 
 	/* Selecting unread and read messages in inbox */
 	jq( 'body.messages #item-body div.messages' ).on( 'change', '#message-type-select', function() {
@@ -1567,7 +1569,7 @@ jq(document).ready( function() {
 	});
 
 	/* Bulk delete messages */
-	jq( 'body.messages #item-body div.messages' ).on( 'click', '.messages-options-nav a', function() {
+	/*jq( 'body.messages #item-body div.messages' ).on( 'click', '.messages-options-nav a', function() {
 		if ( -1 === jq.inArray( this.id, Array( 'delete_sentbox_messages', 'delete_inbox_messages' ) ) ) {
 			return;
 		}
@@ -1613,7 +1615,7 @@ jq(document).ready( function() {
 		});
 
 		return false;
-	});
+	});*/
 
 	/* Selecting/Deselecting all messages */
 	jq('#select-all-messages').click(function(event) {
@@ -1742,8 +1744,9 @@ jq(document).ready( function() {
 
 		jq.post( ajaxurl, {
 			action: 'messages_close_notice',
-			'notice_id': jq('.notice').attr('rel').substr( 2, jq('.notice').attr('rel').length )
-		},
+			'notice_id': jq('.notice').attr('rel').substr( 2, jq('.notice').attr('rel').length ),
+			nonce: jq( '#close-notice-nonce' ).val()
+			},
 		function(response) {
 			jq('#close-notice').removeClass('loading');
 
@@ -1859,22 +1862,17 @@ jq(document).ready( function() {
 	});
 	
 	/* KLEO Header Profile and Group toggle */
-	jq('.toggle-header').click(function(){
-		if(jq('#item-header-content').is(":visible")) {
-			jq('#item-header-content').slideUp(400, function() {
-				jq('body').addClass('bp-header-small');
-				jq.cookie( 'bp-profile-header', 'small', {
-					path: '/'
-				} );
-			});
+	jq('.toggle-header').on('click', function() {
+		if( ! jq('body').hasClass("bp-header-small")) {
+			jq('body').addClass('bp-header-small');
+			jq.cookie( 'bp-profile-header', 'small', {
+				path: '/'
+			} );
 		} else {
-			jq('#item-header-content').slideDown(400, function() {
-				jq('body').removeClass('bp-header-small');
-				jq.cookie('bp-profile-header', null, { path: '/' });
-			});
+			jq('body').removeClass('bp-header-small');
+			jq.cookie('bp-profile-header', null, { path: '/' });
 		}
-
-	});		
+	})
 });
 
 
@@ -2167,3 +2165,33 @@ function bp_get_cookies() {
 	// returns BP cookies as querystring
 	return encodeURIComponent( jq.param(bpCookies) );
 }
+
+/**
+ * Get a querystring parameter from a URL.
+ *
+ * @param param {String} Query string parameter name.
+ * @param url {String} URL to parse. Defaults to current URL.
+ */
+function bp_get_query_var(param, url) {
+	var qs = {};
+
+	// Use current URL if no URL passed.
+	if (typeof url === 'undefined') {
+		url = location.search.substr(1).split('&');
+	} else {
+		url = url.split('?')[1].split('&');
+	}
+
+	// Parse querystring into object props.
+	// http://stackoverflow.com/a/21152762
+	url.forEach(function (item) {
+		qs[item.split("=")[0]] = item.split("=")[1] && decodeURIComponent(item.split("=")[1]);
+	});
+
+	if (qs.hasOwnProperty(param) && qs[param] != null) {
+		return qs[param];
+	} else {
+		return false;
+	}
+}
+

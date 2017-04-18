@@ -12,7 +12,7 @@ if ( ! function_exists( 'sq_option' ) ) {
 	 * @param int $option The option we need from the DB
 	 * @param string $default If $option doesn't exist in DB return $default value
 	 *
-	 * @return string
+	 * @return string|array
 	 */
 	function sq_option( $option = false, $default = false ) {
 		$output_data = false;
@@ -266,7 +266,7 @@ if ( ! function_exists( 'kleo_pagination' ) ) :
 	 *
 	 * @since Squeen Framework 1.0
 	 */
-	function kleo_pagination( $pages = '', $echo = true ) {
+	function kleo_pagination( $pages = '', $echo = true, $current = false  ) {
 
 		$output = '';
 		if ( $pages == '' ) {
@@ -282,7 +282,11 @@ if ( ! function_exists( 'kleo_pagination' ) ) :
 			return;
 		}
 
-		$paged        = get_query_var( 'paged' ) ? intval( get_query_var( 'paged' ) ) : 1;
+		if ( $current ) {
+			$paged = $current;
+		} else {
+			$paged = get_query_var( 'paged' ) ? intval( get_query_var( 'paged' ) ) : 1;
+		}
 		$pagenum_link = html_entity_decode( get_pagenum_link() );
 		$query_args   = array();
 		$url_parts    = explode( '?', $pagenum_link );
@@ -307,7 +311,7 @@ if ( ! function_exists( 'kleo_pagination' ) ) :
 			'add_args'  => array_map( 'urlencode', $query_args ),
 			'prev_text' => __( '&laquo;', 'kleo_framework' ),
 			'next_text' => __( '&raquo;', 'kleo_framework' ),
-			'type'      => 'array'
+			'type'      => 'array',
 		) );
 
 		if ( $links ) {

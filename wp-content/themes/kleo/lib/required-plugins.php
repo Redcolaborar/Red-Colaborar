@@ -49,9 +49,9 @@ function kleo_get_required_plugins() {
 			// The plugin name
 			'slug'               => 'js_composer',
 			// The plugin slug (typically the folder name)
-			'version'            => kleo_get_plugin_version( 'js_composer', '4.12', $kleo_rem_plugin_transient ),
+			'version'            => kleo_get_plugin_version( 'js_composer', '5.1.1', $kleo_rem_plugin_transient ),
 			// E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
-			'source'             => kleo_get_plugin_src( 'js_composer', '4.12', false ),
+			'source'             => kleo_get_plugin_src( 'js_composer', '5.1.1', false ),
 			// The plugin source
 			'required'           => true,
 			// If false, the plugin is only 'recommended' instead of required
@@ -91,7 +91,7 @@ function kleo_get_required_plugins() {
 			// The plugin source
 			'required'           => true,
 			// If false, the plugin is only 'recommended' instead of required
-			'version'            => '4.1.8',
+			'version'            => '4.2.2',
 			// E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation'   => false,
 			// If true, plugin is activated upon theme activation and cannot be deactivated until theme switch

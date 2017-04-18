@@ -29,6 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @var $animation
  * @var $full_width
  * @var $box_shadow
+ * @var $visibility
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Single_image
  */
@@ -226,8 +227,10 @@ if ( vc_has_class( 'prettyphoto', $el_class ) ) {
 $wrapperClass = 'vc_single_image-wrapper ' . $style . ' ' . $border_color;
 
 /* KLEO ADDED */
-if ( $box_shadow != '' ) {
+if ( 'yes' == $box_shadow ) {
 	$wrapperClass .= ' box-shadow';
+} elseif ( 'zoom' == $box_shadow ) {
+	$el_class .= ' zoomin-shd-singleimg';
 }
 
 
@@ -255,6 +258,10 @@ if ( $full_width != '' ) {
 	$class_to_filter .= ' img-full-width';
 }
 
+if ( $visibility != '' ) {
+	$class_to_filter .= ' ' . str_replace( ',', ' ', $visibility );
+}
+
 $css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter, $this->settings['base'], $atts );
 
 if ( in_array( $source, array( 'media_library', 'featured_image' ) ) && 'yes' === $add_caption ) {
@@ -270,13 +277,10 @@ if ( 'yes' === $add_caption && '' !== $caption ) {
 	$html .= '<figcaption class="vc_figure-caption">' . esc_html( $caption ) . '</figcaption>';
 }
 
-$output = '
-	<div class="' . esc_attr( trim( $css_class ) ) . '">
-			' . wpb_widget_title( array( 'title' => $title, 'extraclass' => 'wpb_singleimage_heading' ) ) . '
-			<figure class="wpb_wrapper vc_figure">
-			    ' . $html . '
-            </figure>
-	</div>
-';
+$output = '<div class="' . esc_attr( trim( $css_class ) ) . '">' .
+	      wpb_widget_title( array( 'title' => $title, 'extraclass' => 'wpb_singleimage_heading' ) ) .
+	      '<figure class="wpb_wrapper vc_figure">' .
+	      $html .
+	      '</figure></div>';
 
 echo $output;

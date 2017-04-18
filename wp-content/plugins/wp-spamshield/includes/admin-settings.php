@@ -1,7 +1,7 @@
 <?php
 /**
  *  WP-SpamShield Admin Settings Page
- *  File Version 1.9.9.9.1
+ *  File Version 1.9.9.9.4
  */
 
 /* Make sure file remains secure if called directly */

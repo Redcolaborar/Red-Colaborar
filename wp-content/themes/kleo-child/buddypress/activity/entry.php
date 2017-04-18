@@ -21,11 +21,11 @@
 			<?php bp_activity_avatar(); ?>
 
 		</a>
-    
+
 	</div>
 
 	<div class="activity-content">
-		
+
 		<div class="activity-header">
 
 			<?php bp_activity_action(); ?>
@@ -36,13 +36,13 @@
 
 			<div class="activity-inner">
 
-				<?php 
+				<?php
 
-				global $activities_template; 
-				if ( empty( $activities_template->activity->action ) && ! empty( $activities_template->activity->content ) ) { 
-			        $activities_template->activity->content = bp_insert_activity_meta( $activities_template->activity->content ); 
-			    } 
-			    //echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activities_template->activity->content, &$activities_template->activity ) ); 
+				global $activities_template;
+				if ( empty( $activities_template->activity->action ) && ! empty( $activities_template->activity->content ) ) {
+			        $activities_template->activity->content = bp_insert_activity_meta( $activities_template->activity->content );
+			    }
+			    //echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activities_template->activity->content, &$activities_template->activity ) );
 
 			    $post_id = $activities_template->activity->secondary_item_id;
 
@@ -78,12 +78,12 @@
 					echo '<span class="kleo-love">';
     			    do_action('kleo_show_love');
 	                echo '</span>';
-	                
+
 				}
 				else {
-					bp_activity_content_body(); 
+					bp_activity_content_body();
 				}
-			
+
 				?>
 
 			</div>
@@ -124,12 +124,12 @@
 
 				<?php if ( bp_activity_user_can_delete() ) bp_activity_delete_link(); ?>
 
-				<?php do_action( 'bp_activity_entry_meta' ); ?>
-
 			<?php endif; ?>
 
+			<?php do_action( 'bp_activity_entry_meta' ); ?>
+
 		</div>
-    
+
 	</div>
 
 	<?php do_action( 'bp_before_activity_entry_comments' ); ?>

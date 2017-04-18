@@ -120,8 +120,12 @@ BuddyPress styling
 	position: relative;
 	border-radius: 3px;
 	z-index: 2;
-	width: 25px;
-	height: 25px;
+	/*width: 25px;*/
+	/*height: 25px;*/
+
+	/* v.4.1.9 */
+	width: 34px;
+	height: 34px;
 }
 
 #buddypress form#whats-new-form #whats-new-content {
@@ -130,8 +134,11 @@ BuddyPress styling
 }
 #buddypress form#whats-new-form p.activity-greeting {
 	line-height: 0.5em;
-	margin: 0 10px 25px 35px;
+	/*margin: 0 10px 25px 35px;*/
 	padding-top: 10px;
+
+	/* v.4.1.9 */
+	margin: 0 10px 25px 45px;
 }
 #buddypress form#whats-new-form textarea {
 	background: transparent;
@@ -186,7 +193,6 @@ body.no-js #buddypress form#whats-new-form textarea {
 #buddypress #rtm-media-gallery-uploader {}
 #buddypress .rtm-drag-drop-active {
 	border: 2px dashed #777 !important;
-	border-width: 2px;
 }
 
 body[class*="rtm-3.7"] #rtmedia-whts-new-upload-container {
@@ -467,7 +473,6 @@ body.activity-permalink #buddypress .activity-content blockquote {
 	border-top-width: 1px;
 	color: #bfbfbf;
 	font-size: 11px;
-	text-align: center;
 	height: 10px;
 	line-height: 20px;
 	margin-top: 20px;
@@ -548,7 +553,13 @@ body.activity-permalink #buddypress div.activity-meta {
 	margin-bottom: 6px;
 }
 #buddypress div.activity-meta a {
-	padding: 4px 8px;
+	/*padding: 4px 8px;*/
+
+	/* v.4.1.9 */
+	padding: 8px 18px !important;
+	-webkit-border-radius: 30px !important;
+	-moz-border-radius: 30px !important;
+	border-radius: 30px !important;
 }
 #buddypress a.activity-time-since {
 	text-decoration: none;
@@ -570,10 +581,13 @@ body.activity-permalink #buddypress div.activity-meta {
 	border-radius: 12px;
 }
 #buddypress .activity-meta a.button {
-	font-size: 11px;
+	/*font-size: 11px;*/
 	text-transform: uppercase;
 	border-radius: 12px;
-	}
+
+	/* v.4.1.9 */
+	font-size: 12px;
+}
 	
 /* Add style for activity
    custom plugins buttons */
@@ -831,10 +845,22 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
 }
 #buddypress #groups-list li.odd {}
 #buddypress #groups-list li.even {}
+
 #buddypress #groups-list .group-inner-list {
 	padding: 30px 0 20px;	
 	border-style: solid;
 	border-width: 1px;
+
+	/* v.4.1.9 */
+	/*border-width: 0;*/
+	/*background: #fafafa !important;*/
+	border-radius: 4px;
+	transition: box-shadow 0.4s;
+}
+#buddypress #groups-list .group-inner-list:hover {
+
+	/* v.4.1.9 */
+	box-shadow: 1px 5px 5px #e5e5e5;
 }
 #buddypress #groups-list .item {
 	padding: 20px 20px 0;
@@ -895,7 +921,16 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
 
 #buddypress #groups-list a.group-button {
 	border-radius: 20px;
+
+	/* v.4.1.9 */
+	/*background: #fff !important;*/ /* TODO -  not ok for ../members/user/groups listing */
 }
+#buddypress #groups-list a.group-button:hover {
+
+	/* v.4.1.9 */
+	background: transparent !important;
+}
+
 #buddypress #group-list li {
 	border-bottom: 1px solid #e5e5e5;
 }
@@ -945,7 +980,21 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
 	border-width: 1px;
 	display: inline-block;
 	width: 100%;
+
+	/* v.4.1.9 */
+	/*border-width: 0;*/
+	/*background: #fafafa !important;*/
+	transition: box-shadow 0.4s;
+	border-radius: 4px;
 }
+#buddypress #friend-list .friend-inner-list:hover,
+#buddypress #member-list .member-inner-list:hover,
+#buddypress #members-list .member-inner-list:hover {
+
+	/* v.4.1.9 */
+	box-shadow: 1px 5px 5px #e5e5e5;
+}
+
 #buddypress #friend-list li div.item-avatar,
 #buddypress #member-list li div.item-avatar,
 #buddypress #members-list li div.item-avatar {
@@ -1037,16 +1086,18 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
 #buddypress #member-list div.item {}
 
 .buddypress #item-header-avatar {
-	display: inline-block;
-	position: relative;
-	border-radius: 4px;
-	border-style: solid;
-	border-width: 12px;
-	margin: 0 auto;
-	box-shadow: 0 0 0 20px;
-	transition: all 0.5s ease-in-out 0s;
-	z-index: 10;
+    display: inline-block;
+    position: relative;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 12px;
+    margin: 0 auto;
+    box-shadow: 0 0 0 20px;
+    /* v.4.1.9 */
+    transition: all 0.4s ease;
+    z-index: 10;
 }
+
 .buddypress #item-header-avatar img.avatar {
 	width: 100%;
 }
@@ -1066,7 +1117,7 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
 	transition: all 0.5s ease-in-out 0s;
 }
 .buddypress .kleo-online-status {
-	right: 0;
+    right: 0;
     bottom: 20px;
     width: 16px;
     height: 16px;
@@ -1118,11 +1169,15 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
 	text-align: right;
 }
 .manage-members #buddypress .item-list .button {
-	height: 30px !important;
-	line-height: 30px !important;
-	display: inline-block;
-	font: normal 11px;
+    height: 30px !important;
+    line-height: 30px !important;
+    display: inline-block;
     text-transform: uppercase;
+
+    /* v.4.1.9 */
+    font-size: 11px !important;
+    font-weight: bold;
+    letter-spacing: 0.03em;
 }
 
 
@@ -1958,20 +2013,24 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
 	
 }
 .buddypress div#item-header {
-	background: url(../../assets/img/heading.png) repeat-x 0 115px;
-	text-align: center;
-	transition: all 0.5s ease-in-out 0s;
-	position: relative;
-	padding-top: 40px;
-	padding-bottom: 40px;
-	display: inline-block;
-	width: 100%;
+    background: url(../../assets/img/heading.png) repeat-x 0 115px;
+    text-align: center;
+    transition: all 0.5s ease-in-out 0s;
+    position: relative;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    display: inline-block;
+    width: 100%;
 }
+.buddypress.bp-light-icons div#item-header {
+    background: none;
+}
+
 .buddypress div#item-header .toggle-header {
 	position: absolute;
-	right: 10px;
-	top: 10px;
-	transition: all 0.5s ease-in-out 0s;
+    right: 10px;
+    top: 10px;
+    transition: all 0.5s ease-in-out 0s;
     text-align: right;
 	z-index: 5;
 }
@@ -1983,11 +2042,11 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
     text-indent: -10em;
     cursor: pointer;
     line-height: 30px !important;
-    -webkit-transition: all 0.3s ease;
-    -moz-transition: all 0.3s ease;
-    -ms-transition: all 0.3s ease;
-    -o-transition: all 0.3s ease;
-    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease 0.1s;
+    -moz-transition: all 0.3s ease 0.1s;
+    -ms-transition: all 0.3s ease 0.1s;
+    -o-transition: all 0.3s ease 0.1s;
+    transition: all 0.3s ease 0.1s;
     width: 40px;
     overflow: hidden;
     display: inline-block
@@ -2040,11 +2099,17 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
     background: rgba(0,0,0,0.1);
     color: rgba(255,255,255,0.5);
 }
-.buddypress div#item-header .toggle-header .bp-toggle-less:before {
+/*.buddypres div#item-header .toggle-header .bp-toggle-less:before {
     content: "\e82c";
+}*/
+.buddypress div#item-header .toggle-header .bp-toggle-less:before {
+    content: "\f204";
 }
-.buddypress div#item-header .toggle-header .bp-toggle-more:before {
+/*.buddypress div#item-header .toggle-header .bp-toggle-more:before {
     content: "\e828";
+}*/
+.buddypress div#item-header .toggle-header .bp-toggle-more:before {
+    content: "\f205";
 }
 
 .buddypress.is-user-profile div#item-header .toggle-header .bp-toggle-less:hover:before,
@@ -2059,18 +2124,53 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
 .buddypress div#item-header div#item-header-content span.activity {
 	margin-left: 10px;
 }
-.buddypress div#item-header div#item-header-content #latest-update,
-.buddypress div#item-header div#item-header-content p:first-child {}
+.buddypress div#item-header div#item-header-content #latest-update {}
+/* group info */
+.buddypress div#item-header div#item-header-content p:first-child {
+	/* v.4.1.9 */
+	height: 44px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+	/* Fallback for non-webkit */
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	max-width: 50%;
+	box-sizing: border-box;
+	margin: 10px auto 30px;
+}
 .buddypress div#item-header div#item-header-content #item-buttons {
 	text-align: center;
 	font-style: normal;
+    margin-top: 25px;
 }
 .buddypress div#item-header div#item-header-content #latest-update {
-	margin-bottom: 25px;
+
+}
+.buddypress div#item-header div#item-header-content #item-buttons:empty {
+    margin-top: 0;
+}
+.buddypress div#item-header div#item-header-content #latest-update a {
+	/* v.4.1.9 */
+	display: none;
+}
+.buddypress div#item-header h4.user-nicename {
+    cursor: pointer;
+}
+
+.buddypress.bp-header-small div#item-header div#item-header-content {
+	display: none;
+}
+.buddypress div#item-header div#item-header-content {
+	opacity: 1;
+	transition: opacity 0.4s, height 0.4s;
 }
 
 .buddypress.bp-header-small #item-header img.avatar {width : 80px; margin-left:0; background: #fff;}
-.buddypress.bp-header-small #item-header-avatar {border: 5px solid #f7f7f7;}
+.buddypress.bp-header-small #item-header-avatar {
+    border: 5px solid rgba(255,255,255,0.2);
+}
 .buddypress.bp-header-small #item-header {background-position: 0 80px;}
 .buddypress.bp-header-small #item-header .toggle-header { top : 67px;}
 body.is-user-profile.bp-header-small #item-header .toggle-header { top : 67px;}
@@ -2089,7 +2189,10 @@ body.is-user-profile.bp-header-small #item-header .toggle-header { top : 67px;}
 }
 .buddypress div#item-header img.avatar {
 	width: 130px;
-	transition: all 0.5s ease-in-out 0s;
+	/*transition: all 0.5s ease-in-out 0s;*/
+
+	/* v.4.1.9 */
+	transition: width 0.4s ease 0s;
 }
 .buddypress div#item-header h2 {
 	margin-bottom: 5px;
@@ -2116,11 +2219,11 @@ body.is-user-profile.bp-header-small #item-header .toggle-header { top : 67px;}
 }
 .buddypress div#item-header div#item-meta {
 	overflow: hidden;
-	/*margin: 15px 0 5px 0;*/
-	/*padding-bottom: 10px;*/
 	font-size: 14px;
 	word-wrap: break-word;
-  /*line-height: 30px;*/
+	/* v.4.1.9 */
+	max-width: 90%;
+	margin: auto;
 }
 .buddypress div#item-header div#item-actions {
 }
@@ -2203,6 +2306,9 @@ body.is-user-profile.bp-header-small #item-header .toggle-header { top : 67px;}
 	display: inline-block;
 	font-size: 11px;
     text-transform: uppercase;
+
+	/* v.4.1.9 */
+	/*font-weight: bold;*/
 }
 .buddypress div#item-header div#message.info {
 	line-height: 80%;
@@ -2219,13 +2325,16 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 	border: none;
 }
 #buddypress div#item-nav {
-	height: 102px;
-	overflow: hidden;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	display: inline-block;
-	width: 100%;
-	text-align: center;
+    height: 102px;
+    overflow: hidden;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    /*display: inline-block;*/
+    width: 100%;
+    text-align: center;
+
+	/* v.4.1.9 */
+	display: block;
 }
 #buddypress div#item-nav .responsive-tabs {
 	height: 102px;
@@ -2234,16 +2343,40 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 
 #buddypress div#item-nav .tabdrop .dropdown-menu {
   border-style: solid;
-	border-width: 1px;
+	/*border-width: 1px;*/
+
+	/* v.4.1.9 */
+	border: 0;
+	box-shadow: 3px 5px 15px rgba(102, 102, 102, 0.1);
+	border-radius: 4px;
 }
+#buddypress div#item-nav .tabdrop.open > .dropdown-menu {
+	animation: slide-up-menu 0.4s;
+	transform: translateY(-15px);
+	padding: 10px !important;
+	position: absolute;
+}
+
+@keyframes slide-up-menu {
+	0%   { transform: translateY(0); }
+	100% { transform: translateY(-15px); }
+}
+
 #buddypress div#item-nav .tabdrop .dropdown-menu li {
 	float: none;
 	text-align: left;
+
+	/* v.4.1.9 */
+	border: 0;
 }
 #buddypress div#item-nav .tabdrop .dropdown-menu li a {
 	padding: 0 10px;
-	height: 33px;
-	line-height: 33px;
+	/*height: 33px;*/
+	/*line-height: 33px;*/
+
+	/* v.4.1.9 */
+	height: 40px;
+	line-height: 40px;
 }
 #buddypress div#item-nav .tabdrop .dropdown-menu li a:before {
 	font: 22px "fontello";
@@ -2252,17 +2385,24 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 	line-height: inherit;
 	margin-right: 10px;
 }
+#buddypress div#item-nav .tabdrop ul li a:before {
+
+	/* v.4.1.9 */
+	margin-bottom: 0;
+}
 #buddypress div#item-nav .tabdrop .dropdown-menu li.current a {}
 #buddypress div#item-nav .tabdrop .dropdown-menu li a span {
 	left: inherit;
-	top: 6px;
+	/*top: 6px;*/
 	right: 10px;
 	display: inline-block;
+	box-shadow: none;
+
+	/* v.4.1.9 */
+	top: 50%;
+	transform: translateY(-50%);
 }
 #buddypress div#item-nav .tabdrop .dropdown-menu li.current a {}
-#buddypress div#item-nav .tabdrop .dropdown-menu li a span {
-	box-shadow: none;
-}
 #buddypress div#item-nav li {
 	position: relative;
 }
@@ -2274,23 +2414,44 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 	font-size: 12px;
 	text-transform: uppercase;
 	font-family: inherit;
-	font-weight: normal;
+	/*font-weight: normal;*/
 }
+
+.bp-light-icons #buddypress div#item-nav ul li a {
+    /* v.4.2 */
+    font-weight: bold;
+    letter-spacing: 0.03em;
+    padding: 12px 20px;
+}
+
 #buddypress div#item-nav ul li a:before {
 	font: 400% "fontello";
 	content: "\e8a5";
 	display: block;
 	text-align: center;
 	transition: all 0.4s ease-in-out 0s;
+
 }
+.bp-light-icons #buddypress div#item-nav ul li a:before {
+    font: 320% "fontello";
+    content: "\ea03";
+    margin-bottom: 10px;
+}
+.bp-light-icons #buddypress div#item-nav ul li.dropdown a:before {
+    margin-bottom: 0;
+}
+
 #buddypress div#item-nav ul li.current a {}
 #buddypress div#item-nav ul li.current a:before {}
 #buddypress div#item-nav ul li.current a {}
 #buddypress div#item-nav ul li a span {
 	position: absolute;
 	top: 10px;
-	left: 52%;
+	/*left: 52%;*/
 	z-index: 12;
+
+	/* v.4.1.9 */
+	left: 58%;
 }
 #buddypress div#item-nav ul li.dropdown {}
 
@@ -2298,43 +2459,99 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 #buddypress div#item-nav ul #home-groups-li a:before {
 	content: "\e8ed";
 }
+.bp-light-icons #buddypress div#item-nav ul #activity-personal-li a:before,
+.bp-light-icons #buddypress div#item-nav ul #home-groups-li a:before {
+    content: "\e9af";
+}
 #buddypress div#item-nav ul #xprofile-personal-li a:before {
 	content: "\e98e";
+}
+.bp-light-icons #buddypress div#item-nav ul #xprofile-personal-li a:before {
+    content: "\e9cc";
 }
 #buddypress div#item-nav ul #notifications-personal-li a:before {
 	content: "\e863";
 }
+.bp-light-icons #buddypress div#item-nav ul #notifications-personal-li a:before {
+    content: "\ea02";
+}
 #buddypress div#item-nav ul #messages-personal-li a:before {
-	content: "\e98c";
+    content: "\e98c";
 }
+.bp-light-icons #buddypress div#item-nav ul #messages-personal-li a:before {
+    content: "\e9c2";
+}
+
 #buddypress div#item-nav ul #friends-personal-li a:before {
-	content: "\e98f";
+    content: "\e98f";
 }
+.bp-light-icons #buddypress div#item-nav ul #friends-personal-li a:before {
+    content: "\e9ab";
+}
+
 #buddypress div#item-nav ul #groups-personal-li a:before {
 	content: "\e995";
 }
+.bp-light-icons #buddypress div#item-nav ul #groups-personal-li a:before {
+    content: "\e9cb";
+}
+
 #buddypress div#item-nav ul #forums-personal-li a:before,
 #buddypress div#item-nav ul #nav-forum-groups-li a:before {
 	content: "\e97b";
 }
+.bp-light-icons #buddypress div#item-nav ul #forums-personal-li a:before,
+.bp-light-icons #buddypress div#item-nav ul #nav-forum-groups-li a:before {
+    content: "\e9b7";
+}
+
 #buddypress div#item-nav ul #buddydrive-personal-li a:before,
 #buddypress div#item-nav ul #nav-buddydrive-groups-li a:before {
 	content: "\e8d7";
 }
+
 #buddypress div#item-nav ul #media-personal-li a:before,
 #buddypress div#item-nav ul #rtmedia-media-nav-groups-li a:before {
 	content: "\e8c5";
+
 }
+.bp-light-icons #buddypress div#item-nav ul #media-personal-li a:before,
+.bp-light-icons #buddypress div#item-nav ul #rtmedia-media-nav-groups-li a:before {
+    content: "\e9c5";
+}
+
 #buddypress div#item-nav ul #settings-personal-li a:before,
 #buddypress div#item-nav ul #admin-groups-li a:before {
 	content: "\e98b";
 }
+.bp-light-icons #buddypress div#item-nav ul #settings-personal-li a:before,
+.bp-light-icons #buddypress div#item-nav ul #admin-groups-li a:before {
+    content: "\e9c8";
+}
+
 #buddypress div#item-nav ul li.dropdown a:before {
 	content: "\e97c";
 }
+.bp-light-icons #buddypress div#item-nav ul li.dropdown a:before {
+    content: "\e9b1";
+}
+
+#buddypress div#item-nav ul li.dropdown a.dropdown-toggle:before {
+
+	/* v.4.1.9 */
+	padding: 10px;
+	border-radius: 50%;
+	display: inline-block;
+}
+
 #buddypress div#item-nav ul #members-groups-li a:before {
 	content: "\e995";
+
 }
+.bp-light-icons #buddypress div#item-nav ul #members-groups-li a:before {
+    content: "\ea07";
+}
+
 #buddypress div#item-nav ul #invite-groups-li a:before {
 	content: "\e991";
 }
@@ -2344,14 +2561,25 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 #buddypress div#item-nav ul #blogs-personal-li a:before {
 	content: "\e802";
 }
+.bp-light-icons #buddypress div#item-nav ul #blogs-personal-li a:before {
+    content: "\ea04";
+}
+
 #buddypress div#item-nav ul #articles-personal-li a:before {
 	content: "\e870";
 }
+.bp-light-icons #buddypress div#item-nav ul #articles-personal-li a:before {
+    content: "\e9be";
+}
+
 #buddypress div#item-nav ul #location-personal-li a:before {
 	content: "\e99f";
 }
 #buddypress div#item-nav ul #orders-personal-li a::before {
 	content: "\e87e";
+}
+.bp-light-icons #buddypress div#item-nav ul #orders-personal-li a::before {
+    content: "\ea0a";
 }
 
 
@@ -2399,8 +2627,11 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 
 #buddypress div.item-list-tabs ul {
 	position: inherit;
-	margin-top: -2px;
+	/*margin-top: -2px;*/
 	padding: 0;
+
+	/* v.4.1.9 */
+	margin-top: 0;
 }
 
 /* TO DO - Webkit rendering fix */
@@ -2434,6 +2665,12 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 	padding: 8px 0 4px;
 	border: 1px solid transparent;
 	transition: all 0.4s ease-in-out 0s;
+
+	/* v.4.1.9 */
+	font-size: 12px;
+	text-transform: uppercase;
+	/*font-weight: bold;*/
+	letter-spacing: 0.03em;
 }
 #buddypress div.item-list-tabs#subnav ul li.selected a,
 #buddypress div.item-list-tabs#subnav ul li a:hover {
@@ -2449,12 +2686,21 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 	border-bottom: none;
 }
 #buddypress div.item-list-tabs#subnav ul li.last {
-	margin-top: 4px;
+	/*margin-top: 4px;*/
+
+	/* v.4.1.9 */
+	margin-top: 7px;
 }
 #buddypress div.item-list-tabs#subnav ul li.last label {
 	height: 30px;
 	line-height: 30px;
 	margin-right: 10px;
+
+	/* v.4.1.9 */
+	font-size: 12px;
+	text-transform: uppercase;
+	/*font-weight: bold;*/
+	letter-spacing: 0.03em;
 }
 #buddypress div.item-list-tabs#subnav ul li a span {
 	border: none;
@@ -2465,6 +2711,12 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 #buddypress div.item-list-tabs ul li.last select {
 	max-width: 175px;
 	/*opacity: 0;*/
+
+	/* v.4.1.9 */
+	font-size: 12px;
+	text-transform: uppercase;
+	/*font-weight: bold;*/
+	letter-spacing: 0.03em;
 }
 .no-js #buddypress div.item-list-tabs ul li.last select {
 	opacity: 1;
@@ -2486,7 +2738,12 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 	margin-left: 4px;
 	padding: 0 6px;
 	text-align: center;
-	font-size: 11px;
+	/*font-size: 11px;*/
+
+	/* v.4.1.9 */
+	border-color: transparent;
+	/*font-size: 13px;*/
+	/*font-weight: bold;*/
 }
 #buddypress div.item-list-tabs ul li.selected a span,
 #buddypress div.item-list-tabs ul li.current a span {}
@@ -2518,10 +2775,13 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 }
 #buddypress div.item-list-tabs#subnav {
 	background: transparent;
-	margin: 5px 0 0;
+	/*margin: 5px 0 0;*/
 	overflow: hidden;
 	display: inline-block;
 	width: 100%;
+
+	/* v.4.1.9 */
+	margin: 15px 0;
 }
 
 /* Create Group */
@@ -2538,9 +2798,14 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 	padding: 0 6px;
 }
 #buddypress div#group-create-tabs ul li a {
-	color: #bbb;
-	text-transform: uppercase;
-	font-size: 11px;
+	/*color: #bbb;*/
+	/*text-transform: uppercase;*/
+	/*font-size: 11px;*/
+
+	/* v.4.1.9 */
+	color: inherit;
+	text-transform: inherit;
+	font-size: medium;
 }
 #buddypress div#group-create-tabs ul li:first-child a:before {}
 #buddypress div#group-create-tabs ul li:last-child a:before {}
@@ -2814,7 +3079,9 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 	height: 33px;
 	line-height: 30px;
 	padding: 0 5px 0 10px;
-	margin-top: 10px;
+
+	/* v.4.1.9 */
+	/*margin-top: 10px;*/
 }
 #buddypress div.message-search input[type=text],
 #buddypress div.dir-search input[type=text] {
@@ -2998,6 +3265,9 @@ body.register #buddypress div.page ul {
 	line-height: 16px;
 	-ms-word-wrap: break-word;
 	word-wrap: break-word;
+
+	/* v.4.1.9 */
+	font-size: small;
 }
 .widget.buddypress span.activity {
 	display: inline-block;
@@ -3102,16 +3372,28 @@ body.register #buddypress div.page ul {
 }
 .bp-login-widget-user-links > div {
 	padding-left: 70px;
+
+	/* v.4.1.9 */
+	line-height: 18px;
 }
 
 .bp-login-widget-user-link a {
-	font-weight: bold;
+	/*font-weight: bold;*/
 }
 .bp-login-widget-user-logout a {
 	color: #777;
 }
 .bp-login-widget-user-logout a:after {
 	content: " \2192";
+}
+.bp-login-widget-user-link a,
+.bp-login-widget-user-logout a {
+
+	/* v.4.1.9 */
+	font-weight: bold;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
 }
 
 .widget_display_stats dt {
@@ -3154,7 +3436,6 @@ User avatar in menu
     border: none;
     padding: 0;
 }
-
 
 /*--------------------------------------------------------------
 4.0 - Media Queries
@@ -3329,6 +3610,11 @@ User avatar in menu
 	}
 	#buddypress ul.item-list li div.meta {
 		margin-top: 0;
+
+		/* v.4.1.9 */
+		color: inherit;
+		font-weight: bold;
+		letter-spacing: 0.03em;
 	}
 	#buddypress .item-desc p {
 		margin: 0 0 10px;
@@ -3389,6 +3675,8 @@ Cover Photo
 	background-size: cover;
 	z-index: 1;
 }
+
+
 .group-create #header-cover-image{
 	position: relative;
 	width:100%;

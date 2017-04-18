@@ -20,18 +20,18 @@ if ($F->location != 'directory')
 else
 {
 	$action = parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-?>
+	?>
 	<div class="item-list-tabs bps_header">
-	  <ul>
-		<li><?php echo $F->header; ?></li>
-		<?php
-		if ($F->toggle)
-		{
-		?>
-		<li class="last">
-		  <input id="<?php echo $toggle_id; ?>" type="submit" value="<?php echo $F->toggle_text; ?>">
-		</li>
-		<script type="text/javascript">
+		<ul>
+			<li><?php echo $F->header; ?></li>
+			<?php
+			if ($F->toggle)
+			{
+				?>
+				<li class="last">
+					<input id="<?php echo $toggle_id; ?>" type="submit" value="<?php echo $F->toggle_text; ?>">
+				</li>
+				<script type="text/javascript">
 			jQuery(document).ready(function($) {
 				$('#<?php echo $form_id; ?>').hide();
 				$('#<?php echo $toggle_id; ?>').click(function(){
@@ -39,10 +39,10 @@ else
 				});
 			});
 		</script>
-		<?php
-		}
-		?>
-	  </ul>
+				<?php
+			}
+			?>
+		</ul>
 	</div>
 	<?php
 }
@@ -69,92 +69,92 @@ foreach ($F->fields as $f)
 	switch ($f->display)
 	{
 
-	case 'range':
+		case 'range':
 
-		echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
-		echo "<input placeholder='{$f->label} From' type='text' name='{$f->code}_min' id='$f->code' value='$f->min' class='form-control input-lg input-range'>";
-		echo '&nbsp;-&nbsp;';
-		echo "<input placeholder='{$f->label} To' type='text' name='{$f->code}_max' value='$f->max' class='form-control input-lg input-range'>\n";
-		break;
+			echo "<label class='sr-only ' for='$f->code'>$f->label</label>\n";
+			echo "<input placeholder='{$f->label} " . __( 'From','kleo_framework' ) . "' type='text' name='{$f->code}_min' id='$f->code' value='$f->min' class='form-control input-lg input-range'>";
+			echo '&nbsp;-&nbsp;';
+			echo "<input placeholder='{$f->label} " . __( 'To','kleo_framework' ) . "' type='text' name='{$f->code}_max' value='$f->max' class='form-control input-lg input-range'>\n";
+			break;
 
-	case 'textbox':
-	case 'textarea':
-		echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
-		echo "<input type='text' name='$f->code' placeholder='$f->label' id='$f->code' value='$f->value' class='form-control input-lg'>\n";
-		break;
+		case 'textbox':
+		case 'textarea':
+			echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
+			echo "<input type='text' name='$f->code' placeholder='$f->label' id='$f->code' value='$f->value' class='form-control input-lg'>\n";
+			break;
 
-	case 'number':
-		echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
-		echo "<input type='number' name='$f->code' placeholder='$f->label' id='$f->code' value='$f->value' class='form-control input-lg'>\n";
-		break;
+		case 'number':
+			echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
+			echo "<input type='number' name='$f->code' placeholder='$f->label' id='$f->code' value='$f->value' class='form-control input-lg'>\n";
+			break;
 
-	case 'url':
-		echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
-		echo "<input type='text' inputmode='url' name='$f->code' placeholder='$f->label' id='$f->code' value='$f->value' class='form-control input-lg'>\n";
-		break;
+		case 'url':
+			echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
+			echo "<input type='text' inputmode='url' name='$f->code' placeholder='$f->label' id='$f->code' value='$f->value' class='form-control input-lg'>\n";
+			break;
 
 
-	case 'selectbox':
-	case 'radio':
-		echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
-		echo "<select name='$f->code' id='$f->code' class='form-control input-lg'>\n";
+		case 'selectbox':
+		case 'radio':
+			echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
+			echo "<select name='$f->code' id='$f->code' class='form-control input-lg'>\n";
 
-		$no_selection = apply_filters ('bps_field_selectbox_no_selection', $f->label, $f);
-		if (is_string ($no_selection)) {
-			echo "<option  value=''>$no_selection</option>\n";
-		}
+			$no_selection = apply_filters ('bps_field_selectbox_no_selection', $f->label, $f);
+			if (is_string ($no_selection)) {
+				echo "<option  value=''>$no_selection</option>\n";
+			}
 
-		foreach ($f->options as $key => $label)
-		{
-			$selected = in_array ($key, $f->values)? "selected='selected'": "";
-			echo "<option $selected value='$key'>$label</option>\n";
-		}
-		echo "</select>\n";
-		break;
+			foreach ($f->options as $key => $label)
+			{
+				$selected = in_array ($key, $f->values)? "selected='selected'": "";
+				echo "<option $selected value='$key'>$label</option>\n";
+			}
+			echo "</select>\n";
+			break;
 
-	case 'multiselectbox':
-	case 'checkbox':
-		echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
-		echo "<select name='{$f->code}[]' id='$f->code' multiple='multiple' class='form-control input-lg multi-js'>\n";
+		case 'multiselectbox':
+		case 'checkbox':
+			echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
+			echo "<select name='{$f->code}[]' id='$f->code' multiple='multiple' class='form-control input-lg multi-js'>\n";
 
-		foreach ($f->options as $key => $label)
-		{
-			$selected = in_array ($key, $f->values)? "selected='selected'": "";
-			echo "<option $selected value='$key'>$label</option>\n";
-		}
-		echo "</select>\n";
-		break;
+			foreach ($f->options as $key => $label)
+			{
+				$selected = in_array ($key, $f->values)? "selected='selected'": "";
+				echo "<option $selected value='$key'>$label</option>\n";
+			}
+			echo "</select>\n";
+			break;
 
-	/*case 'radio':
-		echo "<div class='radio'>\n";
-		echo "<label>$f->label</label>\n";
-		echo "<div id='$f->code'>\n";
+		/*case 'radio':
+            echo "<div class='radio'>\n";
+            echo "<label>$f->label</label>\n";
+            echo "<div id='$f->code'>\n";
 
-		foreach ($f->options as $option => $checked)
-		{
-			$checked = $checked? "checked='checked'": "";
-			echo "<label><input $checked type='radio' name='$f->code' value='$option'>$option</label>\n";
-		}
-		echo "</div>\n";
-		echo "<a class='clear-value' href='javascript:clear(\"$f->code\");'>". __('Clear', 'buddypress'). "</a>\n";
-		echo "</div>\n";
-		break;*/
+            foreach ($f->options as $option => $checked)
+            {
+                $checked = $checked? "checked='checked'": "";
+                echo "<label><input $checked type='radio' name='$f->code' value='$option'>$option</label>\n";
+            }
+            echo "</div>\n";
+            echo "<a class='clear-value' href='javascript:clear(\"$f->code\");'>". __('Clear', 'buddypress'). "</a>\n";
+            echo "</div>\n";
+            break;*/
 
-	/*case 'checkbox':
-		echo "<div class='checkbox'>\n";
-		echo "<label>$f->label</label>\n";
+		/*case 'checkbox':
+            echo "<div class='checkbox'>\n";
+            echo "<label>$f->label</label>\n";
 
-		foreach ($f->options as $option => $checked)
-		{
-			$checked = $checked? "checked='checked'": "";
-			echo "<label><input $checked type='checkbox' name='{$f->code}[]' value='$option'>$option</label>\n";
-		}
-		echo "</div>\n";
-		break;*/
+            foreach ($f->options as $option => $checked)
+            {
+                $checked = $checked? "checked='checked'": "";
+                echo "<label><input $checked type='checkbox' name='{$f->code}[]' value='$option'>$option</label>\n";
+            }
+            echo "</div>\n";
+            break;*/
 
-	default:
-		echo "<p>BP Profile Search: don't know how to display the <em>$f->display</em> field type.</p>\n";
-		break;
+		default:
+			echo "<p>BP Profile Search: don't know how to display the <em>$f->display</em> field type.</p>\n";
+			break;
 	}
 
 	if (!empty ($f->description) && $f->description != '-')

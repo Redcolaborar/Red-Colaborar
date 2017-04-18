@@ -497,8 +497,7 @@ class BuddyPress_LearnDash_Plugin
 	 * Load Group Course extension 
 	 */
 	public function bp_learndash_add_group_course_extension() {
-		
-		if ( bp_is_active('groups') ) {
+		if ( bp_is_active( 'groups' ) && class_exists( 'BP_Group_Extension' ) ) {
 			bp_register_group_extension( 'GType_Course_Tab' );
 		}
 	}

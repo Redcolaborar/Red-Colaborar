@@ -1,9 +1,37 @@
 
+function mpp_setup_uploader_file_types( mpp_uploader, type ) {
+
+	if( !_mppData || !_mppData.types ) {
+		return ;
+	}
+
+	if ( type === undefined  && _mppData.current_type !== undefined ) {
+		type = _mppData.current_type;
+	}
+	//if type is still not defined, go back
+	if ( type == undefined ) {
+		return ;
+	}
+
+	//console.log(mpp_uploader);
+	var settings = mpp_uploader.uploader.getOption('filters');
+
+	settings.mime_types = [_mppData.types[type]];
+
+	mpp_uploader.uploader.setOption('filters', settings );
+
+	if( mpp_uploader.dropzone ) {
+		jQuery( mpp_uploader.dropzone ).find('.mpp-uploader-allowed-file-type-info' ).html( _mppData.allowed_type_messages[type] );
+	}
+}
+
 jQuery(document).ready(function( $ ) {
 
   alertify.logPosition("bottom left");
 
   // console.log(BEAM.loading_gif);
+
+  // console.log(_mppData);
 
   $('li.activity-item').append('<div class="activity-loading-edit"><div class="loading_gif" style="background:url(\'' + BEAM.loading_gif + '\') no-repeat center center">&nbsp;</div></div>');
 
@@ -124,12 +152,31 @@ function buddypress_edit_activity_mp_get(link) {
         $form.find('input[name="activity_id"]').val(data.activity_id);
         var $gid = $form.find('.mpp-container .mpp-media-holder').first().data('mpp-gallery-id');
 
-        // jQuery('select#mpp-shortcode-upload-gallery-id').val($gid);
-        // jQuery('select#mpp-shortcode-upload-gallery-id').remove();
-        // jQuery('select#mpp-shortcode-upload-gallery-id').remove();
-        // jQuery('#mpp-upload-dropzone-shortcode').append(jQuery('<input type="hidden" id="mpp-shortcode-upload-gallery-id" name="mpp-shortcode-upload-gallery-id" value="' + $gid + '" />'));
-        // jQuery('#mpp-upload-dropzone-shortcode').append(jQuery('<input type="hidden" id="mpp-shortcode-upload-gallery-id" name="mpp-shortcode-upload-gallery-id" value="' + $gid + '" />'));
-        // <input type="hidden" name="mpp-uploading-media-type" class="mpp-uploading-media-type" value="video">
+        var $type = "";
+        var $photo = $form.find('.mpp-container').hasClass("rc-photo");
+        var $doc = $form.find('.mpp-container').hasClass("rc-doc");
+        var $video = $form.find('.mpp-container').hasClass("rc-video");
+        var $audio = $form.find('.mpp-container').hasClass("rc-audio");
+
+        if( $photo ) $type = "photo";
+        if( $doc ) $type = "doc";
+        if( $video ) $type = "video";
+        if( $audio ) $type = "audio";
+
+        //It is getting the activity uploader too, needs to be filteres to only shortcode
+
+        jQuery('select#mpp-shortcode-upload-gallery-id').val($gid);
+        jQuery('select#mpp-shortcode-upload-gallery-id').remove();
+        jQuery('input#mpp-uploading-media-type').remove();
+
+        jQuery('#mpp-upload-feedback-shortcode > #mpp-shortcode-upload-gallery-id').remove();
+        jQuery('#mpp-upload-feedback-shortcode > input[name="mpp-uploading-media-type"]').remove();
+
+        jQuery('#mpp-upload-feedback-shortcode').append(jQuery('<input type="hidden" id="mpp-shortcode-upload-gallery-id" name="mpp-shortcode-upload-gallery-id" value="' + $gid + '" />'));
+        jQuery('#mpp-upload-feedback-shortcode').append(jQuery('<input type="hidden" name="mpp-uploading-media-type" class="mpp-uploading-media-type" value="' + $type + '">'));
+        //
+
+        mpp_setup_uploader_file_types( mpp.shortcode_uploader, $type );
 
         // $form.find('textarea').val($text_content);
         $form.find('textarea').val(response.content);
@@ -214,7 +261,7 @@ function buddypress_edit_activity_mp_save(link) {
   if( $updated.length ) {
     data['mpp-attached-media'] = $updated.join();
   }
-
+	
   // console.log(data);
 
   jQuery('.mpp-upload-shortcode .mpp-uploaded-media-item').remove();

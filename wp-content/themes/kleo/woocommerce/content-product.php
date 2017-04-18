@@ -10,10 +10,10 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.woothemes.com/document/template-structure/
+ * @see     https://docs.woocommerce.com/document/template-structure/
  * @author  WooThemes
  * @package WooCommerce/Templates
- * @version 2.6.1
+ * @version 3.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,15 +30,15 @@ if ( empty( $product ) || ! $product->is_visible() ) {
 /* KLEO ADDED */
 // Extra post classes
 $classes = array();
-if (sq_option('woo_product_animate', 1) == 1 ) {
-    $classes[] = 'animated animate-when-almost-visible el-appear';
+if ( sq_option( 'woo_product_animate', 1 ) == 1 ) {
+	$classes[] = 'animated animate-when-almost-visible el-appear';
 }
 
-if (kleo_woo_get_first_image() == '') {
+if ( kleo_woo_get_first_image() == '' ) {
 	$product_transition = 'single';
 }
 else {
-	$product_transition = sq_option('woo_image_effect', 'default');
+	$product_transition = sq_option( 'woo_image_effect', 'default' );
 }
 
 ?>

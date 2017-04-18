@@ -8,10 +8,16 @@
     border-style: solid;
     border-width: 1px;
     margin: 1%;
-    padding: 10px;
+    //padding: 10px;
     display: inline-block;
     width: 48%;
     float: left;
+
+    /* v.4.1.9 */
+    border-color: transparent !important;
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 6px;
 }
 #articles-dir-list article.article-container:nth-of-type(n) {}
 #articles-dir-list article.article-container:nth-of-type(2n+1) {
@@ -73,7 +79,10 @@
 .article-content .article-metadata .author-options {
     position: absolute;
     right: 0;
-    top: 10px;
+    /*top: 10px;*/
+
+    /* v.4.1.9 */
+    top: 18px;
 }
 .article-content .article-categories {
     padding-left: 0;
@@ -132,15 +141,28 @@
     height: 20px;
     margin-bottom: 5px;
     width: 21px;
+
+    /* v.4.1.9 */
+    background-color: transparent !important;
 }
 .article-content .author-options .edit:before,
 .article-content .author-options .delete:before {
-    font: 18px "fontello";
+    //font: 18px "fontello";
     content: " ";
     transition: all 0.3s ease-in-out 0s;
+
+    /* v.4.1.9 */
+    color: #fafafa !important;
+    font: 20px "fontello";
+    background-color: #bbb;
+    border-radius: 50%;
 }
 .article-content .author-options .edit:hover:before,
-.article-content .author-options .delete:hover:before {}
+.article-content .author-options .delete:hover:before {
+
+    /* v.4.1.9 */
+    background-color: #777;
+}
 
 .article-content .author-options .edit:before {
     content: "\e99c";
@@ -426,4 +448,26 @@
     height: auto;
     margin-top: 0 !important;
     padding-left: 0 !important;
+}
+body.is-user-profile #item-header-avatar {
+    background: transparent;
+}
+#buddypress .social-articles-main .article-categories {
+    width: 60%;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+}
+#buddypress .social-articles-main .article-likes,
+#buddypress .social-articles-main .article-comments,
+#buddypress .social-articles-main .date,
+#buddypress .social-articles-main .likes-count {
+    font-weight: bold;
+    letter-spacing: 0.05em;
+}
+.more-articles-button-container input.button {
+    height: 40px !important;
+    font-size: small;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.1em;
 }

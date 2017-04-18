@@ -32,8 +32,17 @@ body.reply-edit .reply {
 }
 
 #bbpress-forums div.reply {
+	/*height: auto;
+	width: 100%;*/
+
+	/* v.4.1.9 */
 	height: auto;
 	width: 100%;
+	position: relative;
+	overflow: hidden;
+	border: 1px solid #e5e5e5;
+	padding: 20px;
+
 }
 
 #bbpress-forums div.bbp-forum-header,
@@ -1401,7 +1410,11 @@ fieldset div.avatar {
 .activity-list li.bbp_reply_create .activity-content .activity-inner {
 	border-left: 2px solid #eaeaea;
 	margin-left: 5px;
-	padding-left: 10px;
+	/*padding-left: 10px;*/
+
+	/* v.4.1.9 */
+	border-left: none;
+	padding-left: 0;
 }
 
 /* =User Pages

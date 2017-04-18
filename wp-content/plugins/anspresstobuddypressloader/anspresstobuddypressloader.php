@@ -6,18 +6,18 @@
 Plugin Name: AnsPress to BuddyPress Loader
 Plugin URI: http://mywebsolutions.us/
 Description: A plugin to Load AnsPress to BuddyPress that matches the category
-Version: 1.0.1
+Version: 1.1.1
 Author: Cristopher Perando
 Author URI: http://mywebsolutions.us/
 License: GPLv2 or later
-Text Domain: A plugin to Load AnsPress to BuddyPress that matches the category
+Text Domain: anspresstobuddypressloader
 */
 
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'APTOBPLOADER_VERSION', '1.0.1');
+define( 'APTOBPLOADER_VERSION', '1.1.1');
 define( 'APTOBPLOADER_DB_VERSION', '1.0.0');
 define( 'APTOBPLOADER_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'APTOBPLOADER_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

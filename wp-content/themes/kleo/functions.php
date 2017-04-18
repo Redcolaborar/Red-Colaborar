@@ -399,7 +399,7 @@ if ( ! function_exists( 'kleo_entry_meta' ) ) :
 					                 '</a>';
 				}
 
-				if ( bp_is_active( 'messages' ) ) {
+				if ( bp_is_active( 'messages' ) && is_user_logged_in() ) {
 					if ( in_array( 'message', $meta_elements ) ) {
 						$author_links .= '<a href="' . wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_core_get_username( get_the_author_meta( 'ID' ) ) ) . '">' .
 						                 '<i class="icon-mail hover-tip" ' .
@@ -699,6 +699,7 @@ if ( ! function_exists( 'kleo_switch_layout' ) ) {
 				break;
 
 			case 'no':    //full width
+			case 'full':    //full width
 				remove_action( 'kleo_after_content', 'kleo_sidebar' );
 				remove_action( 'kleo_after_content', 'kleo_extra_sidebar' );
 				add_filter( 'kleo_main_template_classes', create_function( '$cols', '$cols = "col-sm-12 tpl-no"; return $cols;' ), $priority );
@@ -892,12 +893,12 @@ if ( ! function_exists( 'kleo_title_main_content' ) ) {
 		if ( sq_option( 'title_location', 'breadcrumb' ) == 'main' ) {
 
 			$title_status = true;
-			if ( is_singular() && get_cfield( 'title_checkbox' ) == 1 ) {
+			if ( ( is_singular() || is_home() ) && get_cfield( 'title_checkbox' ) == 1 ) {
 				$title_status = false;
 			}
 
 			if ( $title_status ) {
-				if ( ( is_singular() ) && get_cfield( 'custom_title' ) && get_cfield( 'custom_title' ) != '' ) {
+				if ( ( is_singular() || is_home() ) && get_cfield( 'custom_title' ) && get_cfield( 'custom_title' ) != '' ) {
 					$title = get_cfield( 'custom_title' );
 				} else {
 					$title = kleo_title();
@@ -1428,6 +1429,7 @@ if ( ! function_exists( 'kleo_ajax_login' ) ) {
 		$user_signon = wp_signon( '', $secure_cookie );
 		if ( is_wp_error( $user_signon ) ) {
 			$error_msg = $user_signon->get_error_message();
+			$error_msg = apply_filters( 'login_errors', $error_msg );
 			echo wp_json_encode( array(
 				'loggedin' => false,
 				'message'  => '<span class="wrong-response"><i class="icon icon-attention"></i> ' . $error_msg . '</span>',
@@ -1465,7 +1467,6 @@ if ( ! function_exists( 'kleo_ajax_login' ) ) {
 
 if ( ! function_exists( 'kleo_lost_password_ajax' ) ) {
 	function kleo_lost_password_ajax() {
-		global $wpdb, $wp_hasher;
 
 		$errors = new WP_Error();
 
@@ -1487,8 +1488,12 @@ if ( ! function_exists( 'kleo_lost_password_ajax' ) ) {
 			 * Fires before errors are returned from a password reset request.
 			 *
 			 * @since 2.1.0
+			 * @since 4.4.0 Added the `$errors` parameter.
+			 *
+			 * @param WP_Error $errors A WP_Error object containing any errors generated
+			 *                         by using invalid credentials.
 			 */
-			do_action( 'lostpassword_post' );
+			do_action( 'lostpassword_post', $errors );
 
 			if ( $errors->get_error_code() ) {
 				echo '<span class="wrong-response">' . $errors->get_error_message() . '</span>';
@@ -1496,7 +1501,9 @@ if ( ! function_exists( 'kleo_lost_password_ajax' ) ) {
 			}
 
 			if ( ! $user_data ) {
-				$errors->add( 'invalidcombo', __( '<strong>ERROR</strong>: Invalid username or e-mail.' ) );
+				$errors->add(
+					'invalidcombo', wp_kses_data( __( '<strong>ERROR</strong>: Invalid username or e-mail.', 'default' ) )
+				);
 				echo '<span class="wrong-response">' . $errors->get_error_message() . '</span>';
 				die();
 			}
@@ -1504,64 +1511,12 @@ if ( ! function_exists( 'kleo_lost_password_ajax' ) ) {
 			// Redefining user_login ensures we return the right case in the email.
 			$user_login = $user_data->user_login;
 			$user_email = $user_data->user_email;
+			$key = get_password_reset_key( $user_data );
 
-			/**
-			 * Fires before a new password is retrieved.
-			 *
-			 * @since 1.5.0
-			 * @deprecated 1.5.1 Misspelled. Use 'retrieve_password' hook instead.
-			 *
-			 * @param string $user_login The user login name.
-			 */
-			do_action( 'retreive_password', $user_login );
-
-			/**
-			 * Fires before a new password is retrieved.
-			 *
-			 * @since 1.5.1
-			 *
-			 * @param string $user_login The user login name.
-			 */
-			do_action( 'retrieve_password', $user_login );
-
-			/**
-			 * Filter whether to allow a password to be reset.
-			 *
-			 * @since 2.7.0
-			 *
-			 * @param bool true           Whether to allow the password to be reset. Default true.
-			 * @param int $user_data ->ID The ID of the user attempting to reset a password.
-			 */
-			$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
-
-			if ( ! $allow ) {
-				echo '<span class="wrong-response">' . __( 'Password reset is not allowed for this user' ) . '</span>';
-				die();
-			} elseif ( is_wp_error( $allow ) ) {
-				echo '<span class="wrong-response">' . $allow->get_error_message() . '</span>';
+			if ( is_wp_error( $key ) ) {
+				echo '<span class="wrong-response">' . $key->get_error_message() . '</span>';
 				die();
 			}
-
-			// Generate something random for a password reset key.
-			$key = wp_generate_password( 20, false );
-
-			/**
-			 * Fires when a password reset key is generated.
-			 *
-			 * @since 2.5.0
-			 *
-			 * @param string $user_login The username for the user.
-			 * @param string $key The generated password reset key.
-			 */
-			do_action( 'retrieve_password_key', $user_login, $key );
-
-			// Now insert the key, hashed, into the DB.
-			if ( empty( $wp_hasher ) ) {
-				require_once ABSPATH . WPINC . '/class-phpass.php';
-				$wp_hasher = new PasswordHash( 8, true );
-			}
-			$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
-			$wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user_login ) );
 
 			$message = __( 'Someone requested that the password be reset for the following account:' ) . "\r\n\r\n";
 			$message .= network_home_url( '/' ) . "\r\n\r\n";
@@ -1571,7 +1526,7 @@ if ( ! function_exists( 'kleo_lost_password_ajax' ) ) {
 			$message .= '<' . network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) . ">\r\n";
 
 			if ( is_multisite() ) {
-				$blogname = $GLOBALS['current_site']->site_name;
+				$blogname = get_network()->site_name;
 			} else /*
                  * The blogname option is escaped with esc_html on the way into the database
                  * in sanitize_option we want to reverse this for the plain text arena of emails.
@@ -1579,25 +1534,32 @@ if ( ! function_exists( 'kleo_lost_password_ajax' ) ) {
 				$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 			}
 
-			$title = sprintf( __( '[%s] Password Reset' ), $blogname );
+			$title = sprintf( esc_html__( '[%s] Password Reset' ), $blogname );
 
 			/**
-			 * Filter the subject of the password reset email.
+			 * Filters the subject of the password reset email.
 			 *
 			 * @since 2.8.0
+			 * @since 4.4.0 Added the `$user_login` and `$user_data` parameters.
 			 *
-			 * @param string $title Default email title.
+			 * @param string  $title      Default email title.
+			 * @param string  $user_login The username for the user.
+			 * @param WP_User $user_data  WP_User object.
 			 */
-			$title = apply_filters( 'retrieve_password_title', $title );
+			$title = apply_filters( 'retrieve_password_title', $title, $user_login, $user_data );
+
 			/**
-			 * Filter the message body of the password reset mail.
+			 * Filters the message body of the password reset mail.
 			 *
 			 * @since 2.8.0
+			 * @since 4.1.0 Added `$user_login` and `$user_data` parameters.
 			 *
-			 * @param string $message Default mail message.
-			 * @param string $key The activation key.
+			 * @param string  $message    Default mail message.
+			 * @param string  $key        The activation key.
+			 * @param string  $user_login The username for the user.
+			 * @param WP_User $user_data  WP_User object.
 			 */
-			$message = apply_filters( 'retrieve_password_message', $message, $key );
+			$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
 
 
 			if ( $message && ! wp_mail( $user_email, wp_specialchars_decode( $title ), $message ) ) {

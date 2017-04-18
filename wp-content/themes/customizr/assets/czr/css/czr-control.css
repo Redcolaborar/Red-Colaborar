@@ -1755,8 +1755,12 @@ body .select2-container {
   outline: none;
 }
 
-
-
+/* Old SELECT2
+* https://github.com/presscustomizr/themes-customizer-fmk/issues/30
+*/
+body .select2-drop {
+  z-index: 1000000;
+}
 
 
 /* SPECIFIC INPUT STYLE */
@@ -2926,7 +2930,9 @@ body.czr-skop-loading #czr-skope-pane {
   top : 0;
 }
 body.czr-skop-loading #customize-preview {
-  opacity: 0!important;
+  /*opacity: 0!important;*/
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
 }
 
 /* Pure CSS loader */

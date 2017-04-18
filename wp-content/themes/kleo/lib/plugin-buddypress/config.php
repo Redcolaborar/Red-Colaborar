@@ -339,6 +339,21 @@ if ( ! function_exists( 'kleo_bp_page_options' ) ) {
     }
 }
 
+if ( bp_is_blog_page() ) {
+	add_filter( 'body_class', 'kleo_bp_body_classes' );
+}
+
+function kleo_bp_body_classes( $classes = array() ) {
+	if ( 'light' == sq_option( 'bp_icons_style', 'normal' ) ) {
+		//check if on group or on profile page
+		if ( bp_is_user() || ( bp_is_single_item() && bp_is_groups_component() ) ) {
+			$classes[] = 'bp-light-icons';
+		}
+	}
+
+	return $classes;
+}
+
 
 function kleo_bp_set_custom_menu( $args = '' ) {
 
@@ -464,9 +479,7 @@ function kleo_bp_group_cover_html() {
         return;
     }
 
-    global $bp;
-
-    $output ='';
+	$output = '<div class="profile-cover-inner"></div>';
 
     if ( is_user_logged_in() ) {
 
@@ -477,8 +490,9 @@ function kleo_bp_group_cover_html() {
 
             $message = __("Change Cover", 'bpcp');
 
-            $group = groups_get_group(array('group_id' => $group_id));
+            $group = groups_get_group( array( 'group_id' => $group_id ) );
             $group_permalink = trailingslashit(bp_get_root_domain() . '/' . bp_get_groups_root_slug() . '/' . $group->slug . '/');
+
 
             $output .= '<div class="profile-cover-action">';
             $output .= '<a href="' . trailingslashit($group_permalink . 'admin/group-cover-image') . '" class="button">' . $message . '</a>';

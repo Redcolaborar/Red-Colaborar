@@ -401,18 +401,20 @@
           },
           'tc_menu_position' : function( to ) {
             if ( 'aside' != api( api.CZR_preview.prototype._build_setId('tc_menu_style') ).get() ) {
-              if ( 'pull-menu-left' == to )
-                $('.navbar-wrapper').addClass(to).removeClass('pull-menu-right');
-              else
-                $('.navbar-wrapper').addClass(to).removeClass('pull-menu-left');
+              if ( 'pull-menu-center' == to ) {
+                to += CZRPreviewParams.isRTL ?  ' pull-menu-left' : ' pull-menu-right';
+              }
+              $('.navbar-wrapper').removeClass('pull-menu-right pull-menu-left pull-menu-center').addClass(to);
+
             }
           },
           'tc_second_menu_position' : function(to) {
-            if ( 'pull-menu-left' == to )
-              $('.navbar-wrapper').addClass(to).removeClass('pull-menu-right');
-            else
-              $('.navbar-wrapper').addClass(to).removeClass('pull-menu-left');
+            if ( 'pull-menu-center' == to ) {
+              to += CZRPreviewParams.isRTL ?  ' pull-menu-left' : ' pull-menu-right';
+            }
+            $('.navbar-wrapper').removeClass('pull-menu-right pull-menu-left pull-menu-center').addClass(to);
           },
+
           'tc_menu_submenu_fade_effect' : function( to ) {
             if ( false !== to )
               $('.navbar-wrapper').addClass('tc-submenu-fade');
@@ -554,7 +556,10 @@
               $('.tc-rectangular-thumb').find('img').trigger('refresh-height');//listened by the jsimgcentering $ plugin
           },
           'tc_single_post_thumb_height' : function( to ) {
-            $('.tc-rectangular-thumb').css('height' , to + 'px').css('max-height' , to + 'px').trigger('refresh-height');
+            $('.tc-rectangular-thumb', '.tc-single-post-thumbnail-wrapper').css('height' , to + 'px').css('max-height' , to + 'px').trigger('refresh-height');
+          },
+          'tc_single_page_thumb_height' : function( to ) {
+            $('.tc-rectangular-thumb', '.tc-single-page-thumbnail-wrapper').css('height' , to + 'px').css('max-height' , to + 'px').trigger('refresh-height');
           },
         /******************************************
         * SOCIALS

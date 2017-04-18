@@ -283,8 +283,7 @@ if (!class_exists('BuddyPress_LearnDash_Admin')):
 
 			if ( isset( $_POST[ 'bp_learndash_settings_submit' ] ) ) {
 				$submitted = stripslashes_deep( $_POST[ 'buddypress_learndash_plugin_options' ] );
-				$submitted = $this->plugin_options_validate( $submitted );
-
+				
 				update_site_option( 'buddypress_learndash_plugin_options', $submitted );
 			}
 

@@ -35,7 +35,6 @@ class wfConfig {
 			"scheduledScansEnabled" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"lowResourceScansEnabled" => array('value' => false, 'autoload' => self::AUTOLOAD),
 			"scansEnabled_public" => array('value' => false, 'autoload' => self::AUTOLOAD),
-			"scansEnabled_heartbleed" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"scansEnabled_checkHowGetIPs" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"scansEnabled_core" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"scansEnabled_themes" => array('value' => false, 'autoload' => self::AUTOLOAD),
@@ -57,6 +56,7 @@ class wfConfig {
 			"scansEnabled_highSense" => array('value' => false, 'autoload' => self::AUTOLOAD),
 			"scansEnabled_oldVersions" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"scansEnabled_suspiciousAdminUsers" => array('value' => true, 'autoload' => self::AUTOLOAD),
+			"liveActivityPauseEnabled" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"firewallEnabled" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"blockFakeBots" => array('value' => false, 'autoload' => self::AUTOLOAD),
 			"autoBlockScanners" => array('value' => true, 'autoload' => self::AUTOLOAD),
@@ -66,6 +66,12 @@ class wfConfig {
 			"loginSec_blockAdminReg" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"loginSec_disableAuthorScan" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"loginSec_disableOEmbedAuthor" => array('value' => false, 'autoload' => self::AUTOLOAD),
+			"notification_updatesNeeded" => array('value' => true, 'autoload' => self::AUTOLOAD),
+			"notification_securityAlerts" => array('value' => true, 'autoload' => self::AUTOLOAD),
+			"notification_promotions" => array('value' => true, 'autoload' => self::AUTOLOAD),
+			"notification_blogHighlights" => array('value' => true, 'autoload' => self::AUTOLOAD),
+			"notification_productUpdates" => array('value' => true, 'autoload' => self::AUTOLOAD),
+			"notification_scanStatus" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"other_hideWPVersion" => array('value' => false, 'autoload' => self::AUTOLOAD),
 			"other_noAnonMemberComments" => array('value' => true, 'autoload' => self::AUTOLOAD),
 			"other_blockBadPOST" => array('value' => false, 'autoload' => self::AUTOLOAD),
@@ -116,14 +122,15 @@ class wfConfig {
 			'maxScanHits_action' => "throttle",
 			'blockedTime' => "300",
 			'email_summary_interval' => 'weekly',
-			'email_summary_excluded_directories' => 'wp-content/cache,wp-content/plugins/wordfence/tmp',
+			'email_summary_excluded_directories' => 'wp-content/cache,wp-content/wflogs',
 			'allowed404s' => "/favicon.ico\n/apple-touch-icon*.png\n/*@2x.png\n/browserconfig.xml",
 			'wafAlertWhitelist' => '',
 			'wafAlertInterval' => 600,
 			'wafAlertThreshold' => 100,
+			'howGetIPs_trusted_proxies' => '',
 		)
 	);
-	public static $serializedOptions = array('lastAdminLogin', 'scanSched', 'emailedIssuesList', 'wf_summaryItems', 'adminUserList', 'twoFactorUsers', 'alertFreqTrack', 'wfStatusStartMsgs', 'vulnerabilities_plugin', 'vulnerabilities_theme', 'dashboardData');
+	public static $serializedOptions = array('lastAdminLogin', 'scanSched', 'emailedIssuesList', 'wf_summaryItems', 'adminUserList', 'twoFactorUsers', 'alertFreqTrack', 'wfStatusStartMsgs', 'vulnerabilities_plugin', 'vulnerabilities_theme', 'dashboardData', 'malwarePrefixes');
 	public static function setDefaults() {
 		foreach (self::$defaultConfig['checkboxes'] as $key => $config) {
 			$val = $config['value'];
@@ -601,6 +608,9 @@ class wfConfig {
 	}
 	public static function f($key){
 		echo esc_attr(self::get($key));
+	}
+	public static function p() {
+		return self::get('isPaid');
 	}
 	public static function cbp($key){
 		if(self::get('isPaid') && self::get($key)){

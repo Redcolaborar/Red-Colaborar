@@ -328,9 +328,19 @@ if (!class_exists('Mediapresscustomizerfront')) {
                     if(count($child_of_post) > 0 && !empty($child_of_post))
                     {
                         $have_options = true ;
-                        $g_type = has_term('_members', 'mpp-component', $post_data->ID) ? "user" : "group";
+                        $g_component = has_term('_members', 'mpp-component', $post_data->ID) ? "user" : "group";
+                        $g_type_ = wp_get_post_terms( $post_data->ID, 'mpp-type' );
+
+                        if( is_array($g_type_) ) {
+                          $g_type_ = array_shift( $g_type_ );
+                        }
+
+                        $g_type = $g_type_->slug;
+
+                        if( !empty($g_type) ) $g_type = substr( $g_type, 1 );
+
                         $group_id_of_gallery = get_post_meta( $post_data->ID, 'gallery_group_id', true );
-                        $html .= "<option data-gallerytype='{$g_type}' data-gallery_group_id='{$group_id_of_gallery}' value='{$post_data->ID}'>{$post_data->post_title}</option>";
+                        $html .= "<option data-gallerytype='{$g_component}' data-gallery_group_id='{$group_id_of_gallery}' data-gallery_media_type='{$g_type}' value='{$post_data->ID}'>{$post_data->post_title}</option>";
                     }
                 }
 

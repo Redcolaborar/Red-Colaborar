@@ -90,7 +90,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 
 			if ( isset( $_POST[ 'bp_group_course' ] )  && ( $_POST[ 'bp_group_course' ] ) != '-1' ) {
 				
-				if ( isset( $old_course_id ) ) {
+				if ( ! empty( $old_course_id ) && $old_course_id != $_POST['bp_group_course'] ) {
 					delete_post_meta($old_course_id, 'bp_course_group');
 					groups_delete_groupmeta( $group_id, 'bp_course_attached' );
 					bp_learndash_remove_members_group( $old_course_id, $group_id );
@@ -117,12 +117,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 				//Adding teacher as admin of group
 				bp_learndash_course_teacher_group_admin($_POST[ 'bp_group_course' ], $group_id );
 				
-			}
-			
-			if ( isset( $_POST[ 'bp_group_course' ] )  && ( $_POST[ 'bp_group_course' ] ) == '-1' ) {
+			} else {
 				delete_post_meta($old_course_id, 'bp_course_group');
 				groups_delete_groupmeta( $group_id, 'bp_course_attached' );
-				bp_learndash_remove_members_group( $old_course_id, $group_id );
 			}
 			
 			if ( !isset($_POST['activity-checkbox-enable'] ) ) {

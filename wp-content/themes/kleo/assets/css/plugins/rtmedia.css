@@ -422,6 +422,29 @@ body[class*="rtm-3.7"] #rtm-gallery-title-container #rtm-media-options > span:la
 #buddypress div.rtmedia-activity-container .drag-drop .drag-drop-info {
   font-size: inherit;
 }
+.drag-drop #drag-drop-area {
+  /* v.4.1.9 */
+  border: 2px dashed #bad481;
+  background: #f9ffec;
+}
+.drag-drop-inside p.drag-drop-info {
+  /* v.4.1.9 */
+  font-size: inherit;
+}
+p.drag-drop-buttons input#bp-browse-button {
+  /* v.4.1.9 */
+  width: 12em;
+  font-size: 16px;
+  border: 0;
+  background: #6fb74e;
+  color: #fff !important;
+  height: 40px;
+}
+p.drag-drop-buttons input#bp-browse-button:hover {
+  /* v.4.1.9 */
+  background: #84d284 !important;
+  border: 0;
+}
 .rtm-primary-button,
 .rtmedia-container .drag-drop .start-media-upload,
 .rtmedia-activity-container .drag-drop .start-media-upload,

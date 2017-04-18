@@ -261,6 +261,12 @@ select .fade, select.fade {
     transition: all 0.3s ease;
 }
 
+/*Fix for plugins that overwrites font family ex Wanguard*/
+
+ul.redux-group-menu .el {
+    font-family:"Elusive-Icons" !important;
+}
+
 .admin-color-fresh .redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li a {
     background: #e5e5e5;
 }

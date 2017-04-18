@@ -616,10 +616,18 @@ add_action('woocommerce_shop_loop_item_title', 'kleo_woo_template_loop_product_t
 /**
  * Show the product categories in the product loop.
  */
-function kleo_woo_template_loop_product_cats() {
-	global $product, $post;
-	$size = sizeof( get_the_terms( $post->ID, 'product_cat' ) );
-	echo $product->get_categories( ', ', '<span class="posted_in">' . _n( '', '', $size, 'woocommerce' ) . ' ', '</span>' );
+if ( version_compare( WOOCOMMERCE_VERSION, "3.0.0" ) >= 0 ) {
+	function kleo_woo_template_loop_product_cats() {
+		global $post;
+		$size = sizeof( get_the_terms( $post->ID, 'product_cat' ) );
+		echo wc_get_product_category_list( $post->ID, ', ', '<span class="posted_in">' . _n( '', '', $size, 'woocommerce' ) . ' ', '</span>' );
+	}
+} else {
+	function kleo_woo_template_loop_product_cats() {
+		global $product, $post;
+		$size = sizeof( get_the_terms( $post->ID, 'product_cat' ) );
+		echo $product->get_categories( ', ', '<span class="posted_in">' . _n( '', '', $size, 'woocommerce' ) . ' ', '</span>' );
+	}
 }
 
 /**
@@ -645,7 +653,7 @@ function kleo_woo_thumb_image() {
 		echo '<div class="kleo-woo-image kleo-woo-front-image">' . woocommerce_get_product_thumbnail() . '</div>';
 }
 function kleo_woo_first_image() {
-	if (kleo_woo_get_first_image() != '') {
+	if ( kleo_woo_get_first_image() != '' ) {
 		echo '<div class="kleo-woo-image kleo-woo-back-image">' . kleo_woo_get_first_image() . '</div>';
 	}
 }
@@ -656,7 +664,11 @@ function kleo_woo_get_first_image() {
 	if ( version_compare( WOOCOMMERCE_VERSION, "2.0.0" ) >= 0 ) {
 
 		$image = '';
-		$attachment_ids = $product->get_gallery_attachment_ids();
+		if ( version_compare( WOOCOMMERCE_VERSION, "3.0.0" ) >= 0 ) {
+			$attachment_ids = $product->get_gallery_image_ids();
+		} else {
+			$attachment_ids = $product->get_gallery_attachment_ids();
+		}
 		$img_count = 0;
 
 		if ($attachment_ids) {
@@ -669,7 +681,7 @@ function kleo_woo_get_first_image() {
 
 				$img_count++;
 
-				if ($img_count == 1) break;
+				if ( $img_count == 1 ) break;
 
 			}
 		}
@@ -927,12 +939,19 @@ function kleo_product_nav( $same_cat = false ) {
 		if ( is_attachment() ) :
 			previous_post_link( '%link', __( '<span id="older-nav">Go back</span>', 'kleo_framework' ) );
 		else :
-			$prev_img = get_the_post_thumbnail( $previous->ID, 'thumbnail' );
-			$next_img = get_the_post_thumbnail( $next->ID, 'thumbnail' );
-			$prev_img = $prev_img ? '<span class="nav-image">' . $prev_img . '</span>' : '';
-			$next_img = $next_img ? '<span class="nav-image">' . $next_img . '</span>' : '';
-			previous_post_link( '%link', '<span id="older-nav">' . $prev_img . '<span class="outter-title"><span class="entry-title">' . get_the_title( $previous->ID ) . '</span></span></span>', $same_cat );
-			next_post_link( '%link', '<span id="newer-nav">' . $next_img . '<span class="outter-title"><span class="entry-title">' . get_the_title( $next->ID ) . '</span></span></span>', $same_cat );
+
+			if ( $previous ) {
+				$prev_img = get_the_post_thumbnail( $previous->ID, 'thumbnail' );
+				$prev_img = $prev_img ? '<span class="nav-image">' . $prev_img . '</span>' : '';
+				previous_post_link( '%link', '<span id="older-nav">' . $prev_img . '<span class="outter-title"><span class="entry-title">' . get_the_title( $previous->ID ) . '</span></span></span>', $same_cat );
+			}
+
+			if ( $next ) {
+				$next_img = get_the_post_thumbnail( $next->ID, 'thumbnail' );
+				$next_img = $next_img ? '<span class="nav-image">' . $next_img . '</span>' : '';
+				next_post_link( '%link', '<span id="newer-nav">' . $next_img . '<span class="outter-title"><span class="entry-title">' . get_the_title( $next->ID ) . '</span></span></span>', $same_cat );
+			}
+
 		endif;
 		?>
 	</nav><!-- .navigation -->
@@ -941,7 +960,7 @@ function kleo_product_nav( $same_cat = false ) {
 }
 endif;
 if ( sq_option( 'woo_product_navigation', 1 ) == 1 ) :
-    add_action('kleo_after_main', 'kleo_product_nav', 11);
+    add_action( 'kleo_after_main', 'kleo_product_nav', 11 );
 endif;
 
 
@@ -993,10 +1012,14 @@ if (!function_exists('kleo_woo_header_cart_fragment')) {
 
 
 
-if (!function_exists('kleo_woo_get_mini_cart')) {
+if ( ! function_exists( 'kleo_woo_get_mini_cart' ) ) {
 	function kleo_woo_get_mini_cart( $just_inner = false ) {
 
 		global $woocommerce;
+
+
+		//Enqueue variations script for quick view
+		wp_enqueue_script( 'wc-add-to-cart-variation' );
 		
 		$cart_output = "";
 		$cart_total = $woocommerce->cart->get_cart_total();
@@ -1045,7 +1068,7 @@ if (!function_exists('kleo_woo_get_mini_cart')) {
 					$product_short_title = apply_filters( 'woocommerce_cart_item_name', $product_short_title, $cart_item, $cart_item_key );
 
 					$thumbnail        = apply_filters( 'woocommerce_cart_item_thumbnail', $cart_product->get_image(), $cart_item, $cart_item_key );
-					$product_price    = apply_filters( 'woocommerce_cart_item_price', woocommerce_price( $cart_product->get_price() ), $cart_item, $cart_item_key );
+					$product_price    = apply_filters( 'woocommerce_cart_item_price', wc_price( $cart_product->get_price() ), $cart_item, $cart_item_key );
 					$product_quantity = apply_filters( 'woocommerce_cart_item_quantity', $cart_item['quantity'], $cart_item_key, $cart_item );
 
 					if ( $cart_product->exists() && $cart_item['quantity'] > 0 ) {
@@ -1103,7 +1126,7 @@ if (!function_exists('kleo_woo_get_mini_cart')) {
 			if ( version_compare( WOOCOMMERCE_VERSION, "2.1.0" ) >= 0 ) {
 				$shop_page_url = get_permalink( wc_get_page_id( 'shop' ) );
 			} else {
-				$shop_page_url = get_permalink( woocommerce_get_page_id( 'shop' ) );
+				$shop_page_url = get_permalink( wc_get_page_id( 'shop' ) );
 			}
 
 			$cart_output .= '<div class="minicart-buttons">';
@@ -1798,7 +1821,7 @@ if ( ! function_exists( 'wc_dropdown_variation_attribute_options' ) ) {
 	 * @since 2.4.0
 	 */
 	function wc_dropdown_variation_attribute_options( $args = array() ) {
-		$args = wp_parse_args( $args, array(
+		$args = wp_parse_args( apply_filters( 'woocommerce_dropdown_variation_attribute_options_args', $args ), array(
 			'options'          => false,
 			'attribute'        => false,
 			'product'          => false,
@@ -1806,47 +1829,48 @@ if ( ! function_exists( 'wc_dropdown_variation_attribute_options' ) ) {
 			'name'             => '',
 			'id'               => '',
 			'class'            => '',
-			'show_option_none' => __( 'Choose an option', 'woocommerce' )
+			'show_option_none' => __( 'Choose an option', 'woocommerce' ),
 		) );
 
-		$options   = $args['options'];
-		$product   = $args['product'];
-		$attribute = $args['attribute'];
-		$name      = $args['name'] ? $args['name'] : 'attribute_' . sanitize_title( $attribute );
-		$id        = $args['id'] ? $args['id'] : sanitize_title( $attribute );
-		$class     = $args['class'];
+		$options               = $args['options'];
+		$product               = $args['product'];
+		$attribute             = $args['attribute'];
+		$name                  = $args['name'] ? $args['name'] : 'attribute_' . sanitize_title( $attribute );
+		$id                    = $args['id'] ? $args['id'] : sanitize_title( $attribute );
+		$class                 = $args['class'];
+		$show_option_none      = $args['show_option_none'] ? true : false;
+		$show_option_none_text = $args['show_option_none'] ? $args['show_option_none'] : __( 'Choose an option', 'woocommerce' ); // We'll do our best to hide the placeholder, but we'll need to show something when resetting options.
 
 		if ( empty( $options ) && ! empty( $product ) && ! empty( $attribute ) ) {
 			$attributes = $product->get_variation_attributes();
 			$options    = $attributes[ $attribute ];
 		}
 
-		echo '<select id="' . esc_attr( $id ) . '" class="' . esc_attr( $class ) . '" name="' . esc_attr( $name ) . '" data-attribute_name="attribute_' . esc_attr( sanitize_title( $attribute ) ) . '">';
-
-		if ( $args['show_option_none'] ) {
-			echo '<option value="">' . esc_html( $args['show_option_none'] ) . '</option>';
-		}
+		$html = '<select id="' . esc_attr( $id ) . '" class="' . esc_attr( $class ) . '" name="' . esc_attr( $name ) . '" data-attribute_name="attribute_' . esc_attr( sanitize_title( $attribute ) ) . '" data-show_option_none="' . ( $show_option_none ? 'yes' : 'no' ) . '">';
+		$html .= '<option value="">' . esc_html( $show_option_none_text ) . '</option>';
 
 		if ( ! empty( $options ) ) {
 			if ( $product && taxonomy_exists( $attribute ) ) {
 				// Get terms if this is a taxonomy - ordered. We need the names too.
-				$terms = wc_get_product_terms( $product->id, $attribute, array( 'fields' => 'all' ) );
+				$terms = wc_get_product_terms( $product->get_id(), $attribute, array( 'fields' => 'all' ) );
 
 				foreach ( $terms as $term ) {
 					if ( in_array( $term->slug, $options ) ) {
-						echo '<option value="' . esc_attr( $term->slug ) . '" ' . selected( sanitize_title( $args['selected'] ), $term->slug, false ) . '>' . apply_filters( 'woocommerce_variation_option_name', $term->name ) . '</option>';
+						$html .= '<option value="' . esc_attr( $term->slug ) . '" ' . selected( sanitize_title( $args['selected'] ), $term->slug, false ) . '>' . esc_html( apply_filters( 'woocommerce_variation_option_name', $term->name ) ) . '</option>';
 					}
 				}
 			} else {
 				foreach ( $options as $option ) {
 					// This handles < 2.4.0 bw compatibility where text attributes were not sanitized.
 					$selected = sanitize_title( $args['selected'] ) === $args['selected'] ? selected( $args['selected'], sanitize_title( $option ), false ) : selected( $args['selected'], $option, false );
-					echo '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( apply_filters( 'woocommerce_variation_option_name', $option ) ) . '</option>';
+					$html .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( apply_filters( 'woocommerce_variation_option_name', $option ) ) . '</option>';
 				}
 			}
 		}
 
-		echo '</select>';
+		$html .= '</select>';
+
+		echo apply_filters( 'woocommerce_dropdown_variation_attribute_options_html', $html, $args );
 	}
 }
 
@@ -1866,22 +1890,46 @@ if ( ! function_exists( 'woocommerce_single_variation' ) ) {
 
 if ( ! function_exists( 'woocommerce_single_variation_add_to_cart_button' ) ) {
 
-	add_action( 'woocommerce_single_variation', 'woocommerce_single_variation_add_to_cart_button', 20 );
-
 	/**
 	 * Output the add to cart button for variations.
 	 */
 	function woocommerce_single_variation_add_to_cart_button() {
-		global $product;
-		?>
-		<div class="variations_button">
-			<?php woocommerce_quantity_input( array( 'input_value' => isset( $_POST['quantity'] ) ? wc_stock_amount( $_POST['quantity'] ) : 1 ) ); ?>
-			<button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
-			<input type="hidden" name="add-to-cart" value="<?php echo absint( $product->id ); ?>" />
-			<input type="hidden" name="product_id" value="<?php echo absint( $product->id ); ?>" />
-			<input type="hidden" name="variation_id" class="variation_id" value="" />
-		</div>
-		<?php
+		wc_get_template( 'single-product/add-to-cart/variation-add-to-cart-button.php' );
+	}
+}
+
+if ( ! function_exists( 'wc_get_stock_html' ) ) {
+	/**
+	 * Get HTML to show product stock.
+	 * @since  3.0.0
+	 *
+	 * @param  WC_Product $product
+	 *
+	 * @return string
+	 */
+	function wc_get_stock_html( $product ) {
+
+		$html         = '';
+		$availability = $product->get_availability();
+
+		if ( ! empty( $availability['availability'] ) ) {
+			ob_start();
+
+			wc_get_template( 'single-product/stock.php', array(
+				'product'      => $product,
+				'class'        => $availability['class'],
+				'availability' => $availability['availability'],
+			) );
+
+			$html = ob_get_clean();
+		}
+
+		if ( has_filter( 'woocommerce_stock_html' ) ) {
+			wc_deprecated_function( 'The woocommerce_stock_html filter', '', 'woocommerce_get_stock_html' );
+			$html = apply_filters( 'woocommerce_stock_html', $html, $availability['availability'], $product );
+		}
+
+		return apply_filters( 'woocommerce_get_stock_html', $html, $product );
 	}
 }
 

@@ -4,7 +4,7 @@ Donate link: https://www.buddyboss.com/donate/
 Tags: buddypress, learndash, lms, learning management system, learning, courses, courseware, education, social networking, activity, profiles, messaging, friends, groups, forums, notifications, settings, social, community, networks, networking
 Requires at least: 3.8
 Tested up to: 4.7.2
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -108,6 +108,15 @@ For BuddyPress customizations, submit your request at [BuddyBoss](https://www.bu
 2. **Course Group Settings** - Add a course to a BuddyPress group and configure its activity actions.
 
 == Changelog ==
+
+= 1.2.1 =
+* Fix - LearnDash v2.3 compatibility
+* Fix - Multisite fixes
+* Fix - Whole network crashes when activating BP LearnDash on main site
+* Fix - Students are not getting added into the course buddypress group while doing course mass enrollment
+* Fix - Members removal from a related BuddyPress Course Group happens after a course is updated or changed
+* Fix - Hidden groups are not displaying in group meta box on course edit page
+* Fix - Statistic column added under Profile > My Courses
 
 = 1.2.0 =
 * Fix - Hidden groups are not displaying in group meta box on course edit page

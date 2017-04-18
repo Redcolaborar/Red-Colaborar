@@ -195,6 +195,9 @@ class kleo_custom_menu {
 
 				jQuery(document).on('click', '.kleo-wp-menu-item-icon-select', function (e) {
 					e.preventDefault();
+					if ( jQuery(this).closest('.menu-item-icons').find('.kleo-wp-menu-item-icon-container').filter(":empty").length ) {
+						jQuery(this).closest('.menu-item-icons').find('.kleo-wp-menu-item-icon-container').append(SqMenuIcons);
+					}
 					jQuery(this).closest('.menu-item-icons').find('.kleo-wp-menu-item-icon-container').toggleClass('open');
 				});
 				jQuery(document).on('click', '.kleo-wp-menu-item-icon-remove', function (e) {

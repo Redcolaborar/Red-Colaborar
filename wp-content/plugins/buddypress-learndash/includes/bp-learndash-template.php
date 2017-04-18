@@ -7,7 +7,7 @@ function bp_learndash_load_template($template){
     else if(file_exists(TEMPLATEPATH.'bp-learndash/'.$template))
         include_once (TEMPLATEPATH.'/bp-learndash/'.$template);
     else{
-        $template_dir = apply_filters('bp_learndash_templates_dir_filter', buddypress_learndash()->templates_dir);
+        $template_dir = apply_filters('bp_learndash_templates_dir_filter', buddypress_learndash()->templates_dir, $template );
         include_once trailingslashit($template_dir) . $template;
     }
 }

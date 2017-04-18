@@ -483,6 +483,8 @@ a .link-icon {
   padding: 0 12px;
   margin: 0;
 }
+
+
 @media (min-width: 992px) {
   .navbar-nav a.kleo-bp-user-avatar {
     display: inline-block;
@@ -631,6 +633,10 @@ a .link-icon {
     text-align: left;
   }
 }
+.kleo-main-header.header-normal .logo > a {
+  text-align: left;
+}
+
 .kleo-main-header.header-normal .navbar-collapse {
   padding-right: 0;
   //height: 100% !important;
@@ -667,6 +673,9 @@ a .link-icon {
   float: none;
   display: inline-block;
   margin: 0;
+}
+.header-centered .navbar-header .logo > a {
+  text-align: left;
 }
 .header-centered .primary-menu {
   //display: inline-block !important;
@@ -838,6 +847,11 @@ a .link-icon {
       }
     }
   }
+  #header .kleo_ajax_results {
+    overflow-y: auto;
+    max-height: 500px;
+    max-height: 70vh;
+  }
 
 }
 
@@ -874,6 +888,9 @@ a .link-icon {
 }
 .kleo-main-header .nav > li > a.btn-buy {
   //border-radius: 4px;
+
+  /* v.4.1.9 */
+  transition: background-color 0.4s ease;
 }
 .kleo-main-header .nav > li > a.btn:hover,
 .kleo-main-header .nav > li > a.btn-buy:hover {
@@ -1152,6 +1169,8 @@ a .link-icon {
 .navbar-transparent:not(.kleo-navbar-fixed) #header {
   position: absolute;
   width: 100%;
+  background: transparent;
+  z-index: 1;
 }
 
 /* Fixed Header */
@@ -1229,6 +1248,11 @@ a .link-icon {
   /*border-color: #e5e5e5;*/
   border-right: none;
   border-bottom: 0;
+}
+#nav-menu-item-search .icon-search:before {
+
+  /* v.4.1.9 */
+  content: '\e9b6' !important;
 }
 .logo-to-right #ajax_search_container {
   left: auto;
@@ -1383,6 +1407,29 @@ a.ajax_view_all:after {
   animation:         show_search_pop 0.3s 1 cubic-bezier(0.175, 0.885, 0.320, 1.275);
 }
 
+/* Google Search Box in Header */
+
+.has-google-search-box {
+  .sticky-wrapper {
+    z-index: 1601;
+    position: relative;
+  }
+  li#nav-menu-item-search {
+    z-index: 1501;
+  }
+  .header-color input.gsc-input {
+    color: #000;
+    font-size: 14px;
+  }
+  .cse .gsc-search-button input.gsc-search-button-v2, input.gsc-search-button-v2 {
+    width: auto;
+    height: auto;
+  }
+  .gscb_a {
+    font-size: 22px;
+    line-height: 19px;
+  }
+}
 
 /*Menu dropdown toggle*/
 .kleo-toggle-menu {
@@ -1600,6 +1647,16 @@ a.ajax_view_all:after {
   }
 }
 
+@media screen and (max-width: 480px) {
+
+  .navbar-header .logo {
+
+    /* v.4.1.9 */
+    float: none;
+    text-align: left;
+  }
+}
+
 @media (min-width: 768px) and (max-width: 991px) {
 
   .logo {
@@ -1678,6 +1735,10 @@ a.ajax_view_all:after {
     &.btn {
       padding: 14px 20px;
     }
+    &.btn-buy.btn-default {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
   }
   #header .navbar-nav > li > a {
     font-weight: bold;
@@ -1744,6 +1805,9 @@ a.ajax_view_all:after {
     text-align: center;
     right: 0;
     top: 0;
+  }
+  #header i.icon-basket-full-alt:before {
+    content: "\ea0a" !important;
   }
   #header .navbar-nav li.dropdown.open > a .caret:after,
   #header .navbar-nav li.dropdown-submenu.open > a .caret:after {
@@ -1816,6 +1880,36 @@ a.ajax_view_all:after {
   }
   .navbar-transparent #menu-kleonavmenu li .caret:after {
     color: rgba(255,255,255, 0.2) !important;
+  }
+
+  .navbar-transparent.on-dark-bg:not(.kleo-navbar-fixed) #header {
+    background: #000;
+  }
+  .navbar-transparent.on-dark-bg .navbar .kleo-main-header {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  .navbar-transparent.on-dark-bg #ajax_searchform {
+    background-color: #000;
+  }
+
+  .navbar-transparent.on-light-bg:not(.kleo-navbar-fixed) #header {
+    background: #fff;
+  }
+  .navbar-transparent.on-light-bg .navbar .kleo-main-header {
+    box-shadow: 0 5px 15px rgba(191,191,191,0.1);
+  }
+
+  .navbar-transparent.on-light-bg a.btn-see-through {
+    border: 2px solid rgba(0, 0, 0, 0.2);
+  }
+  .navbar-transparent.on-light-bg #ajax_searchform {
+    background-color: #fff;
+  }
+  .navbar-transparent.on-light-bg #ajax_searchform .form-control {
+    color: inherit;
+  }
+  .navbar-transparent.on-light-bg input.form-control[type=text] {
+    border-color: #e5e5e5;
   }
 
   /* Megamenu */

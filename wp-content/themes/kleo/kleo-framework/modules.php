@@ -164,7 +164,7 @@ class SQ_Modules {
 		if ( ! $option ) {
 			$option = array();
 		}
-		$option[$scope] = $this->current_file_version;
+		$option[ $scope ] = $this->current_file_version;
 		update_option( $this->option_name, $option );
 
 		//update transient
@@ -172,18 +172,18 @@ class SQ_Modules {
 	}
 
 	public function file_needs_generation( $scope ) {
-		
+
 		//prepare main css file
-		if( $this->get_current_version( $scope ) == false ) {
+		if ( $this->get_current_version( $scope ) == false ) {
 			$needs_update = true;
 		} else {
 			$needs_update = version_compare( $this->get_current_version( $scope ), $this->current_file_version, '<' );
 		}
-		
+
 		if ( ! $this->file_exists( $scope ) || $needs_update ) {
 			return true;
 		}
-		
+
 		return false;
 
 	}
@@ -216,10 +216,10 @@ class SQ_Modules {
 
 		return $modules_content;
 	}
-	
+
 
 	public function generate_file( $scope, $content = '' ) {
-		
+
 		$this->remove_file( $scope );
 
 		$scope_obj = $this->get_scope_data( $scope );
@@ -229,8 +229,7 @@ class SQ_Modules {
 
 		if ( $content != '' ) {
 
-			if( sq_fs_put_contents( $scope_obj->output_path . $scope_obj->filename, $content ) ) {
-				
+			if ( sq_fs_put_contents( $scope_obj->output_path . $scope_obj->filename, $content ) ) {
 				$this->set_current_version( $scope );
 
 				return true;
@@ -247,13 +246,13 @@ class SQ_Modules {
 
 		if ( $this->file_needs_generation( $scope ) ) {
 
-			if( $this->generate_file( $scope, $content ) ) {
+			if ( $this->generate_file( $scope, $content ) ) {
 				$file_exists = true;
 			}
 		} else {
 			$file_exists = true;
 		}
-		
+
 		return $file_exists;
 
 	}

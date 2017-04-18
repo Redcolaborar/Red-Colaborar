@@ -1715,6 +1715,34 @@ img.attachment-kleo-full-width {
     content: "\e9ae";
 }
 
+/* New Blog Demo Style*/
+
+.left-rail-text {
+
+    /* v.4.1.9 */
+    font-size: 112px;
+    font-weight: 900;
+    position: absolute;
+    left: -200px;
+    top: -140px;
+    white-space: nowrap;
+    color: #fafafa;
+    z-index: 0;
+}
+.right-rail-text {
+
+    /* v.4.1.9 */
+    font-size: 112px;
+    font-weight: 900;
+    position: absolute;
+    right: -200px;
+    top: -140px;
+    white-space: nowrap;
+    color: #fafafa;
+    z-index: 0;
+    left: auto;
+}
+
 
 /* Social share */
 .share-links {
@@ -2893,7 +2921,7 @@ ul.link-list li {float:left;margin-right: 10px;}
 /* Tagcloud widget */
 .widget_tag_cloud a {
     display: block;
-    font-size: 11px !important;
+    //font-size: 11px !important;
     line-height: 1.2em !important;
     float: left; padding: 5px 8px;
     margin: 0 5px 5px 0;
@@ -2903,6 +2931,9 @@ ul.link-list li {float:left;margin-right: 10px;}
     -moz-border-radius: 3px;
     border-radius: 3px;
     cursor: pointer;
+
+    /* v.4.1.9 */
+    font-size: small !important;
 }
 .widget_tag_cloud a:hover {
     text-decoration: none;
@@ -3764,7 +3795,7 @@ input[type=number]::-webkit-outer-spin-button {
 select {
     height: 30px;
     /*line-height: 30px;*/
-    padding: 4px 30px 4px 9px !important;
+    /*padding: 4px 30px 4px 9px !important;*/
     border-radius:2px;
     border-style: solid;
     border-width: 1px;
@@ -3778,6 +3809,9 @@ select {
     /* Remove arrow from firefox */
     text-indent: 0.01px;
     text-overflow: "";
+
+    /* v.4.1.9 */
+    padding: 0 30px 0 9px !important;
 }
 html.no-touch select[multiple] {
     padding: 0 2px 0 0 !important;
@@ -4194,9 +4228,43 @@ canvas.letitsnow.pos-fixed {position: fixed;}
     }
 
     /* Buddypress */
+    #buddypress div#item-nav {
+
+        /* v.4.1.9 */
+        border-bottom: 0;
+        padding: 20px;
+    }
+    .buddypress div#item-header div#item-header-content p:first-child {
+        height: 20px;
+        -webkit-line-clamp: 1;
+        max-width: 90%;
+        margin: 10px auto 10px;
+    }
+    #buddypress div#item-nav .responsive-tabs {
+
+        /* v.4.1.9 */
+        height: auto !important;
+    }
+    #buddypress div#item-nav .tabdrop .dropdown-menu li a {
+
+        /* v.4.1.9 */
+        height: 43px;
+        line-height: 43px;
+    }
+    #buddypress div#item-nav ul li a:before {
+
+        /* v.4.1.9 */
+        margin-bottom: 0 !important;
+    }
+    #buddypress div#item-nav ul li.dropdown a.dropdown-toggle:before {
+
+        /* v.4.1.9 */
+        background: #fafafa;
+    }
     #buddypress div.message-search {
         width: 100%;
         display: block;
+        margin-top: 10px;
     }
 
     #buddypress li div.item {
@@ -4214,7 +4282,10 @@ canvas.letitsnow.pos-fixed {position: fixed;}
     }
 
     #item-nav .tabdrop .dropdown-menu {
-        margin: -11px 0 0 !important;
+        //margin: -11px 0 0 !important;
+
+        /* v.4.1.9 */
+        margin: 11px 0 0 !important;
     }
     #buddypress div.activity-comments {
         margin-left: 0;
@@ -4238,6 +4309,18 @@ canvas.letitsnow.pos-fixed {position: fixed;}
     #comments-list .comment-respond {
         margin-left: 0;
     }
+    .kleo-mfp-zoom .mfp-container {
+        padding: 0;
+        margin: 0 auto;
+        max-width: initial;
+    }
+    /*.template-page,
+    .sidebar {
+
+        !* v.4.1.9 *!
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }*/
 }
 
 @media (min-width: 480px) and (max-width: 767px) { }
@@ -5699,7 +5782,10 @@ canvas.letitsnow.pos-fixed {position: fixed;}
     font-style: italic;
     padding: 10px 10px 0;
     text-align: center;
-    font-size: 14px;
+    /*font-size: 14px;*/
+
+    /* v.4.1.9 */
+    font-size: 18px;
 }
 .kleo-carousel-testimonials .testimonial-meta {
     font-size: 12px;
@@ -5882,6 +5968,76 @@ canvas.letitsnow.pos-fixed {position: fixed;}
     line-height: 75px;
 }
 
+/* Thumbs ofer preview image */
+.thumbs-over-img > .wpb_wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+    text-align: center;
+}
+
+.thumbs-over-img h2 {
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    margin: 30px 0;
+}
+.thumbs-over-img .kleo-gallery-container {
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.4s;
+}
+.thumbs-over-img .kleo-gallery-container:hover {
+    box-shadow: 0 12px 42px 12px rgba(0,0,0,0.08);
+}
+.thumbs-over-img .kleo-gallery {
+    position: absolute;
+    overflow: hidden;
+    transform: translateY(-100%);
+    z-index: 100;
+
+    opacity: 0;
+    transition: opacity 0.4s;
+    width: 100%;
+}
+.thumbs-over-img .kleo-gallery-container:hover .kleo-gallery {
+    opacity: 1;
+}
+.thumbs-over-img .kleo-gallery-container:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 100;
+    transition: background 0.4s;
+    pointer-events: none;
+}
+.thumbs-over-img .kleo-gallery-container:hover:before {
+    background: rgba(255,255,255,0.3);
+}
+.thumbs-over-img .kleo-gallery-image {
+    //max-height: 360px;
+    //max-width: 540px;
+    margin: auto !important;
+    position: relative !important;
+}
+.thumbs-over-img .kleo-gallery-image img {
+    transition: transform 0.4s;
+}
+.thumbs-over-img .kleo-gallery-image:hover img {
+    transform: scale(1.05);
+}
+.thumbs-over-img .kleo-carousel-container {
+    //max-width: 540px;
+    margin: auto;
+}
+.thumbs-over-img .caroufredsel_wrapper {
+    margin: 0 !important;
+}
+
+
+
 /* Carousel Gallery Grid */
 .kleo-gallery-grid {}
 .kleo-gallery-grid ul.kleo-isotope {
@@ -5910,7 +6066,10 @@ canvas.letitsnow.pos-fixed {position: fixed;}
 }
 .kleo-gallery-grid .kleo-gallery-inner {
     display: inline-block;
-    width: 100%;
+    //width: 100%;
+
+    /* v.4.1.9 */
+    width: auto;  /* If we put 100% than gap will not work correctly */
 }
 .kleo-large-gap.kleo-gallery-grid {
     padding: 10px 0 0 10px;
@@ -5918,6 +6077,10 @@ canvas.letitsnow.pos-fixed {position: fixed;}
 
 .kleo-masonry-item,
 .kleo-isotope > li {float:left;}
+
+.kleo-masonry .entry-summary {
+  word-wrap: break-word;
+}
 
 .kleo-masonry-item,
 .kleo-isotope > li {width:33.3%; }
@@ -6028,6 +6191,7 @@ img {
     height: auto;
     max-width: 100%;
 }
+
 
 /* -----------------------------------------
    11. Progress bar

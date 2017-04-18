@@ -1,4 +1,4 @@
-/*! kleo-wp 4.1.8 combined.min.js 
+/*! kleo-wp 4.2.0 combined.min.js 
 Combined JS files for KLEO THEME: 
 Bootstrap 
 Waypoints 
@@ -6,7 +6,7 @@ Magnific popup
 carouFredSel 
 TouchSwipe - jQuery Plugin 
 Isotope 
-2017-02-09 1:15:32 AM 
+2017-04-13 7:24:23 PM 
  */
 if (!jQuery) {
     throw new Error("Bootstrap requires jQuery");

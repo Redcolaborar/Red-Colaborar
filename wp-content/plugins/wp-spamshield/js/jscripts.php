@@ -1,7 +1,7 @@
 <?php
 /**
  *  WP-SpamShield Dynamic JS File
- *  Version: 1.9.9.9.2
+ *  Version: 1.9.9.9.6
  */
 
 /* Security Check - BEGIN */
@@ -28,8 +28,8 @@ date_default_timezone_set('UTC');
 if(!defined('WPSS_SERVER_NAME')){define('WPSS_SERVER_NAME',js_wpss_get_server_name());}
 if(!defined('WPSS_EOL')){$eol=(defined('PHP_EOL')&&("\n"===PHP_EOL||"\r\n"===PHP_EOL))?PHP_EOL:js_wpss_eol();define('WPSS_EOL',$eol);}
 if(!defined('WPSS_DS')){$ds=(defined('DIRECTORY_SEPARATOR')&&('/'===DIRECTORY_SEPARATOR||'\\'===DIRECTORY_SEPARATOR))?DIRECTORY_SEPARATOR:js_wpss_ds();define('WPSS_DS',$ds);}
-function js_wpss_eol(){return (strtolower(substr(PHP_OS,0,3))==='win')?"\r\n":"\n";}
-function js_wpss_ds(){return (strtolower(substr(PHP_OS,0,3))==='win')?'\\':'/';}
+function js_wpss_eol(){return (js_wpss_casetrans('lower',substr(PHP_OS,0,3))==='win')?"\r\n":"\n";}
+function js_wpss_ds(){return (js_wpss_casetrans('lower',substr(PHP_OS,0,3))==='win')?'\\':'/';}
 
 /* SESSION CHECK AND FUNCTIONS - BEGIN */
 global $session_id,$is_https,$this_url;
@@ -42,7 +42,7 @@ if(!defined('WPSS_HASH_ALT')){$alt_prefix=js_wpss_md5(WPSS_SERVER_NAME_NODOT);de
 if(!defined('WPSS_SITE_URL')&&!empty($_SESSION['wpss_site_url_'.WPSS_HASH_ALT])){$site_url=$_SESSION['wpss_site_url_'.WPSS_HASH_ALT];define('WPSS_SITE_URL',$site_url);}
 if(defined('WPSS_SITE_URL')&&!defined('WPSS_HASH')){$hash_prefix=js_wpss_md5(WPSS_SITE_URL);define('WPSS_HASH',$hash_prefix);}
 elseif(!empty($_SESSION)&&!empty($_COOKIE)&&!defined('WPSS_HASH')){
-	foreach($_COOKIE as $ck_name => $ck_val){
+	foreach($_COOKIE as $ck_name => $ck_v){
 		if(preg_match("~^comment_author_([a-z0-9]{32})$~i",$ck_name,$matches)){define('WPSS_HASH',$matches[1]);break;}
 	}
 }
@@ -188,10 +188,16 @@ function js_wpss_get_url(){
 }
 function js_wpss_get_ck_dir(){
 	global $this_url;
-	$path=__FILE__;$std_str=WPSS_DS.'wp-content'.WPSS_DS.'plugins'.WPSS_DS.'wp-spamshield'.WPSS_DS.'js'.WPSS_DS.'jscripts.php';
-	$path_guess=str_replace($std_str,'',$path);
-	$wpconf=$path_guess.WPSS_DS.'wp-config.php';
-	return (file_exists($wpconf))?str_replace(WPSS_DS,'/',str_replace($_SERVER['DOCUMENT_ROOT'],'',$path_guess).WPSS_DS):'/';
+	$path		= __FILE__;
+	$jscripts	= WPSS_DS.'wp-content'.WPSS_DS.'plugins'.WPSS_DS.'wp-spamshield'.WPSS_DS.'js'.WPSS_DS.'jscripts.php';
+	$path_guess	= str_replace( $jscripts, '', $path );
+	$wp_cnf		= $path_guess.WPSS_DS.'wp-config.php';
+	$ck_dir		= ( file_exists( $wp_cnf ) && !empty( $_SERVER['DOCUMENT_ROOT'] ) ) ? str_replace( WPSS_DS, '/', str_replace( $_SERVER['DOCUMENT_ROOT'], '', $path_guess ) . WPSS_DS ) : '/';
+	if( FALSE !== strpos( $ck_dir, 'public_html' ) ) {
+		$arr	= (array) explode( 'public_html', $ck_dir );
+		$ck_dir	= trim( (string) end( $arr ) );
+	}
+	return ( FALSE !== strpos( $this_url, WPSS_SERVER_NAME.$ck_dir ) && FALSE === strpos( $ck_dir, 'public_html' ) && FALSE === strpos( $ck_dir, '/htdocs/' ) && FALSE === strpos( $ck_dir, WPSS_SERVER_NAME ) ) ? $ck_dir : '/';
 }
 function js_wpss_strlen($str){
 	return function_exists('mb_strlen')?mb_strlen($str,'UTF-8'):strlen($str);
@@ -224,20 +230,6 @@ function js_wpss_in_array($needle,$haystack) {
 	$haystack_flip=array_flip($haystack);
 	return (isset($haystack_flip[$needle]));
 }
-function js_wpss_invalid_browser_footprint() {
-	$http_accept_language	=(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))?trim(strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'])):'';
-	$http_accept_encoding	=(isset($_SERVER['HTTP_ACCEPT_ENCODING']))?trim(strtolower($_SERVER['HTTP_ACCEPT_ENCODING'])):'';
-	$http_proto				=(isset($_SERVER['SERVER_PROTOCOL']))?trim(strtolower($_SERVER['SERVER_PROTOCOL'])):'';
-	return ('http/1.0'===$http_proto||0===strpos($http_proto,'http/0.')||!preg_match("~^[a-z]{2}(\-[a-z]{2})?,\s?[a-z]{2};\s?q\=[0-9]\.[0-9]~i",$http_accept_language)||!preg_match("~^gzip,(?:\s)?deflate(?:,(?:\s)?sdch)?(?:,(?:\s)?br)?$~i",$http_accept_encoding));
-}
-function js_wpss_skiddie_ua_chk($user_agent_lc=NULL){
-	global $skiddie_ua; if(isset($skiddie_ua)&&is_bool($skiddie_ua)){return $skiddie_ua;}
-	$skiddie_ua=FALSE;
-	if(empty($user_agent_lc)){$user_agent_lc=strtolower(js_wpss_get_user_agent());}
-	if(empty($user_agent_lc)){$skiddie_ua=TRUE;return TRUE;}
-	if((substr_count($user_agent_lc,' ')+1)<3){$skiddie_ua=TRUE;return TRUE;}
-	return $skiddie_ua;
-}
 /* STANDARD FUNCTIONS - END */
 
 /* SET COOKIE VALUES - BEGIN */
@@ -245,15 +237,14 @@ if(empty($session_id)){$session_id=@session_id();}
 $DATE_C_YYMM	=date( 'ym' );
 $SJECT			='SJECT'.$DATE_C_YYMM;
 $CKON			='CKON'.$DATE_C_YYMM;
-$ck_bot_token	=(js_wpss_invalid_browser_footprint()||js_wpss_skiddie_ua_chk(strtolower($current_ua)))?$DATE_C_YYMM:''; /* Invalidates keys: Fake out the bots */
-$ck_key_phrase	='wpss_ckkey_'.WPSS_SERVER_NAME_NODOT.'_'.$session_id.$ck_bot_token;
-$ck_val_phrase	='wpss_ckval_'.WPSS_SERVER_NAME_NODOT.'_'.$session_id.$ck_bot_token;
+$ck_key_phrase	='wpss_ckkey_'.WPSS_SERVER_NAME_NODOT.'_'.$session_id;
+$ck_val_phrase	='wpss_ckval_'.WPSS_SERVER_NAME_NODOT.'_'.$session_id;
 $ck_key 		=js_wpss_md5($ck_key_phrase);
 $ck_val 		=js_wpss_md5($ck_val_phrase);
 $ck_dir			=js_wpss_get_ck_dir();
 $ck_sec			=($is_https)?'secure':'';
-$jq_key_phrase	='wpss_jqkey_'.WPSS_SERVER_NAME_NODOT.'_'.$session_id.$ck_bot_token;
-$jq_val_phrase	='wpss_jqval_'.WPSS_SERVER_NAME_NODOT.'_'.$session_id.$ck_bot_token;
+$jq_key_phrase	='wpss_jqkey_'.WPSS_SERVER_NAME_NODOT.'_'.$session_id;
+$jq_val_phrase	='wpss_jqval_'.WPSS_SERVER_NAME_NODOT.'_'.$session_id;
 $jq_key 		=js_wpss_md5($jq_key_phrase);
 $jq_val 		=js_wpss_md5($jq_val_phrase);
 /* SET COOKIE VALUES - END */
@@ -274,7 +265,8 @@ if(!empty($cl_sbluck)){
 }elseif(!empty($sbluck)){
 	@setcookie($lang_ck_key,$lang_ck_val,$current_dt+60*60*24*365*10,$ck_dir,WPSS_SERVER_NAME,$is_https,TRUE); /* 10 years */
 }
-@setcookie(strtolower($CKON),strtolower($SJECT.'_'.strrev(uniqid())),$current_dt+60*5,$ck_dir,WPSS_SERVER_NAME,$is_https,TRUE); /* 5 minutes - Cache control - setting cookies turns off Varnish caching for this script */
+@setcookie($ck_key,$ck_val,$current_dt+60*60*4,$ck_dir,WPSS_SERVER_NAME,$is_https,TRUE); /* 4 hours - Keep this line as backstop for cache control on browsers with aggressive caching: Safari, etc. */
+@setcookie(js_wpss_casetrans('lower',$CKON),js_wpss_casetrans('lower',$SJECT.'_'.strrev(uniqid())),$current_dt+60*5,$ck_dir,WPSS_SERVER_NAME,$is_https,TRUE); /* 5 minutes - Cache control - setting cookies turns off Varnish caching for this script */
 /* Control caching */
 if(function_exists('header_remove')){@header_remove('Cache-Control');@header_remove('Last-Modified');@header_remove('ETag');}
 @header('Cache-Control: private, no-store, no-cache, must-revalidate, max-age=0, proxy-revalidate, s-maxage=0, no-transform',TRUE); /* HTTP/1.1 - Tell browsers and proxies not to cache this */

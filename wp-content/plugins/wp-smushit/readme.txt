@@ -1,13 +1,13 @@
 === Smush Image Compression and Optimization ===
 Plugin Name: Smush Image Compression and Optimization
-Version: 2.6.1
+Version: 2.6.2
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 Contributors: WPMUDEV, alexdunae
 Tags: image, resize, optimize, compress, performance, lossless, lossy, photo, pictures, optimize JPG, compress PNG, Smush WordPress Compression, Smush.it
 Requires at least: 3.5
-Tested up to: 4.7.2
-Stable tag: 2.6.1
+Tested up to: 4.7.3
+Stable tag: 2.6.2
 License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 Compress and optimize image files, improve performance and boost your SEO rank using Smush WordPress image compression and optimization.
@@ -30,7 +30,7 @@ WP Smush meticulously scans every image you upload – or have already added to 
 
 = Compress any Image in any Directory =
 
-In addition to smushing your media uploads, you may want to compress the images stored in other folders. Smush now lets you compress any image in any directory so that you can optimize all the images on your site, including images from theme and plugin packages!
+In addition to smushing your media uploads, you may want to compress the images stored in other folders. Smush now lets you compress any image in any directory so that you can optimize all the images on your site – including NextGEN images and the images in EVERY WordPress plugin and theme package!
 
 ★★★★★ <br>
 “I had no idea that my page load time was being dragged down by the images. The plugin nearly halved the time it took.” - <a href="http://profiles.wordpress.org/karlcw">karlcw</a>
@@ -131,6 +131,23 @@ Yahoo's Smush.it API is gone forever. So WPMU DEV built our own free API that is
 
 
 == Changelog ==
+
+= 2.6.2 =
+
+* Added:
+    * WP All Import Compatibility
+
+* Fixed:
+    * Image not being updated to S3 after resmush ( *Only if remove files from server is kept off in S3 plugin settings )
+    * Added check for directory smush savings
+    * Call `wp_update_attachment_metadata` after smushing, to allow the optimised image to be used
+    * Dir Smush: Images with special symbols doesn't gets optimised
+    * Dir Smush: Skip .bak files
+    * Retina Images @2x: Do not smush if auto smush is disabled
+    * Backup ( Pro ): Take backup of original untouched image, improved backup and restore.
+
+* Updated:
+    * Smush Limit ( 50 Images ), do not include images with error in count
 
 = 2.6.1 =
 

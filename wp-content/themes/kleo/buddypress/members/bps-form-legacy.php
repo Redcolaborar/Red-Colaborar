@@ -73,9 +73,9 @@ foreach ($F->fields as $f)
         case 'range':
             echo "<label class='sr-only' for='$f->code'>$f->label</label>\n";
             echo '<div class="input-group">';
-            echo "<input placeholder='{$f->label} From' type='text' name='{$f->code}_min' id='$f->code' value='$f->min' class='form-control'>";
+            echo "<input placeholder='{$f->label} " . __( 'From','kleo_framework' ) . "' type='text' name='{$f->code}_min' id='$f->code' value='$f->min' class='form-control'>";
             echo '<span class="input-group-btn" style="width:0px;"></span>';
-            echo "<input placeholder='{$f->label} To' type='text' name='{$f->code}_max' value='$f->max' class='form-control' style='margin-left:-1px'>\n";
+            echo "<input placeholder='{$f->label} ". __( 'To','kleo_framework' ) . "' type='text' name='{$f->code}_max' value='$f->max' class='form-control' style='margin-left:-1px'>\n";
             echo '</div>';
             break;
 

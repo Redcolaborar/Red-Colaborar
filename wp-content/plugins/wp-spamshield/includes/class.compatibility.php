@@ -1,7 +1,7 @@
 <?php
 /**
  *  WP-SpamShield Compatibility
- *  File Version 1.9.9.9.1
+ *  File Version 1.9.9.9.6
  */
 
 /* Make sure file remains secure if called directly */
@@ -13,8 +13,7 @@ if( !defined( 'ABSPATH' ) || !defined( 'WPSS_VERSION' ) ) {
 if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); }
 
 
-
-class WPSS_Compatibility extends WP_SpamShield {
+final class WPSS_Compatibility extends WP_SpamShield {
 
 	/**
 	 *	WP-SpamShield Compatibility Class
@@ -31,8 +30,8 @@ class WPSS_Compatibility extends WP_SpamShield {
 
 	static public function is_plugin_active( $plug_bn, $check_network = TRUE ) {
 		/**
-		 *  Using this because WordPress native' 'is_plugin_active()' function only works in Admin
-		 *  ex. $plug_bn = 'folder/filename.php'; // Plugin Basename
+		 *	Using this because WordPress native' 'is_plugin_active()' function only works in Admin
+		 *	ex. $plug_bn = 'folder/filename.php'; // Plugin Basename
 		 */
 		if( empty( $plug_bn ) ){ return FALSE; }
 		global $wpss_conf_active_plugins,$wpss_active_plugins,$wpss_active_network_plugins;
@@ -44,7 +43,7 @@ class WPSS_Compatibility extends WP_SpamShield {
 		/* Check known plugin constants and classes */
 		$plug_cncl = array(
 			/* Compatibility Fixes */
-			'autoptimize/autoptimize.php' => array( 'cn' => 'AUTOPTIMIZE_WP_CONTENT_NAME', 'cl' => 'autoptimizeConfig' ), 'commentluv/commentluv.php' => array( 'cn' => '', 'cl' => 'commentluv' ), 'si-contact-form/si-contact-form.php' => array( 'cn' => 'FSCF_VERSION', 'cl' => 'FSCF_Util' ), 'jetpack/jetpack.php' => array( 'cn' => 'JETPACK__VERSION', 'cl' => 'Jetpack' ), 'wp-spamfree/wp-spamfree.php' => array( 'cn' => '', 'cl' => 'wpSpamFree' ),
+			'autoptimize/autoptimize.php' => array( 'cn' => 'AUTOPTIMIZE_WP_CONTENT_NAME', 'cl' => 'autoptimizeConfig' ), 'commentluv/commentluv.php' => array( 'cn' => '', 'cl' => 'commentluv' ), 'gwolle-gb/gwolle-gb.php' => array( 'cn' => 'GWOLLE_GB_VER', 'cl' => '' ), 'jetpack/jetpack.php' => array( 'cn' => 'JETPACK__VERSION', 'cl' => 'Jetpack' ), 'plugin-organizer/plugin-organizer.php' => array( 'cn' => '', 'cl' => 'PluginOrganizer' ), 'si-contact-form/si-contact-form.php' => array( 'cn' => 'FSCF_VERSION', 'cl' => 'FSCF_Util' ), 'wp-slimstat/wp-slimstat.php' => array( 'cn' => '', 'cl' => 'wp_slimstat' ), 'wordpress-seo/wp-seo.php' => array( 'cn' => 'WPSEO_VERSION', 'cl' => '' ), 'wp-spamfree/wp-spamfree.php' => array( 'cn' => '', 'cl' => 'wpSpamFree' ),
 			/* 3rd Party Forms, Membership & Registration */
 			'bbpress/bbpress.php' => array( 'cn' => '', 'cl' => 'bbPress' ), 'buddypress/bp-loader.php' => array( 'cn' => 'BP_PLUGIN_DIR', 'cl' => 'BuddyPress' ), 'contact-form-7/wp-contact-form-7.php' => array( 'cn' => 'WPCF7_VERSION', 'cl' => '' ), 'gravityforms/gravityforms.php' => array( 'cn' => 'GF_MIN_WP_VERSION', 'cl' => 'GFForms' ), 'mailchimp-for-wp/mailchimp-for-wp.php' => array( 'cn' => 'MC4WP_LITE_VERSION', 'cl' => 'MC4WP_Lite' ), 'ninja-forms/ninja-forms.php' => array( 'cn' => 'NF_PLUGIN_VERSION', 'cl' => 'Ninja_Forms' ),
 			/* Cache Plugins */
@@ -59,10 +58,10 @@ class WPSS_Compatibility extends WP_SpamShield {
 		if( ( !empty( $plug_cncl[$plug_bn]['cn'] ) && defined( $plug_cncl[$plug_bn]['cn'] ) ) || ( !empty( $plug_cncl[$plug_bn]['cl'] ) && class_exists( $plug_cncl[$plug_bn]['cl'] ) ) ) { $wpss_conf_active_plugins[$plug_bn] = TRUE; return TRUE; }
 		/* No match yet, so now do standard check */
 		if( empty( $wpss_active_plugins ) ) { $wpss_active_plugins = rs_wpss_get_active_plugins(); }
-		if( in_array( $plug_bn, $wpss_active_plugins, TRUE ) ) { $wpss_conf_active_plugins[$plug_bn] = TRUE; return TRUE; }
+		if( WPSS_PHP::in_array( $plug_bn, $wpss_active_plugins ) ) { $wpss_conf_active_plugins[$plug_bn] = TRUE; return TRUE; }
 		if( TRUE === $check_network && is_multisite() ) {
 			if( empty( $wpss_active_network_plugins ) ) { $wpss_active_network_plugins = rs_wpss_get_active_network_plugins(); }
-			if( in_array( $plug_bn, $wpss_active_network_plugins, TRUE ) ) { $wpss_conf_active_network_plugins[$plug_bn] = TRUE; return TRUE; }
+			if( WPSS_PHP::in_array( $plug_bn, $wpss_active_network_plugins ) ) { $wpss_conf_active_network_plugins[$plug_bn] = TRUE; return TRUE; }
 		}
 		return FALSE;
 	}
@@ -78,7 +77,7 @@ class WPSS_Compatibility extends WP_SpamShield {
 		$rsmg_plugins = array( 'rs-feedburner', 'rs-head-cleaner', 'rs-head-cleaner-lite', 'rs-nofollow-blogroll', 'rs-system-diagnostic', 'scrapebreaker', 'wp-spamshield' );
 		foreach( $rsmg_plugins as $i => $p ) {
 			$plugin = '*/'.$p.'/*';
-			if( !in_array( $plugin, $ignored ) ) {
+			if( !WPSS_PHP::in_array( $plugin, $ignored ) ) {
 				$ignored[] = $plugin;
 			}
 		}
@@ -87,7 +86,7 @@ class WPSS_Compatibility extends WP_SpamShield {
 
 	static public function upgrade_conflict_check() {
 		/**
-		 *  When it is detected that the plugin has been upgraded, fire, and run these checks
+		 *	When it is detected that the plugin has been upgraded, fire, and run these checks
 		 */
 
 		/* Plugin Organizer Plugin ( https://wordpress.org/plugins/plugin-organizer/ ) */
@@ -98,33 +97,60 @@ class WPSS_Compatibility extends WP_SpamShield {
 
 	static public function supported() {
 		/**
-		 *  Check if supported 3rd party plugins are active that require exceptions
-		 *  hook@ 'plugins_loaded':-100
+		 *	Check if supported 3rd party plugins are active that require exceptions
+		 *	hook@ 'plugins_loaded':-100
 		 */
 
 		/**
-		 *  Turn on Soft Compat Mode for the following plugins: ( TO DO: array() / foreach() )
-		 *  Gravity Forms	- http://www.gravityforms.com/
-		 *  W3 Total Cache	- https://wordpress.org/plugins/w3-total-cache/ - https://www.w3-edge.com/products/w3-total-cache/
+		 *	Turn on Soft Compat Mode for the following plugins: ( TO DO: array() / foreach() )
+		 *	Gravity Forms		- http://www.gravityforms.com/
+		 *	W3 Total Cache		- https://wordpress.org/plugins/w3-total-cache/ - https://www.w3-edge.com/products/w3-total-cache/
 		 */
 		if( self::is_plugin_active( 'gravityforms/gravityforms.php' ) || self::is_plugin_active( 'w3-total-cache/w3-total-cache.php' ) ) {
 			if( !defined( 'WPSS_SOFT_COMPAT_MODE' ) ) { define( 'WPSS_SOFT_COMPAT_MODE', TRUE ); }
 		}
 
+		/**
+		 *	Gwolle Guestbook	- https://wordpress.org/plugins/gwolle-gb/
+		 */
+		if( self::is_plugin_active( 'gwolle-gb/gwolle-gb.php' ) ) {
+			$spamshield_options = WP_SpamShield::get_option();
+			if( empty( $spamshield_options['disable_misc_form_shield'] ) ) {
+				add_filter( 'gwolle_gb_button', array( 'WPSS_Compatibility', 'deconflict_gwgb_01' ), -100, 1 );
+				if( 'POST' === $_SERVER['REQUEST_METHOD'] && !empty( $_POST ) ) {
+					if( is_admin() ) {
+						if( !empty( $_GET['page'] ) && 'gwolle-gb/settings.php' === $_GET['page'] ) {
+							$pref = ''; $keys_unset	= array( 'antispam-answer', 'antispam-question', 'form_ajax', 'form_antispam_enabled', 'form_recaptcha_enabled', 'honeypot', );
+							foreach( $keys_unset as $i => $k ) { unset( $_POST[$pref.$k] ); }
+							add_action( 'shutdown', array( 'WPSS_Compatibility', 'deconflict_gwgb_01' ), -100 );
+						}
+					} elseif( !rs_wpss_is_user_logged_in() ) {
+						add_filter( 'gwolle_gb_write_add_after', array( 'WPSS_Compatibility', 'deconflict_gwgb_02' ), 10, 1 );
+						if( !empty( $_POST['gwolle_gb_function'] ) && 'add_entry' === $_POST['gwolle_gb_function'] ) {
+							$pref = 'gwolle_gb_'; $keys_unset = array( 'antispam_answer', 'captcha_code', 'captcha_prefix', );
+							foreach( $keys_unset as $i => $k ) { unset( $_POST[$pref.$k] ); }
+						}
+					}
+				}
+			}
+		}
+
+		/* Add next... */
+
 	}
 
 	static public function conflict_check() {
 		/**
-		 *  Check if plugins with known issues are active, then deconflict using workarounds
-		 *  @hook			'plugins_loaded':100
-		 *  @dependencies	...
-		 *  @since			...
+		 *	Check if plugins with known issues are active, then deconflict using workarounds
+		 *	@hook			'plugins_loaded':100
+		 *	@dependencies	...
+		 *	@since			...
 		 */
 
 		/* New User Approve Plugin ( https://wordpress.org/plugins/new-user-approve/ ) */
 		if( class_exists( 'pw_new_user_approve' ) ) {
-			add_action( 'register_post', array('WPSS_Compatibility','deconflict_nua_01'), -10 );
-			add_action( 'registration_errors', array('WPSS_Compatibility','deconflict_nua_02'), -10 );
+			add_action( 'register_post', array( 'WPSS_Compatibility', 'deconflict_nua_01' ), -10 );
+			add_action( 'registration_errors', array( 'WPSS_Compatibility', 'deconflict_nua_02' ), -10 );
 		}
 
 		/* Affiliates Plugin ( https://wordpress.org/plugins/affiliates/ ) */
@@ -137,7 +163,7 @@ class WPSS_Compatibility extends WP_SpamShield {
 			}
 		}
 
-		/*Add more... */
+		/* Add next... */
 
 	}
 
@@ -183,10 +209,31 @@ class WPSS_Compatibility extends WP_SpamShield {
 				foreach( $value  as $k => $v ) {
 					if( 0 === strpos( $v, WPSS_PLUGIN_NAME ) ) { unset( $value[$k] ); }
 				}
-				$value = array_values($value); update_option( $option, $value );
+				$value = array_values( $value ); update_option( $option, $value );
 			}
 		}
 		update_option( 'PO_plugin_order', array() );
+	}
+
+	static public function deconflict_gwgb_01( $var = NULL ) {
+		$pref = 'gwolle_gb-';
+		$mod_form = array( 'form_name_enabled' => 'true', 'form_name_mandatory' => 'true', 'form_email_enabled' => 'true', 'form_email_mandatory' => 'true', 'form_homepage_enabled' => 'true', 'form_homepage_mandatory' => 'true', 'form_message_enabled' => 'true', 'form_message_mandatory' => 'true', 'form_antispam_enabled' => 'false', 'form_recaptcha_enabled' => 'false', );
+		$form = get_option( $pref.'form', array() );
+		$form = ( !empty( $form ) && is_string( $form ) ) ? maybe_unserialize( $form ) : $form;
+		$form = ( !empty( $form ) && is_array( $form ) ) ? $form : array();
+		foreach( $mod_form as $k => $v ) { $form[$k] = $v; }
+		$mod_options = array( 'akismet-active' => 'false', 'antispam-answer' => '', 'antispam-question' => '', 'form_ajax' => 'false', 'honeypot' => 'false', 'moderate-entries' => 'true', 'nonce' => 'false', 'form' => serialize( $form ), );
+		foreach( $mod_options as $k => $v ) { update_option( $pref.$k, $v ); }
+		if( !empty( $var ) ) { return $var; }
+	}
+
+	static public function deconflict_gwgb_02( $form_append = NULL ) {
+		if( rs_wpss_is_user_admin() || rs_wpss_is_admin_sproc() || self::is_builder_active() ) { return $form_append; }
+		$spamshield_options = WP_SpamShield::get_option();
+		if( !empty( $spamshield_options['disable_gf_shield'] ) ) { return $form_append; }
+		$wpss_string = WP_SpamShield::insert_footer_js( TRUE );
+		$form_append = "\n".$wpss_string."\n"."\n";
+		return $form_append;
 	}
 
 	/**
@@ -214,7 +261,7 @@ class WPSS_Compatibility extends WP_SpamShield {
 			}
 		}
 
-		/* Add next plugin here... */
+		/* Add next... */
 
 		return FALSE;
 	}
@@ -246,7 +293,7 @@ class WPSS_Compatibility extends WP_SpamShield {
 			}
 		}
 
-		/* Add next plugin here... */
+		/* Add next... */
 
 		return $js;
 	}
@@ -270,8 +317,7 @@ class WPSS_Compatibility extends WP_SpamShield {
 		$referer	= rs_wpss_get_referrer();
 
 		/* IP / PROXY INFO - BEGIN */
-		global $wpss_ip_proxy_info; if( empty( $wpss_ip_proxy_info ) ) { $wpss_ip_proxy_info = rs_wpss_ip_proxy_info(); }
-		extract( $wpss_ip_proxy_info );
+		$GLOBALS['wpss_ip_proxy_info'] = rs_wpss_ip_proxy_info(); extract( $GLOBALS['wpss_ip_proxy_info'] );
 		/* IP / PROXY INFO - END */
 
 		/* GEOLOCATION */
@@ -303,6 +349,7 @@ class WPSS_Compatibility extends WP_SpamShield {
 			foreach( $wc_funcs as $i => $f ) {
 				if( function_exists( $f ) && (bool) @$f() ) { return TRUE; }
 			}
+			if( rs_wpss_is_wc_ajax_request() ) { return TRUE; }
 		}
 
 		/* Easy Digital Downloads Payment Gateways */
@@ -326,7 +373,7 @@ class WPSS_Compatibility extends WP_SpamShield {
 			&& $fcrdns === '[Verified]'
 		) { return TRUE; }
 
-		/* Clef */
+		/* Clef - TO DO: Remove after June 6, 2017 - https://wptavern.com/clef-is-shutting-down-june-6th */
 		if( defined( 'CLEF_VERSION' ) ) {
 			if( WP_SpamShield::preg_match( "~^Clef/[0-9](\.[0-9]+)+\ \(https\://getclef\.com\)$~", $user_agent ) && WP_SpamShield::preg_match( "~((^|\.)clef\.io|\.amazonaws\.com)$~", $rev_dns ) ) { return TRUE; }
 		}
@@ -344,7 +391,7 @@ class WPSS_Compatibility extends WP_SpamShield {
 		if( $user_agent === 'Amazon Simple Notification Service Agent' && isset( $_SERVER['HTTP_X_AMZ_SNS_MESSAGE_TYPE'], $_SERVER['HTTP_X_AMZ_SNS_MESSAGE_ID'], $_SERVER['HTTP_X_AMZ_SNS_TOPIC_ARN'], $_SERVER['CONTENT_TYPE'], $_POST['HTTP_RAW_POST_DATA'] ) ) {
 			$_POST['HTTP_RAWDS_POST_DATA'] = trim(stripslashes($_POST['HTTP_RAW_POST_DATA']));
 			if(
-				WP_SpamShield::preg_match( "~text/plain~i", $_SERVER['CONTENT_TYPE'] )
+				   WP_SpamShield::preg_match( "~text/plain~i", $_SERVER['CONTENT_TYPE'] )
 				&& WP_SpamShield::preg_match( "~^(SubscriptionConfirmation|Notification|UnsubscribeConfirmation)$~", $_SERVER['HTTP_X_AMZ_SNS_MESSAGE_TYPE'] )
 				&& WP_SpamShield::preg_match( "~\"Type\"\ \:\ \"(SubscriptionConfirmation|Notification|UnsubscribeConfirmation)\",~", $_POST['HTTP_RAWDS_POST_DATA'] )
 				&& WP_SpamShield::preg_match( "~^[a-z0-9\-]+$~", $_SERVER['HTTP_X_AMZ_SNS_MESSAGE_ID'] )
@@ -353,8 +400,16 @@ class WPSS_Compatibility extends WP_SpamShield {
 				&& WP_SpamShield::preg_match( "~\"TopicArn\"\ \:\ \"".preg_quote($_SERVER['HTTP_X_AMZ_SNS_TOPIC_ARN'])."\",~", $_POST['HTTP_RAWDS_POST_DATA'] )
 				&& WP_SpamShield::preg_match( "~\"SigningCertURL\"\ \:\ \"https\://sns\." . preg_quote( $amz_sns_topic_arn_matches[1] ) . "\.amazonaws\.com/SimpleNotificationService\-[a-z0-9]+\.pem\"~", $_POST['HTTP_RAWDS_POST_DATA'] )
 				&& $fcrdns === '[Verified]'
-			) { unset($_POST['HTTP_RAWDS_POST_DATA']); return TRUE; }
-			unset($_POST['HTTP_RAWDS_POST_DATA']);
+			) { unset( $_POST['HTTP_RAWDS_POST_DATA'] ); return TRUE; }
+			unset( $_POST['HTTP_RAWDS_POST_DATA'] );
+		}
+
+		/**
+		 *	Slim Stat Analytics - https://wordpress.org/plugins/wp-slimstat/
+		 *	@since	1.9.9.9.5
+		 */
+		if( rs_wpss_is_doing_ajax() && 'POST' === $_SERVER['REQUEST_METHOD'] && !empty( $_POST['action'] ) && 'slimtrack' === $_POST['action'] && self::is_plugin_active( 'wp-slimstat/wp-slimstat.php' ) ) {
+			return TRUE;
 		}
 
 		/* Nothing was triggered */
@@ -430,55 +485,98 @@ class WPSS_Compatibility extends WP_SpamShield {
 	/**
 	 *	Check for Surrogates
 	 *	- Server Caching, Reverse Poxies, WAFS: Varnish, Cloudflare (Rocket Loader), Sucuri WAF, Incapsula, etc.
-	 *	- Specific web hosts that use Varnish: WP Engine, Dreamhost, SiteGround, Bluehost, GoDaddy...
+	 *	- Specific web hosts that use Varnish: WP Engine, Dreamhost, SiteGround, Bluehost, GoDaddy, Lightning Base...
 	 *	@dependencies	WPSS_Utils::get_ip_dns_params(), WPSS_Utils::get_web_host(), WP_SpamShield::update_option(), WP_SpamShield::is_varnish_active()(), WP_SpamShield::get_option(), ...
 	 *	@since			1.9.9.5
 	 */
 	static public function is_surrogate() {
-		global $wpss_surrogate; if( isset( $wpss_surrogate ) && is_bool( $wpss_surrogate ) ) { return TRUE; }
-		$wpss_surrogate = FALSE; $web_host = WPSS_Utils::get_web_host( WPSS_Utils::get_ip_dns_params() );
-		if( !empty( $web_host ) && ( $web_host === 'WP Engine' || $web_host === 'Dreamhost' || $web_host === 'SiteGround' || $web_host === 'Bluehost'  || $web_host === 'GoDaddy' ) ) { $wpss_surrogate = TRUE; WP_SpamShield::update_option( array( 'surrogate' => $wpss_surrogate ) ); return TRUE; }
-		if( self::is_varnish_active() ) { $wpss_surrogate = TRUE; WP_SpamShield::update_option( array( 'surrogate' => $wpss_surrogate ) ); return TRUE; }
-		if( empty( $wpss_surrogate ) ) { $wpss_surrogate = WP_SpamShield::get_option( 'surrogate' ); }
-		if( empty( $wpss_surrogate ) ) { $wpss_surrogate = FALSE; }
+		global $wpss_surrogate;
+		if( isset( $wpss_surrogate ) && is_bool( $wpss_surrogate ) ) { return $wpss_surrogate; }
+		$wpss_surrogate	= FALSE;
+		$web_host		= WPSS_Utils::get_web_host( WPSS_Utils::get_ip_dns_params() );
+		if( ( !empty( $web_host ) && ( $web_host === 'WP Engine' || $web_host === 'Dreamhost' || $web_host === 'SiteGround' || $web_host === 'Bluehost' || $web_host === 'GoDaddy' || $web_host === 'Lightning Base' ) ) || self::is_varnish_active() || self::is_lscache_active() ) {
+			$wpss_surrogate	= TRUE;
+			WP_SpamShield::update_option( array( 'surrogate' => $wpss_surrogate ) ); return TRUE;
+		}
+		if( empty( $wpss_surrogate ) ) {
+			$wpss_surrogate = WP_SpamShield::get_option( 'surrogate' );
+		}
+		if( empty( $wpss_surrogate ) ) {
+			$wpss_surrogate = FALSE;
+		}
 		WP_SpamShield::update_option( array( 'surrogate' => $wpss_surrogate, 'web_host' => $web_host ) );
 		return $wpss_surrogate;
 	}
 
 	/**
 	 *	Varnish detection
-	 *	@dependencies	WP_SpamShield::update_option(), WP_SpamShield::is_plugin_active(), 
+	 *	@dependencies	WPSS_PHP::extension_loaded(), WP_SpamShield::update_option(), WP_SpamShield::is_plugin_active(),
 	 *	@since			1.9.9.5
 	 */
 	static public function is_varnish_active() {
-		global $wpss_varnish_active,$wpss_surrogate,$_WPSS_ENV; if( isset( $wpss_varnish_active ) && is_bool( $wpss_varnish_active ) ) { $wpss_surrogate = TRUE; return TRUE; }
-		if( function_exists( 'get_loaded_extensions' ) ) { $ext_loaded = @get_loaded_extensions(); }
-		$ext_loaded	= ( !empty( $ext_loaded ) && is_array( $ext_loaded ) ) ? $ext_loaded : array();
-		$varnish_loaded		= $wpss_varnish_active = $wpss_surrogate = in_array( 'varnish', $ext_loaded, TRUE );
-		if( TRUE === $varnish_loaded ) { WP_SpamShield::update_option( array( 'surrogate' => $wpss_surrogate ) ); return TRUE; }
-		$varnish_srv_var	= array( 'HTTP_X_VARNISH', );
-		$varnish_env_var	= array( 'HTTP_X_VARNISH', );
-		$varnish_php_const	= array( 'VARNISH_COMPAT_2', 'VARNISH_COMPAT_3', 'VARNISH_CONFIG_COMPAT', 'VARNISH_CONFIG_HOST', 'VARNISH_CONFIG_IDENT', 'VARNISH_CONFIG_PORT', 'VARNISH_CONFIG_SECRET', 'VARNISH_CONFIG_TIMEOUT', 'VARNISH_STATUS_AUTH', 'VARNISH_STATUS_CANT', 'VARNISH_STATUS_CLOSE', 'VARNISH_STATUS_COMMS', 'VARNISH_STATUS_OK', 'VARNISH_STATUS_PARAM', 'VARNISH_STATUS_SYNTAX', 'VARNISH_STATUS_TOOFEW', 'VARNISH_STATUS_TOOMANY', 'VARNISH_STATUS_UNIMPL', 'VARNISH_STATUS_UNKNOWN', );
-		$varnish_plug_const	= array( 'DHDO', 'DHDO_PLUGIN_DIR', 'DREAMSPEED_VERSION', 'VHP_VARNISH_IP', );
-		$varnish_constants	= array_merge( $varnish_php_const, $varnish_plug_const );
-		foreach( $varnish_srv_var as $i => $v ) {
-			if( !empty( $_SERVER[$v] ) ) { $wpss_varnish_active = $wpss_surrogate = TRUE; WP_SpamShield::update_option( array( 'surrogate' => $wpss_surrogate ) ); return TRUE; }
+		global $wpss_varnish_active,$wpss_surrogate,$_WPSS_ENV;
+		if( isset( $wpss_varnish_active ) && is_bool( $wpss_varnish_active ) ) { return $wpss_varnish_active; }
+		$varnish_srv_var		= array( 'HTTP_X_VARNISH', );
+		$varnish_env_var		= array( 'HTTP_X_VARNISH', );
+		$varnish_php_const		= array( 'VARNISH_COMPAT_2', 'VARNISH_COMPAT_3', 'VARNISH_CONFIG_COMPAT', 'VARNISH_CONFIG_HOST', 'VARNISH_CONFIG_IDENT', 'VARNISH_CONFIG_PORT', 'VARNISH_CONFIG_SECRET', 'VARNISH_CONFIG_TIMEOUT', 'VARNISH_STATUS_AUTH', 'VARNISH_STATUS_CANT', 'VARNISH_STATUS_CLOSE', 'VARNISH_STATUS_COMMS', 'VARNISH_STATUS_OK', 'VARNISH_STATUS_PARAM', 'VARNISH_STATUS_SYNTAX', 'VARNISH_STATUS_TOOFEW', 'VARNISH_STATUS_TOOMANY', 'VARNISH_STATUS_UNIMPL', 'VARNISH_STATUS_UNKNOWN', );
+		$varnish_plug_const		= array( 'DHDO', 'DHDO_PLUGIN_DIR', 'DREAMSPEED_VERSION', 'VHP_VARNISH_IP', );
+		$varnish_constants		= array_merge( $varnish_php_const, $varnish_plug_const );
+		$varnish_plugs			= array( 'dreamobjects/dreamobjects.php', 'dreamspeed-cdn/dreamspeed-cdn.php', 'varnish-http-purge/varnish-http-purge.php', );
+		$wpss_varnish_active	= WPSS_PHP::extension_loaded( 'varnish' );
+		if( empty( $wpss_varnish_active ) ) {
+			foreach( $varnish_srv_var as $i => $v ) {
+				if( !empty( $_SERVER[$v] ) ) { $wpss_varnish_active = TRUE; break; }
+			}
 		}
-		foreach( $varnish_env_var as $i => $v ) {
-			if( !empty( $_WPSS_ENV[$v] ) ) { $wpss_varnish_active = $wpss_surrogate = TRUE; WP_SpamShield::update_option( array( 'surrogate' => $wpss_surrogate ) ); return TRUE; }
+		if( empty( $wpss_varnish_active ) ) {
+			foreach( $varnish_env_var as $i => $v ) {
+				if( !empty( $_WPSS_ENV[$v] ) ) { $wpss_varnish_active = TRUE; break; }
+			}
 		}
-		foreach( $varnish_constants as $i => $c ) {
-			if( defined( $c ) ) { $wpss_varnish_active = $wpss_surrogate = TRUE; WP_SpamShield::update_option( array( 'surrogate' => $wpss_surrogate ) ); return TRUE; }
+		if( empty( $wpss_varnish_active ) ) {
+			foreach( $varnish_constants as $i => $c ) {
+				if( defined( $c ) ) { $wpss_varnish_active = TRUE; break; }
+			}
 		}
-		$varnish_plugs		= array( 'dreamobjects/dreamobjects.php', 'dreamspeed-cdn/dreamspeed-cdn.php', 'varnish-http-purge/varnish-http-purge.php', );
-		foreach( $varnish_plugs as $i => $p ) {
-			if( self::is_plugin_active( $p ) ) { $wpss_varnish_active = $wpss_surrogate = TRUE; return TRUE; }
+		if( empty( $wpss_varnish_active ) ) {
+			foreach( $varnish_plugs as $i => $p ) {
+				if( self::is_plugin_active( $p ) ) { $wpss_varnish_active = TRUE; break; }
+			}
+		}
+		if( !empty( $wpss_varnish_active ) ) {
+			$wpss_surrogate	= $wpss_varnish_active = TRUE;
+			WP_SpamShield::update_option( array( 'surrogate' => $wpss_surrogate ) );
+			return TRUE;
 		}
 		$wpss_varnish_active = FALSE;
 		return FALSE;
 	}
 
-	/* Add more... */
+	/**
+	 *	Litespeed detection
+	 *	@dependencies	WPSS_PHP::extension_loaded(),
+	 *	@since			1.9.9.9.6
+	 */
+	static public function is_litespeed() {
+		global $is_litespeed;
+		if( isset( $is_litespeed ) && is_bool( $is_litespeed ) ) { return $is_litespeed; }
+		$is_litespeed	= ( FALSE !== strpos( $_SERVER['SERVER_SOFTWARE'], 'LiteSpeed' ) || 'litespeed' === PHP_SAPI || WPSS_PHP::extension_loaded( 'litespeed' ) );
+		return $is_litespeed;
+	}
+
+	/**
+	 *	LSCache detection (Litespeed Cache)
+	 *	@dependencies	WPSS_Compatibility::is_litespeed(),
+	 *	@since			1.9.9.9.6
+	 */
+	static public function is_lscache_active() {
+		global $wpss_lscache_active;
+		if( isset( $wpss_lscache_active ) && is_bool( $wpss_lscache_active ) ) { return $wpss_lscache_active; }
+		$wpss_lscache_active = ( self::is_litespeed() && ( !empty( $_SERVER['X-LSCACHE'] ) || !empty( $_SERVER['HTTP_X_LSCACHE'] ) ) );
+		return $wpss_lscache_active;
+	}
+
+	/* Add next... */
 
 }
 

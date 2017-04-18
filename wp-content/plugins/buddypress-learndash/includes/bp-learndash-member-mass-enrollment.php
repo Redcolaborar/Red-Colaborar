@@ -16,10 +16,10 @@ class BuddyPress_Learndash_Member_Mass_Enrollment {
 
 	//initialization
 	function __construct() {
-		add_action( 'admin_footer',             array( $this,  'group_members_enrollment_interface' ) );
+		add_action( 'admin_footer',             array( $this, 'group_members_enrollment_interface' ) );
 		add_action( 'save_post',                array( $this, 'set_session_var' ) );
-		add_action( 'admin_enqueue_scripts',    array( &$this, 'admin_enqueues' ) );
-		add_action( 'wp_ajax_mass_group_join',  array( &$this, 'mass_group_join' ) );
+		add_action( 'admin_enqueue_scripts',    array( $this, 'admin_enqueues' ) );
+		add_action( 'wp_ajax_mass_group_join',  array( $this, 'mass_group_join' ) );
 	}
 
 	/**
@@ -57,7 +57,7 @@ class BuddyPress_Learndash_Member_Mass_Enrollment {
 		wp_enqueue_style( 'jquery-ui-users-migration', BUDDYPRESS_LEARNDASH_PLUGIN_URL .'assets/jquery-ui/redmond/jquery-ui-1.7.2.custom.css', array(), '1.7.2' );
 	}
 
-	function set_session_var() {
+	function set_session_var( $post_id ) {
 
 		// If it is our form has not been submitted, so we dont want to do anything
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
@@ -70,10 +70,9 @@ class BuddyPress_Learndash_Member_Mass_Enrollment {
 			session_start();
 		}
 
-		$_SESSION['learndash_group_enroll_course']      = $_REQUEST['learndash_group_enroll_course'];
-		$_SESSION['learndash_group_unenroll_course']    = $_REQUEST['learndash_group_unenroll_course'];
-		$_SESSION['learndash_group_users']              = $_REQUEST['learndash_group_users'];
-
+		$_SESSION['learndash_group_enroll_course']      = (array)json_decode( stripslashes ( $_REQUEST['learndash_group_courses'][$post_id] ) );
+		$_SESSION['learndash_group_users']              = (array)json_decode( stripslashes ( $_REQUEST['learndash_group_users'][$post_id] ) );
+		$_SESSION['learndash_group_leaders']            = (array)json_decode( stripslashes( $_REQUEST['learndash_group_leaders'][$post_id] ) );
 	}
 
 	/**
@@ -91,9 +90,7 @@ class BuddyPress_Learndash_Member_Mass_Enrollment {
 		}
 
 		//unset variable
-		if ( ( empty( $_SESSION['learndash_group_enroll_course'] )
-		       && empty( $_SESSION['learndash_group_unenroll_course'] ) )
-		     || empty( $_SESSION['learndash_group_users'] ) ) {
+		if ( empty( $_SESSION['learndash_group_enroll_course'] ) || empty( $_SESSION['learndash_group_users'] ) ) {
 			return;
 		}
 
@@ -109,22 +106,27 @@ class BuddyPress_Learndash_Member_Mass_Enrollment {
 
 			echo '	<p>' . __( "Please be patient while the mass enrollment process. This can take a while if your server is slow (inexpensive hosting) or if you have many students(members). Do not navigate away from this dialog until this script is done.", 'buddypress-learndash' ) . '</p>';
 
-				$learndash_group_users = isset( $_SESSION['learndash_group_users'] )? $_SESSION['learndash_group_users']:array();
-				$learndash_group_enroll_course = isset( $_SESSION['learndash_group_enroll_course'] )? $_SESSION['learndash_group_enroll_course']:array();
-				$learndash_group_unenroll_course = isset( $_SESSION['learndash_group_unenroll_course'] )? $_SESSION['learndash_group_unenroll_course']:array();
-
+				$learndash_group_users 				= isset( $_SESSION['learndash_group_users'] )? $_SESSION['learndash_group_users']:array();
+				$learndash_group_leaders 			= isset( $_SESSION['learndash_group_leaders'] )? $_SESSION['learndash_group_leaders']:array();
+				$learndash_group_enroll_courses 	= isset( $_SESSION['learndash_group_enroll_course'] )? $_SESSION['learndash_group_enroll_course']:array();
+			
 				//unset session variable
 				unset( $_SESSION['learndash_group_enroll_course'] );
-				unset( $_SESSION['learndash_group_unenroll_course'] );
 				unset( $_SESSION['learndash_group_users'] );
+				unset( $_SESSION['learndash_group_leaders'] );
 
-				$images = array_map( 'intval', $learndash_group_users );
-				$ids    = implode( ',', $images );
-				$count  = count( $images );
+				$count  = count( $learndash_group_users );
 
-				$text_goback = ( ! empty( $_GET['goback'] ) ) ? sprintf( __( 'To go back to the previous page, <a href="%s">click here</a>.', 'buddypress-learndash' ), 'javascript:history.go(-1)' ) : '';
-				$text_failures = sprintf( __( 'All done! %1$s image(s) were successfully resized in %2$s seconds and there were %3$s failure(s). To try regenerating the failed images again, <a href="%4$s">click here</a>. %5$s', 'buddypress-learndash' ), "' + bpl_successes + '", "' + bpl_totaltime + '", "' + bpl_errors + '", esc_url( wp_nonce_url( admin_url( 'tools.php?page=buddypress-learndash&goback=1' ), 'buddypress-learndash' ) . '&ids=' ) . "' + bpl_failedlist + '", $text_goback );
-				$text_nofailures = sprintf( __( 'All done! %1$s image(s) were successfully resized in %2$s seconds and there were 0 failures. %3$s', 'buddypress-learndash' ), "' + bpl_successes + '", "' + bpl_totaltime + '", $text_goback );
+				$learndash_group_users 					= array_map( 'intval', $learndash_group_users );
+				$learndash_group_users    				= implode( ',', $learndash_group_users );
+				$learndash_group_enroll_courses  		= array_map( 'intval', $learndash_group_enroll_courses );
+				$learndash_group_enroll_courses    		= implode( ',', $learndash_group_enroll_courses );
+				$learndash_group_leaders 				= array_map( 'intval', $learndash_group_leaders );
+				$learndash_group_leaders    			= implode( ',', $learndash_group_leaders );
+
+				$text_goback 		= ( ! empty( $_GET['goback'] ) ) ? sprintf( __( 'To go back to the previous page, <a href="%s">click here</a>.', 'buddypress-learndash' ), 'javascript:history.go(-1)' ) : '';
+				$text_failures 		= sprintf( __( 'All done! %1$s image(s) were successfully resized in %2$s seconds and there were %3$s failure(s). To try regenerating the failed images again, <a href="%4$s">click here</a>. %5$s', 'buddypress-learndash' ), "' + bpl_successes + '", "' + bpl_totaltime + '", "' + bpl_errors + '", esc_url( wp_nonce_url( admin_url( 'tools.php?page=buddypress-learndash&goback=1' ), 'buddypress-learndash' ) . '&ids=' ) . "' + bpl_failedlist + '", $text_goback );
+				$text_nofailures 	= sprintf( __( 'All done! %1$s image(s) were successfully resized in %2$s seconds and there were 0 failures. %3$s', 'buddypress-learndash' ), "' + bpl_successes + '", "' + bpl_totaltime + '", $text_goback );
 				?>
 				<noscript><p><em><?php _e( 'You must enable Javascript in order to proceed!', 'buddypress-learndash' ) ?></em></p></noscript>
 
@@ -141,17 +143,17 @@ class BuddyPress_Learndash_Member_Mass_Enrollment {
 					<?php printf( __( 'Members Joined: %s', 'buddypress-learndash' ), '<span id="bp-learndash-debug-successcount">0</span>' ); ?><br />
 					<?php printf( __( 'Join Failures: %s', 'buddypress-learndash' ), '<span id="bp-learndash-debug-failurecount">0</span>' ); ?>
 				</p>
-		</div>
-
+		</div><!-- #student-mass-enrollment-thickbox -->
 
 		<script type="text/javascript">
 			// <![CDATA[
 			jQuery(document).ready(function($){
 				var i;
-				var bpl_images = [<?php echo $ids; ?>];
-				var bpl_enrolled_course      = '<?php echo $learndash_group_enroll_course ?>';
-				var bpl_unenrolled_course    = '<?php echo $learndash_group_unenroll_course;?>';
-				var bpl_total = bpl_images.length;
+				var bpl_users = [<?php echo $learndash_group_users; ?>];
+
+				var bpl_enrolled_courses      = '[<?php echo $learndash_group_enroll_courses ?>]';
+				var bpl_leaders      = '[<?php echo $learndash_group_leaders ?>]';
+				var bpl_total = bpl_users.length;
 				var bpl_count = 0;
 				var bpl_percent = 0;
 				var bpl_successes = 0;
@@ -195,35 +197,17 @@ class BuddyPress_Learndash_Member_Mass_Enrollment {
 					}
 				}
 
-				// Called when all images have been processed. Shows the results and cleans up.
-				function EnrollmentFinishUp() {
-					bpl_timeend = new Date().getTime();
-					bpl_totaltime = Math.round( ( bpl_timeend - bpl_timestart ) / 1000 );
-
-					$('#bp-learndash-stop').hide();
-
-					if ( bpl_errors > 0 ) {
-						bpl_resulttext = '<?php echo $text_failures; ?>';
-					} else {
-						bpl_resulttext = '<?php echo $text_nofailures; ?>';
-					}
-
-					$("#message").html("<p><strong>" + bpl_resulttext + "</strong></p>");
-					$("#message").show();
-				}
-
 				// Regenerate a specified image via AJAX
 				function Enrollment( id ) {
 
 					if ( 0 == id.length ) {
-						EnrollmentFinishUp();
 						return 0;
 					}
 
 					$.ajax({
 						type: 'POST',
 						url: ajaxurl,
-						data: { action: "mass_group_join", id: id, enroll: bpl_enrolled_course, unenroll: bpl_unenrolled_course },
+						data: { action: "mass_group_join", students: id, courses: bpl_enrolled_courses, leaders: bpl_leaders  },
 						success: function( response ) {
 							if ( response !== Object( response ) || ( typeof response.success === "undefined" && typeof response.error === "undefined" ) ) {
 								response = new Object;
@@ -233,22 +217,18 @@ class BuddyPress_Learndash_Member_Mass_Enrollment {
 
 							if ( response.success ) {
 								EnrollmentUpdateStatus( id, true, response );
-							}
-							else {
+							} else {
 								EnrollmentUpdateStatus( id, false, response );
 							}
 
-
 							bpl_stabpl_index = bpl_end_index;
 							bpl_end_index = bpl_end_index + 10;
-							Enrollment( bpl_images.slice( bpl_stabpl_index, bpl_end_index ) );
-
-
+							Enrollment( bpl_users.slice( bpl_stabpl_index, bpl_end_index ) );
 						}
 					});
 				}
 
-				Enrollment( bpl_images.slice( bpl_stabpl_index, bpl_end_index ) );
+				Enrollment( bpl_users.slice( bpl_stabpl_index, bpl_end_index ) );
 
 				setTimeout( function() {
 					jQuery('#student-mass-enroll-group-button').click();
@@ -257,7 +237,6 @@ class BuddyPress_Learndash_Member_Mass_Enrollment {
 			});
 			// ]]>
 		</script>
-
 		<?php
 	}
 
@@ -272,30 +251,25 @@ class BuddyPress_Learndash_Member_Mass_Enrollment {
 
 		@set_time_limit( 900 ); // 5 minutes per batch of 100-100 should be PLENTY
 
-		$learndash_group_users = isset($_POST['id'])? $_POST['id']:array();
-		$learndash_group_enroll_course = isset($_POST['enroll'])? $_POST['enroll']:array();
-		$learndash_group_unenroll_course = isset($_POST['unenroll'])? $_POST['unenroll']:array();
-
-		if(is_numeric($learndash_group_enroll_course)) $learndash_group_enroll_course = array($learndash_group_enroll_course);
-		if(is_numeric($learndash_group_unenroll_course)) $learndash_group_unenroll_course = array($learndash_group_unenroll_course);
-
+		$learndash_group_users 			= isset($_POST['students'])? $_POST['students']:array(); //students
+		$learndash_group_leader 		= isset($_POST['leaders'])? (array)json_decode( $_POST['leaders'] ):array(); //leaders
+		$learndash_group_enroll_course 	= isset($_POST['courses'])? (array)json_decode( $_POST['courses'] ):array(); //courses
 
 		//Add a user to enrolled groups
 		foreach ( $learndash_group_enroll_course as $course_id ) {
+
 			$group_id = bp_learndash_course_group_id( $course_id );
+
 			foreach ( $learndash_group_users as $ga ) {
 				groups_join_group( $group_id, $ga );
 			}
-		}
-
-		//Remove a user from unenrolled groups
-		foreach ( $learndash_group_unenroll_course as $course_id ) {
-			$group_id = bp_learndash_course_group_id( $course_id );
-			foreach ( $learndash_group_users as $ga ) {
-				groups_leave_group( $group_id, $ga );
+			
+			foreach ( $learndash_group_leader as $ga ) {
+				groups_join_group( $group_id, $ga );
+				$member = new BP_Groups_Member( $ga, $group_id );
+				$member->promote( 'admin' );
 			}
 		}
-
 
 		die( json_encode( array( 'success' => true ) ) );
 	}

@@ -71,7 +71,7 @@ class BP_Edit_Mediapress extends BuddyBoss_Edit_Activity {
 	}
 
 	public function bp_loaded(){
-		add_action( 'bp_activity_entry_meta',		array( $this, 'btn_edit_activity' ) );
+		add_action( 'bp_activity_entry_meta',		array( $this, 'btn_edit_activity' ), 3, 0 );
 		add_action( 'bp_activity_comment_options',	array( $this, 'btn_edit_activity_comment' ) );
 
 		if ( ! is_admin() && ! is_network_admin() ){
@@ -105,6 +105,40 @@ class BP_Edit_Mediapress extends BuddyBoss_Edit_Activity {
 
 		wp_localize_script( 'buddyboss-edit-activity-mediapress', 'BEAM', $data );
 
+    //mppdata to get allowed types message when editing
+    $settings = array(
+			'enable_activity_lightbox' => mpp_get_option( 'enable_activity_lightbox' ) ? true : false,
+			'enable_gallery_lightbox' => mpp_get_option( 'enable_gallery_lightbox' ) ? true : false,
+		);
+		$active_types = mpp_get_active_types();
+
+		$extensions = $type_erros = array();
+		$allowed_type_messages = array();
+		foreach( $active_types as $type => $object ) {
+			$type_extensions = mpp_get_allowed_file_extensions_as_string( $type, ',' );
+
+			$extensions[$type] = array( 'title'=> sprintf( 'Select %s', ucwords( $type ) ), 'extensions' => $type_extensions );
+			$readable_extensions = mpp_get_allowed_file_extensions_as_string( $type, ', ' );
+			$type_erros[$type] = sprintf( _x( 'This file type is not allowed. Allowed file types are: %s', 'type error message', 'mediapress' ), $readable_extensions );
+			$allowed_type_messages[$type] = sprintf( _x( ' Please only select : %s', 'type error message', 'mediapress' ),  $readable_extensions );
+		}
+
+		$settings['types'] = $extensions;
+		$settings['type_errors'] = $type_erros;
+		$settings['allowed_type_messages'] = $allowed_type_messages;
+
+		if( mpp_is_single_gallery() ) {
+
+			$settings['current_type'] = mpp_get_current_gallery()->type;
+		}
+
+		$settings['loader_src'] = mpp_get_asset_url( 'assets/images/loader.gif', 'mpp-loader' );
+
+		$settings = apply_filters( 'mpp_localizable_data', $settings );
+
+		wp_localize_script( 'mpp_core', '_mppData', $settings );
+		//_mppData
+
   }
 
 	public function option( $key ){
@@ -136,13 +170,15 @@ class BP_Edit_Mediapress extends BuddyBoss_Edit_Activity {
         <textarea class="bp-suggestions" id="whats-new" cols="50" rows="10" style="height: 50px; margin: 0px; width: 95%; min-height: 20vh;" name="activity_content"></textarea>
 
         <?php
-          if( bp_is_group() ) {
-            echo do_shortcode("[mpp-uploader component=\"groups\"]") ;
-          } else if( bp_is_user() ) {
-            echo do_shortcode("[mpp-uploader component=\"members\"]") ;
-          } else {
-            echo do_shortcode("[mpp-uploader component=\"sitwide\"]") ;
-          }
+          // if( bp_is_group() ) {
+          //   echo do_shortcode("[mpp-uploader component=\"groups\"]") ;
+          // } else if( bp_is_user() ) {
+          //   echo do_shortcode("[mpp-uploader component=\"members\"]") ;
+          // } else {
+          //   echo do_shortcode("[mpp-uploader component=\"sitwide\"]") ;
+          // }
+
+          echo do_shortcode("[mpp-uploader]") ;
         ?>
 
         </div>
@@ -308,9 +344,19 @@ class BP_Edit_Mediapress extends BuddyBoss_Edit_Activity {
     do_action( 'bea_before_save_activity_content', $activity->id );
 
     // do_action('beamp_saved_activity', $retval['content'] , current_user_id(), $group_id, $activity_id  );
-    if(function_exists('mpp_activity_mark_attached_media')) {
-      mpp_activity_mark_attached_media( $activity->id );
+    // if(function_exists('mpp_activity_mark_attached_media')) {
+    //   mpp_activity_mark_attached_media( $activity->id );
+    // }
+
+    if(function_exists('mpp_activity_update_attached_media_ids') && !empty($_POST['mpp-attached-media']) ) {
+      $media_ids = $_POST['mpp-attached-media'];
+    	$media_ids = explode( ',', $media_ids ); //make an array
+
+    	$media_ids = array_filter( array_unique( $media_ids ) );
+
+      mpp_activity_update_attached_media_ids( $activity->id, $media_ids );
     }
+
 
     $activity->content = apply_filters( 'beam_activity_content',  $args['content'], $activity->id );
 		$activity->save();

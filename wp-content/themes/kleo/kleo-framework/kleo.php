@@ -495,34 +495,46 @@ class Kleo {
 				$is_google = true;
 			}
 
-			//family
-			if ( $is_google === true ) {
-				$font_backup = '';
-				if ( isset( $font['font-backup'] ) && ! empty( $font['font-backup'] ) ) {
-					$font_backup = ', ' . $font['font-backup'];
-				}
-				$output .= $section . ' {font-family:"' . $font['font-family'] . '"' . $font_backup . ';}';
-			} else {
-				$output .= $section . ' {font-family:' . $font['font-family'] . ';}';
+			$selector = $section;
+			if ( 'header' == $section ) {
+				$selector = '#header';
 			}
 
-			if ( $section == 'h1' ) {
-				$output .= '.lead p, p.lead, article .article-meta .entry-date, .single-attachment .post-time, #buddypress #groups-list .item-title, .popover-title, .nav-tabs > li > a, .nav-pills > li > a, .panel-kleo .panel-title {font-family:' . $font['font-family'] . ';}';
-				$output .= '#rtm-gallery-title-container .rtm-gallery-title, #item-body .rtmedia-container h2 {font-family:' . $font['font-family'] . ' !important;}';
-			} elseif ( $section == 'body' ) {
-				$output .= 'li.bbp-forum-info .bbp-forum-title, .woocommerce #accordion-woo .panel-title, .woocommerce ul.products li.product h3, .woocommerce-page ul.products li.product h3, .woocommerce .kleo-cart-totals .shipping-calculator-button {font-family:' . $font['font-family'] . ';}';
+			//family
+			if ( $font['font-family'] && '' != $font['font-family'] ) {
+				if ( true === $is_google ) {
+					$font_backup = '';
+					if ( isset( $font['font-backup'] ) && ! empty( $font['font-backup'] ) ) {
+						$font_backup = ', ' . $font['font-backup'];
+					}
+					$output .= $selector . ' {font-family:"' . $font['font-family'] . '"' . $font_backup . ';}';
+				} else {
+					$output .= $selector . ' {font-family:' . $font['font-family'] . ';}';
+				}
+
+
+				if ( $section == 'h1' ) {
+					$output .= '.lead p, p.lead, article .article-meta .entry-date, .single-attachment .post-time, #buddypress #groups-list .item-title, .popover-title, .nav-tabs > li > a, .nav-pills > li > a, .panel-kleo .panel-title {font-family:' . $font['font-family'] . ';}';
+					$output .= '#rtm-gallery-title-container .rtm-gallery-title, #item-body .rtmedia-container h2 {font-family:' . $font['font-family'] . ' !important;}';
+				} elseif ( $section == 'body' ) {
+					$output .= 'li.bbp-forum-info .bbp-forum-title, .woocommerce #accordion-woo .panel-title, .woocommerce ul.products li.product h3, .woocommerce-page ul.products li.product h3, .woocommerce .kleo-cart-totals .shipping-calculator-button {font-family:' . $font['font-family'] . ';}';
+				}
 			}
 			//size
 			if ( isset( $font['font-size'] ) && ! empty( $font['font-size'] ) ) {
-				$output .= $section . ' {font-size:' . $font['font-size'] . ';}';
+				$output .= $selector . ' {font-size:' . $font['font-size'] . ';}';
 			}
 			//line-height
 			if ( isset( $font['line-height'] ) && ! empty( $font['line-height'] ) ) {
-				$output .= $section . ' {line-height:' . $font['line-height'] . ';}';
+				$output .= $selector . ' {line-height:' . $font['line-height'] . ';}';
 			}
 			//weight
 			if ( isset( $font['font-weight'] ) && ! empty( $font['font-weight'] ) ) {
-				$output .= $section . ' {font-weight:' . $font['font-weight'] . ';}';
+				$output .= $selector . ' {font-weight:' . $font['font-weight'] . ';}';
+			}
+			//letter spacing
+			if ( isset( $font['letter-spacing'] ) && ! empty( $font['letter-spacing'] ) ) {
+				$output .= $selector . ' {letter-spacing:' . $font['letter-spacing'] . ';}';
 			}
 		}
 		echo $output;

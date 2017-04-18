@@ -135,6 +135,8 @@ class Config
 	}	
 	public function loadQuestions()
 	{
+		global $wpdb;
+		
 		$aptobploader_term_id				= $_REQUEST['aptobploader_term_id'];
 		
 		$termID = array();
@@ -147,57 +149,72 @@ class Config
 		$LibAPtoBPLoader 	= new \AnsPressToBuddyPressLoader\Library\LibAPtoBPLoader\LibAPtoBPLoader;
 		$LibAPtoBPLoader->termID = $termID;
 		
-		$questionID = $LibAPtoBPLoader->getQuestionsAPByCategory();
+		$LibAPtoBPLoader->getQuestionsAPByCategory();
 		
 		$questionID	= $LibAPtoBPLoader->questionID;
 				
 		if(isset($questionID))
 		{
 			foreach($questionID as $key => $val)
-			{
-				$post 			= get_post( $val );
-				$LibAPtoBPLoader->parentID = $val;
-				$answers 		= $LibAPtoBPLoader->getAnswersAP();
-				$num_answers 	= count($answers);
+			{				
+				$sql = "SELECT * FROM $wpdb->posts 
+							WHERE ID = $val AND post_type='question' AND post_status='publish' 
+							ORDER BY ID DESC";
+												
+				$post 	= $wpdb->get_row( $sql );
 				
-			echo '
-			<li class="groups mpp_media_upload activity-item bottom-to-top" id="questions-'.$val.'">
-			<div class="activity-avatar rounded"> '.get_avatar($post->post_author, 50).'  </div>
-			<div class="activity-content">
-			  <div class="activity-header">
-				<p>'.get_author_name($post->post_author).'<span class="time-since">'.$post->post_date.'</span></p>
-				<p><strong>'.$post->post_title.'</strong></p>
-				<p>'.$post->post_content.'</p>
-			  </div>
-			  <div style="margin-bottom: 10px;">
-			  	<a href="'.$post->guid.'" class="link" style="border: 1px solid #E5E5E5; border-radius: 5px; padding: 2px 5px 2px 5px;">Answers <span>'.$num_answers.'</span></a>
-			  </div>
-			</div>
-			<div class="activity-comments">
-				<ul>';
-				if(isset($answers))
+				if($wpdb->num_rows)
 				{
-					foreach($answers as $k=>$v)
-					{
-						echo'
-						<li id="answers-'.$v->ID.'">
-						  <div class="acomment-avatar rounded"> '.get_avatar($v->post_author, 50).'</div>
-						  <div class="acomment-meta"> '.get_author_name($v->post_author).'	</div>
-						  <span class="time-since">'.$v->post_date.'</span>
-						  <div class="acomment-content">						  	
-							<p><strong>'.$v->post_title.'</strong></p>
-							<p>'.$v->post_content.'</p>
-						  </div>
-						</li>';					
-					}
-				}
+					$LibAPtoBPLoader->parentID = $val;
+					$answers 		= $LibAPtoBPLoader->getAnswersAP();
+					$num_answers 	= count($answers);
 
-			echo'
-			  </ul>
-			</div>
-			<div class="activity-timeline"></div>
-		  </li>';	
+					echo '
+						<li class="groups mpp_media_upload activity-item bottom-to-top" id="questions-'.$val.'">
+						<div class="activity-avatar rounded"> '.get_avatar($post->post_author, 50).'  </div>
+						<div class="activity-content">
+						  <div class="activity-header">
+							<p>'.get_author_name($post->post_author).'<span class="time-since">'.$post->post_date.'</span></p>
+							<p><strong>'.$post->post_title.'</strong></p>
+							<p>'.$post->post_content.'</p>
+						  </div>
+						  <div style="margin-bottom: 10px;">
+							<a href="'.$post->guid.'" class="link" style="border: 1px solid #E5E5E5; border-radius: 5px; padding: 2px 5px 2px 5px;"> ';
+						_e( 'Answers', 'anspresstobuddypressloader' );
+					echo ' <span>'.$num_answers.'</span></a>
+						  </div>
+						</div>
+						<div class="activity-comments">
+						<ul>';
+						if(isset($answers))
+						{
+							foreach($answers as $k=>$v)
+							{
+								echo'
+								<li id="answers-'.$v->ID.'">
+								  <div class="acomment-avatar rounded"> '.get_avatar($v->post_author, 50).'</div>
+								  <div class="acomment-meta"> '.get_author_name($v->post_author).'	</div>
+								  <span class="time-since">'.$v->post_date.'</span>
+								  <div class="acomment-content">						  	
+									<p><strong>'.$v->post_title.'</strong></p>
+									<p>'.$v->post_content.'</p>
+								  </div>
+								</li>';					
+							}
+						}
+
+					echo '
+						  </ul>
+						</div>
+						<div class="activity-timeline"></div>
+					  </li>
+				  		';						
+				}
 			}
+		}
+		else
+		{
+			return false;
 		}
 		die();		
 	}
@@ -233,6 +250,7 @@ class Config
 		echo "var APTOBPLOADER_SITE_URL = ", json_encode( site_url('/') ), ";\n";
 		echo "var APTOBPLOADER_AJAX_URL = ", json_encode( admin_url('/admin-ajax.php') ), ";\n";
 		echo "var APTOBPLOADER_TERM_ID = ", json_encode( $this->APtoBPLoader->termID ), ";\n";
+		echo "var APTOBPLOADER_TEXT_QUESTIONS = '", _e('Questions'), "';\n";
 		echo "// ]]>\n</script>\n";
 	}
 	

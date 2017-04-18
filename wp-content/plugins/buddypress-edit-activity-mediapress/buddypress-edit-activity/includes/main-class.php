@@ -200,7 +200,7 @@ class BuddyBoss_Edit_Activity {
 	 * @return void
 	 */
 	public function bp_loaded(){
-		add_action( 'bp_activity_entry_meta',		array( $this, 'btn_edit_activity' ) );
+		add_action( 'bp_activity_entry_meta',		array( $this, 'btn_edit_activity' ), 3, 0 );
 		add_action( 'bp_activity_comment_options',	array( $this, 'btn_edit_activity_comment' ) );
 
 		if ( ! is_admin() && ! is_network_admin() ){

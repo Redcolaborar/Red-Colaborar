@@ -1,5 +1,51 @@
 <?php
 
+/* Add some shortcodes to VC interface */
+add_action( 'vc_before_init', 'kleo_vc_theme_mapping' );
+function kleo_vc_theme_mapping() {
+	/* MailChimp4WP shortcode */
+
+	$posts = array( 'Last added' => '' );
+	$args = array(
+		'post_type' => 'mc4wp-form',
+	);
+	$the_query = new WP_Query( $args );
+
+	// The Loop
+	if ( $the_query->have_posts() ) {
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			$posts[ get_the_title() ] = get_the_ID();
+		}
+		/* Restore original Post Data */
+		wp_reset_postdata();
+	} else {
+		// no posts found
+	}
+
+	vc_map(
+		array(
+			'name' => __( 'MailChimp 4 WP Form' ),
+			'base' => 'mc4wp_form',
+			'class' => '',
+			'category' => __( 'Content' ),
+			'icon' => 'mc4wp',
+			'description' => __( 'Displays a mailchimp signup form' ),
+			'params' => array(
+				array(
+					'type'        => 'dropdown',
+					'holder'      => 'div',
+					'class'       => 'hide hidden',
+					'heading'     => __( 'Form' ),
+					'param_name'  => 'id',
+					'value'       => $posts,
+					'description' => __( 'What form to show' ),
+				),
+			),
+		)
+	);
+}
+
 if ( ! function_exists( 'vc_has_class' ) ) {
 	/**
 	 * Check if element has specific class
@@ -148,6 +194,67 @@ if ( ! function_exists( 'vc_shortcode_custom_css_class' ) ) {
 	}
 }
 
+if ( ! function_exists( 'kleo_translateColumnWidth' ) ) {
+	/**
+	 * Translate column proportions to classes
+	 *
+	 * @param string $width
+	 *
+	 * @return string
+	 */
+	function kleo_translateColumnWidth( $width ) {
+		if ( preg_match( '/^(\d{1,2})\/12$/', $width, $match ) ) {
+			$w = 'vc_col-sm-' . $match[1];
+		} else {
+			$w = 'vc_col-sm-';
+			switch ( $width ) {
+				case "1/6" :
+					$w .= '2';
+					break;
+				case "1/4" :
+					$w .= '3';
+					break;
+				case "1/3" :
+					$w .= '4';
+					break;
+				case "1/2" :
+					$w .= '6';
+					break;
+				case "2/3" :
+					$w .= '8';
+					break;
+				case "3/4" :
+					$w .= '9';
+					break;
+				case '5/6' :
+					$w .= '10';
+					break;
+				case '1/1' :
+					$w .= '12';
+					break;
+				/* custom 5 columns */
+				case '1/5' :
+					$w = 'col-sm-1-5';
+					break;
+				case '2/5' :
+					$w = 'col-sm-2-5';
+					break;
+				case '3/5' :
+					$w = 'col-sm-3-5';
+					break;
+				case '4/5' :
+					$w = 'col-sm-4-5';
+					break;
+
+				default :
+					$w = $width;
+			}
+		}
+
+		return $w;
+	}
+}
+
 
 /* Custom 5 columns layout */
 
@@ -157,13 +264,11 @@ function kleo_add_new_five_cols() {
 		'cells'      => '15_15_15_15_15',
 		'mask'       => '530',
 		'title'      => '1/5 + 1/5 + 1/5 + 1/5 + 1/5',
-		'icon_class' => 'l_15_15_15_15_15',
+		'icon_class' => '1-6_1-6_1-6_1-6_1-6_1-6',
 	);
-
-	return $vc_row_layouts;
 }
 
-add_action( 'vc_before_init', 'kleo_add_new_five_cols' );
+add_action( 'vc_before_init_base', 'kleo_add_new_five_cols' );
 
 function kleo_add_vc_column_five_cols_options() {
 	//Get current values stored in the width param in "Column" element

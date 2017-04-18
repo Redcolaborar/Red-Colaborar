@@ -1,7 +1,7 @@
 <?php
 /**
  *  WP-SpamShield Utilities
- *  File Version 1.9.9.9.1
+ *  File Version 1.9.9.9.6
  */
 
 /* Make sure file remains secure if called directly */
@@ -439,10 +439,10 @@ class WPSS_Utils extends WP_SpamShield {
 
 	/**
 	 *	Attempt to detect and identify web host
-	 *	As of RSSD.20170228.01, web hosts detected: 97+
+	 *	As of RSSD.20170414.01, web hosts detected: 98+
 	 *	@dependencies	WPSS_Utils::get_option(), WPSS_Utils::update_option(), WPSS_Utils::get_server_hostname(), WPSS_Utils::get_ip_dns_params(), WPSS_Utils::get_reverse_dns(), WP_SpamShield::is_valid_ip(), WPSS_Utils::get_ns(), WPSS_Utils::sort_unique()
 	 *	@used by		...
-	 *	@func_ver		RSSD.20170228.01
+	 *	@func_ver		RSSD.20170414.01
 	 *	@since			WPSS 1.9.9.8.2, RSSD 1.0.3
 	 */
 	static public function get_web_host( $params = array() ) {
@@ -525,6 +525,7 @@ class WPSS_Utils extends WP_SpamShield {
 			'IX Web Hosting'			=> array( 'slug' => 'ix-web-hosting', 'webhost' => 'IX Web Hosting', 'domains' => 'cloudbyix.com,cloudix.com,ecommerce.com,hostexcellence.com,ixwebhosting.com,ixwebsites.com,opentransfer.com,webhost.biz', 'parent' => 'Ecommerce Corporation', ), 
 			'JustHost'					=> array( 'slug' => 'justhost', 'webhost' => 'JustHost', 'domains' => 'justhost.com', ), 
 			'LeaseWeb'					=> array( 'slug' => 'leaseweb', 'webhost' => 'LeaseWeb', 'domains' => 'leaseweb.com,leaseweb.net,leaseweb.nl,lswcdn.com', ), 
+			'Lightning Base'			=> array( 'slug' => 'lightning-base', 'webhost' => 'Lightning Base', 'domains' => 'lightningbase.com', ), 
 			'Linode'					=> array( 'slug' => 'linode', 'webhost' => 'Linode', 'domains' => 'linode.com', ), 
 			'Liquid Web'				=> array( 'slug' => 'liquid-web', 'webhost' => 'Liquid Web', 'domains' => 'liquidweb.com', ), 
 			'Lunarpages'				=> array( 'slug' => 'lunarpages', 'webhost' => 'Lunarpages', 'domains' => 'lunarfo.com,lunarpages.com,lunarservers.com', ), 
@@ -551,7 +552,7 @@ class WPSS_Utils extends WP_SpamShield {
 			'Register.com'				=> array( 'slug' => 'register-com', 'webhost' => 'Register.com', 'domains' => 'register.com', ), 
 			'SingleHop'					=> array( 'slug' => 'singlehop', 'webhost' => 'SingleHop', 'domains' => 'singlehop.com', ), 
 			'Site5'						=> array( 'slug' => 'site5', 'webhost' => 'Site5', 'domains' => 'site5.com', ), 
-			'SiteGround'				=> array( 'slug' => 'siteground', 'webhost' => 'siteground', 'domains' => 'siteground.', 'tags' => 'top' ), 
+			'SiteGround'				=> array( 'slug' => 'siteground', 'webhost' => 'SiteGround', 'domains' => 'siteground.', 'tags' => 'top' ), 
 			'SiteRubix'					=> array( 'slug' => 'siterubix', 'webhost' => 'SiteRubix', 'domains' => 'siterubix.com', 'parent' => 'my-wealthy-affiliate', ), 
 			'SoftLayer'					=> array( 'slug' => 'softlayer', 'webhost' => 'SoftLayer', 'domains' => 'networklayer.com,static.sl-reverse.com,softlayer.net', ), 
 			'Superb'					=> array( 'slug' => 'superb', 'webhost' => 'Superb', 'domains' => 'superb.net', ), 
@@ -838,43 +839,6 @@ class WPSS_PHP extends WPSS_Utils {
 	}
 
 	/**
-	 *  Convert case using multibyte version (superior) if available, if not, use defaults
-	 *  Replaces PHP functions strtolower(), strtoupper(), ucfirst(), ucwords()
-	 *  Usage:
-	 *  - WPSS_PHP::casetrans( 'lower', $str ); // Ver 1.9.9.8.2+
-	 *  Replaces:
-	 *  - rs_wpss_casetrans( 'lower', $str ); // Ver 1.8.4 - 1.9.9.8.1
-	 *	@dependencies	...
-	 *	@used by		...
-	 *  @since			1.8.4 as rs_wpss_casetrans()
-	 *  @moved			1.9.9.8.2 to WPSS_PHP class
-	 */
-	static public function casetrans( $type, $str ) {
-		if( empty( $str ) || empty( $type ) || !is_string( $str ) || !is_string( $type ) ) { return $str; }
-		switch( $type ) {
-			case 'upper':
-				return function_exists( 'mb_strtoupper' ) ? mb_strtoupper( $str, 'UTF-8' ) : strtoupper( $str );
-			case 'lower':
-				return function_exists( 'mb_strtolower' ) ? mb_strtolower( $str, 'UTF-8' ) : strtolower( $str );
-			case 'ucfirst':
-				if( function_exists( 'mb_strtoupper' ) && function_exists( 'mb_substr' ) ) {
-					$strtmp = mb_strtoupper( mb_substr( $str, 0, 1, 'UTF-8' ), 'UTF-8' ) . mb_substr( $str, 1, NULL, 'UTF-8' );
-					/* 1.9.5.1 - Added workaround for strange PHP bug in mb_substr() on some servers */
-					return rs_wpss_strlen( $str ) === rs_wpss_strlen( $strtmp ) ? $strtmp : ucfirst( $str );
-				} else { return ucfirst( $str ); }
-			case 'ucwords':
-				return function_exists( 'mb_convert_case' ) ? mb_convert_case( $str, MB_CASE_TITLE, 'UTF-8' ) : ucwords( $str );
-				/**
-				 *  Note differences in results between ucwords() and this.
-				 *  ucwords() will capitalize first characters without altering other characters, whereas this will lowercase everything, but capitalize the first character of each word.
-				 *  This works better for our purposes, but be aware of differences.
-				 */
-			default:
-				return $str;
-		}
-	}
-
-	/**
 	 *  Drop-in replacement for native PHP function chmod()
 	 *  Provides built-in error correction for $mode
 	 *  $mode is input as octal integers to match standard file permissions (644, 755, etc.)
@@ -885,7 +849,7 @@ class WPSS_PHP extends WPSS_Utils {
 	 */
 	static public function chmod( $file, $mode, $check_exists = FALSE ) {
 		if( TRUE === $check_exists ) {
-			@clearstatcache;
+			@clearstatcache();
 			if( ! file_exists( $file ) ) { return; }
 		}
 		@chmod( $file, octdec( $mode ) );
@@ -935,6 +899,24 @@ class WPSS_PHP extends WPSS_Utils {
 		return ( isset( $haystack_flip[$needle] ) );
 	}
 
+	/**
+	 *  Drop-in replacement for native PHP function extension_loaded()
+	 *  @dependencies	WPSS_PHP::in_array()
+	 *  @used by		...
+	 *  @since			1.9.9.9.6
+	 *  @reference		http://php.net/manual/en/function.extension-loaded.php
+	 *  @param			string	$extension 
+	 */
+	static public function extension_loaded( $extension ) {
+		if( empty( $extension ) || !is_string( $extension ) ) { return FALSE; }
+		if( function_exists( 'get_loaded_extensions' ) ) {
+			$ext_loaded	= @get_loaded_extensions();
+			$ext_loaded	= ( !empty( $ext_loaded ) && is_array( $ext_loaded ) ) ? $ext_loaded : array();
+			return ( WPSS_PHP::in_array( $extension, $ext_loaded ) );
+		}
+		return ( function_exists( 'extension_loaded' ) && (bool) @extension_loaded( $extension ) );
+	}
+
 }
 
 
@@ -956,52 +938,64 @@ class WPSS_Func extends WPSS_PHP {
 	}
 
 	/**
-	 *  Alias of WPSS_PHP::casetrans( 'lower', $str )
+	 *  Alias of WP_SpamShield::casetrans( 'lower', $str )
 	 *  Replaces PHP function strtolower()
-	 *  @dependencies	WPSS_PHP::casetrans()
+	 *  @dependencies	WP_SpamShield::casetrans()
 	 *  @used by		...
 	 *  @usage			WPSS_Func::lower( $str )
 	 *  @since			1.9.9.8.2
 	 */
 	static public function lower( $str ) {
-		return WPSS_PHP::casetrans( 'lower', $str );
+		return WP_SpamShield::casetrans( 'lower', $str );
 	}
 
 	/**
-	 *  Alias of WPSS_PHP::casetrans( 'upper', $str )
+	 *  Alias of WP_SpamShield::casetrans( 'upper', $str )
 	 *  Replaces PHP function strtoupper()
-	 *  @dependencies	WPSS_PHP::casetrans()
+	 *  @dependencies	WP_SpamShield::casetrans()
 	 *  @used by		...
 	 *  @usage			WPSS_Func::upper( $str )
 	 *  @since			1.9.9.8.2
 	 */
 	static public function upper( $str ) {
-		return WPSS_PHP::casetrans( 'upper', $str );
+		return WP_SpamShield::casetrans( 'upper', $str );
 	}
 
 	/**
-	 *  Alias of WPSS_PHP::casetrans( 'upper', $str )
+	 *  Alias of WP_SpamShield::casetrans( 'upper', $str )
 	 *  Replaces PHP function ucfirst()
-	 *  @dependencies	WPSS_PHP::casetrans()
+	 *  @dependencies	WP_SpamShield::casetrans()
 	 *  @used by		...
 	 *  @usage			WPSS_Func::ucfirst( $str )
 	 *  @since			1.9.9.8.2
 	 */
 	static public function ucfirst( $str ) {
-		return WPSS_PHP::casetrans( 'ucfirst', $str );
+		return WP_SpamShield::casetrans( 'ucfirst', $str );
 	}
 
 	/**
-	 *  Alias of WPSS_PHP::casetrans( 'upper', $str )
+	 *  Alias of WP_SpamShield::casetrans( 'upper', $str )
 	 *  Replaces PHP function ucwords()
-	 *  @dependencies	WPSS_PHP::casetrans()
+	 *  @dependencies	WP_SpamShield::casetrans()
 	 *  @used by		...
 	 *  @usage			WPSS_Func::ucwords( $str )
 	 *  @since			1.9.9.8.2
 	 */
 	static public function ucwords( $str ) {
-		return WPSS_PHP::casetrans( 'ucwords', $str );
+		return WP_SpamShield::casetrans( 'ucwords', $str );
+	}
+
+
+
+	/**
+	 *	Deprecata
+	 */
+
+	static public function casetrans( $type, $str ) {
+		_deprecated_function( __METHOD__, '1.9.9.9.4', 'WP_SpamShield::casetrans()' );
+		return WP_SpamShield::casetrans( $type, $str );
 	}
 
 }
+
 

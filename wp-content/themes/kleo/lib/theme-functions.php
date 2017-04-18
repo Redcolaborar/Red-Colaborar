@@ -1,5 +1,5 @@
 <?php
-define( 'KLEO_THEME_VERSION', '4.1.8' );
+define( 'KLEO_THEME_VERSION', '4.2.2' );
 
 /* Configuration array */
 global $kleo_config;
@@ -26,7 +26,7 @@ $kleo_config['blog_meta_elements'] = array(
 	'message'     => 'Message Link',
 	'categories'  => 'Categories',
 	'tags'        => 'Tags',
-	'comments'    => 'Comments'
+	'comments'    => 'Comments',
 );
 $kleo_config['blog_meta_defaults'] = array( 'author_link', 'date', 'categories', 'tags', 'comments' );
 
@@ -45,7 +45,7 @@ $kleo_config['image_overlay']     = '<span class="hover-element"><i>+</i></span>
 
 //define site style sets
 $kleo_config['style_sets']    = array( 'header', 'main', 'alternate', 'side', 'footer', 'socket' );
-$kleo_config['font_sections'] = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body' );
+$kleo_config['font_sections'] = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'header' );
 
 //physical file template mapping
 $kleo_config['tpl_map'] = array(
@@ -54,7 +54,7 @@ $kleo_config['tpl_map'] = array(
 	'page-templates/full-width.php'          => 'no',
 	'page-templates/left-right-sidebars.php' => '3lr',
 	'page-templates/left-two-sidebars.php'   => '3ll',
-	'page-templates/right-two-sidebars.php'  => '3rr'
+	'page-templates/right-two-sidebars.php'  => '3rr',
 );
 
 /***************************************************
@@ -239,76 +239,77 @@ foreach ( $kleo_widgets as $widget ) {
 	}
 }
 
+if ( ! function_exists( 'kleo_title_section' ) ) {
+	/**
+	 * Return the breadcrumb area
+	 * @global object $wp_query
+	 *
+	 * @param array $args
+	 *
+	 * @return string
+	 */
+	function kleo_title_section( $args = false ) {
+		$defaults = array(
+			'title'           => get_the_title(),
+			'show_title'      => true,
+			'show_breadcrumb' => true,
+			'link'            => '',
+			'output'          => "<section class='{class} border-bottom'><div class='container'>{title_data}<div class='breadcrumb-extra'>{breadcrumb_data}{extra}</div></div></section>",
+			'class'           => 'container-wrap main-title alternate-color ',
+			'extra'           => '<p class="page-info">' . do_shortcode( sq_option( 'title_info', '' ) ) . '</p>',
+			'heading'         => 'h1'
+		);
 
-/**
- * Return the breadcrumb area
- * @global object $wp_query
- *
- * @param array $args
- *
- * @return string
- */
-function kleo_title_section( $args = false ) {
-	$defaults = array(
-		'title'           => get_the_title(),
-		'show_title'      => true,
-		'show_breadcrumb' => true,
-		'link'            => '',
-		'output'          => "<section class='{class} border-bottom'><div class='container'>{title_data}<div class='breadcrumb-extra'>{breadcrumb_data}{extra}</div></div></section>",
-		'class'           => 'container-wrap main-title alternate-color ',
-		'extra'           => '<p class="page-info">' . do_shortcode( sq_option( 'title_info', '' ) ) . '</p>',
-		'heading'         => 'h1'
-	);
+		// Parse incoming $args into an array and merge it with $defaults
+		$args = wp_parse_args( $args, $defaults );
+		$args = apply_filters( 'kleo_title_args', $args );
 
-	// Parse incoming $args into an array and merge it with $defaults
-	$args = wp_parse_args( $args, $defaults );
-	$args = apply_filters( 'kleo_title_args', $args );
+		// OPTIONAL: Declare each item in $args as its own variable i.e. $type, $before.
+		extract( $args, EXTR_SKIP );
 
-	// OPTIONAL: Declare each item in $args as its own variable i.e. $type, $before.
-	extract( $args, EXTR_SKIP );
+		if ( ! empty( $link ) ) {
+			$title = "<a href='" . $link . "' rel='bookmark' title='" . __( 'Permanent Link:', 'kleo_framework' ) . " " . esc_attr( $title ) . "'>" . $title . "</a>";
+		}
 
-	if ( ! empty( $link ) ) {
-		$title = "<a href='" . $link . "' rel='bookmark' title='" . __( 'Permanent Link:', 'kleo_framework' ) . " " . esc_attr( $title ) . "'>" . $title . "</a>";
+		$breadcrumb_data = '';
+		if ( $show_breadcrumb ) {
+			$breadcrumb_data = kleo_breadcrumb( array(
+				'show_browse' => false,
+				'separator'   => ' ',
+				'show_home'   => __( 'Home', 'kleo_framework' ),
+				'echo'        => false
+			) );
+		}
+
+		$title_data = '';
+		if ( $show_title ) {
+			$title_data = '<{heading} class="page-title">{title}</{heading}>';
+		}
+
+		if ( ! $show_breadcrumb && $extra == '' ) {
+			$class .= ' title-single';
+		}
+
+		$title_layout = sq_option( 'title_layout', 'normal' );
+		if ( is_singular() && get_cfield( 'title_layout' ) && get_cfield( 'title_layout' ) != '' ) {
+			$title_layout = get_cfield( 'title_layout' );
+		}
+		if ( $title_layout == 'center' ) {
+			$class .= ' main-center-title';
+		} elseif ( $title_layout == 'right_breadcrumb' ) {
+			$class .= ' main-right-breadcrumb';
+		}
+
+
+		$output = str_replace( '{title_data}', $title_data, $output );
+		$output = str_replace( '{class}', $class, $output );
+		$output = str_replace( '{title}', $title, $output );
+		$output = str_replace( '{breadcrumb_data}', $breadcrumb_data, $output );
+		$output = str_replace( '{extra}', $extra, $output );
+		$output = str_replace( '{heading}', $heading, $output );
+
+		return $output;
 	}
-
-	$breadcrumb_data = '';
-	if ( $show_breadcrumb ) {
-		$breadcrumb_data = kleo_breadcrumb( array(
-			'show_browse' => false,
-			'separator'   => ' ',
-			'show_home'   => __( 'Home', 'kleo_framework' ),
-			'echo'        => false
-		) );
-	}
-
-	$title_data = '';
-	if ( $show_title ) {
-		$title_data = '<{heading} class="page-title">{title}</{heading}>';
-	}
-
-	if ( ! $show_breadcrumb && $extra == '' ) {
-		$class .= ' title-single';
-	}
-
-	$title_layout = sq_option( 'title_layout', 'normal' );
-	if ( is_singular() && get_cfield( 'title_layout' ) && get_cfield( 'title_layout' ) != '' ) {
-		$title_layout = get_cfield( 'title_layout' );
-	}
-	if ( $title_layout == 'center' ) {
-		$class .= ' main-center-title';
-	} elseif ( $title_layout == 'right_breadcrumb' ) {
-		$class .= ' main-right-breadcrumb';
-	}
-
-
-	$output = str_replace( '{title_data}', $title_data, $output );
-	$output = str_replace( '{class}', $class, $output );
-	$output = str_replace( '{title}', $title, $output );
-	$output = str_replace( '{breadcrumb_data}', $breadcrumb_data, $output );
-	$output = str_replace( '{extra}', $extra, $output );
-	$output = str_replace( '{heading}', $heading, $output );
-
-	return $output;
 }
 
 /**
@@ -481,34 +482,58 @@ if ( ! function_exists( 'kleo_search_menu_item' ) ) {
 		return $items;
 	}
 }
+
+/* Custom search form */
+if ( sq_option( 'header_custom_search', 0 ) == 1 && sq_option( 'header_search_form', '' ) != '' ) {
+	add_filter( 'body_class', 'kleo_gsb_body_class' );
+	if ( ! function_exists( 'kleo_get_search_menu_item' ) ) {
+		function kleo_get_search_menu_item() {
+			$output = '';
+			$output .= '<a class="search-trigger" href="#"><i class="icon icon-search"></i></a>';
+			$output .= '<div class="kleo-search-wrap searchHidden" id="ajax_search_container">';
+			$output .= '<div class="gse-loading"></div>';
+			$output .= sq_option( 'header_search_form', '' );
+			$output .= '</div>';
+
+			return $output;
+		}
+	}
+}
+
+function kleo_gsb_body_class( $classes ) {
+	$classes[] = 'has-google-search-box';
+	return $classes;
+}
+
+
 if ( ! function_exists( 'kleo_get_search_menu_item' ) ) {
 
-	function kleo_get_search_menu_item()
-	{
+	function kleo_get_search_menu_item() {
 
-		$context = sq_option('search_context', '');
-		if (is_array($context)) {
-			$context = implode(',', $context);
+		$context = sq_option( 'search_context', '' );
+		if ( is_array( $context ) ) {
+			$context = implode( ',', $context );
 		}
 
 		//Defaults
-		$action = home_url('/');
-		$hidden = '';
+		$action     = home_url( '/' );
+		$hidden     = '';
 		$input_name = 's';
-		if (function_exists('bp_is_active') && $context == 'members') {
+		if ( function_exists( 'bp_is_active' ) && $context == 'members' ) {
 			//Buddypress members form link
 			$action = bp_get_members_directory_permalink();
 
-		} elseif (function_exists('bp_is_active') && bp_is_active('groups') && $context == 'groups') {
+		} elseif ( function_exists( 'bp_is_active' ) && bp_is_active( 'groups' ) && $context == 'groups' ) {
 			//Buddypress group directory link
 			$action = bp_get_groups_directory_permalink();
 
-		} elseif (class_exists('bbPress') && $context == 'forum') {
-			$action = bbp_get_search_url();
+		} elseif ( class_exists( 'bbPress' ) && $context == 'forum' ) {
+			$action     = bbp_get_search_url();
 			$input_name = 'bbp_search';
 
-		} elseif ($context == 'product') {
+		} elseif ( $context == 'product' ) {
 			$hidden .= '<input type="hidden" name="post_type" value="product">';
+			$action     = home_url( '/' ) . '?post_type=product';
 		}
 
 
@@ -517,12 +542,12 @@ if ( ! function_exists( 'kleo_get_search_menu_item' ) ) {
 		<a class="search-trigger" href="#"><i class="icon icon-search"></i></a>
 		<div class="kleo-search-wrap searchHidden" id="ajax_search_container">
 			<form class="form-inline" id="ajax_searchform" action="<?php echo $action; ?>"
-				  data-context="<?php echo $context; ?>">
+			      data-context="<?php echo $context; ?>">
 				<?php echo $hidden; ?>
 				<input name="<?php echo $input_name; ?>" class="ajax_s form-control" autocomplete="off" type="text"
-					   value="<?php if (isset($_REQUEST['s'])) {
-						   echo esc_attr($_REQUEST['s']);
-					   } ?>" placeholder="<?php _e("Start typing to search...", "kleo_framework"); ?>">
+				       value="<?php if ( isset( $_REQUEST['s'] ) ) {
+					       echo esc_attr( $_REQUEST['s'] );
+				       } ?>" placeholder="<?php _e( "Start typing to search...", "kleo_framework" ); ?>">
 				<span class="kleo-ajax-search-loading"><i class="icon-spin6 animate-spin"></i></span>
 			</form>
 			<div class="kleo_ajax_results"></div>
@@ -551,8 +576,8 @@ if ( ! function_exists( 'kleo_ajax_search' ) ) {
 			$search_string = $_REQUEST['s'];
 		}
 
-		$output   = "";
-		$context  = "any";
+		$output   = '';
+		$context  = 'any';
 		$defaults = array(
 			'numberposts'      => 4,
 			'posts_per_page'   => 20,
@@ -560,26 +585,31 @@ if ( ! function_exists( 'kleo_ajax_search' ) ) {
 			'post_status'      => 'publish',
 			'post_password'    => '',
 			'suppress_filters' => false,
-			's'                => $_REQUEST['s']
+			's'                => $_REQUEST['s'],
 		);
 
-		if ( isset( $_REQUEST['context'] ) && $_REQUEST['context'] != '' ) {
-			$context               = explode( ",", $_REQUEST['context'] );
+		if ( isset( $_REQUEST['context'] ) && '' != $_REQUEST['context'] ) {
+			$context               = explode( ',', $_REQUEST['context'] );
 			$defaults['post_type'] = $context;
 		}
+		//Remove forum since it is handled with a different function
 		if ( ! empty( $defaults['post_type'] ) && is_array( $defaults['post_type'] ) ) {
 			foreach ( $defaults['post_type'] as $ptk => $ptv ) {
-				if ( $ptv == 'forum' ) {
+				if ( 'forum' == $ptv ) {
 					unset( $defaults['post_type'][ $ptk ] );
 					break;
 				}
 			}
 		}
+		if ( empty( $defaults['post_type'] ) ) {
+			$posts = null;
+		} else {
 
-		$defaults = apply_filters( 'kleo_ajax_query_args', $defaults );
+			$defaults = apply_filters( 'kleo_ajax_query_args', $defaults );
 
-		$the_query = new WP_Query( $defaults );
-		$posts     = $the_query->get_posts();
+			$the_query = new WP_Query( $defaults );
+			$posts     = $the_query->get_posts();
+		}
 
 		$members          = array();
 		$members['total'] = 0;
@@ -592,7 +622,7 @@ if ( ! function_exists( 'kleo_ajax_search' ) ) {
 			$members = bp_core_get_users( array(
 				'search_terms'    => $search_string,
 				'per_page'        => $defaults['numberposts'],
-				'populate_extras' => false
+				'populate_extras' => false,
 			) );
 		}
 
@@ -600,7 +630,7 @@ if ( ! function_exists( 'kleo_ajax_search' ) ) {
 			$groups = groups_get_groups( array(
 				'search_terms'    => $search_string,
 				'per_page'        => $defaults['numberposts'],
-				'populate_extras' => false
+				'populate_extras' => false,
 			) );
 		}
 
@@ -684,6 +714,7 @@ if ( ! function_exists( 'kleo_ajax_search' ) ) {
 
 		//if there are posts
 		if ( ! empty( $posts ) ) {
+			$post_type_str = array();
 			$post_types    = array();
 			$post_type_obj = array();
 			foreach ( $posts as $post ) {
@@ -703,6 +734,7 @@ if ( ! function_exists( 'kleo_ajax_search' ) ) {
 				$count = 0;
 				foreach ( $post_type as $post ) {
 
+					$post_type_str[$post->post_type] = $post->post_type;
 					$count ++;
 					if ( $count > 4 ) {
 						continue;
@@ -748,7 +780,18 @@ if ( ! function_exists( 'kleo_ajax_search' ) ) {
 				$output .= '</div>';
 			}
 
-			$output .= "<a class='ajax_view_all' href='" . esc_url( home_url( '/' ) . '?s=' . $search_string ) . "'>" . __( 'View all results', 'kleo_framework' ) . "</a>";
+			if ( ! empty( $post_type_str ) ) {
+				if ( count( $post_type_str ) > 1 ) {
+					$search_str_posts = '&post_type[]=' . implode( ',', $post_type_str );
+				} else {
+					$search_str_posts = '&post_type=' . implode( ',', $post_type_str );
+				}
+
+			} else {
+				$search_str_posts = '';
+			}
+
+			$output .= "<a class='ajax_view_all' href='" . esc_url( home_url( '/' ) . '?s=' . $search_string ) . $search_str_posts . "'>" . __( 'View all results', 'kleo_framework' ) . "</a>";
 		}
 
 		/* Forums topics search */
@@ -1635,56 +1678,6 @@ if ( defined( 'WP_INSTALLING' ) && WP_INSTALLING == true ) {
 }
 
 
-/**
- * Translate column proportions to classes
- *
- * @param string $width
- *
- * @return string
- */
-function kleo_translateColumnWidth( $width ) {
-	if ( preg_match( '/^(\d{1,2})\/12$/', $width, $match ) ) {
-		$w = 'vc_col-sm-' . $match[1];
-	} else {
-		$w = 'vc_col-sm-';
-		switch ( $width ) {
-			case "1/6" :
-				$w .= '2';
-				break;
-			case "1/4" :
-				$w .= '3';
-				break;
-			case "1/3" :
-				$w .= '4';
-				break;
-			case "1/2" :
-				$w .= '6';
-				break;
-			case "2/3" :
-				$w .= '8';
-				break;
-			case "3/4" :
-				$w .= '9';
-				break;
-			case "5/6" :
-				$w .= '10';
-				break;
-			case "1/1" :
-				$w .= '12';
-				break;
-			/* custom 5 columns */
-			case "1/5" :
-				$w = 'col-sm-1-5';
-				break;
-
-			default :
-				$w = $width;
-		}
-	}
-
-	return $w;
-}
-
 
 /**
  * GET CUSTOM POST TYPE TAXONOMY LIST
@@ -2483,10 +2476,7 @@ if ( ! function_exists( 'kleo_get_schema_org_markup' ) ) {
 
 	function kleo_get_schema_org_markup() {
 		$schema = 'http://schema.org/';
-		// If woocommerce product
-		if ( function_exists( 'is_woocommerce' ) && is_woocommerce() ) {
-			$type = 'Product';
-		} elseif ( is_singular( 'post' ) ) {
+		if ( is_singular( 'post' ) ) {
 			$type = "Article";
 		} elseif ( is_singular( 'portfolio' ) ) {
 			$type = "VisualArtwork";

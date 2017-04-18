@@ -248,14 +248,10 @@ switch ( $type ) {
 		$bg_cover      = apply_filters( 'kleo_sanitize_flag', $bg_cover );
 		$bg_attachment = in_array( $bg_attachment, array( 'false', 'fixed', 'true' ) ) ? $bg_attachment : 'false';
 
+		$bg_image_path = array();
 		if ( $bg_image && ! in_array( $bg_image, array( 'none' ) ) ) {
 
-			if ( is_numeric( $bg_image ) ) {
-				$bg_image_path = wp_get_attachment_image_src( $bg_image, 'full' );
-			} else {
-				$bg_image_path = array();
-				$bg_image_path[0] = $bg_image;
-			}
+			$bg_image_path = wp_get_attachment_image_src( $bg_image, 'full' );
 
 			if ( null == $bg_image_path ) {
 				$bg_image_path[0] = get_template_directory_uri() . '/assets/img/row_bg.jpg';
@@ -263,6 +259,7 @@ switch ( $type ) {
 
 			$my_style[] = 'background-image: url(' . esc_url( $bg_image_path[0] ) . ')';
 		}
+
 		if ( $bg_color ) {
 			$my_style[] = 'background-color: ' . $bg_color;
 		}

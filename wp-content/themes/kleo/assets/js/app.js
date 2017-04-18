@@ -1272,7 +1272,7 @@ function activate_shortcode_scripts(container) {
 
         });
 
-    }
+    };
 
     window.kleoAnimFrame = (function () {
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
@@ -1303,7 +1303,7 @@ function activate_shortcode_scripts(container) {
 
 
         });
-    }
+    };
 
 
 // -------------------------------------------------------------------------------------------
@@ -1324,7 +1324,7 @@ function activate_shortcode_scripts(container) {
                 });
             });
         });
-    }
+    };
 
 
 // -------------------------------------------------------------------------------------------
@@ -1557,6 +1557,54 @@ var KLEO = KLEO || {};
                 });
             }
 
+            var ajaxPortfolioWrap = $('.ajax-filter-wrap');
+            if ( ajaxPortfolioWrap.length ) {
+	            ajaxPortfolioWrap.find('a').on('click', function() {
+		            var wrap = $(this).closest('.ajax-filter-wrap');
+
+	            	if ($(this).parent('li').hasClass('all') && kleoPage.portfolioInitialContent != '') {
+			            wrap.siblings('.portfolio-wrapper').html(kleoPage.portfolioInitialContent);
+			            $(this).closest('ul').find('li').removeClass('selected');
+			            $(this).parent('li').addClass('selected');
+		            }
+		            if ( $(this).attr('data-id')) {
+
+		            	var data = {
+		            		catId : $(this).data('id'),
+				            pItem: wrap.find('input[name=pitem]').val(),
+				            postId: wrap.find('input[name=post_id]').val(),
+				            security: wrap.find('#portfolio-security').val(),
+				            filterEl: this,
+				            itemsWrap: wrap.siblings('.portfolio-wrapper'),
+				            url: ''
+			            };
+
+			            kleoPage.ajaxPortfolio(data);
+
+		            }
+		            return false;
+	            });
+            }
+
+			$('body').on('click', '.portfolio-wrapper .pagination-wrap a', function() {
+				var wrap = $(this).closest('.portfolio-wrapper');
+				var data = {};
+				if ( wrap.siblings('.ajax-filter-wrap').find('li.selected a').attr('data-id')) {
+					data.catId = wrap.siblings('.ajax-filter-wrap').find('li.selected a').data('id');
+				}
+
+				data.pItem = wrap.siblings('.ajax-filter-wrap').find('input[name=pitem]').val();
+				data.postId =  wrap.siblings('.ajax-filter-wrap').find('input[name=post_id]').val();
+				data.security = wrap.siblings('.ajax-filter-wrap').find('#portfolio-security').val();
+				data.filterEl = this;
+				data.itemsWrap = wrap;
+				data.url = $(this).attr('href');
+
+
+				kleoPage.ajaxPortfolio(data);
+				return false;
+			});
+
             $('a.kleo-login-switch').on('click', function () {
                 var thisParent = $(this).parent().parent().parent();
                 thisParent.find('.lostpass-form-inline').slideUp(100, function () {
@@ -1578,21 +1626,65 @@ var KLEO = KLEO || {};
 
             /* Blog switch layout */
             kleoPage.switchBlogLayout();
-
-
         },
+
+	    portfolioInitialContent : '',
+	    ajaxPortfolio: function(data) {
+
+	        $.ajax({
+		        type: "POST",
+		        url: kleoFramework.ajaxurl,
+		        data: {
+		            action: 'portfolio_items',
+			        pid: data.catId,
+			        pitem: data.pItem,
+			        post_id: data.postId,
+			        security: data.security,
+			        url: data.url
+		        },
+		        success: function (response) {
+		            if ( response.hasOwnProperty('data') && response.data.hasOwnProperty('message') ) {
+
+		            	if (data.hasOwnProperty('filterEl')) {
+				            $(data.filterEl).closest('ul').find('li').removeClass('selected');
+				            $(data.filterEl).parent('li').addClass('selected');
+			            }
+
+						if ( kleoPage.portfolioInitialContent == '' ) {
+							kleoPage.portfolioInitialContent = data.itemsWrap.html();
+						}
+
+			            data.itemsWrap.replaceWith(response.data.message);
+				        kleoPage.bannerSlider();
+				        $('.animate-when-almost-visible').kleo_waypoints({offset: '90%'});
+				        $(".kleo-video-embed").fitVids();
+				        kleoIsotope.applyGridIsotpe(".kleo-masonry");
+			        }
+
+		        },
+		        error: function (errorThrown) {
+			        console.log(errorThrown);
+		        }
+	        });
+
+	    },
         refreshContentTabs: function (el) {
+
+        	//compatibility with multiple modules
+	        $(window).trigger('resize');
+
             //carousels
-            $('.kleo-carousel, .kleo-banner-items').trigger('updateSizes');
+            //$('.kleo-carousel, .kleo-banner-items').trigger('updateSizes');
             //masonry
-            kleoIsotope.init();
+            //kleoIsotope.init();
+
             //google maps
-            var $google_maps = $(el).find(".wpb_gmaps_widget");
+           /* var $google_maps = $(el).find(".wpb_gmaps_widget");
             if ($google_maps.length && !$google_maps.is('.map_ready')) {
                 var $google_maps_frame = $google_maps.find('iframe');
                 $google_maps_frame.attr('src', $google_maps_frame.attr('src'));
                 $google_maps.addClass('map_ready');
-            }
+            }*/
 
             //pie & line & round charts
             var panel = $('.kleo-tabs, .panel-body');
@@ -1773,7 +1865,7 @@ var KLEO = KLEO || {};
                             setTimeout(function () {
                                 thisSliderItems.trigger('updateSizes');
                             }, 600);
-                        },
+                        }
                     });
                 });
             });
@@ -1923,22 +2015,25 @@ var KLEO = KLEO || {};
                                 setTimeout(function () {
                                     $thumbsCarousel.trigger('updateSizes');
                                 }, 600);
-                            },
+                            }
                         });
                     });
                 });
             }
 
-            $('.kleo-thumbs-carousel a').click(function () {
+            $('.kleo-thumbs-carousel a').click(function (e) {
                 $(this).closest('.kleo-gallery-container').find('.kleo-gallery-image').trigger('slideTo', '#' + this.href.split('#').pop());
                 $('.kleo-thumbs-carousel a').removeClass('selected');
                 $(this).addClass('selected');
+	            e.preventDefault();
                 return false;
             });
 
-            if ($(".kleo-gallery-image").length) {
-                $('.kleo-gallery-image').imagesLoaded(function () {
-                    $('.kleo-gallery-image').carouFredSel({
+            var kleoGalleryImage = $(".kleo-gallery-image");
+
+            if (kleoGalleryImage.length) {
+	            kleoGalleryImage.imagesLoaded(function () {
+		            kleoGalleryImage.carouFredSel({
                         responsive: true,
                         circular: false,
                         auto: false,
@@ -1951,7 +2046,7 @@ var KLEO = KLEO || {};
                             fx: 'crossfade'
                         }
                     });
-                    $('.kleo-gallery-image').swipe({
+		            kleoGalleryImage.swipe({
                         excludedElements: "",
                         threshold: 40,
                         swipeLeft: function () {
@@ -1965,7 +2060,7 @@ var KLEO = KLEO || {};
                             setTimeout(function () {
                                 $('.kleo-gallery-image').trigger('updateSizes');
                             }, 600);
-                        },
+                        }
                     });
                 });
             }
@@ -2156,28 +2251,7 @@ var KLEO = KLEO || {};
                 }
             });
 
-            /* Lost Pass modal */
-            $('.kleo-show-lostpass').magnificPopup({
-                items: {
-                    src: '#kleo-lostpass-modal',
-                    type: 'inline',
-                    focus: '#forgot-email'
-                },
-                preloader: false,
-                mainClass: 'kleo-mfp-zoom',
-
-                // When elemened is focused, some mobile browsers in some cases zoom in
-                // It looks not nice, so we disable it:
-                callbacks: {
-                    beforeOpen: function () {
-                        if ($(window).width() < 700) {
-                            this.st.focus = false;
-                        } else {
-                            this.st.focus = '#forgot-email';
-                        }
-                    }
-                }
-            });
+	        kleoPage.lostPassMagnific();
 
             /* Register modal */
             $('.kleo-show-register').magnificPopup({
@@ -2202,6 +2276,32 @@ var KLEO = KLEO || {};
                 }
             });
         },
+
+        lostPassMagnific: function() {
+	        /* Lost Pass modal */
+	        $('.kleo-show-lostpass').magnificPopup({
+		        items: {
+			        src: '#kleo-lostpass-modal',
+			        type: 'inline',
+			        focus: '#forgot-email'
+		        },
+		        preloader: false,
+		        mainClass: 'kleo-mfp-zoom',
+
+		        // When element is focused, some mobile browsers in some cases zoom in
+		        // It looks not nice, so we disable it:
+		        callbacks: {
+			        beforeOpen: function () {
+				        if ($(window).width() < 700) {
+					        this.st.focus = false;
+				        } else {
+					        this.st.focus = '#forgot-email';
+				        }
+			        }
+		        }
+	        });
+        },
+
         magnificPopupGallery: function () {
 
             /* Regular popup images */
@@ -2215,10 +2315,13 @@ var KLEO = KLEO || {};
                     titleSrc: function(item) {
                         if($(item.el).next('figcaption').length){
                             return $(item.el).next('figcaption').html();
+                        } else if($(item.el).attr('data-caption')) {
+                             return $(item.el).data('caption');
                         } else {
                             return '';
                         }
                     }
+
                     // this tells the script which attribute has your caption
                 }
             });
@@ -2227,7 +2330,7 @@ var KLEO = KLEO || {};
 
             var modalElements = "a[href$=jpg], a[href$=JPG], a[href$=jpeg], a[href$=JPEG], a[href$=png], a[href$=PNG], a[href$=gif], a[href$=GIF], a[href$=bmp], a[href$=BMP]";
 
-            $('.gallery, .modal-gallery, .kleo-gallery, .kleo-gallery-grid').each(function () {
+            $('.gallery, .modal-gallery, .kleo-gallery:not(.kleo-no-popup), .kleo-gallery-grid').each(function () {
                 if ($(this).find(modalElements).length && $(this).find(modalElements).has('img')) {
                     $(this).magnificPopup({
                         delegate: modalElements,
@@ -2365,6 +2468,7 @@ var KLEO = KLEO || {};
                     },
                     success: function (data) {
                         $('#kleo-lost-result').html(data);
+                        kleoPage.lostPassMagnific();
                     },
                     error: function () {
                         $('#kleo-lost-result').html('Sorry, an error occurred.').css('color', 'red');
@@ -2512,7 +2616,6 @@ var KLEO = KLEO || {};
                     bP.notificationsRefresh();
                 }
             }
-
         },
 
         notificationsRefresh: function () {
@@ -2867,8 +2970,8 @@ var KLEO = KLEO || {};
                 });
 
                 /* filter items on button click */
-                if ($isoItem.prev(".filter-wrap").length) {
-                    var filterButton = $isoItem.prev(".filter-wrap");
+	            var filterButton = $isoItem.closest('.portfolio-wrapper').siblings(".filter-wrap");
+                if (filterButton.length) {
                     filterButton.on('click', "a", function () {
                         var filterValue = $(this).data('filter');
                         $(this).closest('ul').find('li').removeClass('selected');
@@ -3069,11 +3172,17 @@ var KLEO = KLEO || {};
                         $(window).on("debouncedresize", kleoHeader.resizeLogo);
 
                     } else if ($("body.kleo-navbar-fixed.navbar-transparent").length) {
+                    	/* when transparent is selected but not resizable */
+
                         /* apply header-scrolled class for transparent navbar too */
 
                         var st = $window.scrollTop();
+	                    var resizePoint = 50;
+	                    if (kleoFramework.hasOwnProperty('headerResizeOffset') && kleoFramework.headerResizeOffset != '') {
+		                    resizePoint = kleoFramework.headerResizeOffset;
+	                    }
 
-                        if (st > 50) {
+                        if (st > resizePoint) {
                             kleoHeader.header.addClass('header-scrolled');
                         } else {
                             kleoHeader.header.removeClass('header-scrolled');
@@ -3081,7 +3190,7 @@ var KLEO = KLEO || {};
 
                         $window.scroll(function () {
                             var st = $window.scrollTop();
-                            if (st > 50) {
+                            if (st > resizePoint) {
                                 kleoHeader.header.addClass('header-scrolled');
                             } else {
                                 kleoHeader.header.removeClass('header-scrolled');
@@ -3104,10 +3213,10 @@ var KLEO = KLEO || {};
             kleoHeader.topSocialExpander();
 
             //enable menu Ajax search button
-            if ($('.kleo_ajax_results').length) {
+            if ($('.search-trigger').length) {
                 kleoHeader.toggleAjaxSearch();
-                kleoHeader.doAjaxSearch();
             }
+	        kleoHeader.doAjaxSearch();
 
             // Activate Hover menu
             if (kleoIsotope.viewport().width > 992) {
@@ -3133,15 +3242,15 @@ var KLEO = KLEO || {};
             kleoHeader.sideMenu();
 
             /* Flexmenu logic */
-            if (kleoFramework.hasOwnProperty('flexMenuEnabled') && kleoFramework.flexMenuEnabled == 1) {
-                $(body).on('flexmenu-added', function () {
+            if ( body.hasClass('header-flexmenu') ) {
+                body.on('flexmenu-added', function () {
                     kleoHeader.resizeLogo();
                 });
-                $(body).on('flexmenu-finished', function () {
-                    $('body').removeClass('header-overflow');
+                body.on('flexmenu-finished', function () {
+                    body.removeClass('header-overflow');
                 });
-                $(body).on('flexmenu-beforeResize', function () {
-                    $(body).addClass('header-overflow');
+                body.on('flexmenu-beforeResize', function () {
+                    body.addClass('header-overflow');
                 });
 
                 $('.primary-menu > ul').flexMenu({
@@ -3209,7 +3318,7 @@ var KLEO = KLEO || {};
             var st = $window.scrollTop(),
                 newH = 0,
                 newMenuH = 0,
-                headerFinishScrolling = parseInt(scrollPoint) + parseInt(kleoHeader.initialSize) + parseInt(kleoHeader.scrolledHeight),
+                headerFinishScrolling = parseInt(scrollPoint) + parseInt(kleoHeader.initialSize) - parseInt(kleoHeader.scrolledHeight),
                 headerIsScrolled = false,
                 resizeRatio = 1,
                 currentState = 'normal';
@@ -3384,7 +3493,7 @@ var KLEO = KLEO || {};
                 var topHeight = 0;
 
                 if ($("body").hasClass("kleo-navbar-fixed")) {
-                    topHeight += kleoHeader.initialSize;
+                    topHeight += parseInt(kleoHeader.initialSize);
 
                     if ($("body").hasClass("navbar-resize")) {
                         topHeight = topHeight / 2;
@@ -3392,7 +3501,7 @@ var KLEO = KLEO || {};
                 }
 
                 if ($(kleoHeader.adminBar).length) {
-                    topHeight += $(kleoHeader.adminBar).height();
+                    topHeight += parseInt($(kleoHeader.adminBar).height());
                 }
 
                 if (target.length) {
@@ -3468,7 +3577,7 @@ var KLEO = KLEO || {};
                 delay: 350,                //delay in ms for typing
                 minChars: 3,               //no. of characters after we start the search
                 scope: 'body'
-            }
+            };
 
             this.options = $.extend({}, defaults, options);
             this.scope = $(this.options.scope);
@@ -3818,8 +3927,8 @@ var KLEO = KLEO || {};
     /***************************************************
      GLOBAL VARIABLES
      ***************************************************/
-    var $window = jQuery(window),
-        body = jQuery('body'),
+    var $window = $(window),
+        body = $('body'),
         deviceAgent = navigator.userAgent.toLowerCase(),
         isMobile = deviceAgent.match(/(iphone|ipod|ipad|android|iemobile)/);
 
@@ -3866,6 +3975,9 @@ var KLEO = KLEO || {};
     kleoPage.notReadyInit();
     jQuery(document).ready(onReady.init);
     jQuery(window).load(onLoad.init);
+
+
+
 
 })(jQuery);
 
