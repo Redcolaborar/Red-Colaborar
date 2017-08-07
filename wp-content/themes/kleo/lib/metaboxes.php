@@ -103,14 +103,14 @@ function kleo_metaboxes( array $meta_boxes ) {
 				'value' => '1',
 			),
 			array(
-				'name'  => esc_html__( 'Transparent Main menu', 'kleo_framework' ),
-				'desc'  => esc_html__( 'Check to have Main menu background transparent.', 'kleo_framework' ),
+				'name'  => esc_html__( 'Transparent Header', 'kleo_framework' ),
+				'desc'  => esc_html__( 'Check to have Main Header with transparent background.', 'kleo_framework' ),
 				'id'    => $prefix . 'transparent_menu',
 				'type'  => 'checkbox',
 				'value' => '1',
 			),
 			array(
-				'name'    => esc_html__( 'Transparent Main menu color', 'kleo_framework' ),
+				'name'    => esc_html__( 'Transparent Header - Menu color', 'kleo_framework' ),
 				'desc'    => '',
 				'id'      => $prefix . 'transparent_menu_color',
 				'type'    => 'select',

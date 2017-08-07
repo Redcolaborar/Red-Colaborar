@@ -972,7 +972,7 @@ function kleo_body_classes( $classes = array() ) {
 	}
 
 	if ( ( sq_option( 'sticky_menu', 1 ) == 1 && sq_option( 'transparent_logo', 1 ) == 1 )
-	     || ( is_singular() && get_cfield( 'transparent_menu' ) )
+	     || ( ( is_singular() || ( is_home() && get_option( 'page_for_posts' ) ) ) && get_cfield( 'transparent_menu' ) )
 	) {
 		$classes[] = 'navbar-transparent';
 
@@ -1009,6 +1009,11 @@ function kleo_body_classes( $classes = array() ) {
 	$header_style = sq_option( 'header_layout', 'normal' );
 	if ( 'left_logo' == $header_style || 'center_logo' == $header_style ) {
 		$classes[] = 'header-two-rows';
+	}
+
+	/* Stick footer */
+	if ( 1 == sq_option( 'footer_bottom', 0 ) ) {
+		$classes[] = 'footer-bottom';
 	}
 
 	return $classes;
@@ -1258,6 +1263,26 @@ function kleo_load_combined_files() {
 		wp_register_style( 'kleo-combined', get_template_directory_uri() . '/assets/css/' . $combined_file . $min . '.css', array(), $version, 'all' );
 		wp_enqueue_style( 'kleo-combined' );
 	}
+}
+
+/* Remove all query strings from all static resources */
+
+if ( sq_option( 'perf_remove_query', 0 ) == 1 ) {
+
+	function pre_remove_query_strings_static_resources()
+	{
+		function remove_cssjs_ver($src)
+		{
+			if (strpos($src, '?ver='))
+				$src = remove_query_arg('ver', $src);
+			return $src;
+		}
+
+		add_filter('style_loader_src', 'remove_cssjs_ver', 10, 2);
+		add_filter('script_loader_src', 'remove_cssjs_ver', 10, 2);
+	}
+
+	add_action('init', 'pre_remove_query_strings_static_resources');
 }
 
 function kleo_add_inline_js_helper_classes() {

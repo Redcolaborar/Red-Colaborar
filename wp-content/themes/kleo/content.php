@@ -69,7 +69,9 @@ if ( $is_single && get_cfield( 'centered_text' ) == 1 ) {
 			<?php echo kleo_excerpt( 50 ); ?>
 			<p class="kleo-continue">
 				<a class="btn btn-default"
-				   href="<?php the_permalink() ?>"><?php esc_html_e( 'Continue reading', 'kleo_framework' ); ?></a>
+				   href="<?php the_permalink() ?>">
+					<?php esc_html_e( sq_option( 'continue_reading_blog_text', 'Continue reading' ), 'kleo_framework' ); ?>
+				</a>
 			</p>
 
 		<?php else : ?>

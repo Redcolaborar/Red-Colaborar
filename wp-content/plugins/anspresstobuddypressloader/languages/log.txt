@@ -1,3 +1,0 @@
-18/04/2017 10:06:49: C:\Users\me\AppData\Local\Temp\poeCD5F.tmp\ref.pot:84: definición del mensaje duplicada...
-18/04/2017 10:06:49: C:\Users\me\AppData\Local\Temp\poeCD5F.tmp\ref.pot:73: ...esta es la localización de la primera definición
-18/04/2017 10:06:49: C:\Program Files (x86)\Poedit\GettextTools\bin\msgmerge.exe: se encontró 1 error fatal

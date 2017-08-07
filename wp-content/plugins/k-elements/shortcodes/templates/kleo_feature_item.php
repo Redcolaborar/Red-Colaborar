@@ -10,7 +10,7 @@
  */
 
 
-$output = $icon = $icon_size = $icon_position = $class = '';
+$output = $title = $icon = $icon_size = $icon_position = $class = '';
 extract( shortcode_atts( array(
 		'title' => '',
 		'href' => '',
@@ -18,13 +18,19 @@ extract( shortcode_atts( array(
 		'icon_size' => 'default',
 		'icon_position' => 'left',
 		'icon_color' => '',
-		'class' => ''
+		'class' => '',
 ), $atts ) );
+
+global $kleo_grid_font_size;
+$title_attr = '';
+if ( '' != $kleo_grid_font_size ) {
+	$title_attr = ' style="font-size: ' . kleo_set_default_unit( $kleo_grid_font_size ) . ' !important;"';
+}
 
 $class = ( $class != '' ) ? 'kleo-block feature-item list-el-animated ' . esc_attr( $class ) : 'kleo-block feature-item list-el-animated';
 
 $icon = str_replace( 'icon-', '', $icon );
-$icon = ( $icon !='' ) ? ' icon-' . $icon : '';
+$icon = ( $icon != '' ) ? ' icon-' . $icon : '';
 
 $class .= ($icon_size !='') ? " " . $icon_size . '-icons-size' : '';
 $class .= ($icon_position == 'center') ? " center-icons" : '';
@@ -33,9 +39,9 @@ if( $href != '' ){
 	$class .= ' kleo-open-href';
 }
 
-$output .= '<div class="' . $class . '"'.( $href != '' ? 'data-href="'.esc_attr(esc_url($href)) . '"' : '' ).'>';
-$output .= '<span class="feature-icon el-appear' . $icon . '"'.( $icon_color != '' ? 'style="color:'.$icon_color.'"' : '' ).'></span>';
-$output .= '<h3 class="feature-title">' . $title . '</h3>';
+$output .= '<div class="' . $class . '"' . ( $href != '' ? 'data-href="' . esc_attr( esc_url( $href ) ) . '"' : '' ) . '>';
+$output .= '<span class="feature-icon el-appear' . $icon . '"' . ( $icon_color != '' ? 'style="color:' . $icon_color . '"' : '' ) . '></span>';
+$output .= '<h3 class="feature-title"' . $title_attr . '>' . $title . '</h3>';
 $output .= '<div class="feature-text">' . do_shortcode( $content ) . '</div>';
 $output .= '</div>';
 

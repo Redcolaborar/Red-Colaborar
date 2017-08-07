@@ -91,7 +91,7 @@ function kleo_get_required_plugins() {
 			// The plugin source
 			'required'           => true,
 			// If false, the plugin is only 'recommended' instead of required
-			'version'            => '4.2.2',
+			'version'            => '4.2.6',
 			// E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation'   => false,
 			// If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
@@ -368,7 +368,7 @@ add_action( 'tgmpa_register', array( $kleo_theme, 'required_plugins' ) );
  */
 function kleo_get_plugin_src( $name, $version, $external_only = true ) {
 
-	$online_version = kleo_get_plugin_version( $name, $version );
+	$online_version = kleo_get_plugin_version( $name, $version, false );
 
 	if ( true === $external_only || version_compare( $online_version, $version, '>' ) ) {
 		$output = 'http://updates.seventhqueen.com/check/kleo/' . $name . '.zip';
@@ -387,14 +387,16 @@ function kleo_get_plugin_src( $name, $version, $external_only = true ) {
  * @return mixed|string
  */
 function kleo_get_plugin_version( $name, $version, $reset_transient = false ) {
-
+	
+	$force_remote_check = false;
+	//$transient = 60*60*24*7;
+	$transient = 0;
 	if ( true === $reset_transient ) {
-		delete_transient( 'kleo_' . $name );
+		$force_remote_check = true;
 	}
-
 	$final_version = $version;
 
-	if ( get_transient( 'kleo_' . $name ) ) {
+	if ( $force_remote_check == false && get_transient( 'kleo_' . $name ) ) {
 		$final_version = get_transient( 'kleo_' . $name );
 	} else {
 		$version_get = wp_remote_get( 'http://updates.seventhqueen.com/check/kleo/plugin_version.php?name=' . $name );
@@ -406,7 +408,8 @@ function kleo_get_plugin_version( $name, $version, $reset_transient = false ) {
 			if ( ! is_wp_error( $url_version ) ) {
 				$final_version = $url_version;
 
-				set_transient( 'kleo_' . $name, $url_version, 86400 );
+				//set transient for 1 week
+				set_transient( 'kleo_' . $name, $url_version, $transient );
 			}
 		}
 	}

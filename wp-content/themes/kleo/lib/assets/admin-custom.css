@@ -188,6 +188,10 @@ select .fade, select.fade {
     clear: both;
 }
 
+.vc_wrapper-param-type-sq_hidden {
+    display:none;
+}
+
 
 /* New added */
 

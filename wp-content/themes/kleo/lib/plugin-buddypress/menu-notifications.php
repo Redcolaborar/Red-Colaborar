@@ -12,14 +12,6 @@ function kleo_add_notifications_nav_item( $menu_items ) {
   return $menu_items;
 }
 
-/* Localize refresh interval to JavaScript app.js */
-add_filter( 'kleo_localize_app', 'kleo_bp_notif_refresh_int' );
-function kleo_bp_notif_refresh_int( $data ) {
-    $data['bpNotificationsRefresh'] = sq_option( 'bp_notif_interval', 20000 );
-
-    return $data;
-}
-
 
 add_filter('kleo_setup_nav_item_notifications' , 'kleo_setup_notifications_nav');
 function kleo_setup_notifications_nav( $menu_item ) {
@@ -166,44 +158,40 @@ function kleo_bp_notification_mark_read() {
 }
 
 
-/* Refresh notfications by AJAX */
-add_action('wp_ajax_kleo_bp_notifications_refresh', 'kleo_bp_notifications_refresh');
-
-function kleo_bp_notifications_refresh() {
-  $response = array();
-  
-  if ( ! isset( $_GET['current'] ) ) {
-    $response['status'] = 'failure';
-    echo json_encode( $response );
-    exit;
-  }
-  
-  $old_count = (int) $_GET['current'];
-  
-  $notifications = bp_notifications_get_notifications_for_user( bp_loggedin_user_id(), 'object' );
-  $count         = ! empty( $notifications ) ? count( $notifications ) : 0;
-
-  if ( $count == $old_count ) {
-    $response['status'] = 'no_change';
-    echo json_encode( $response );
-    exit;
-  }
-  
-  $output = '';
-
-  if ( !empty( $notifications ) ) {
-    foreach ( (array)$notifications as $notification ) {
-      $output .='<li class="kleo-submenu-item" id="kleo-notification-' . $notification->id . '">';
-      $output .='<a href="' . $notification->href . '">' . $notification->content . '</a>';
-      $output .='</li>';
-    }
-  } else {
-    $output .= '<li class="kleo-submenu-item">' . __( 'No new notifications' , 'kleo_framework' ) . '</li>';
-  }
-  $response['data'] = $output;
-  $response['count']  = $count;
-  $response['status']  = 'success';
-  
-  echo json_encode( $response );
-  exit;
+/* Refresh notifications by AJAX */
+add_filter( 'kleo_bp_ajax_call','kleo_bp_notifications_refresh' );
+function kleo_bp_notifications_refresh( $response ) {
+	
+	if ( ! isset( $_GET['current_notifications'] ) ) {
+		$response['statusNotif'] = 'failure';
+		return $response;
+	}
+	
+	$old_count = (int) $_GET['current_notifications'];
+	
+	$notifications = bp_notifications_get_notifications_for_user( bp_loggedin_user_id(), 'object' );
+	$count         = ! empty( $notifications ) ? count( $notifications ) : 0;
+	
+	if ( $count == $old_count ) {
+		$response['statusNotif'] = 'no_change';
+		return $response;
+	}
+	
+	$output = '';
+	
+	if ( !empty( $notifications ) ) {
+		foreach ( (array)$notifications as $notification ) {
+			$output .='<li class="kleo-submenu-item" id="kleo-notification-' . $notification->id . '">';
+			$output .='<a href="' . $notification->href . '">' . $notification->content . '</a>';
+			$output .='</li>';
+		}
+	} else {
+		$output .= '<li class="kleo-submenu-item">' . esc_html__( 'No new notifications' , 'kleo_framework' ) . '</li>';
+	}
+	$response['dataNotif'] = $output;
+	$response['countNotif']  = $count;
+	$response['statusNotif']  = 'success';
+	
+	return $response;
 }
+

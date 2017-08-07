@@ -3,7 +3,7 @@
  * These scripts are used to edit or delete entries
  * in the myCRED Log.
  * @since 1.4
- * @version 1.2.3
+ * @version 1.2.5
  */
 jQuery(function($) {
 
@@ -334,6 +334,25 @@ jQuery(function($) {
 			mycred_delete_entry( rowtodelete );
 
 		});
+		$( '#mycred-delete-entry-in-editor' ).on( 'click', function(e){
+
+			e.preventDefault();
+
+			// Require user to confirm deletion (if used)
+			if ( myCREDLog.messages.delete_row != '' && ! confirm( myCREDLog.messages.delete ) )
+				return false;
+
+			var deletebutton = $(this);
+			var rowtodelete  = deletebutton.data( 'id' );
+
+			if ( rowtodelete === undefined || rowtodelete == '' )
+				rowtodelete = myCREDRowId;
+			else
+				myCREDRowId = rowtodelete;
+
+			mycred_delete_entry( rowtodelete );
+
+		});
 
 		/**
 		 * Submit New Log Entry
@@ -350,7 +369,7 @@ jQuery(function($) {
 
 	// Checkbox select in table
 	// @see http://stackoverflow.com/questions/19164816/jquery-select-all-checkboxes-in-table
-	$( '#myCRED-wrap form table .check-column input' ).click(function(e){
+	$( '#myCRED-wrap form table thead .check-column input' ).click(function(e){
 		var table= $(e.target).closest('table');
 		$('.check-column input',table).prop( 'checked',this.checked );
 	});

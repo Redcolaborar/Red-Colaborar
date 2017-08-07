@@ -1540,6 +1540,7 @@ echo '.header-two-rows #header .sticky-wrapper { height: ' . $two_row_total . 'p
 echo '@media (max-width: 991px) {.header-two-rows #header .sticky-wrapper { height: auto !important;} }';
 
 echo '.header-banner { line-height: ' . $header_height . 'px;}';
+echo '.header-banner { display: inline-block; vertical-align: middle; float:right;}';
 echo '@media (min-width: 991px) {.header-banner {height: ' . $header_height . 'px;}}';
 
 

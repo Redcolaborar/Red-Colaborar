@@ -10,7 +10,35 @@ if ( bp_is_active('notifications') ) {
     require_once( KLEO_LIB_DIR . '/plugin-buddypress/menu-notifications.php' );
 }
 
+if ( bp_is_active('messages') ) {
+	require_once( KLEO_LIB_DIR . '/plugin-buddypress/menu-messages.php' );
+}
 
+
+/***************************************************
+:: Catch AJAX requests
+ ***************************************************/
+
+add_action( 'wp_ajax_kleo_bp_ajax_call', 'kleo_bp_ajax_call' );
+
+function kleo_bp_ajax_call() {
+	
+	$response = array();
+	$response = apply_filters( 'kleo_bp_ajax_call', $response );
+	
+	if ( ! empty( $response ) ) {
+		echo json_encode( $response );
+	}
+	exit;
+}
+
+/* Localize refresh interval to JavaScript app.js */
+add_filter( 'kleo_localize_app', 'kleo_bp_notif_refresh_int' );
+function kleo_bp_notif_refresh_int( $data ) {
+	$data['bpAjaxRefresh'] = sq_option( 'bp_notif_interval', 20000 );
+	
+	return $data;
+}
 
 /* BuddyPress Avatar in menu item */
 add_filter('kleo_nav_menu_items', 'kleo_add_user_avatar_nav_item' );

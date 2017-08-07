@@ -482,5 +482,6 @@
 .icon-streamline-group { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea08;&nbsp;'); }
 .icon-streamline-hierarchy-business { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea09;&nbsp;'); }
 .icon-streamline-shopping-cart-1 { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xea0a;&nbsp;'); }
+.icon-qq { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf1d6;&nbsp;'); }
 .icon-toggle-off { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf204;&nbsp;'); }
 .icon-toggle-on { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf205;&nbsp;'); }

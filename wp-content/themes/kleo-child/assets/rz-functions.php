@@ -361,7 +361,7 @@ add_action( 'template_redirect', 'rc_only_show_homepage', 1);
 function rc_only_show_homepage() {
 
   $is_logged_in = is_user_logged_in();
-  $slug_no_user = 'home-no-user';
+  $slug_no_user = 'bienvenida';
   $slug_register = 'register';
 
   $page_no_user = get_page_by_path( $slug_no_user , OBJECT );

@@ -1421,6 +1421,9 @@ a .link-icon {
 .kleo-main-header.header-normal > .container .secondary-menu {
   text-align: left;
 }
+.kleo-main-header.header-normal .logo > a {
+  text-align: left;
+}
 .kleo-main-header.header-normal .navbar-collapse {
   padding-right: 0;
 }
@@ -1434,6 +1437,9 @@ a .link-icon {
 }
 .kleo-main-header a.btn-see-through:hover {
   border: 2px solid rgba(0, 0, 0, 0.4);
+}
+.kleo-main-header a.btn-see-through .kleo-main-header a.btn-see-through span.caret:after {
+  top: 14px;
 }
 /* Center Logo & Menu */
 #header .header-centered.kleo-main-header > .container {
@@ -1453,6 +1459,9 @@ a .link-icon {
   float: none;
   display: inline-block;
   margin: 0;
+}
+.header-centered .navbar-header .logo > a {
+  text-align: left;
 }
 .header-centered .primary-menu {
   padding-right: 0;
@@ -2086,7 +2095,7 @@ a.ajax_view_all:after {
 }
 /* Google Search Box in Header */
 .has-google-search-box .sticky-wrapper {
-  z-index: 1601;
+  z-index: 1490;
   position: relative;
 }
 .has-google-search-box li#nav-menu-item-search {
@@ -2104,6 +2113,9 @@ a.ajax_view_all:after {
 .has-google-search-box .gscb_a {
   font-size: 22px;
   line-height: 19px;
+}
+.has-google-search-box .kleo-search-wrap.show_search_pop {
+  padding: 10px;
 }
 /*Menu dropdown toggle*/
 .kleo-toggle-menu {
@@ -2240,7 +2252,7 @@ a.ajax_view_all:after {
   margin-right: 10px;
   position: absolute;
   left: 5px;
-  top: 0;
+  top: 2px;
 }
 .notify-contents {
   /*position: relative;
@@ -2917,6 +2929,41 @@ body.modal-open {
 }
 .tagcloud {
   display: inline-block;
+}
+/* Bottom footer */
+/*.footer-bottom {
+  height: 100%;
+  overflow-y: initial;
+  -webkit-overflow-scrolling: touch;
+
+  .kleo-page {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction: column;
+    -ms-flex-direction: column;
+    -webkit-flex-direction: column;
+    height: 100%;
+
+    #header, #footer {
+      flex-shrink: 0;
+      -webkit-flex-shrink: 0;
+    }
+
+    #main {
+      flex-grow: 1;
+      -webkit-flex-grow: 1;
+    }
+  }
+}*/
+/* IE 10 & 11 bugfix */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .footer-bottom {
+    overflow: visible !important;
+  }
+  .footer-bottom .kleo-page #main {
+    flex: 1 0 auto !important;
+  }
 }
 /* Socket Section */
 #socket {
@@ -4290,6 +4337,9 @@ div .wp-caption {
     width: 100%;
   }
 }
+.posts-load-more {
+  margin-top: 40px;
+}
 /* #Comments */
 #comments-list {
   position: relative;
@@ -4690,7 +4740,7 @@ ul.link-list li {
   border-radius: 3px;
   cursor: pointer;
   /* v.4.1.9 */
-  font-size: small !important;
+  font-size: small;
 }
 .widget_tag_cloud a:hover {
   text-decoration: none;

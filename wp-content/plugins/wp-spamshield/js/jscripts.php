@@ -1,7 +1,7 @@
 <?php
 /**
  *  WP-SpamShield Dynamic JS File
- *  Version: 1.9.9.9.6
+ *  Version: 1.9.15
  */
 
 /* Security Check - BEGIN */
@@ -10,7 +10,8 @@ if(!empty($_GET)||FALSE!==strpos($_SERVER['REQUEST_URI'],'?')||!empty($_SERVER['
 	die('ERROR: This resource will not function with a query string. Remove the query string from the URL and try again.');
 }
 js_wpss_getenv(FALSE,array('REQUEST_METHOD'));global $_WPSS_ENV;
-$request_method=!empty($_SERVER['REQUEST_METHOD'])?$_SERVER['REQUEST_METHOD']:$_WPSS_ENV['REQUEST_METHOD'];
+$request_method=(!empty($_SERVER['REQUEST_METHOD']))?$_SERVER['REQUEST_METHOD']:$_WPSS_ENV['REQUEST_METHOD'];
+$request_method=(!empty($request_method))?js_wpss_casetrans('upper',$request_method):'';
 if(empty($request_method)){$request_method='';}
 if(($request_method!='GET'&&$request_method!='HEAD')){
 	@header('Allow: GET,HEAD',TRUE);
@@ -275,6 +276,7 @@ if(function_exists('header_remove')){@header_remove('Cache-Control');@header_rem
 @header('Expires: Sat, 26 Jul 1997 05:00:00 GMT',TRUE); /* Date in the past */
 @header('Vary: *',TRUE); /* Force no caching */
 @header('Content-Type: application/javascript; charset=UTF-8',TRUE);
+@header('X-Robots-Tag: none',TRUE);
 /* 1e3 = 1000 */
 $content = "function wpss_set_ckh(n,v,e,p,d,s){var t=new Date;t.setTime(t.getTime());if(e){e=e*1e3}var u=new Date(t.getTime()+e);document.cookie=n+'='+escape(v)+(e?';expires='+u.toGMTString()+';max-age='+e/1e3+';':'')+(p?';path='+p:'')+(d?';domain='+d:'')+(s?';secure':'')}function wpss_init_ckh(){wpss_set_ckh('".$ck_key."','".$ck_val."','". (60*60*4) ."','".$ck_dir."','".WPSS_SERVER_NAME."','".$ck_sec."');wpss_set_ckh('".$SJECT."','".$CKON."','". (60*60*1) ."','".$ck_dir."','".WPSS_SERVER_NAME."','".$ck_sec."');}wpss_init_ckh();jQuery(document).ready(function($){var h=\"form[method='post']\";\$(h).submit(function(){\$('<input>').attr('type','hidden').attr('name','".$jq_key."').attr('value','".$jq_val."').appendTo(h);return true;})});"."\n";
 

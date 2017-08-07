@@ -58,6 +58,10 @@ if ( ! empty( $flex_row ) ) {
 	$css_classes[] = ' vc_row-flex';
 }
 
+if ($bg_gradient != '') {
+	$css_classes[] = 'kleo-gradient';
+}
+
 $wrapper_attributes = array();
 // build attributes for wrapper
 if ( ! empty( $el_id ) ) {

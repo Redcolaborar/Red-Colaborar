@@ -26,7 +26,7 @@ if ( $needs_update || ! file_exists ( trailingslashit( $kleo_config['custom_styl
 }
 
 if ( ! is_admin() ) {
-	if ( is_writable( trailingslashit( $kleo_config['upload_basedir'] ) ) ) {
+	if ( wp_is_writable( trailingslashit( $kleo_config['upload_basedir'] ) ) ) {
 		add_action( 'wp_enqueue_scripts', 'kleo_load_dynamic_css', 22 );
 	} else {
 		add_action( 'wp_head', 'kleo_custom_head_css' );

@@ -64,19 +64,19 @@ if(!class_exists('Aq_Resize')) {
             $upload_info = wp_upload_dir();
             $upload_dir = $upload_info['basedir'];
             $upload_url = $upload_info['baseurl'];
-            
+
             $http_prefix = "http://";
             $https_prefix = "https://";
-            
+
             /* if the $url scheme differs from $upload_url scheme, make them match 
                if the schemes differe, images don't show up. */
             if(!strncmp($url,$https_prefix,strlen($https_prefix))){ //if url begins with https:// make $upload_url begin with https:// as well
                 $upload_url = str_replace($http_prefix,$https_prefix,$upload_url);
             }
             elseif(!strncmp($url,$http_prefix,strlen($http_prefix))){ //if url begins with http:// make $upload_url begin with http:// as well
-                $upload_url = str_replace($https_prefix,$http_prefix,$upload_url);      
+                $upload_url = str_replace($https_prefix,$http_prefix,$upload_url);
             }
-            
+
 
             // Check if $img_url is local.
             if ( false === strpos( $url, $upload_url ) ) return false;
@@ -200,16 +200,25 @@ if(!function_exists('aq_resize')) {
      */
     function aq_resize( $url, $width = null, $height = null, $crop = null, $single = true, $upscale = false ) {
         $aq_resize = Aq_Resize::getInstance();
+        
+        $original_url = $url;
 
         /* WPML Fix */
         if ( defined( 'ICL_SITEPRESS_VERSION' ) ){
             global $sitepress;
             $url = $sitepress->convert_url( $url, $sitepress->get_default_language() );
+
+            if($url == false ){
+                $url = $original_url;
+            }
         }
         /* WPML Fix */
 
-        return $aq_resize->process( $url, $width, $height, $crop, $single, $upscale );
+        $response = $aq_resize->process( $url, $width, $height, $crop, $single, $upscale );
+        if ( $response == false ) {
+            return $original_url;
+        }
+
+        return $response;
     }
 }
-
-

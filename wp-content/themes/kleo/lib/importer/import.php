@@ -311,6 +311,14 @@ class kleoImport {
 			'img'       => $remote_path . 'img/home-material-design.jpg',
 			'page'      => 'pages/home-material',
 			'attach'    => 'yes',
+			'extra'     => array(
+				array(
+					'id' => 'testimonials',
+					'data' => 'content/testimonials',
+					'name' => 'Import Dummy Testimonials',
+					'checked' => true,
+				),
+			),
 			'plugins'   => array( 'revslider' ),
 			'revslider' => 'material-design',
 			'options' => 'home-material-design',

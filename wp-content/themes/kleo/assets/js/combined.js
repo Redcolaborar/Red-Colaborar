@@ -6,7 +6,7 @@ Magnific popup
 carouFredSel 
 TouchSwipe - jQuery Plugin 
 Isotope 
-2017-04-13 7:24:23 PM 
+2017-06-23 8:24:47 PM 
  */
 if (!jQuery) {
     throw new Error("Bootstrap requires jQuery");

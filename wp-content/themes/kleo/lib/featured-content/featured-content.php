@@ -249,7 +249,8 @@ class Featured_Content {
 			return;
 		}
 
-		$featured = self::get_featured_post_ids();
+		$featured = apply_filters( 'kleo_featured_content_ids',self::get_featured_post_ids() );
+
 
 		// Bail if no featured posts.
 		if ( ! $featured ) {

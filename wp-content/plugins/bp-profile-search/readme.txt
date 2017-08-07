@@ -3,7 +3,7 @@ Contributors: dontdream
 Tags: buddypress, directory, members, users, profile, search, filter
 Requires at least: 4.3
 Tested up to: 4.7
-Stable tag: 4.7.3
+Stable tag: 4.7.4
 
 Custom members search forms and results pages, and custom members directories for your BuddyPress site.
 
@@ -41,6 +41,8 @@ Follow the standard plugin installation procedure.
 
 == Changelog ==
 
+= 4.7.4 =
+* Fixed bugs in WPML support
 = 4.7.3 =
 * Added filter to change the cookie name
 = 4.7.2 =

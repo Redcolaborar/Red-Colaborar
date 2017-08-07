@@ -368,7 +368,7 @@ if ( ! class_exists( 'sidebar_generator' ) ) {
 		 * @param string $name
 		 */
 		public static function get_sidebar( $name = '0' ) {
-			if ( ! is_singular() ) {
+			if ( ! ( is_singular() || is_home() ) ) {
 				if ( '0' != $name ) {
 					dynamic_sidebar( $name );
 				} else {
@@ -380,18 +380,20 @@ if ( ! class_exists( 'sidebar_generator' ) ) {
 
 			global $wp_query;
 			$post = $wp_query->get_queried_object();
-			if ( ! $post ) {
+			/*if ( ! $post ) {
 				dynamic_sidebar();
 
 				return;
-			}
+			}*/
 
-			$post_id = $post->ID;
+			
 
 			if ( ! is_object( $post ) ) {
 
 				if ( function_exists( 'kleo_bp_get_page_id' ) && bp_is_blog_page() && kleo_bp_get_page_id() ) {
 					$post_id = kleo_bp_get_page_id();
+				} elseif( is_home() && get_option( 'page_for_posts' ) ) {
+					$post_id = get_option( 'page_for_posts' );
 				} else {
 					if ( '0' != $name ) {
 						dynamic_sidebar( $name );
@@ -401,6 +403,8 @@ if ( ! class_exists( 'sidebar_generator' ) ) {
 
 					return;
 				}
+			} else {
+				$post_id = $post->ID;
 			}
 
 			$selected_sidebar             = get_post_meta( $post_id, 'sbg_selected_sidebar', true );

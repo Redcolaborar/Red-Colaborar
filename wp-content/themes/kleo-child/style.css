@@ -196,7 +196,7 @@ width: 80%;
 #buddypress div#item-nav ul #mediapress-personal-li a:before { content: "\E875"; }
 
  
-/* Group: Course icon */
+/* Group: Invite icon */
 #buddypress div#item-nav ul #nav-invite-anyone-groups-li a:before { content: "\E991"; }
 
 /* Group: Resource icon */
@@ -206,10 +206,10 @@ width: 80%;
 #buddypress div#item-nav ul #nav-listing-groups-li a:before { content: "\E993"; }
 
 /* Group: Questions icon */
-#buddypress div#item-nav ul li #aptobploader_preguntas a:before { content: "\E861"; }
+#buddypress div#item-nav ul #aptobploader_preguntas a:before { content: "\E861"; }
 
 /* Group: Email options icon */
-#buddypress div#item-nav ul li #nav-notifications a:before { content: "\E800"; }
+#buddypress div#item-nav ul #nav-notifications a:before { content: "\E800"; }
 
  
 /* AnsPress ask button mobile quick fix */

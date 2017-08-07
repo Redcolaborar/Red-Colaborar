@@ -1,5 +1,5 @@
 <?php
-define( 'KLEO_THEME_VERSION', '4.2.2' );
+define( 'KLEO_THEME_VERSION', '4.2.8' );
 
 /* Configuration array */
 global $kleo_config;
@@ -254,7 +254,7 @@ if ( ! function_exists( 'kleo_title_section' ) ) {
 			'show_title'      => true,
 			'show_breadcrumb' => true,
 			'link'            => '',
-			'output'          => "<section class='{class} border-bottom'><div class='container'>{title_data}<div class='breadcrumb-extra'>{breadcrumb_data}{extra}</div></div></section>",
+			'output'          => "<section class='{class} border-bottom breadcrumbs-container'><div class='container'>{title_data}<div class='breadcrumb-extra'>{breadcrumb_data}{extra}</div></div></section>",
 			'class'           => 'container-wrap main-title alternate-color ',
 			'extra'           => '<p class="page-info">' . do_shortcode( sq_option( 'title_info', '' ) ) . '</p>',
 			'heading'         => 'h1'
@@ -1646,7 +1646,13 @@ if ( class_exists( 'RTMedia' ) ) {
 
 	global $rtmedia_admin;
 	remove_action( 'admin_notices', array( $rtmedia_admin, 'rtmedia_admin_notices' ) );
-
+	
+	/* When BuddyPress is not enabled */
+	function kleo_rtmedia_no_buddypress() {
+		return locate_template( 'page.php' );
+	}
+	add_filter( 'rtmedia_main_template_include', 'kleo_rtmedia_no_buddypress', 20 );
+	
 }
 
 
@@ -2022,7 +2028,20 @@ function kleo_bp_replace_placeholders( $output ) {
 			$logged_in_username = bbp_get_user_nicename( bbp_get_current_user_id() );
 			$output             = str_replace( '##member_name##', $logged_in_username, $output );
 		}
+
 	}
+	if( is_user_logged_in() ){
+		
+		$current_user_firstname = wp_get_current_user()->user_firstname;
+		if ($current_user_firstname) {
+			$output = str_replace('##member_first_name##', $current_user_firstname, $output);
+		}
+		$current_user_lastname = wp_get_current_user()->user_lastname;
+		if ($current_user_lastname) {
+			$output = str_replace('##member_last_name##', $current_user_lastname, $output);
+		}
+	}
+
 	$output = apply_filters( 'kleo_bp_replace_placeholders', $output, $initial_output );
 
 	return $output;
@@ -2518,4 +2537,65 @@ function kleo_override_header_layout( $output, $option ) {
 	}
 
 	return $output;
+}
+
+
+/* Remove blog posts from main blog loop */
+if ( sq_option( 'blog_exclude_cat' ) ) {
+	function sq_exclude_blog_category( $query ) {
+		$to_exclude = sq_option( 'blog_exclude_cat' );
+		if ( ! empty( $to_exclude ) && is_array( $to_exclude ) ) {
+			if ( $query->is_home() && $query->is_main_query() ) {
+				$query->set( 'category__not_in', $to_exclude );
+			}
+		}
+	}
+	
+	add_action( 'pre_get_posts', 'sq_exclude_blog_category' );
+}
+
+/* Tag cloud font size */
+if ( sq_option( 'blog_tag_cloud', 0 ) == 0 ) {
+	add_action( 'init', 'sq_tag_cloud_size' );
+	function sq_tag_cloud_size() {
+		sq_kleo()->add_css( '.widget_tag_cloud a { font-size: small !important; }' );
+	}
+}
+
+/* Ajax for posts grid element */
+add_action( 'wp_ajax_nopriv_vc_post_items', 'sq_vc_posts_ajax' );
+add_action( 'wp_ajax_vc_post_items', 'sq_vc_posts_ajax' );
+
+function sq_vc_posts_ajax() {
+	// Check the nonce, if it fails the function will break
+	check_ajax_referer( 'kleo-ajax-posts-nonce', 'security' );
+	
+	/* If not our action, bail out */
+	if ( ! isset( $_POST['action'] ) || 'vc_post_items' != $_POST['action'] ) {
+		return false;
+	}
+	
+	$count_id = (int) $_POST['pitem'];
+	$post_id = $_POST['post_id'];
+	if (isset( $_POST['paged'] )) {
+		$paged = $_POST['paged'];
+	} else {
+		$paged = '';
+	}
+	
+	$args = get_transient( 'kleo_post_' . $post_id . '_' . $count_id );
+	if ( $args ) {
+		$args = maybe_unserialize( $args );
+	}
+	
+	if ( ! is_array( $args ) ) {
+		wp_send_json_error( array( 'message' => __( 'Something went wrong. Please reload page.', 'kleo_framework' ) ) );
+		exit;
+	}
+	
+	$args['ajax_paged'] = $paged;
+	$args['ajax_post'] = $post_id;
+	$items = vc_do_shortcode( $args, null, 'vc_posts_grid' );
+	wp_send_json_success( array( 'message' => $items ) );
+	exit;
 }

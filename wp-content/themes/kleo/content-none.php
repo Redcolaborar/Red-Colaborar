@@ -11,7 +11,7 @@
 <div class="page-content text-center">
 	<?php if ( is_home() && current_user_can( 'publish_posts' ) ) : ?>
 
-	<p><?php printf( esc_html__( 'Ready to publish your first post? <a href="%1$s">Get started here</a>.', 'kleo_framework' ), admin_url( 'post-new.php' ) ); ?></p>
+	<p><?php printf( __( 'Ready to publish your first post? <a href="%1$s">Get started here</a>.', 'kleo_framework' ), admin_url( 'post-new.php' ) ); ?></p>
 
 	<?php elseif ( is_search() ) : ?>
 

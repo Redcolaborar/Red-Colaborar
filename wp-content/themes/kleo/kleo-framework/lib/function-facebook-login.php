@@ -1,145 +1,152 @@
 <?php
+if ( ! function_exists( 'kleo_fb_head' ) ) {
+	function kleo_fb_head()
+	{
 
-function kleo_fb_head() {
+		if (is_user_logged_in()) {
+			return false;
+		}
 
-	if ( is_user_logged_in() ) {
-		return false;
+		?>
+		<div id="fb-root"></div>
+		<?php
 	}
-
-	?>
-	<div id="fb-root"></div>
-	<?php
 }
+if ( ! function_exists( 'kleo_fb_footer' ) ) {
 
+	function kleo_fb_footer()
+	{
 
-function kleo_fb_footer() {
+		if (is_user_logged_in()) {
+			return false;
+		}
 
-	if ( is_user_logged_in() ) {
-		return false;
-	}
+		?>
+		<script>
+			// Additional JS functions here
+			window.fbAsyncInit = function () {
+				FB.init({
+					appId: '<?php echo sq_option('fb_app_id'); ?>', // App ID
+					version: 'v2.6',
+					status: true, // check login status
+					cookie: true, // enable cookies to allow the server to access the session
+					xfbml: true,  // parse XFBML
+					oauth: true
+				});
 
-	?>
-	<script>
-		// Additional JS functions here
-		window.fbAsyncInit = function () {
-			FB.init({
-				appId: '<?php echo sq_option( 'fb_app_id' ); ?>', // App ID
-				version: 'v2.6',
-				status: true, // check login status
-				cookie: true, // enable cookies to allow the server to access the session
-				xfbml: true,  // parse XFBML
-				oauth: true
-			});
+				// Additional init code here
+				jQuery('body').trigger('sq_fb.init');
 
-			// Additional init code here
-			jQuery('body').trigger('sq_fb.init');
+			};
 
-		};
+			// Load the SDK asynchronously
+			(function (d, s, id) {
+				var js, fjs = d.getElementsByTagName(s)[0];
+				if (d.getElementById(id)) return;
+				js = d.createElement(s);
+				js.id = id;
+				js.src = "//connect.facebook.net/<?php echo apply_filters('kleo_facebook_js_locale', 'en_US'); ?>/sdk.js";
+				fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
 
-		// Load the SDK asynchronously
-		(function (d, s, id) {
-			var js, fjs = d.getElementsByTagName(s)[0];
-			if (d.getElementById(id)) return;
-			js = d.createElement(s);
-			js.id = id;
-			js.src = "//connect.facebook.net/<?php echo apply_filters( 'kleo_facebook_js_locale', 'en_US' ); ?>/sdk.js";
-			fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
+		</script>
+		<script type="text/javascript">
+			var fbAjaxUrl = '<?php echo site_url('wp-login.php', 'login_post'); ?>';
 
-	</script>
-	<script type="text/javascript">
-		var fbAjaxUrl = '<?php echo site_url( 'wp-login.php', 'login_post' ); ?>';
+			jQuery(document).ready(function () {
 
-		jQuery(document).ready(function () {
+				jQuery('.kleo-facebook-connect').click(function () {
 
-			jQuery('.kleo-facebook-connect').click(function () {
-
-				// fix iOS Chrome
-				if (navigator.userAgent.match('CriOS') || navigator.userAgent.match(/Android/i)) {
-					window.open('https://www.facebook.com/dialog/oauth?client_id=<?php echo sq_option( 'fb_app_id' ); ?>&redirect_uri=' + document.location.href + '&scope=email&response_type=token', '', null);
-				} else {
-					FB.login(function (FB_response) {
-							if (FB_response.authResponse) {
-								fb_intialize(FB_response, '');
-							}
-						},
-						{
-							scope: 'email',
-							auth_type: 'rerequest',
-							return_scopes: true
-						});
-				}
-			});
-
-			if (navigator.userAgent.match('CriOS') || navigator.userAgent.match(/Android/i)) {
-				jQuery("body").bind("sq_fb.init", function () {
-					var accToken = jQuery.getUrlVar('#access_token');
-					if (accToken) {
-						var fbArr = {scopes: "email"};
-						fb_intialize(fbArr, accToken);
+					// fix iOS Chrome
+					if (navigator.userAgent.match('CriOS') || navigator.userAgent.match(/Android/i)) {
+						window.open('https://www.facebook.com/dialog/oauth?client_id=<?php echo sq_option('fb_app_id'); ?>&redirect_uri=' + document.location.href + '&scope=email&response_type=token', '', null);
+					} else {
+						FB.login(function (FB_response) {
+								if (FB_response.authResponse) {
+									fb_intialize(FB_response, '');
+								}
+							},
+							{
+								scope: 'email',
+								auth_type: 'rerequest',
+								return_scopes: true
+							});
 					}
 				});
-			}
 
-		});
-
-		function fb_intialize(FB_response, token) {
-			FB.api('/me', 'GET', {
-					fields: 'id,email,verified,name',
-					access_token: token
-				},
-				function (FB_userdata) {
-					jQuery.ajax({
-						type: 'POST',
-						url: fbAjaxUrl,
-						data: {"action": "fb_intialize", "FB_userdata": FB_userdata, "FB_response": FB_response},
-						success: function (user) {
-							if (user.error) {
-								alert(user.error);
-							}
-							else if (user.loggedin) {
-								jQuery('#kleo-login-result').html(user.message);
-
-								if (window.location.href.indexOf("wp-login.php") > -1) {
-									window.location = user.url;
-								} else if (user.redirectType == 'reload') {
-									window.location.reload();
-								} else {
-									window.location = user.url;
-								}
-
-							}
+				if (navigator.userAgent.match('CriOS') || navigator.userAgent.match(/Android/i)) {
+					jQuery("body").bind("sq_fb.init", function () {
+						var accToken = jQuery.getUrlVar('#access_token');
+						if (accToken) {
+							var fbArr = {scopes: "email"};
+							fb_intialize(fbArr, accToken);
 						}
 					});
 				}
-			);
-		}
 
-		jQuery.extend({
-			getUrlVars: function () {
-				var vars = [], hash;
-				var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-				for (var i = 0; i < hashes.length; i++) {
-					hash = hashes[i].split('=');
-					vars.push(hash[0]);
-					vars[hash[0]] = hash[1];
-				}
-				return vars;
-			},
-			getUrlVar: function (name) {
-				return jQuery.getUrlVars()[name];
+			});
+
+			function fb_intialize(FB_response, token) {
+				FB.api('/me', 'GET', {
+						fields: 'id,email,verified,name',
+						access_token: token
+					},
+					function (FB_userdata) {
+						jQuery.ajax({
+							type: 'POST',
+							url: fbAjaxUrl,
+							data: {"action": "fb_intialize", "FB_userdata": FB_userdata, "FB_response": FB_response},
+							success: function (user) {
+								if (user.error) {
+									alert(user.error);
+								}
+								else if (user.loggedin) {
+									jQuery('#kleo-login-result').html(user.message);
+
+									if (window.location.href.indexOf("wp-login.php") > -1) {
+										window.location = user.url;
+									} else if (user.redirectType == 'reload') {
+										window.location.reload();
+									} else {
+										window.location = user.url;
+									}
+
+								}
+							}
+						});
+					}
+				);
 			}
-		});
-	</script>
-	<?php
+
+			jQuery.extend({
+				getUrlVars: function () {
+					var vars = [], hash;
+					var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+					for (var i = 0; i < hashes.length; i++) {
+						hash = hashes[i].split('=');
+						vars.push(hash[0]);
+						vars[hash[0]] = hash[1];
+					}
+					return vars;
+				},
+				getUrlVar: function (name) {
+					return jQuery.getUrlVars()[name];
+				}
+			});
+		</script>
+		<?php
+	}
 }
 
-function kleo_fb_loginform_script() {
-	//Enqueue jQuery
-	wp_enqueue_script( 'jquery' );
+if ( ! function_exists( 'kleo_fb_loginform_script' ) ) {
 
-	//Output CSS
-	echo '<style type="text/css" media="screen">
+	function kleo_fb_loginform_script()
+	{
+		//Enqueue jQuery
+		wp_enqueue_script('jquery');
+
+		//Output CSS
+		echo '<style type="text/css" media="screen">
 		.hr-title, .gap-30, .gap-10 {display: none;}
     .kleo-facebook-connect.btn.btn-default {
       background-color: #3b5997;
@@ -161,6 +168,7 @@ function kleo_fb_loginform_script() {
       white-space: nowrap;
     }
 		</style>';
+	}
 }
 
 if ( sq_option( 'facebook_login', 0 ) == 1 ) {
@@ -171,185 +179,189 @@ if ( sq_option( 'facebook_login', 0 ) == 1 ) {
 	add_action( 'login_footer', 'kleo_fb_footer', 99 );
 }
 
+if ( ! function_exists( 'kleo_fb_intialize' ) ) {
 
-function kleo_fb_intialize() {
+	function kleo_fb_intialize()
+	{
 
-	/* If not our action, bail out */
-	if ( ! isset( $_POST['action'] ) || ( isset( $_POST['action'] ) && $_POST['action'] != 'fb_intialize' ) ) {
-		return false;
-	}
+		/* If not our action, bail out */
+		if (!isset($_POST['action']) || (isset($_POST['action']) && $_POST['action'] != 'fb_intialize')) {
+			return false;
+		}
 
-	@error_reporting( 0 ); // Don't break the JSON result
-	header( 'Content-type: application/json' );
+		@error_reporting(0); // Don't break the JSON result
+		header('Content-type: application/json');
 
-	if ( is_user_logged_in() ) {
-		die( wp_json_encode( array( 'error' => __( 'You are already logged in.', 'kleo_framework' ) ) ) );
-	}
+		if (is_user_logged_in()) {
+			die(wp_json_encode(array('error' => __('You are already logged in.', 'kleo_framework'))));
+		}
 
-	if ( ! isset( $_REQUEST['FB_response'] ) || ! isset( $_REQUEST['FB_userdata'] ) ) {
-		die( wp_json_encode( array( 'error' => __( 'Authentication required.', 'kleo_framework' ) ) ) );
-	}
+		if (!isset($_REQUEST['FB_response']) || !isset($_REQUEST['FB_userdata'])) {
+			die(wp_json_encode(array('error' => __('Authentication required.', 'kleo_framework'))));
+		}
 
-	$FB_response = $_REQUEST['FB_response'];
-	$FB_userdata = $_REQUEST['FB_userdata'];
-	$FB_userid   = $FB_userdata['id'];
+		$FB_response = $_REQUEST['FB_response'];
+		$FB_userdata = $_REQUEST['FB_userdata'];
+		$FB_userid = $FB_userdata['id'];
 
-	if ( ! $FB_userid ) {
-		die( wp_json_encode( array( 'error' => __( 'Please connect your facebook account.', 'kleo_framework' ) ) ) );
-	}
+		if (!$FB_userid) {
+			die(wp_json_encode(array('error' => __('Please connect your facebook account.', 'kleo_framework'))));
+		}
 
-	global $wpdb;
-	//check if we already have matched our facebook account
-	$user_ID = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = '_fbid' AND meta_value = '$FB_userid'" );
+		global $wpdb;
+		//check if we already have matched our facebook account
+		$user_ID = $wpdb->get_var("SELECT user_id FROM $wpdb->usermeta WHERE meta_key = '_fbid' AND meta_value = '$FB_userid'");
 
-	$redirect = '';
-	$redirect_type = 'redirect';
+		$redirect = '';
+		$redirect_type = 'redirect';
 
-	//if facebook is not connected
-	if ( ! $user_ID ) {
-		$user_email = $FB_userdata['email'];
-		$user_ID    = $wpdb->get_var( "SELECT ID FROM $wpdb->users WHERE user_email = '" . $wpdb->escape( $user_email ) . "'" );
+		//if facebook is not connected
+		if (!$user_ID) {
+			$user_email = $FB_userdata['email'];
+			$user_ID = $wpdb->get_var("SELECT ID FROM $wpdb->users WHERE user_email = '" . $wpdb->escape($user_email) . "'");
 
-		//Register user
-		if ( ! $user_ID ) {
-			if ( ! get_option( 'users_can_register' ) ) {
-				die( wp_json_encode( array( 'error' => __( 'Registration is not open at this time. Please come back later.', 'kleo_framework' ) ) ) );
-			}
-			if ( sq_option( 'facebook_register', 0 ) == 0 ) {
-				die( wp_json_encode( array( 'error' => __( 'Registration using Facebook is not currently allowed. Please use our Register page', 'kleo_framework' ) ) ) );
-			}
-
-			extract( $FB_userdata );
-
-			$display_name = $name;
-
-			$first_name = '';
-			$last_name  = '';
-			$name_array = explode( ' ', $name, 2 );
-			$first_name = $name_array[0];
-			if ( isset( $name_array[1] ) ) {
-				$last_name = $name_array[1];
-			}
-
-			if ( empty( $verified ) || ! $verified ) {
-				die( wp_json_encode( array( 'error' => __( 'Your facebook account is not verified. You have to verify your account before proceed login or registering on this site.', 'kleo_framework' ) ) ) );
-			}
-
-			$user_email = $email;
-			if ( empty( $user_email ) ) {
-				die( wp_json_encode( array( 'error' => __( 'Please click again to login with Facebook and allow the application to use your email address', 'kleo_framework' ) ) ) );
-			}
-
-			if ( empty( $name ) ) {
-				die( wp_json_encode( array(
-					'error' => 'empty_name',
-					__( 'We didn\'t find your name. Please complete your facebook account before proceeding.', 'kleo_framework' )
-				) ) );
-			}
-
-			$user_login = sanitize_title_with_dashes( sanitize_user( $display_name, true ) );
-
-			if ( username_exists( $user_login ) ) {
-				$user_login = $user_login . time();
-			}
-
-			$user_pass = wp_generate_password( 12, false );
-			$userdata  = compact( 'user_login', 'user_email', 'user_pass', 'display_name', 'first_name', 'last_name' );
-			$userdata  = apply_filters( 'kleo_fb_register_data', $userdata );
-
-			$user_ID = wp_insert_user( $userdata );
-			if ( is_wp_error( $user_ID ) ) {
-				die( wp_json_encode( array( 'error' => $user_ID->get_error_message() ) ) );
-			}
-
-			//send email with password
-			wp_new_user_notification( $user_ID, wp_unslash( $user_pass ) );
-
-			//add Facebook image
-			update_user_meta( $user_ID, 'kleo_fb_picture', 'https://graph.facebook.com/' . $id . '/picture' );
-
-			do_action( 'fb_register_action', $user_ID );
-			do_action( 'user_register', $user_ID );
-
-			update_user_meta( $user_ID, '_fbid', $id );
-
-			$logintype = 'register';
-
-			/* Registration logic redirect */
-			if ( function_exists( 'bp_is_active' ) && sq_option( 'facebook_register_redirect', 'default' ) == 'default' ) {
-				$redirect_url = bp_core_get_user_domain( $user_ID ) . 'profile/edit/group/1/?fb=registered';
-			} elseif ( sq_option( 'facebook_register_redirect', 'default' ) == 'reload' ) {
-				$redirect_type = 'reload';
-				$redirect_url = home_url();
-			} elseif ( sq_option( 'facebook_register_redirect', 'default' ) == 'custom' ) {
-				$redirect_url = sq_option( 'facebook_register_redirect_url', '' );
-				if ( function_exists( 'bp_is_active' ) ) {
-					$logged_in_link = bp_core_get_user_domain( $user_ID );
-					$redirect_url   = str_replace( '##profile_link##', $logged_in_link, $redirect_url );
+			//Register user
+			if (!$user_ID) {
+				if (!get_option('users_can_register')) {
+					die(wp_json_encode(array('error' => __('Registration is not open at this time. Please come back later.', 'kleo_framework'))));
 				}
-			}
+				if (sq_option('facebook_register', 0) == 0) {
+					die(wp_json_encode(array('error' => __('Registration using Facebook is not currently allowed. Please use our Register page', 'kleo_framework'))));
+				}
 
-			if ( ! isset( $redirect_url ) || empty( $redirect_url ) ) {
-				$redirect_type = 'reload';
-				$redirect_url = home_url();
-			}
+				extract($FB_userdata);
 
-			$redirect = apply_filters( 'kleo_fb_register_redirect', $redirect_url, $user_ID );
+				$display_name = $name;
+
+				$first_name = '';
+				$last_name = '';
+				$name_array = explode(' ', $name, 2);
+				$first_name = $name_array[0];
+				if (isset($name_array[1])) {
+					$last_name = $name_array[1];
+				}
+
+				if (empty($verified) || !$verified) {
+					die(wp_json_encode(array('error' => __('Your facebook account is not verified. You have to verify your account before proceed login or registering on this site.', 'kleo_framework'))));
+				}
+
+				$user_email = $email;
+				if (empty($user_email)) {
+					die(wp_json_encode(array('error' => __('Please click again to login with Facebook and allow the application to use your email address', 'kleo_framework'))));
+				}
+
+				if (empty($name)) {
+					die(wp_json_encode(array(
+						'error' => 'empty_name',
+						__('We didn\'t find your name. Please complete your facebook account before proceeding.', 'kleo_framework')
+					)));
+				}
+
+				$user_login = sanitize_title_with_dashes(sanitize_user($display_name, true));
+
+				if (username_exists($user_login)) {
+					$user_login = $user_login . time();
+				}
+
+				$user_pass = wp_generate_password(12, false);
+				$userdata = compact('user_login', 'user_email', 'user_pass', 'display_name', 'first_name', 'last_name');
+				$userdata = apply_filters('kleo_fb_register_data', $userdata);
+
+				$user_ID = wp_insert_user($userdata);
+				if (is_wp_error($user_ID)) {
+					die(wp_json_encode(array('error' => $user_ID->get_error_message())));
+				}
+
+				if (sq_option('facebook_sent_email_login_details', '1') == '1') {
+					//send email with password
+					wp_new_user_notification($user_ID, wp_unslash($user_pass));
+				}
+				//add Facebook image
+				update_user_meta($user_ID, 'kleo_fb_picture', 'https://graph.facebook.com/' . $id . '/picture');
+
+				do_action('fb_register_action', $user_ID);
+				do_action('user_register', $user_ID);
+
+				update_user_meta($user_ID, '_fbid', $id);
+
+				$logintype = 'register';
+
+				/* Registration logic redirect */
+				if (function_exists('bp_is_active') && sq_option('facebook_register_redirect', 'default') == 'default') {
+					$redirect_url = bp_core_get_user_domain($user_ID) . 'profile/edit/group/1/?fb=registered';
+				} elseif (sq_option('facebook_register_redirect', 'default') == 'reload') {
+					$redirect_type = 'reload';
+					$redirect_url = home_url();
+				} elseif (sq_option('facebook_register_redirect', 'default') == 'custom') {
+					$redirect_url = sq_option('facebook_register_redirect_url', '');
+					if (function_exists('bp_is_active')) {
+						$logged_in_link = bp_core_get_user_domain($user_ID);
+						$redirect_url = str_replace('##profile_link##', $logged_in_link, $redirect_url);
+					}
+				}
+
+				if (!isset($redirect_url) || empty($redirect_url)) {
+					$redirect_type = 'reload';
+					$redirect_url = home_url();
+				}
+
+				$redirect = apply_filters('kleo_fb_register_redirect', $redirect_url, $user_ID);
+			} else {
+				update_user_meta($user_ID, '_fbid', $FB_userdata['id']);
+				//add Facebook image
+				update_user_meta($user_ID, 'kleo_fb_picture', 'https://graph.facebook.com/' . $FB_userdata['id'] . '/picture');
+				$logintype = 'login';
+			}
 		} else {
-			update_user_meta( $user_ID, '_fbid', $FB_userdata['id'] );
-			//add Facebook image
-			update_user_meta( $user_ID, 'kleo_fb_picture', 'https://graph.facebook.com/' . $FB_userdata['id'] . '/picture' );
 			$logintype = 'login';
 		}
-	} else {
-		$logintype = 'login';
-	}
 
-	$user = get_user_by( 'id', $user_ID );
+		$user = get_user_by('id', $user_ID);
 
-	if ( $logintype == 'login' ) {
+		if ($logintype == 'login') {
 
-		$redirect_to = home_url();
-		if ( function_exists( 'bp_is_active' ) ) {
-			$redirect_to = bp_core_get_user_domain( $user_ID );
+			$redirect_to = home_url();
+			if (function_exists('bp_is_active')) {
+				$redirect_to = bp_core_get_user_domain($user_ID);
+			}
+
+			/* Check the configured type of redirect */
+			if (sq_option('login_redirect') == 'reload') {
+				$redirect_type = 'reload';
+			}
+
+			/**
+			 * Filter the login redirect URL.
+			 *
+			 * @since 3.0.0
+			 *
+			 * @param string $redirect_to The redirect destination URL.
+			 * @param string $requested_redirect_to The requested redirect destination URL passed as a parameter.
+			 * @param WP_User|WP_Error $user WP_User object if login was successful, WP_Error object otherwise.
+			 */
+
+			$redirect = apply_filters('login_redirect', $redirect_to, '', $user);
 		}
 
-		/* Check the configured type of redirect */
-		if ( sq_option( 'login_redirect' ) == 'reload' ) {
-			$redirect_type = 'reload';
-		}
-
+		wp_set_auth_cookie($user_ID, false, false);
 		/**
-		 * Filter the login redirect URL.
+		 * Fires after the user has successfully logged in.
 		 *
-		 * @since 3.0.0
+		 * @since 1.5.0
 		 *
-		 * @param string $redirect_to The redirect destination URL.
-		 * @param string $requested_redirect_to The requested redirect destination URL passed as a parameter.
-		 * @param WP_User|WP_Error $user WP_User object if login was successful, WP_Error object otherwise.
+		 * @param string $user_login Username.
+		 * @param WP_User $user WP_User object of the logged-in user.
 		 */
+		do_action('wp_login', $user->user_login, $user);
 
-		$redirect = apply_filters( 'login_redirect', $redirect_to, '', $user );
+		die(wp_json_encode(array(
+			'loggedin' => true,
+			'type' => $logintype,
+			'url' => $redirect,
+			'redirectType' => $redirect_type,
+			'message' => __('Login successful, redirecting...', 'kleo_framework'),
+		)));
 	}
-
-	wp_set_auth_cookie( $user_ID, false, false );
-	/**
-	 * Fires after the user has successfully logged in.
-	 *
-	 * @since 1.5.0
-	 *
-	 * @param string $user_login Username.
-	 * @param WP_User $user WP_User object of the logged-in user.
-	 */
-	do_action( 'wp_login', $user->user_login, $user );
-
-	die( wp_json_encode( array(
-		'loggedin'     => true,
-		'type'         => $logintype,
-		'url'          => $redirect,
-		'redirectType' => $redirect_type,
-		'message'      => __( 'Login successful, redirecting...', 'kleo_framework' ),
-	) ) );
 }
 
 if ( ! is_admin() ) {
@@ -379,71 +391,81 @@ if ( sq_option( 'facebook_avatar', 1 ) == 1 ) {
 	//show Facebook avatar in Buddypress - url version
 	add_filter( 'bp_core_fetch_avatar_url', 'kleo_fb_bp_show_avatar_url', 3, 2 );
 }
-function kleo_fb_show_avatar( $avatar = '', $id_or_email, $size = 96, $default = '', $alt = false ) {
-	$id = 0;
-	if ( is_numeric( $id_or_email ) ) {
-		$id = $id_or_email;
-	} elseif ( is_string( $id_or_email ) ) {
-		$u = get_user_by( 'email', $id_or_email );
-		if ( $u ) {
-			$id = $u->id;
+
+if ( ! function_exists( 'kleo_fb_show_avatar' ) ) {
+
+	function kleo_fb_show_avatar($avatar = '', $id_or_email, $size = 96, $default = '', $alt = false)
+	{
+		$id = 0;
+		if (is_numeric($id_or_email)) {
+			$id = $id_or_email;
+		} elseif (is_string($id_or_email)) {
+			$u = get_user_by('email', $id_or_email);
+			if ($u) {
+				$id = $u->id;
+			}
+		} elseif (is_object($id_or_email)) {
+			$id = $id_or_email->user_id;
 		}
-	} elseif ( is_object( $id_or_email ) ) {
-		$id = $id_or_email->user_id;
-	}
 
-	if ( $id == 0 ) {
+		if ($id == 0) {
+			return $avatar;
+		}
+
+		//if we have an avatar uploaded and is not Gravatar return it
+		if (strpos($avatar, home_url()) !== false && strpos($avatar, 'gravatar') === false) {
+			return $avatar;
+		}
+
+		//if we don't have a Facebook photo
+		$pic = get_user_meta($id, 'kleo_fb_picture', true);
+		if (!$pic || $pic == '') {
+			return $avatar;
+		}
+
+		$avatar = preg_replace('/src=("|\').*?("|\')/i', 'src=\'' . $pic . apply_filters('fb_show_avatar_params', '?width=580&amp;height=580') . '\'', $avatar);
+
 		return $avatar;
 	}
-
-	//if we have an avatar uploaded and is not Gravatar return it
-	if ( strpos( $avatar, home_url() ) !== false && strpos( $avatar, 'gravatar' ) === false ) {
-		return $avatar;
-	}
-
-	//if we don't have a Facebook photo
-	$pic = get_user_meta( $id, 'kleo_fb_picture', true );
-	if ( ! $pic || $pic == '' ) {
-		return $avatar;
-	}
-
-	$avatar = preg_replace( '/src=("|\').*?("|\')/i', 'src=\'' . $pic . apply_filters( 'fb_show_avatar_params', '?width=580&amp;height=580' ) . '\'', $avatar );
-
-	return $avatar;
 }
 
-function kleo_fb_bp_show_avatar( $avatar = '', $params, $id ) {
-	if ( ! is_numeric( $id ) || strpos( $avatar, 'gravatar' ) === false ) {
+if ( ! function_exists( 'kleo_fb_bp_show_avatar' ) ) {
+	function kleo_fb_bp_show_avatar($avatar = '', $params, $id)
+	{
+		if (!is_numeric($id) || strpos($avatar, 'gravatar') === false) {
+			return $avatar;
+		}
+
+		//if we have an avatar uploaded and is not Gravatar return it
+		if (strpos($avatar, home_url()) !== false && strpos($avatar, 'gravatar') === false) {
+			return $avatar;
+		}
+
+		$pic = get_user_meta($id, 'kleo_fb_picture', true);
+		if (!$pic || $pic == '') {
+			return $avatar;
+		}
+		$avatar = preg_replace('/src=("|\').*?("|\')/i', 'src=\'' . $pic . apply_filters('fb_show_avatar_params', '?width=580&amp;height=580') . '\'', $avatar);
+
 		return $avatar;
 	}
-
-	//if we have an avatar uploaded and is not Gravatar return it
-	if ( strpos( $avatar, home_url() ) !== false && strpos( $avatar, 'gravatar' ) === false ) {
-		return $avatar;
-	}
-
-	$pic = get_user_meta( $id, 'kleo_fb_picture', true );
-	if ( ! $pic || $pic == '' ) {
-		return $avatar;
-	}
-	$avatar = preg_replace( '/src=("|\').*?("|\')/i', 'src=\'' . $pic . apply_filters( 'fb_show_avatar_params', '?width=580&amp;height=580' ) . '\'', $avatar );
-
-	return $avatar;
 }
+if ( ! function_exists( 'kleo_fb_bp_show_avatar_url' ) ) {
+	function kleo_fb_bp_show_avatar_url($gravatar, $params)
+	{
 
-function kleo_fb_bp_show_avatar_url( $gravatar, $params ) {
+		//if we have an avatar uploaded and is not Gravatar return it
+		if (strpos($gravatar, home_url()) !== false && strpos($gravatar, 'gravatar') === false) {
+			return $gravatar;
+		}
 
-	//if we have an avatar uploaded and is not Gravatar return it
-	if ( strpos( $gravatar, home_url() ) !== false && strpos( $gravatar, 'gravatar' ) === false ) {
-		return $gravatar;
+		$pic = get_user_meta($params['item_id'], 'kleo_fb_picture', true);
+		if (!$pic || $pic == '') {
+			return $gravatar;
+		}
+
+		return $pic . apply_filters('fb_show_avatar_params', '?width=580&amp;height=580');
 	}
-
-	$pic = get_user_meta( $params['item_id'], 'kleo_fb_picture', true );
-	if ( ! $pic || $pic == '' ) {
-		return $gravatar;
-	}
-
-	return $pic . apply_filters( 'fb_show_avatar_params', '?width=580&amp;height=580' );
 }
 
 

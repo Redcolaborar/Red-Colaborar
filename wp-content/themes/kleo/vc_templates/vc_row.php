@@ -375,6 +375,10 @@ if ( $vertical_align == 'yes' ) {
 	$section_classes[] = 'vertical-col';
 }
 
+if ($bg_gradient != '') {
+	$section_classes[] = 'kleo-gradient';
+}
+
 $style_elements = array(
 	'padding_top',
 	'padding_bottom',

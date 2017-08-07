@@ -40,6 +40,7 @@ extract( shortcode_atts( array(
 	'box_shadow_spread'  => '0',
 	'box_shadow_color'   => '#000000',
 	'vertical_separator' => '',
+	'visibility'         => '',
 	'el_class'           => '',
 
 ), $atts ) );
@@ -58,7 +59,6 @@ if ( $css != '' ) {
 	} else {
 		$styles[] = esc_attr( trim( $css ) );
 	}
-
 }
 
 if ( $content_position != '' ) {

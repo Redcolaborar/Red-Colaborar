@@ -178,7 +178,16 @@ echo '<script type="text/javascript">
         } else {
         	jQuery(".bps-form-legacy select.multi-js").show();
         }
+            
+        jQuery(".bps-form").keyup(function(event){
+            if(event.keyCode == 13){
+                jQuery(".form-submit").click();
+            }
+        });
+
+        
     });
+    
 </script>';
 
 wp_enqueue_script('bootstrap-multiselect');

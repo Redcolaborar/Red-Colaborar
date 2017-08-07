@@ -286,12 +286,12 @@ if ( ! class_exists( 'myCRED_Badge_Module' ) ) :
 		/**
 		 * Add Admin Menu Item
 		 * @since 1.7
-		 * @version 1.0
+		 * @version 1.0.1
 		 */
 		public function add_to_menu() {
 
 			add_submenu_page(
-				'mycred',
+				MYCRED_SLUG,
 				__( 'Badges', 'mycred' ),
 				__( 'Badges', 'mycred' ),
 				$this->core->edit_creds_cap(),
@@ -303,7 +303,7 @@ if ( ! class_exists( 'myCRED_Badge_Module' ) ) :
 		/**
 		 * Parent File
 		 * @since 1.6
-		 * @version 1.0.1
+		 * @version 1.0.2
 		 */
 		public function parent_file( $parent = '' ) {
 
@@ -311,13 +311,13 @@ if ( ! class_exists( 'myCRED_Badge_Module' ) ) :
 
 			if ( ( $pagenow == 'edit.php' || $pagenow == 'post-new.php' ) && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'mycred_badge' ) {
 			
-				return 'mycred';
+				return MYCRED_SLUG;
 			
 			}
 
 			elseif ( $pagenow == 'post.php' && isset( $_GET['post'] ) && get_post_type( $_GET['post'] ) == 'mycred_badge' ) {
 
-				return 'mycred';
+				return MYCRED_SLUG;
 
 			}
 
@@ -353,7 +353,7 @@ if ( ! class_exists( 'myCRED_Badge_Module' ) ) :
 		/**
 		 * Add Finished
 		 * @since 1.0
-		 * @version 1.2
+		 * @version 1.3
 		 */
 		public function add_finished( $result, $request, $mycred ) {
 
@@ -369,8 +369,33 @@ if ( ! class_exists( 'myCRED_Badge_Module' ) ) :
 					foreach ( $badge_ids as $badge_id ) {
 
 						$level_reached = mycred_badge_level_reached( $user_id, $badge_id );
-						if ( $level_reached !== false )
-							mycred_assign_badge_to_user( $user_id, $badge_id, $level_reached );
+						if ( $level_reached !== false ) {
+
+							$levels   = mycred_get_badge_levels( $badge_id );
+							$assigned = mycred_assign_badge_to_user( $user_id, $badge_id, $level_reached );
+
+							// Payout reward
+							if ( $assigned && $levels[ $level_reached ]['reward']['log'] != '' && $levels[ $level_reached ]['reward']['amount'] != 0 ) {
+
+								$reward_type = $levels[ $level_reached ]['reward']['type'];
+								if ( $reward_type != $mycred->cred_id )
+									$mycred = mycred( $reward_type );
+
+								// Make sure we only get points once for each level we reach for each badge
+								if ( ! $mycred->has_entry( 'badge_reward', $badge_id, $user_id, $level_reached, $reward_type ) )
+									$mycred->add_creds(
+										'badge_reward',
+										$user_id,
+										$levels[ $level_reached ]['reward']['amount'],
+										$levels[ $level_reached ]['reward']['log'],
+										$badge_id,
+										$level_reached,
+										$reward_type
+									);
+
+							}
+
+						}
 
 					}
 

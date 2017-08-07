@@ -1060,6 +1060,45 @@ body.modal-open{
     display: inline-block;
 }
 
+/* Bottom footer */
+/*.footer-bottom {
+  height: 100%;
+  overflow-y: initial;
+  -webkit-overflow-scrolling: touch;
+
+  .kleo-page {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction: column;
+    -ms-flex-direction: column;
+    -webkit-flex-direction: column;
+    height: 100%;
+
+    #header, #footer {
+      flex-shrink: 0;
+      -webkit-flex-shrink: 0;
+    }
+
+    #main {
+      flex-grow: 1;
+      -webkit-flex-grow: 1;
+    }
+  }
+}*/
+
+/* IE 10 & 11 bugfix */
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .footer-bottom {
+        overflow: visible !important;
+
+    }
+    .footer-bottom .kleo-page #main {
+        flex: 1 0 auto !important;
+    }
+}
+
 /* Socket Section */
 #socket {
     position: relative;
@@ -2529,6 +2568,9 @@ div .wp-caption { max-width: 100%; font-size: 11px; font-style: italic; border-w
     }
 }
 
+.posts-load-more {
+  margin-top: 40px;
+}
 
 /* #Comments */
 #comments-list {
@@ -2933,7 +2975,7 @@ ul.link-list li {float:left;margin-right: 10px;}
     cursor: pointer;
 
     /* v.4.1.9 */
-    font-size: small !important;
+    font-size: small;
 }
 .widget_tag_cloud a:hover {
     text-decoration: none;
@@ -6089,6 +6131,7 @@ canvas.letitsnow.pos-fixed {position: fixed;}
 .template-page.col-sm-12 .section-container.container-full .kleo-masonry-item,
 .template-page.col-sm-12 .section-container.container-full .kleo-isotope > li {width:16.6%;}
 
+
 @media (min-width: 992px) {
     .navbar-transparent .navbar-nav .dropdown-menu li a {
         color: #fff !important;
@@ -7362,3 +7405,5 @@ h4.kb-section-name i.icon {
     position: relative;
     z-index: 10;
 }
+
+

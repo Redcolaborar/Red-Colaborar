@@ -270,14 +270,14 @@ endif;
  * @since 4.0.3
  */
 function kleo_pmpro_return_restriction($return = false, $default_redirect = null) {
+	$custom_link = apply_filters( 'kleo_pmpro_return_restriction_custom_link', $default_redirect );
 	if ($return === false) {
-		wp_redirect($default_redirect);
+		wp_redirect($custom_link);
 		exit;
 	} else {
 		return true;
 	}
 }
-
 
 if (!function_exists('kleo_membership_info')) :
 /**

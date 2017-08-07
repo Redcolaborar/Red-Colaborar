@@ -37,7 +37,7 @@ if ( is_admin() ) {
 
 
 // Remove Default VC Features
-vc_remove_element("vc_wp_search");
+/*vc_remove_element("vc_wp_search");
 vc_remove_element("vc_wp_meta");
 vc_remove_element("vc_wp_recentcomments");
 vc_remove_element("vc_wp_pages");
@@ -47,7 +47,7 @@ vc_remove_element("vc_wp_rss");
 vc_remove_element("vc_button");
 vc_remove_element("vc_posts_slider");
 vc_remove_element("vc_cta_button");
-vc_remove_element("vc_cta_button2");
+vc_remove_element("vc_cta_button2");*/
 
 
 /***************************************************
@@ -96,6 +96,17 @@ function kleo_css_classes_for_elements( $class_string, $tag, $atts = array() ) {
 			}
 		}
 	}
+	if ( $tag == 'vc_custom_heading' ) {
+		if ( isset( $atts['visibility'] ) && $atts['visibility'] != '' ) {
+			$class_string .= ' ' . str_replace( ',', ' ', $atts['visibility'] );
+		}
+	}
+	if ( $tag == 'vc_progress_bar' ) {
+		if ( isset( $atts['style'] ) && $atts['style'] != '' ) {
+			$class_string .= ' ' . $atts['style'] . '-style';
+		}
+	}
+
 
 	return $class_string;
 }
@@ -696,6 +707,116 @@ function kleo_vc_manipulate_shortcodes() {
         "heading" => __('Query offset', 'kleo_framework'),
         "value" => '0',
         "description" => 'Enter an offset for the posts query(numerical value)',
+    );
+
+    $responsive_font = array(
+	    array(
+		    "type" => "checkbox",
+		    "holder" => 'div',
+		    'class' => 'hide hidden',
+		    "heading" => __("Enable responsive font size settings"),
+		    "param_name" => "responsive_font",
+		    "description" => "",
+		    'value' => array(
+			    'Yes' => 'yes'
+		    ),
+	    ),
+	    array(
+		    "type" => "textfield",
+		    "class" => "hide hidden",
+		    "holder" => 'div',
+		    "heading" => __("Font size - Mobile"),
+		    "admin_label" => true,
+		    "param_name" => "font_size_xs",
+		    "value" => "",
+		    "description" => "Max 768px device width. Use px|em|%|pt|cm",
+		    'group' => __( 'Responsive Font', 'js_composer' ),
+		    'dependency'  => array(
+			    'element' => 'responsive_font',
+			    "not_empty" => true
+		    ),
+		    'edit_field_class' => 'vc_col-sm-6 vc_column pad-top-15',
+	    ),
+	    array(
+		    "type" => "textfield",
+		    "class" => "hide hidden",
+		    "holder" => 'div',
+		    "heading" => __("Line Height - Mobile"),
+		    "admin_label" => true,
+		    "param_name" => "line_height_xs",
+		    "value" => "",
+		    "description" => "Max 768px device width. Use px|em|%|pt|cm",
+		    'group' => __( 'Responsive Font', 'js_composer' ),
+		    'dependency'  => array(
+			    'element' => 'responsive_font',
+			    "not_empty" => true
+		    ),
+		    'edit_field_class' => 'vc_col-sm-6 vc_column',
+	    ),
+	    array(
+		    "type" => "textfield",
+		    "class" => "hide hidden",
+		    "holder" => 'div',
+		    "heading" => __("Font size - Tablet"),
+		    "admin_label" => true,
+		    "param_name" => "font_size_sm",
+		    "value" => "",
+		    "description" => "768px - 991px device width. Use px|em|%|pt|cm",
+		    'group' => __( 'Responsive Font', 'js_composer' ),
+		    'dependency'  => array(
+			    'element' => 'responsive_font',
+			    "not_empty" => true
+		    ),
+		    'edit_field_class' => 'vc_col-sm-6 vc_column',
+	    ),
+	    array(
+		    "type" => "textfield",
+		    "class" => "hide hidden",
+		    "holder" => 'div',
+		    "heading" => __("Line Height - Tablet"),
+		    "admin_label" => true,
+		    "param_name" => "line_height_sm",
+		    "value" => "",
+		    "description" => "768px - 991px device width. Use px|em|%|pt|cm",
+		    'group' => __( 'Responsive Font', 'js_composer' ),
+		    'dependency'  => array(
+			    'element' => 'responsive_font',
+			    "not_empty" => true
+		    ),
+		    'edit_field_class' => 'vc_col-sm-6 vc_column',
+	    ),
+	    array(
+		    "type" => "textfield",
+		    "class" => "hide hidden",
+		    "holder" => 'div',
+		    "heading" => __("Font size - Desktop"),
+		    "admin_label" => true,
+		    "param_name" => "font_size_md",
+		    "value" => "",
+		    "description" => "991px - 1200px device width. Use px|em|%|pt|cm",
+		    'group' => __( 'Responsive Font', 'js_composer' ),
+		    'dependency'  => array(
+			    'element' => 'responsive_font',
+			    "not_empty" => true
+		    ),
+		    'edit_field_class' => 'vc_col-sm-6 vc_column',
+	    ),
+	    array(
+		    "type" => "textfield",
+		    "class" => "hide hidden",
+		    "holder" => 'div',
+		    "heading" => __("Line Height - Desktop"),
+		    "admin_label" => true,
+		    "param_name" => "line_height_md",
+		    "value" => "",
+		    "description" => "991px - 1200px device width. Use px|em|%|pt|cm",
+		    'group' => __( 'Responsive Font', 'js_composer' ),
+		    'dependency'  => array(
+			    'element' => 'responsive_font',
+			    "not_empty" => true
+		    ),
+		    'edit_field_class' => 'vc_col-sm-6 vc_column',
+	    ),
     );
 
 
@@ -1391,130 +1512,21 @@ function kleo_vc_manipulate_shortcodes() {
         "description" => "Set a custom line height. Use px|em|%|pt|cm"
     ));
 
-    vc_add_param("vc_column_text", array(
-        "type" => "checkbox",
-        "holder" => 'div',
-        'class' => 'hide hidden',
-        "heading" => __("Enable responsive font size settings"),
-        "param_name" => "responsive_font",
-        "description" => "",
-        'value' => array(
-            'Yes' => 'yes'
-        ),
-    ));
+	vc_add_params( "vc_column_text", $responsive_font );
+	vc_add_param('vc_column_text', array(
+		"type" => "dropdown",
+		"class" => "hide hidden",
+		"holder" => 'div',
+		"heading" => __("Font weight"),
+		"admin_label" => true,
+		"param_name" => "font_weight",
+		"value" => array(
+			"Normal" => "",
+			"Bold" => "bold"
+		),
+		"description" => "Set a custom Font Weight for this text"
+	));
 
-    vc_add_param("vc_column_text", array(
-        "type" => "textfield",
-        "class" => "hide hidden",
-        "holder" => 'div',
-        "heading" => __("Font size - Mobile"),
-        "admin_label" => true,
-        "param_name" => "font_size_xs",
-        "value" => "",
-        "description" => "Max 768px device width. Use px|em|%|pt|cm",
-        'group' => __( 'Responsive Font', 'js_composer' ),
-        'dependency'  => array(
-            'element' => 'responsive_font',
-            "not_empty" => true
-        ),
-        'edit_field_class' => 'vc_col-sm-6 vc_column pad-top-15',
-    ));
-    vc_add_param("vc_column_text", array(
-        "type" => "textfield",
-        "class" => "hide hidden",
-        "holder" => 'div',
-        "heading" => __("Line Height - Mobile"),
-        "admin_label" => true,
-        "param_name" => "line_height_xs",
-        "value" => "",
-        "description" => "Max 768px device width. Use px|em|%|pt|cm",
-        'group' => __( 'Responsive Font', 'js_composer' ),
-        'dependency'  => array(
-            'element' => 'responsive_font',
-            "not_empty" => true
-        ),
-        'edit_field_class' => 'vc_col-sm-6 vc_column',
-    ));
-
-    vc_add_param("vc_column_text", array(
-        "type" => "textfield",
-        "class" => "hide hidden",
-        "holder" => 'div',
-        "heading" => __("Font size - Tablet"),
-        "admin_label" => true,
-        "param_name" => "font_size_sm",
-        "value" => "",
-        "description" => "768px - 991px device width. Use px|em|%|pt|cm",
-        'group' => __( 'Responsive Font', 'js_composer' ),
-        'dependency'  => array(
-            'element' => 'responsive_font',
-            "not_empty" => true
-        ),
-        'edit_field_class' => 'vc_col-sm-6 vc_column',
-    ));
-    vc_add_param("vc_column_text", array(
-        "type" => "textfield",
-        "class" => "hide hidden",
-        "holder" => 'div',
-        "heading" => __("Line Height - Tablet"),
-        "admin_label" => true,
-        "param_name" => "line_height_sm",
-        "value" => "",
-        "description" => "768px - 991px device width. Use px|em|%|pt|cm",
-        'group' => __( 'Responsive Font', 'js_composer' ),
-        'dependency'  => array(
-            'element' => 'responsive_font',
-            "not_empty" => true
-        ),
-        'edit_field_class' => 'vc_col-sm-6 vc_column',
-    ));
-
-    vc_add_param("vc_column_text", array(
-        "type" => "textfield",
-        "class" => "hide hidden",
-        "holder" => 'div',
-        "heading" => __("Font size - Desktop"),
-        "admin_label" => true,
-        "param_name" => "font_size_md",
-        "value" => "",
-        "description" => "991px - 1200px device width. Use px|em|%|pt|cm",
-        'group' => __( 'Responsive Font', 'js_composer' ),
-        'dependency'  => array(
-            'element' => 'responsive_font',
-            "not_empty" => true
-        ),
-        'edit_field_class' => 'vc_col-sm-6 vc_column',
-    ));
-    vc_add_param("vc_column_text", array(
-        "type" => "textfield",
-        "class" => "hide hidden",
-        "holder" => 'div',
-        "heading" => __("Line Height - Desktop"),
-        "admin_label" => true,
-        "param_name" => "line_height_md",
-        "value" => "",
-        "description" => "991px - 1200px device width. Use px|em|%|pt|cm",
-        'group' => __( 'Responsive Font', 'js_composer' ),
-        'dependency'  => array(
-            'element' => 'responsive_font',
-            "not_empty" => true
-        ),
-        'edit_field_class' => 'vc_col-sm-6 vc_column',
-    ));
-
-    vc_add_param("vc_column_text", array(
-        "type" => "dropdown",
-        "class" => "hide hidden",
-        "holder" => 'div',
-        "heading" => __("Font weight"),
-        "admin_label" => true,
-        "param_name" => "font_weight",
-        "value" => array(
-            "Normal" => "",
-            "Bold" => "bold"
-        ),
-        "description" => "Set a custom Font Weight for this text"
-    ));
 
     vc_add_param( "vc_column_text", $vertical_separator );
 
@@ -1527,10 +1539,12 @@ function kleo_vc_manipulate_shortcodes() {
 
     /* VC CUSTOM HEADING */
     vc_add_param( "vc_custom_heading", $letter_spacing );
+	vc_add_params( "vc_custom_heading", $responsive_font );
     vc_add_param( "vc_custom_heading", $vertical_separator );
+    vc_add_param( "vc_custom_heading", $visibility );
 
 
-    /* Toggle */
+	/* Toggle */
     vc_map_update('vc_toggle', array('name' => 'Toggle', 'description' => 'Add a Toggle element', 'weight' => 6));
     vc_remove_param( 'vc_toggle', 'color' );
     vc_remove_param( 'vc_toggle', 'style' );
@@ -1610,13 +1624,15 @@ function kleo_vc_manipulate_shortcodes() {
 
     vc_add_param('vc_single_image', array(
         'param_name'  => 'box_shadow',
-        'heading'     => __( 'Enable box shadow', 'kleo_framework' ),
-        'description' => 'It will apply a nice shadow to the container',
-        'type'        => 'checkbox',
+        'heading'     => __( 'Image effects', 'kleo_framework' ),
+        'description' => 'Apply nice effects to the image element',
+        'type'        => 'dropdown',
         'class' => 'hide hidden',
         'holder'      => 'div',
         'value'       => array(
-            'Yes'    => 'yes',
+            'No effect'    => '',
+            'Box Shadow'    => 'yes',
+            'Hover Zoom and shadow'    => 'zoom',
         )
     ));
 
@@ -1624,11 +1640,13 @@ function kleo_vc_manipulate_shortcodes() {
     vc_add_param("vc_single_image", $animation);
     vc_add_param("vc_single_image", $css_animation);
     vc_add_param("vc_single_image", $el_class); //add the class field
+	vc_add_param( "vc_single_image", $visibility );
 
 
     /* Gallery */
     vc_map_update('vc_gallery',array('description' => ''));
     vc_remove_param( 'vc_gallery', 'interval' );
+    vc_remove_param( 'vc_gallery', 'css_animation' );
     vc_remove_param( 'vc_gallery', 'el_class' );
     vc_add_param('vc_gallery', array(
         "type" => "dropdown",
@@ -1641,6 +1659,33 @@ function kleo_vc_manipulate_shortcodes() {
             'Grid' => 'grid'
         )
     ));
+	vc_add_param('vc_gallery', array(
+		'param_name'  => 'enable_animation',
+		'heading'     => __( 'Enable Fading animation', 'kleo_framework' ),
+		'description' => 'When enabled you will have a nice fading animation',
+		'type'        => 'checkbox',
+		'class' => 'hide hidden',
+		'holder'      => 'div',
+		'value'       => array(
+			'Yes'    => 'yes',
+		),
+		'std' => 'yes'
+	));
+	vc_add_param('vc_gallery', array(
+		'param_name'  => 'thumbs_over_img',
+		'heading'     => __( 'Thumbnail over image', 'kleo_framework' ),
+		'description' => 'Thumbnails will show on hover over the main image',
+		'type'        => 'checkbox',
+		'class' => 'hide hidden',
+		'holder'      => 'div',
+		'value'       => array(
+			'Yes'    => 'yes',
+		),
+		"dependency" => array(
+			"element" => "type",
+			"value" => "thumbs"
+		)
+	));
     vc_add_param('vc_gallery', array(
         "type" => "dropdown",
         "holder" => 'div',
@@ -1661,6 +1706,16 @@ function kleo_vc_manipulate_shortcodes() {
         )
     ));
     vc_add_param('vc_gallery', array(
+        "type" => "checkbox",
+        "holder" => 'div',
+        'class' => 'hide hidden',
+        "heading" => __("Show Caption ?"),
+        "param_name" => "show_caption",
+        "value" => array(
+            'Show Caption under image in prettyphoto pop-up' => 'yes'
+        )
+    ));
+    vc_add_param('vc_gallery', array(
         "type" => "dropdown",
         "holder" => 'div',
         'class' => 'hide hidden',
@@ -1676,6 +1731,8 @@ function kleo_vc_manipulate_shortcodes() {
             "value" => "grid"
         )
     ));
+
+
     vc_add_param( 'vc_gallery', $el_class );
 
     /* Block Grid */
@@ -1779,6 +1836,15 @@ function kleo_vc_manipulate_shortcodes() {
                             'Yes'     => 'yes',
                         )
                     ),
+	                array(
+		                'param_name'  => 'title_size',
+		                'heading'     => 'Title Font Size',
+		                'description' => "Custom title font size. Use px|em|pt|cm",
+		                'type'        => 'textfield',
+		                'class'       => 'hide hidden',
+		                'holder'      => "div",
+		                'value'       => ""
+	                ),
                     array(
                         'param_name'  => 'box_shadow',
                         'heading'     => __( 'Enable box shadow.', 'kleo_framework' ),
@@ -2370,7 +2436,24 @@ function kleo_vc_manipulate_shortcodes() {
                 $el_class
             )
 
-        ));
+        )
+    );
+
+    /* vc_progress_bar  */
+	vc_remove_param( 'vc_progress_bar', 'el_class' );
+	vc_add_param("vc_progress_bar", array(
+		'param_name'  => 'style',
+		'heading'     => __( 'Style', 'kleo_framework' ),
+		'description' => __( 'Choose the bar appearance', 'kleo_framework' ),
+		'type'        => 'dropdown',
+		'class'       => 'hide hidden',
+		'holder'      => 'div',
+		'value'       => array(
+			'Regular' => '',
+			'Slim'  => 'slim'
+		)
+	));
+	vc_add_param( 'vc_progress_bar', $el_class );
 
     /* Clients */
 
@@ -3418,7 +3501,7 @@ function kleo_vc_manipulate_shortcodes() {
                             "type"        => "dropdown",
                             "holder"      => "div",
                             "class"       => "hide hidden",
-                            "heading"     => __( "Display pagination. Only if is the case it will be showed" ),
+                            "heading"     => __( "Display pagination. Only if is the case it will be shown" ),
                             "value"       => array(
                                 'No'  => 'no',
                                 'Yes' => 'yes'
@@ -3437,6 +3520,17 @@ function kleo_vc_manipulate_shortcodes() {
                             ),
                             "description" => ''
                         ),
+	                    array(
+		                    'param_name'  => 'ajax',
+		                    'heading'     => __( 'Enable AJAX on filters .', 'kleo_framework' ),
+		                    'description' => 'When clicking filters will send an AJAX request to get specific category items. Works best when you have pagination',
+		                    'type'        => 'checkbox',
+		                    'class' => 'hide hidden',
+		                    'holder'      => 'div',
+		                    'value'       => array(
+			                    'Yes'    => 'yes',
+		                    ),
+	                    ),
                         array(
                             "param_name"  => "excerpt",
                             "type"        => "dropdown",
@@ -3465,7 +3559,7 @@ function kleo_vc_manipulate_shortcodes() {
                             "class"       => "hide hidden",
                             "heading"     => __( "Show from Category" ),
                             "value"       => kleo_get_category_list( apply_filters( 'kleo_portfolio_cat_slug', 'portfolio-category' ), 1 ),
-                            "description" => ''
+                            "description" => 'It will get also any subcategories'
                         ),
                         array(
                             "param_name"  => "exclude_categories",
@@ -4224,7 +4318,8 @@ function kleo_vc_manipulate_shortcodes() {
                     'edit_field_class' => 'vc_col-sm-6 vc_column',
                     'group' => __( 'Design Options', 'js_composer' ),
                 ),
-                $el_class
+	            $visibility,
+                $el_class,
             )
         )
     );
@@ -4424,6 +4519,49 @@ function kleo_vc_manipulate_shortcodes() {
             )
         );
     }
+
+	/* Kleo News Ticker */
+	if (isset($k_elements['kleo_news_puzzle'])) {
+		vc_map(
+			array(
+				"name"        => __( "News Puzzle" ),
+				"base"        => "kleo_news_puzzle",
+				"class"       => "",
+				"category"    => __( 'Content' ),
+				"icon"        => "kleo-news-puzzle",
+				"description" => __( "Posts in puzzle design" ),
+				"params"      => array(
+					array(
+						'type'        => 'loop',
+						'heading'     => __( 'Build your query', 'js_composer' ),
+						'param_name'  => 'posts_query',
+						'settings'    => array(
+							'size'     => array( 'hidden' => false, 'value' => 10 ),
+							'order_by' => array( 'value' => 'date' )
+						),
+						'description' => __( 'Refine your posts by specific filters. This will get only image and gallery post formats', 'js_composer' )
+					),
+					$query_offset,
+					array(
+						"type"        => "dropdown",
+						"holder"      => "div",
+						"class"       => "hide hidden",
+						"heading"     => __( "Posts per Row" ),
+						"param_name"  => "per_row",
+						"value"       => array(
+							'2' => '2',
+							'3'  => '3',
+							'4'  => '4',
+						),
+						'std' => '3',
+						"description" => __( "How many posts to show on one line." )
+					),
+					$el_class
+				)
+
+			)
+		);
+	}
 
     /* Buddypress members count */
     vc_map(

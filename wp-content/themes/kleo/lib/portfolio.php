@@ -117,6 +117,7 @@ function sq_portfolio_ajax() {
 	if ( $args ) {
 		$args = maybe_unserialize( $args );
 	}
+	
 	if ( ! is_array( $args ) ) {
 		wp_send_json_error( array( 'message' => __( 'Something went wrong. Please reload page.', 'kleo_framework' ) ) );
 		exit;
@@ -249,7 +250,7 @@ if ( ! function_exists( 'kleo_portfolio_items' ) ) {
 		if ( $ajax ) {
 			global $portfolio_count;
 			$portfolio_count++;
-
+			
 			$all_options = compact(
 				'display_type',
 				'title_style',
@@ -265,12 +266,25 @@ if ( ! function_exists( 'kleo_portfolio_items' ) ) {
 				'ajax'
 			);
 			set_transient( 'kleo_portfolio_' . get_the_ID() . '_' . $portfolio_count, serialize( $all_options ) );
+		} else {
+			$portfolio_count = 0;
 		}
-
+		
+		
+		if (defined('DOING_AJAX') && DOING_AJAX) {
+			/* it's an AJAX call */
+		} else {
+			$portfolio_items_output .= '<div class="portfolio-data" style="display: none;">';
+			$portfolio_items_output .= wp_nonce_field( 'kleo-ajax-portfolio-nonce', 'portfolio-security', true, false );
+			$portfolio_items_output .= '<input type="hidden" name="pitem" value="' . $portfolio_count . '">';
+			$portfolio_items_output .= '<input type="hidden" name="post_id" value="' . get_the_ID() . '">';
+			$portfolio_items_output .= '</div>';
+		}
+		
 		if ( 'yes' == $filter ) {
 			$portfolio_items_output .= kleo_portfolio_filter( $category, $exclude_categories, $ajax );
 		}
-
+		
 		$portfolio_items_output .= '<div class="portfolio-wrapper">';
 
 		$portfolio_items_output .= '<ul class="portfolio-items responsive-cols kleo-masonry ' . $classes . '">' . "\n";
@@ -302,7 +316,12 @@ if ( ! function_exists( 'kleo_portfolio_items' ) ) {
 		/* PAGINATION OUTPUT
 		================================================== */
 		if ( 'yes' == $pagination ) {
-			$portfolio_items_output .= '<div class="pagination-wrap">';
+			$class_prefix = '';
+			if ( $ajax ) {
+				$class_prefix = 'ajax-';
+			}
+			
+			$portfolio_items_output .= '<div class="'. $class_prefix .'pagination-wrap">';
 			$portfolio_items_output .= kleo_pagination( $portfolio_items->max_num_pages, false, $paged );
 			$portfolio_items_output .= '</div>';
 		}
@@ -333,16 +352,10 @@ if ( ! function_exists( 'kleo_portfolio_filter' ) ) {
 
 		$class_prefix = '';
 		if ( $ajax ) {
-			global $portfolio_count;
 			$class_prefix = 'ajax-';
-		} else {
-			$portfolio_count = '0';
 		}
 
 		$filter_output .= '<div class="' . $class_prefix . 'filter-wrap row clearfix">' . "\n";
-		$filter_output .= '<input type="hidden" name="pitem" value="' . $portfolio_count . '">';
-		$filter_output .= '<input type="hidden" name="post_id" value="' . get_the_ID() . '">';
-		$filter_output .= wp_nonce_field( 'kleo-ajax-portfolio-nonce', 'portfolio-security', true, false );
 		$filter_output .= '<ul class="portfolio-filter-tabs bar-styling filtering col-sm-12 clearfix">' . "\n";
 		$filter_output .= '<li class="all selected"><a data-filter="*" href="#"><span class="item-name">' . __( 'All', 'kleo_framework' ) . '</span></a></li>' . "\n";
 		foreach ( $tax_terms as $tax_term ) {

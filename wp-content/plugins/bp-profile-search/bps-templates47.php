@@ -15,7 +15,7 @@ function bps_escaped_form_data ()
 	$F->toggle_text = bps_wpml ($form, '-', 'toggle form', $meta['button']);
 
 	$dirs = bps_directories ();
-	$F->action = $dirs[$meta['action']]->link;
+	$F->action = $dirs[bps_wpml_id ($meta['action'])]->link;
 
 	$F->method = $meta['method'];
 	$F->fields = array ();

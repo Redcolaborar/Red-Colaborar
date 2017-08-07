@@ -11,8 +11,7 @@ class Config
 	public $_plugin_name				= 'anspresstobuddypressloader';	
 	
 	public function __construct()
-	{
-				
+	{				
 		add_action( 'wp_ajax_anspresstobuddypressloader_load_questions', 
 				   	array(&$this, 'loadQuestions')
 				  );
@@ -33,6 +32,8 @@ class Config
 		add_action( 'wp_enqueue_scripts', 
 				   	array(&$this, 'anspresstobuddypressloader_enqueue_js')
 				  );
+		
+		add_action( 'init', array( $this, 'load_textdomain' ), 0 );
 
 	}
 	
@@ -250,8 +251,12 @@ class Config
 		echo "var APTOBPLOADER_SITE_URL = ", json_encode( site_url('/') ), ";\n";
 		echo "var APTOBPLOADER_AJAX_URL = ", json_encode( admin_url('/admin-ajax.php') ), ";\n";
 		echo "var APTOBPLOADER_TERM_ID = ", json_encode( $this->APtoBPLoader->termID ), ";\n";
-		echo "var APTOBPLOADER_TEXT_QUESTIONS = '", _e('Questions'), "';\n";
+		echo "var APTOBPLOADER_TEXT_QUESTIONS = '", _e('Questions', $this->_plugin_name), "';\n";
 		echo "// ]]>\n</script>\n";
 	}
 	
+	public function load_textdomain()
+	{
+		load_plugin_textdomain( $this->_plugin_name, false, $this->_plugin_name.'/languages'); 	
+	}	
 }

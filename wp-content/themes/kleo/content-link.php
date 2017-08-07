@@ -31,7 +31,8 @@ if ( is_single() && get_cfield( 'centered_text' ) == 1 ) {
 
 		<?php do_action( 'kleo_before_inner_article_loop' ); ?>
 
-		<?php the_content( esc_html__( 'Continue reading <span class="meta-nav">&rarr;</span>', 'kleo_framework' ) ); ?>
+		<?php the_content( esc_html__( sq_option( 'continue_reading_blog_text', 'Continue reading' ) . '<span class="meta-nav">&rarr;</span>', 'kleo_framework' ) ); ?>
+
 		<?php wp_link_pages( array(
 			'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'kleo_framework' ),
 			'after'  => '</div>',

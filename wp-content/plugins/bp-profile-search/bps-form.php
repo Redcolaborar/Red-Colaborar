@@ -134,10 +134,10 @@ function bps_set_wpml ($form, $code, $key, $value)
 	if (!class_exists ('BPML_XProfile'))  return false;
 	if (empty ($value))  return false;
 
-	icl_register_string ('Profile Search', "form $form $code $key", $value);
+	do_action ('wpml_register_single_string', 'Profile Search', "form {$form} {$code} {$key}", $value);
 }
 
-function bps_wpml ($form, $id, $key, $value)
+function bps_wpml ($form, $code, $key, $value)
 {
 	if (empty ($value))  return $value;
 
@@ -146,20 +146,20 @@ function bps_wpml ($form, $id, $key, $value)
 		switch ($key)
 		{
 		case 'name':
-			return icl_t ('Buddypress Multilingual', "profile field $id name", $value);
+			return apply_filters ('wpml_translate_single_string', $value, 'Buddypress Multilingual', "profile field {$code} name");
 		case 'label':
-			return icl_t ('Profile Search', "form $form field_$id label", $value);
+			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} {$code} label");
 		case 'description':
-			return icl_t ('Buddypress Multilingual', "profile field $id description", $value);
+			return apply_filters ('wpml_translate_single_string', $value, 'Buddypress Multilingual', "profile field {$code} description");
 		case 'comment':
-			return icl_t ('Profile Search', "form $form field_$id comment", $value);
+			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} {$code} comment");
 		case 'option':
 			$option = bpml_sanitize_string_name ($value, 30);
-			return icl_t ('Buddypress Multilingual', "profile field $id - option '$option' name", $value);
+			return apply_filters ('wpml_translate_single_string', $value, 'Buddypress Multilingual', "profile field {$code} - option '{$option}' name");
 		case 'header':
-			return icl_t ('Profile Search', "form $form - header", $value);
+			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} - header");
 		case 'toggle form':
-			return icl_t ('Profile Search', "form $form - toggle form", $value);
+			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} - toggle form");
 		}
 	}
 	else if (class_exists ('WPGlobus_Core'))
@@ -174,10 +174,8 @@ function bps_wpml_id ($id, $lang='current')
 {
 	if (class_exists ('BPML_XProfile'))
 	{
-		global $sitepress;
-
-		if ($lang == 'current')  $id = icl_object_id ($id, 'page', true);
-		if ($lang == 'default')  $id = icl_object_id ($id, 'page', true, $sitepress->get_default_language ());
+		$language = $lang == 'current'? apply_filters ('wpml_current_language', null): apply_filters ('wpml_default_language', null);
+		$id = apply_filters ('wpml_object_id', $id, 'page', true, $language);
 	}
 
 	return $id;

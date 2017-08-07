@@ -12,9 +12,11 @@ function bps_directories ()
 		if (isset ($bp_pages['members']))
 		{
 			$members = $bp_pages['members'];
+// echo "-- debug: bp_core_get_directory_page_ids returns $members --\n";
+			$members = bps_wpml_id ($members);
 			$dirs[$members] = new stdClass;
 			$dirs[$members]->label = get_the_title ($members);
-			$dirs[$members]->link = parse_url (get_page_link (bps_wpml_id ($members)), PHP_URL_PATH);
+			$dirs[$members]->link = parse_url (get_page_link ($members), PHP_URL_PATH);
 
 			if (function_exists ('bp_get_member_types'))
 			{
@@ -36,7 +38,7 @@ function bps_directories ()
 	{
 		$dirs[$page->ID] = new stdClass;
 		$dirs[$page->ID]->label = $page->post_title;
-		$dirs[$page->ID]->link = parse_url (get_page_link (bps_wpml_id ($page->ID)), PHP_URL_PATH);
+		$dirs[$page->ID]->link = parse_url (get_page_link ($page->ID), PHP_URL_PATH);
 	}
 
 	return $dirs;

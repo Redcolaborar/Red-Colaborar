@@ -439,3 +439,29 @@ body.is-user-profile #item-header-avatar {
   font-weight: bold;
   letter-spacing: 0.1em;
 }
+.navbar .sa-notification {
+  min-height: 0 !important;
+  margin-bottom: 0 !important;
+  line-height: normal !important;
+}
+li.kleo-notifications-nav .kleo-submenu-item > a {
+  line-height: 20px;
+}
+.navbar .sa-notification a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block !important;
+  width: 50px;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+.navbar .sa-notification a.social-delete {
+  width: 20px !important;
+  text-align: center;
+  border-radius: 50%;
+  top: 6px;
+  display: none !important;
+}
+.kleo-notifications-nav ul.submenu-inner.has-notif li:before {
+  top: 4px;
+}

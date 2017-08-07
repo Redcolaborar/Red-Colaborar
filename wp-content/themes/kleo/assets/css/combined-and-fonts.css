@@ -6959,6 +6959,9 @@ a .link-icon {
 .kleo-main-header a.btn-see-through:hover {
   border: 2px solid rgba(0, 0, 0, 0.4);
 }
+.kleo-main-header a.btn-see-through .kleo-main-header a.btn-see-through span.caret:after {
+  top: 14px;
+}
 /* Center Logo & Menu */
 #header .header-centered.kleo-main-header > .container {
   display: block;
@@ -7613,7 +7616,7 @@ a.ajax_view_all:after {
 }
 /* Google Search Box in Header */
 .has-google-search-box .sticky-wrapper {
-  z-index: 1601;
+  z-index: 1490;
   position: relative;
 }
 .has-google-search-box li#nav-menu-item-search {
@@ -7631,6 +7634,9 @@ a.ajax_view_all:after {
 .has-google-search-box .gscb_a {
   font-size: 22px;
   line-height: 19px;
+}
+.has-google-search-box .kleo-search-wrap.show_search_pop {
+  padding: 10px;
 }
 /*Menu dropdown toggle*/
 .kleo-toggle-menu {
@@ -7767,7 +7773,7 @@ a.ajax_view_all:after {
   margin-right: 10px;
   position: absolute;
   left: 5px;
-  top: 0;
+  top: 2px;
 }
 .notify-contents {
   /*position: relative;
@@ -8444,6 +8450,41 @@ body.modal-open {
 }
 .tagcloud {
   display: inline-block;
+}
+/* Bottom footer */
+/*.footer-bottom {
+  height: 100%;
+  overflow-y: initial;
+  -webkit-overflow-scrolling: touch;
+
+  .kleo-page {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction: column;
+    -ms-flex-direction: column;
+    -webkit-flex-direction: column;
+    height: 100%;
+
+    #header, #footer {
+      flex-shrink: 0;
+      -webkit-flex-shrink: 0;
+    }
+
+    #main {
+      flex-grow: 1;
+      -webkit-flex-grow: 1;
+    }
+  }
+}*/
+/* IE 10 & 11 bugfix */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .footer-bottom {
+    overflow: visible !important;
+  }
+  .footer-bottom .kleo-page #main {
+    flex: 1 0 auto !important;
+  }
 }
 /* Socket Section */
 #socket {
@@ -9817,6 +9858,9 @@ div .wp-caption {
     width: 100%;
   }
 }
+.posts-load-more {
+  margin-top: 40px;
+}
 /* #Comments */
 #comments-list {
   position: relative;
@@ -10217,7 +10261,7 @@ ul.link-list li {
   border-radius: 3px;
   cursor: pointer;
   /* v.4.1.9 */
-  font-size: small !important;
+  font-size: small;
 }
 .widget_tag_cloud a:hover {
   text-decoration: none;
@@ -18061,6 +18105,32 @@ body.is-user-profile #item-header-avatar {
   font-weight: bold;
   letter-spacing: 0.1em;
 }
+.navbar .sa-notification {
+  min-height: 0 !important;
+  margin-bottom: 0 !important;
+  line-height: normal !important;
+}
+li.kleo-notifications-nav .kleo-submenu-item > a {
+  line-height: 20px;
+}
+.navbar .sa-notification a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block !important;
+  width: 50px;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+.navbar .sa-notification a.social-delete {
+  width: 20px !important;
+  text-align: center;
+  border-radius: 50%;
+  top: 6px;
+  display: none !important;
+}
+.kleo-notifications-nav ul.submenu-inner.has-notif li:before {
+  top: 4px;
+}
 /* --------------------------------------------------
     YITH WooCommerce Wishlist - KLEO Compatibility
 ----------------------------------------------------- */
@@ -19112,8 +19182,8 @@ body[class*="rtm-3.7"] .rtmedia-activity-container .mejs-time-rail {
 }
 @font-face {
   font-family: 'fontello';
-  src: url('../font/fontello.eot?54362609');
-  src: url('../font/fontello.eot?54362609#iefix') format('embedded-opentype'), url('../font/fontello.woff2?54362609') format('woff2'), url('../font/fontello.woff?54362609') format('woff'), url('../font/fontello.ttf?54362609') format('truetype'), url('../font/fontello.svg?54362609#fontello') format('svg');
+  src: url('../font/fontello.eot?45483646');
+  src: url('../font/fontello.eot?45483646#iefix') format('embedded-opentype'), url('../font/fontello.woff2?45483646') format('woff2'), url('../font/fontello.woff?45483646') format('woff'), url('../font/fontello.ttf?45483646') format('truetype'), url('../font/fontello.svg?45483646#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -20523,6 +20593,36 @@ body[class*="rtm-3.7"] .rtmedia-activity-container .mejs-time-rail {
 }
 .icon-streamline-bookmark-article:before {
   content: '\e9ce';
+}
+.icon-streamline-alarm:before {
+  content: '\ea02';
+}
+.icon-streamline-box:before {
+  content: '\ea03';
+}
+.icon-streamline-compatible-devices:before {
+  content: '\ea04';
+}
+.icon-streamline-email-send:before {
+  content: '\ea05';
+}
+.icon-streamline-friends:before {
+  content: '\ea06';
+}
+.icon-streamline-group-global:before {
+  content: '\ea07';
+}
+.icon-streamline-group:before {
+  content: '\ea08';
+}
+.icon-streamline-hierarchy-business:before {
+  content: '\ea09';
+}
+.icon-streamline-shopping-cart-1:before {
+  content: '\ea0a';
+}
+.icon-qq:before {
+  content: '\f1d6';
 }
 .icon-toggle-off:before {
   content: '\f204';

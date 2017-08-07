@@ -130,7 +130,7 @@ function remove_wp_logo( $wp_admin_bar ) {
 
         $my_account_crear_cursos['id'] = 'my-account-crear-curso';
         $my_account_crear_cursos['title'] = 'Crear Curso';
-        $my_account_crear_cursos['href'] = 'http://redcolaborar.org/create-course/';
+        $my_account_crear_cursos['href'] = 'https://redcolaborar.org/create-course/';
         $wp_admin_bar->add_node( $my_account_crear_cursos );
 
         // Recursos
@@ -161,7 +161,7 @@ function remove_wp_logo( $wp_admin_bar ) {
         $my_account_preguntas_2['parent'] = 'my-account-mis-preguntas';
         $my_account_preguntas_2['id'] = 'my-account-mis-preguntas-2';
         $my_account_preguntas_2['title'] = 'Hacer Pregunta';
-        $my_account_preguntas_2['href'] = 'http://redcolaborar.org/preguntas/hacer-pregunta/';
+        $my_account_preguntas_2['href'] = 'https://redcolaborar.org/preguntas/hacer-pregunta/';
         $wp_admin_bar->add_node( $my_account_preguntas_2 );
 
         $my_account_preguntas_3 = $my_account_crear_cursos;
@@ -184,7 +184,7 @@ function remove_wp_logo( $wp_admin_bar ) {
         $my_account_rep_prob['parent'] = 'my-account';
         $my_account_rep_prob['id'] = 'my-account-reportar-problemas';
         $my_account_rep_prob['title'] = 'Reportar Problema';
-        $my_account_rep_prob['href'] = 'http://redcolaborar.org/foros/foro/problemas-y-sugerencias/';
+        $my_account_rep_prob['href'] = 'https://redcolaborar.org/foros/foro/problemas-y-sugerencias/';
         $wp_admin_bar->add_node( $my_account_rep_prob );
 
         // Configuracion
@@ -243,11 +243,11 @@ add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
 add_filter( 'wp_nav_menu_items', 'nav_sign_links');
 function nav_sign_links($menu) {
     if (is_user_logged_in()){
-        $outlink = '<li><a href="http://redcolaborar.org/wp-login.php?action=logout"></a></li>';
+        $outlink = '<li><a href="https://redcolaborar.org/wp-login.php?action=logout"></a></li>';
         $menu = $menu . $outlink;
         return $menu;
     } else {
-        $signlinks = '<li><a href="http://redcolaborar.org/wp-login.php?">Ingresar</a></li><li><a href="http://redcolaborar.org/wp-login.php?action=wordpress_social_authenticate&mode=login&provider=Facebook"><img alt="Facebook" title="Ingresar con Facebook" src="http://redcolaborar.org/wp-content/plugins/wordpress-social-login/assets/img/32x32/wpzoom/facebook.png"></a></li><li><a href="http://redcolaborar.org/wp-login.php?action=wordpress_social_authenticate&mode=login&provider=LinkedIn"><img alt="LinkedIn" title="Ingresar con LinkedIn" src="http://redcolaborar.org/wp-content/plugins/wordpress-social-login/assets/img/32x32/wpzoom/linkedin.png"></a></li>';
+        $signlinks = '<li><a href="https://redcolaborar.org/wp-login.php?">Ingresar</a></li><li><a href="https://redcolaborar.org/wp-login.php?action=wordpress_social_authenticate&mode=login&provider=Facebook"><img alt="Facebook" title="Ingresar con Facebook" src="https://redcolaborar.org/wp-content/plugins/wordpress-social-login/assets/img/32x32/wpzoom/facebook.png"></a></li><li><a href="https://redcolaborar.org/wp-login.php?action=wordpress_social_authenticate&mode=login&provider=LinkedIn"><img alt="LinkedIn" title="Ingresar con LinkedIn" src="https://redcolaborar.org/wp-content/plugins/wordpress-social-login/assets/img/32x32/wpzoom/linkedin.png"></a></li>';
         $menu = $menu . $signlinks;
         return $menu;
     }

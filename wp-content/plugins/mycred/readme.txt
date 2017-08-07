@@ -2,8 +2,8 @@
 Contributors: designbymerovingi
 Tags: point, points, tokens, credit, management, reward, charge, community, contest, buddypress, jetpack, bbpress, simple press, woocommerce, wp e-commerce, contact-form-7
 Requires at least: 4.0
-Tested up to: 4.7.3
-Stable tag: 1.7.7
+Tested up to: 4.8
+Stable tag: 1.7.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -96,8 +96,8 @@ You can find a list of [frequently asked questions](https://mycred.me/about/faq/
 
 == Upgrade Notice ==
 
-= 1.7.7 =
-Important bug fixes.
+= 1.7.9 =
+Minor bug fixes.
 
 
 == Other Notes ==
@@ -121,18 +121,16 @@ Important bug fixes.
 
 == Changelog ==
 
-= 1.7.7 =
-FIX - When deleting a log entry it is no longer animated and visually removed.
-FIX - Displaying users badges that no longer exists cause fatal error.
-FIX - Video hook ajax url fails to load.
-FIX - mycred_sell_this shortcode causes the entire content to be hidden.
-FIX - Fixed array to string conversion error in Statistics add-on.
-FIX - Currency symbol missing in WooCommerce when points is selected as the store currency.
-FIX - When the Transfer add-on is set to only allow transfers of 1 custom point type and not the default point type, the transfer shortcode will show a "over limit" error.
-FIX - Sell Content add-on can in certain situations produce a PHP notice until the add-ons settings are saved after an update.
-TWEAK - Mixed up the member and visitor default template values.
-TWEAK - The mycred_types_select_from_checkboxes() function is not rendering checkboxes and labels correctly. Also removed break line element.
-NEW - Added new mycred_get_addon_settings() function to make add-on settings retrieval easier.
+= 1.7.9 =
+FIX - Incorrect badge level labels are shown in the mycred_badges shortcode.
+FIX - Unapproved comments are sometimes seen as spam by the Points for comments hook. (Thanks thomaslhotta)
+FIX - Fixed minor logic issue in the mycred_total_points shortcode.
+FIX - Balance export option is missing in the Management section (Thanks imago).
+FIX - Removed duplicate usage of the mycred_transfer_ready action.
+FIX - Rank sorting in the front end should only be applied to the main query in the rank archive (if used).
+TWEAK - Updated export balance modal design to 1.7
+TWEAK - Updated the mycred_total_since shortcode to render potential errors when the shortcode is used incorrectly.
+Tested with WordPress 4.8
 
 
 = Previous Versions =

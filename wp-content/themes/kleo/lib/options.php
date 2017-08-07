@@ -689,6 +689,13 @@ $sections[] = array(
 			'subtitle' => __( 'You can use shortcodes in your footer text like: [site-url] [current-year]', 'kleo_framework' ),
 			'default'  => '<p style="text-align: center;"><strong>&copy;[current-year] KLEO Template</strong> a premium and multipurpose theme from <a href="http://www.seventhqueen.com" target="_blank">Seven<sup>th</sup> Queen</a></p>',
 		),
+		array(
+			'id'       => 'footer_bottom',
+			'type'     => 'switch',
+			'title'    => __( 'Keep footer on bottom', 'kleo_framework' ),
+			'subtitle' => __( 'When page content is very small, force footer to stay on bottom', 'kleo_framework' ),
+			'default'  => '0' // 1 = checked | 0 = unchecked
+		),
 
 	)
 );
@@ -1679,6 +1686,21 @@ $sections[] = array(
 			'default'  => '3'
 		),
 		array(
+			'id'       => 'blog_exclude_cat',
+			'type'     => 'select',
+			'multi'    => true,
+			'title'    => __( 'Exclude categories from main blog', 'kleo_framework' ),
+			'desc'     => __( 'Choose the categories to hide posts from in the main blog.', 'kleo_framework' ),
+			'data'      => 'categories',
+		),
+		array(
+			'id'          => 'blog_tag_cloud',
+			'type'        => 'switch',
+			'title'       => __( 'Tag Cloud Widget dynamic font size ', 'kleo_framework' ),
+			'description' => __( 'When enabled, tags will appear in different sizes based on number of posts.', 'kleo_framework' ),
+			'default'     => '0' // 1 = checked | 0 = unchecked
+		),
+		array(
 			'id'          => 'blog_custom_img',
 			'type'        => 'switch',
 			'title'       => __( 'Enable Custom Image sizes', 'kleo_framework' ),
@@ -1883,6 +1905,13 @@ $sections[] = array(
 			'title'    => __( 'Default Featured Image Placeholder', 'kleo_framework' ),
 			'subtitle' => __( 'If your post does not have a Featured image set then show a default image on archive pages.', 'kleo_framework' ),
 		),
+        array(
+            'id'       => 'continue_reading_blog_text',
+            'type'     => 'text',
+            'title'    => __( 'Read more text from blog/archives ', 'kleo_framework' ),
+            'subtitle' => __( 'Add your desired text for read more button from blog/archives', 'kleo_framework' ),
+            'default'  => 'Continue reading'
+        ),
 		array(
 			'id'       => 'post_navigation',
 			'type'     => 'switch',
@@ -2476,8 +2505,8 @@ $sections[] = array(
 		array(
 			'id'       => 'bp_notif_interval',
 			'type'     => 'text',
-			'title'    => __( 'Live Notifications interval', 'kleo_framework' ),
-			'subtitle' => 'Refresh time in miliseconds for the live menu notification. Default is 20000 which means 20 seconds. Put 0 to disable notifications refresh. Add it to the menu from Appearance - Menus - KLEO section.',
+			'title'    => __( 'AJAX refresh interval', 'kleo_framework' ),
+			'subtitle' => 'Menu notifications and Messages Refresh time in miliseconds. Default is 20000 which means 20 seconds. Put 0 to disable notifications refresh. Add it to the menu from Appearance - Menus - KLEO section.',
 			'default'  => '20000' // 1 = checked | 0 = unchecked
 		),
 		array(
@@ -2642,6 +2671,36 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				'default'  => '1' // 1 = checked | 0 = unchecked
 			),
 			array(
+				'id'       => 'woo_new_days',
+				'type'     => 'text',
+				'required' => array( 'woo_new_badge', '=', '1' ),
+				'title'    => __( 'Number of days to treat a product as new', 'kleo_framework' ),
+				'subtitle' => __( 'For how many days to show the NEW badge once a product is added to the shop.', 'kleo_framework' ),
+				'default'  => '7' // 1 = checked | 0 = unchecked
+			),
+			array(
+				'id'       => 'section-title-woo-single',
+				'type'     => 'section',
+				'title'    => __( 'Product Page settings', 'kleo_framework' ),
+				'subtitle' => __( 'Settings for Single Product page', 'kleo_framework' ),
+				'indent'   => true, // Indent all options below until the next 'section' option is set.
+			),
+			array(
+				'id'       => 'woo_prod_zoom',
+				'type'     => 'switch',
+				'title'    => __( 'Enable Image Zoom', 'kleo_framework' ),
+				'subtitle' => 'Enable Main Image Zoom effect on hover. Will disable click to open big image. Use with bellow option for gallery',
+				'default'  => '0' // 1 = checked | 0 = unchecked
+			),
+			array(
+				'id'       => 'woo_prod_lightbox',
+				'type'     => 'switch',
+				'title'    => __( 'Enable Default Image Gallery', 'kleo_framework' ),
+				'subtitle' => 'Enable Woocommerce default gallery for product images',
+				'default'  => '0' // 1 = checked | 0 = unchecked
+			),
+
+			array(
 				'id'       => 'woo_show_excerpt_single',
 				'type'     => 'switch',
 				'title'    => __( 'Show excerpt on product page', 'kleo_framework' ),
@@ -2655,6 +2714,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				'subtitle' => 'Display previous and next product navigation',
 				'default'  => '1' // 1 = checked | 0 = unchecked
 			),
+
+			array(
+				'id'     => 'section-title-woo-single-end',
+				'type'   => 'section',
+				'indent' => false, // Indent all options below until the next 'section' option is set.
+			),
+
 			array(
 				'id'       => 'woo_buddypress_menus',
 				'type'     => 'switch',
@@ -2662,14 +2728,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				'subtitle' => __( 'Integrates "My Account" into Buddypress profile tabs', 'kleo_framework' ),
 				'default'  => '1' // 1 = checked | 0 = unchecked
 			),
-			array(
-				'id'       => 'woo_new_days',
-				'type'     => 'text',
-				'required' => array( 'woo_new_badge', '=', '1' ),
-				'title'    => __( 'Number of days to treat a product as new', 'kleo_framework' ),
-				'subtitle' => __( 'For how many days to show the NEW badge once a product is added to the shop.', 'kleo_framework' ),
-				'default'  => '7' // 1 = checked | 0 = unchecked
-			),
+
 
 			array(
 				'id'       => 'woo_catalog',
@@ -3074,7 +3133,23 @@ $sections[] = array(
 			'subtitle' => "Your Xing link",
 			'desc'     => '',
 			'default'  => ''
-		)
+		),
+        array(
+            'id'       => 'social_weibo',
+            'type'     => 'text',
+            'title'    => __( 'Weibo', 'kleo_framework' ),
+            'subtitle' => "Your Weibo link",
+            'desc'     => '',
+            'default'  => ''
+        ),
+        array(
+            'id'       => 'social_qq',
+            'type'     => 'text',
+            'title'    => __( 'QQ Link', 'kleo_framework' ),
+            'subtitle' => "Your QQ link",
+            'desc'     => '',
+            'default'  => ''
+        )
 	)
 );
 
@@ -3129,6 +3204,15 @@ $sections[] = array(
 				'custom'  => __( 'Custom link', 'kleo_framework' ),
 			),
 			'default'  => 'default',
+			'required' => array( 'facebook_register', '=', '1' ),
+
+		),
+        array(
+			'id'       => 'facebook_sent_email_login_details',
+			'type'     => 'switch',
+			'title'    => __( 'Sent email to the user with username and generated password', 'kleo_framework' ),
+			'subtitle' => __( 'Select if you want users who login with facebook to receive email with username and generated password.', 'kleo_framework' ),
+            'default'  => '1', // 1 = checked | 0 = unchecked
 			'required' => array( 'facebook_register', '=', '1' ),
 
 		),

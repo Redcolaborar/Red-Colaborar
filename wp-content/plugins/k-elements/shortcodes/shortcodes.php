@@ -18,7 +18,7 @@ $k_elements = array(
     'kleo_gap' => array(
         'name' => 'Gap',
         'category' => '',
-        'example' => '[kleo_gap size="12px" class="" id=""]'
+        'example' => '[kleo_gap size="12px" class="" id=""]',
     ),
     'kleo_divider' => array(
         'name' => 'Divider',
@@ -154,6 +154,11 @@ $k_elements = array(
         'name' => 'News Ticker',
         'category' => '',
         'example' => '[kleo_news_ticker]'
+    ),
+    'kleo_news_puzzle' => array(
+	    'name' => 'News Column',
+	    'category' => '',
+	    'example' => '[kleo_news_puzzle]'
     ),
 	'kleo_login' => array(
         'name' => 'Login / Lost Password Forms',
@@ -1330,7 +1335,7 @@ if ( ! function_exists( 'kleo_restrict_func' ) ) {
 if ( ! function_exists( 'kleo_portfolio_func' ) && function_exists('kleo_portfolio_items') && isset( $k_elements['kleo_portfolio'] ) ) {
     function kleo_portfolio_func( $atts, $content = null )
     {
-        $output = $display_type = $title_style = $columns = $item_count = $pagination = $filter = $excerpt = $image_size = $category = $exclude_categories = $el_class = '';
+        $output = $display_type = $title_style = $columns = $item_count = $pagination = $filter = $ajax = $excerpt = $image_size = $category = $exclude_categories = $el_class = '';
         extract(shortcode_atts(array(
             'display_type' => 'default',
             'title_style' => 'standard',
@@ -1338,6 +1343,7 @@ if ( ! function_exists( 'kleo_portfolio_func' ) && function_exists('kleo_portfol
             'item_count' => NULL,
             'pagination' => 'no',
             'filter' => 'yes',
+            'ajax' => '',
             'excerpt' => 1,
             'image_size' => '',
             'category' => '',
@@ -1363,8 +1369,14 @@ if ( ! function_exists( 'kleo_portfolio_func' ) && function_exists('kleo_portfol
                 $img_height = $img_array[1];
             }
         }
+
+	    $use_ajax = false;
+        if ( 'yes' == $filter && 'yes' == $ajax ) {
+        	$use_ajax = true;
+        }
+
         $output .= '<div class="wpb_wrapper' . $class . '">';
-        $output .= kleo_portfolio_items( $display_type, $title_style, $columns, $item_count, $pagination, $filter, $excerpt, $img_width, $img_height, $category, $exclude_categories );
+        $output .= kleo_portfolio_items( $display_type, $title_style, $columns, $item_count, $pagination, $filter, $excerpt, $img_width, $img_height, $category, $exclude_categories, $use_ajax );
         $output .= '</div>';
 
         return $output;
@@ -1875,6 +1887,62 @@ if (isset($k_elements['kleo_news_ticker'])) {
 		return $args;
 	}
 }
+
+
+/**
+ * News Ticker shortcode
+ */
+
+if (isset($k_elements['kleo_news_puzzle'])) {
+	add_shortcode( "kleo_news_puzzle", "kleo_news_puzzle_func" );
+	add_filter( 'kleo_tinymce_shortcodes', "kleo_news_puzzle_mce" );
+
+
+	function kleo_news_puzzle_func( $atts, $content = null ) {
+
+		global $kleo_config;
+		$shortcode = $kleo_config['shortcodes']['kleo_news_puzzle'];
+		$output    = '';
+
+		if ( ! isset( $shortcode ) ) {
+			return;
+		}
+
+		$sh_category = '';
+		if ( isset( $shortcode['category'] ) && ! empty( $shortcode['category'] ) ) {
+			$sh_category = trailingslashit( $shortcode['category'] );
+		}
+		$shortcode_path = $sh_category . 'kleo_news_puzzle';
+
+		if ( find_shortcode_template( $shortcode_path ) ) {
+			include find_shortcode_template( $shortcode_path );
+		} else {
+			$output = kleo_shortcode_not_found();
+		}
+
+		return $output;
+	}
+
+	function kleo_news_puzzle_mce( $args ) {
+
+		global $kleo_config;
+		$shortcode = $kleo_config['shortcodes']['kleo_news_puzzle'];
+		if ( ! isset( $shortcode ) ) {
+			return $args;
+		}
+
+		$shortcode = $kleo_config['shortcodes']['kleo_news_puzzle'];
+
+		$args[ $shortcode["category"] ][] = array(
+			"name"     => $shortcode["name"],
+			"category" => $shortcode["category"],
+			"code"     => $shortcode["example"]
+		);
+
+		return $args;
+	}
+}
+
 
 
 /**

@@ -359,9 +359,9 @@ if ( ! class_exists( 'myCRED_Ranks_Module' ) ) :
 			if ( ( $pagenow == 'edit.php' || $pagenow == 'post-new.php' ) && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'mycred_rank' ) {
 			
 				if ( isset( $_GET['ctype'] ) && sanitize_key( $_GET['ctype'] ) != MYCRED_DEFAULT_TYPE_KEY )
-					return 'mycred_' . sanitize_key( $_GET['ctype'] );
+					return MYCRED_SLUG . '_' . sanitize_key( $_GET['ctype'] );
 
-				return 'mycred';
+				return MYCRED_SLUG;
 			
 			}
 
@@ -369,15 +369,15 @@ if ( ! class_exists( 'myCRED_Ranks_Module' ) ) :
 			elseif ( $pagenow == 'post.php' && isset( $_GET['post'] ) && get_post_type( $_GET['post'] ) == 'mycred_rank' ) {
 
 				if ( isset( $_GET['ctype'] ) && $_GET['ctype'] != MYCRED_DEFAULT_TYPE_KEY )
-					return 'mycred_' . sanitize_key( $_GET['ctype'] );
+					return MYCRED_SLUG . '_' . sanitize_key( $_GET['ctype'] );
 
 				$point_type = get_post_meta( $_GET['post'], 'ctype', true );
 				$point_type = sanitize_key( $point_type );
 
 				if ( $point_type != MYCRED_DEFAULT_TYPE_KEY )
-					return 'mycred_' . $point_type;
+					return MYCRED_SLUG . '_' . $point_type;
 
-				return 'mycred';
+				return MYCRED_SLUG;
 
 			}
 
@@ -998,17 +998,20 @@ if ( ! class_exists( 'myCRED_Ranks_Module' ) ) :
 		 * Adjust Rank Sort Order
 		 * Adjusts the wp query when viewing ranks to order by the min. point requirement.
 		 * @since 1.1.1
-		 * @version 1.2
+		 * @version 1.2.1
 		 */
 		public function adjust_wp_query( $query ) {
+
+			if ( ! function_exists( 'is_admin' ) ) return;
 
 			// Front End Queries
 			if ( ! is_admin() ) {
 
-				if ( ! is_post_type_archive( 'mycred_rank' ) ) return;
+				// Only applicable on the post archive page (if used) and only for the main query
+				if ( ! is_post_type_archive( 'mycred_rank' ) || ! $query->is_main_query() ) return;
 
 				// By default we want to only show ranks for the main point type
-				if ( ! isset( $_GET['ctype'] ) && $query->is_main_query() ) {
+				if ( ! isset( $_GET['ctype'] ) ) {
 					$query->set( 'meta_query', array(
 						array(
 							'key'     => 'ctype',
@@ -1034,6 +1037,7 @@ if ( ! class_exists( 'myCRED_Ranks_Module' ) ) :
 			// Admin Queries
 			else {
 
+				// Only applicable when we are quering ranks
 				if ( ! isset( $query->query['post_type'] ) || $query->query['post_type'] != 'mycred_rank' ) return;
 
 				// If ctype is set, filter ranks according to it's value
