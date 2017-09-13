@@ -8,8 +8,10 @@
 
 ?>
 
+<?php if ( sq_option( 'bp_full_profile', 0 ) == 0 || sq_option( 'bp_nav_overlay', 0 ) == 0 ) : ?>
 <div id="buddypress">
-
+<?php endif; ?>
+	
     <?php
 
     /**
@@ -40,7 +42,8 @@
           <!-- #item-header -->
       </div>
       <?php endif ?>
-
+	
+	  <?php if ( ! sq_option( 'bp_nav_overlay', 0 ) == 1 ) : ?>
       <div class="col-sm-12">
           <div id="item-nav">
               <div class="item-list-tabs no-ajax" id="object-nav" aria-label="<?php esc_attr_e( 'Member primary navigation', 'buddypress' ); ?>" role="navigation">
@@ -62,6 +65,7 @@
           </div>
           <!-- #item-nav -->
       </div>
+	  <?php endif ?>
 
       <div id="item-body" role="main" class="col-sm-12">
 
@@ -131,8 +135,8 @@
      * @since 1.2.0
      */
     do_action( 'bp_after_member_home_content' ); ?>
-
-
+	
+<?php if ( sq_option( 'bp_full_profile', 0 ) == 0 || sq_option( 'bp_nav_overlay', 0 ) == 0 ) : ?>
 </div><!-- #buddypress -->
-
+<?php endif; ?>
 

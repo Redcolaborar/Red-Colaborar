@@ -17,7 +17,7 @@ function bb_global_search_default_items_to_search( $value ){
 		 * lets make sure search results do return someting at least.
 		 * So, by default, we'll search though blog posts and members.
 		 */
-		$value = array( 'posts', 'members' );
+		$value = array( 'posts', 'pages', 'members' );
 	}
 	
 	/*

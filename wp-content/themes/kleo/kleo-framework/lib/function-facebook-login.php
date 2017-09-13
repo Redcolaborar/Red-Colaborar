@@ -1,9 +1,11 @@
 <?php
 if ( ! function_exists( 'kleo_fb_head' ) ) {
-	function kleo_fb_head()
-	{
+	/**
+	 * @return bool|string
+	 */
+	function kleo_fb_head() {
 
-		if (is_user_logged_in()) {
+		if ( is_user_logged_in() ) {
 			return false;
 		}
 
@@ -27,11 +29,11 @@ if ( ! function_exists( 'kleo_fb_footer' ) ) {
 			window.fbAsyncInit = function () {
 				FB.init({
 					appId: '<?php echo sq_option('fb_app_id'); ?>', // App ID
-					version: 'v2.6',
+					version: 'v2.8',
 					status: true, // check login status
 					cookie: true, // enable cookies to allow the server to access the session
-					xfbml: true,  // parse XFBML
-					oauth: true
+					xfbml: true  // parse XFBML
+					//oauth: true
 				});
 
 				// Additional init code here
@@ -75,7 +77,7 @@ if ( ! function_exists( 'kleo_fb_footer' ) ) {
 				});
 
 				if (navigator.userAgent.match('CriOS') || navigator.userAgent.match(/Android/i)) {
-					jQuery("body").bind("sq_fb.init", function () {
+					jQuery("body").on("sq_fb.init", function () {
 						var accToken = jQuery.getUrlVar('#access_token');
 						if (accToken) {
 							var fbArr = {scopes: "email"};

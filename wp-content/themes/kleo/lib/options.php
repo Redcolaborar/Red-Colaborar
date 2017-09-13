@@ -2462,18 +2462,18 @@ $sections[] = array(
 			'subtitle' => __( 'If enabled it will show the profile Photo in full width', 'kleo_framework' ),
 			'default'  => '0' // 1 = checked | 0 = unchecked
 		),
-		/*array(
-			'id'       => 'bp_nav_overlay',
-			'type'     => 'switch',
-			'title'    => __( 'Profile &amp; Group menu over cover image', 'kleo_framework' ),
-			'subtitle' => __( 'Put navigation menu over the cover image like an overlay', 'kleo_framework' ),
-			'default'  => '0' // 1 = checked | 0 = unchecked
-		),*/
 		array(
 			'id'       => 'bp_full_group',
 			'type'     => 'switch',
 			'title'    => __( 'Enable Full width Group Header', 'kleo_framework' ),
 			'subtitle' => __( 'If enabled it will show the Group Photo section in full width', 'kleo_framework' ),
+			'default'  => '0' // 1 = checked | 0 = unchecked
+		),
+		array(
+			'id'       => 'bp_nav_overlay',
+			'type'     => 'switch',
+			'title'    => __( 'Profile &amp; Group Menu Overlay', 'kleo_framework' ),
+			'subtitle' => __( 'Put navigation menu over the cover image like an overlay.', 'kleo_framework' ),
 			'default'  => '0' // 1 = checked | 0 = unchecked
 		),
 		array(

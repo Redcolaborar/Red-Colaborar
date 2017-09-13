@@ -511,7 +511,8 @@ if (!class_exists('BuddyBoss_Global_Search_Plugin')):
 													   } else {
 															   var x = jQuery('.acfb-holder').find(".friend-tab").last().after(v);
 													   }
-													   jQuery('#send-to-usernames').addClass(un);
+												   jQuery(this).val(''); //clear username field after selecting username from autocomplete dropdown
+												   jQuery('#send-to-usernames').addClass(un);
 											   }
 											   return false;
 									   },

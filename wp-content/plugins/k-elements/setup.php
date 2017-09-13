@@ -4,7 +4,7 @@
 Plugin Name: K Elements
 Plugin URL: http://seventhqueen.com/
 Description: WordPress elements using easy to add shortcodes
-Version: 4.2.2
+Version: 4.2.6
 Author: SeventhQueen
 Author URI: http://seventhqueen.com/
 Domain Path: /languages
@@ -25,7 +25,7 @@ Text Domain: k-elements
 // =============================================================================
 
 if ( ! defined( 'K_ELEM_VERSION' ) ) {
-	define( 'K_ELEM_VERSION', '4.2.2' );
+	define( 'K_ELEM_VERSION', '4.2.6' );
 }
 
 // Plugin Folder Path

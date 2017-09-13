@@ -117,7 +117,12 @@ if (!class_exists('BBoss_Global_Search_Helper')):
 				//load and associate helpers one by one
 				if( in_array( 'posts', $searchable_types ) ){
 					require_once( BUDDYBOSS_GLOBAL_SEARCH_PLUGIN_DIR . 'includes/search-types/class.BBoss_Global_Search_Posts.php' );
-					$this->search_helpers['posts'] = BBoss_Global_Search_Posts::instance();
+					$this->search_helpers['posts'] = new BBoss_Global_Search_Posts( 'post', 'posts');
+				}
+
+				if( in_array( 'pages', $searchable_types ) ){
+					require_once( BUDDYBOSS_GLOBAL_SEARCH_PLUGIN_DIR . 'includes/search-types/class.BBoss_Global_Search_Posts.php' );
+					$this->search_helpers['pages'] = new BBoss_Global_Search_Posts( 'page', 'pages');
 				}
 
 				if ( in_array( 'posts_comments', $searchable_types ) ) {
@@ -218,7 +223,7 @@ if (!class_exists('BBoss_Global_Search_Helper')):
 			}
 
 			$args = array(
-				'search_term'	=> esc_attr( $_REQUEST['search_term'] ),
+				'search_term'	=> $_REQUEST['search_term'],
 				//How many results should be displyed in autosuggest?
 				//@todo: give a settings field for this value
 				'per_page'		=>  $_REQUEST['per_page'] ,
@@ -299,7 +304,7 @@ if (!class_exists('BBoss_Global_Search_Helper')):
 				}
 				
 				$all_results_row = array(
-					"value" => "<div class='bboss_ajax_search_item allresults'><a href='" . esc_url( $url ) . "'>" . sprintf( __( "View all results for '%s'", "buddypress-global-search" ), $this->search_args['search_term'] ) . "</a></div>",
+					"value" => "<div class='bboss_ajax_search_item allresults'><a href='" . esc_url( $url ) . "'>" . sprintf( __( "View all results for '%s'", "buddypress-global-search" ), stripslashes( $this->search_args['search_term'] ) ) . "</a></div>",
 					"type"	=> 'view_all_type',
 					"type_label"	=> ''
 				);
@@ -307,7 +312,7 @@ if (!class_exists('BBoss_Global_Search_Helper')):
 			} else {
 				//@todo give a settings screen for this field
 				$search_results[] = array(
-					'value' => '<div class="bboss_ajax_search_item noresult">' . sprintf( __( "Nothing found for '%s'", "buddypress-global-search" ), $this->search_args['search_term'] ) . '</div>',
+					'value' => '<div class="bboss_ajax_search_item noresult">' . sprintf( __( "Nothing found for '%s'", "buddypress-global-search" ), stripslashes( $this->search_args['search_term'] ) ) . '</div>',
 					'label'	=> $this->search_args['search_term']
 				);
 			}
@@ -539,9 +544,9 @@ if (!class_exists('BBoss_Global_Search_Helper')):
 				 * 1. Search top top 20( $args['per_page'] ) item( posts|members|..)
 				 * 2. Generate html for each of them
 				 */
-				
-				$obj = $this->search_helpers[$args['search_subset']];
-				$pre_search_query = $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC ";
+				$args['per_page'] 	= get_option('posts_per_page');
+				$obj 				= $this->search_helpers[$args['search_subset']];
+				$pre_search_query 	= $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC ";
 				
 				if( $args['per_page']> 0 ){
 					$offset = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
@@ -698,7 +703,7 @@ if (!class_exists('BBoss_Global_Search_Helper')):
 				$full_url = esc_url( add_query_arg( 'bbp_search' , urlencode( $this->search_args['search_term'] ), $base_url ) );
 			} else {
 				$base_url = $this->search_page_url();
-				$full_url = esc_url(add_query_arg( 's', urlencode( $this->search_args['search_term'] ), $base_url ));
+				$full_url = esc_url(add_query_arg( 's', urlencode( stripslashes($this->search_args['search_term'] ) ), $base_url ));
 				//for now we only have one filter in url
 			}
 

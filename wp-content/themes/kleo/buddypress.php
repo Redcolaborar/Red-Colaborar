@@ -101,6 +101,10 @@ if ( isset ( $title_arr['show_breadcrumb'] ) && $title_arr['show_breadcrumb'] ==
 ?>
 
 <?php if ( sq_option( 'bp_full_profile', 0 ) == 1 && bp_is_user() ) : ?>
+	
+	<?php if ( sq_option( 'bp_nav_overlay', 0 ) == 1 ) : ?>
+	<div id="buddypress">
+	<?php endif; ?>
 
 	<section class="alternate-color bp-full-width-profile">
 		<div id="item-header" role="complementary">
@@ -125,6 +129,10 @@ if ( isset ( $title_arr['show_breadcrumb'] ) && $title_arr['show_breadcrumb'] ==
 <?php if ( sq_option( 'bp_full_group', 0 ) == 1 && bp_is_single_item() && bp_is_groups_component() ) : ?>
 
 	<?php if ( bp_has_groups() ) : while ( bp_groups() ) : bp_the_group(); ?>
+
+		<?php if ( sq_option( 'bp_nav_overlay', 0 ) == 1 ) : ?>
+			<div id="buddypress">
+		<?php endif; ?>
 
 		<section class="alternate-color bp-full-width-profile">
 			<div id="item-header" role="complementary">
@@ -179,5 +187,10 @@ endif;
 ?>
 
 <?php get_template_part( 'page-parts/general-after-wrap' ); ?>
+
+<?php if ( ( sq_option( 'bp_full_profile', 0 ) == 1 && bp_is_user() || sq_option( 'bp_full_group', 0 ) == 1 && bp_is_single_item() && bp_is_groups_component() )
+           && sq_option( 'bp_nav_overlay', 0 ) == 1 ) : ?>
+	</div> <!-- end buddypress -->
+<?php endif; ?>
 
 <?php get_footer(); ?>

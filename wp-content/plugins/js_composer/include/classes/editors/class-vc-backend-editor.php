@@ -176,21 +176,6 @@ class Vc_Backend_Editor implements Vc_Editor_Interface {
 		do_action( 'vc_backend_editor_enqueue_js_css' );
 	}
 
-	/**
-	 * @deprecated 4.8
-	 * @return string
-	 */
-	public function showRulesValue() {
-		_deprecated_function( '\Vc_Backend_Editor::showRulesValue', '4.8 (will be removed in next release)' );
-		global $current_user;
-		wp_get_current_user();
-		/** @var $settings - get use group access rules */
-		$settings = vc_settings()->get( 'groups_access_rules' );
-		$role = is_object( $current_user ) && isset( $current_user->roles[0] ) ? $current_user->roles[0] : '';
-
-		return isset( $settings[ $role ]['show'] ) ? $settings[ $role ]['show'] : '';
-	}
-
 	public function registerBackendJavascript() {
 		// editor can be disabled but fe can be enabled. so we currently need this file. @todo maybe make backend-disabled.min.js
 		wp_register_script( 'vc-backend-actions-js', vc_asset_url( 'js/dist/backend-actions.min.js' ), array(

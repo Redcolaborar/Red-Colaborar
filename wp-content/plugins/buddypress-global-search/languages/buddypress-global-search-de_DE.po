@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyPress Global Search v1.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2017-01-12 08:13:27+00:00\n"
+"POT-Creation-Date: 2017-06-06 13:57:27+00:00\n"
 "PO-Revision-Date: 2015-01-18 20:50-0500\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: BuddyBoss <support@buddyboss.com>\n"
@@ -36,15 +36,16 @@ msgstr "Allgemeine Einstellungen"
 
 # @ buddypress-global-search
 #: includes/admin.php:192
-msgid "Items To Search"
+#, fuzzy
+msgid "Items to Search"
 msgstr "Zu durchsuchende Inhalte"
 
 #: includes/admin.php:193
-msgid "AutoSuggest"
+msgid "Autosuggest"
 msgstr ""
 
 #: includes/admin.php:194
-msgid "AutoSuggest number of items"
+msgid "Autosuggest number of items"
 msgstr ""
 
 #: includes/admin.php:198
@@ -102,16 +103,16 @@ msgid "Cheatin&#8217; huh?"
 msgstr ""
 
 # @ buddypress-global-search
-#: includes/class.BBoss_Global_Search_Helper.php:302
+#: includes/class.BBoss_Global_Search_Helper.php:307
 msgid "View all results for '%s'"
 msgstr "Zeige alle Ergebnisse für '%s' an"
 
 # @ buddypress-global-search
-#: includes/class.BBoss_Global_Search_Helper.php:310
+#: includes/class.BBoss_Global_Search_Helper.php:315
 msgid "Nothing found for '%s'"
 msgstr "Es wurden für '%s' keine Ergebnisse gefunden."
 
-#: includes/class.BBoss_Global_Search_Helper.php:714
+#: includes/class.BBoss_Global_Search_Helper.php:719
 msgid "All"
 msgstr ""
 
@@ -125,49 +126,55 @@ msgstr "Suchergebnisse"
 msgid "Blog Posts"
 msgstr "Blogeinträge"
 
+# @ buddypress-global-search
 #: includes/functions.php:304
+#, fuzzy
+msgid "Pages"
+msgstr "Nachrichten"
+
+#: includes/functions.php:305
 msgid "Post Comments"
 msgstr ""
 
 # @ buddypress-global-search
-#: includes/functions.php:305
+#: includes/functions.php:306
 msgid "Members"
 msgstr "Mitglieder"
 
 # @ buddypress-global-search
-#: includes/functions.php:310
-msgid "Forums"
-msgstr "Foren"
-
-# @ buddypress-global-search
 #: includes/functions.php:311
-#, fuzzy
-msgid "Forums Topics"
+msgid "Forums"
 msgstr "Foren"
 
 # @ buddypress-global-search
 #: includes/functions.php:312
 #, fuzzy
+msgid "Forums Topics"
+msgstr "Foren"
+
+# @ buddypress-global-search
+#: includes/functions.php:313
+#, fuzzy
 msgid "Forums Replies"
 msgstr "Foren"
 
 # @ buddypress-global-search
-#: includes/functions.php:317
+#: includes/functions.php:318
 msgid "Groups"
 msgstr "Gruppen"
 
 # @ buddypress-global-search
-#: includes/functions.php:318
+#: includes/functions.php:319
 msgid "Activity"
 msgstr "Aktivitäten"
 
 # @ buddypress-global-search
-#: includes/functions.php:319
+#: includes/functions.php:320
 msgid "Messages"
 msgstr "Nachrichten"
 
 # @ buddypress-global-search
-#: includes/functions.php:330
+#: includes/functions.php:331
 #, fuzzy
 msgid "Activity Comment"
 msgstr "Aktivitäten"
@@ -203,28 +210,28 @@ msgid ""
 "Click &ldquo;Send Invites&rdquo; to finish sending your new invitations."
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:250
+#: includes/search-types/class.BBoss_Global_Search_Members.php:252
 msgid "Account"
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:253
+#: includes/search-types/class.BBoss_Global_Search_Members.php:255
 msgid "Username/Login"
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:254
+#: includes/search-types/class.BBoss_Global_Search_Members.php:256
 msgid "Display Name"
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:255
+#: includes/search-types/class.BBoss_Global_Search_Members.php:257
 msgid "Email"
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:256
+#: includes/search-types/class.BBoss_Global_Search_Members.php:258
 msgid "User Meta"
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Posts.php:164
-msgid "Post Meta"
+#: includes/search-types/class.BBoss_Global_Search_Posts.php:181
+msgid "%s Meta"
 msgstr ""
 
 # @ buddypress-global-search

@@ -376,6 +376,7 @@ class wordfence {
 		if (function_exists('ignore_user_abort')) {
 			ignore_user_abort(true);
 		}
+		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
 		$previous_version = ((is_multisite() && function_exists('get_network_option')) ? get_network_option(null, 'wordfence_version', '0.0.0') : get_option('wordfence_version', '0.0.0'));
 		if (is_multisite() && function_exists('update_network_option')) {
 			update_network_option(null, 'wordfence_version', WORDFENCE_VERSION); //In case we have a fatal error we don't want to keep running install.	
@@ -383,6 +384,8 @@ class wordfence {
 		else {
 			update_option('wordfence_version', WORDFENCE_VERSION); //In case we have a fatal error we don't want to keep running install.
 		}
+		
+		wordfence::status(4, 'info', 'runInstall called with previous version = ' . $previous_version);
 		
 		//EVERYTHING HERE MUST BE IDEMPOTENT
 
@@ -540,6 +543,17 @@ SQL
 					}
 				}
 			}
+			
+			$ip_results = $wpdb->get_results("SELECT countryCode, IP FROM `{$prefix}wfBlockedCommentLog` GROUP BY IP");
+			if ($ip_results) {
+				foreach ($ip_results as $ip_row) {
+					$country = wfUtils::IP2Country(wfUtils::inet_ntop($ip_row->IP));
+					if ($country != $ip_row->countryCode) {
+						$wpdb->query($wpdb->prepare("UPDATE `{$prefix}wfBlockedCommentLog` SET countryCode = %s WHERE IP = %s", $country, $ip_row->IP));
+					}
+				}
+			}
+			
 			wfConfig::set('geoIPVersionHash', $geoIPVersionHash);
 		}
 
@@ -1034,6 +1048,7 @@ SQL
 	public static function ajax_doScan_callback(){
 		ignore_user_abort(true);
 		self::$wordfence_wp_version = false;
+		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
 		//This is messy, but not sure of a better way to do this without guaranteeing we get $wp_version
 		require(ABSPATH . 'wp-includes/version.php');
 		self::$wordfence_wp_version = $wp_version;
@@ -1992,6 +2007,7 @@ SQL
 		return $authUser;
 	}
 	public static function wfsnBatchReportBlockedAttempts() {
+		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
 		$threshold = wfConfig::get('lastBruteForceDataSendTime', 0);;
 		
 		$wfdb = new wfDB();
@@ -2053,6 +2069,7 @@ SQL
 		}
 	}
 	private static function wfsnScheduleBatchReportBlockedAttempts($timeToSend = null) {
+		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
 		if ($timeToSend === null) {
 			$timeToSend = time() + 30;
 		}
@@ -2069,11 +2086,13 @@ SQL
 		}
 	}
 	public static function wfsnReportBlockedAttempt($IP, $type){
+		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
 		self::wfsnScheduleBatchReportBlockedAttempts();
 		$endpointType = self::wfsnEndpointType();
 		self::getLog()->getCurrentRequest()->actionData = wfRequestModel::serializeActionData(array('type' => $endpointType));
 	}
 	public static function wfsnBatchReportFailedAttempts() {
+		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
 		$threshold = time();
 		
 		$wfdb = new wfDB();
@@ -2125,6 +2144,7 @@ SQL
 		}
 	}
 	private static function wfsnScheduleBatchReportFailedAttempts($timeToSend = null) {
+		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
 		if ($timeToSend === null) {
 			$timeToSend = time() + 30;
 		}
@@ -2141,6 +2161,7 @@ SQL
 		}
 	}
 	public static function wfsnIsBlocked($IP, $hitType){
+		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
 		$wfdb = new wfDB();
 		global $wpdb;
 		$p = $wpdb->base_prefix;
@@ -4872,7 +4893,7 @@ HTML;
 			wp_enqueue_script('json2');
 			wp_enqueue_script('jquery.wftmpl', wfUtils::getBaseURL() . 'js/jquery.tmpl.min.js', array('jquery'), WORDFENCE_VERSION);
 			wp_enqueue_script('jquery.wfcolorbox', wfUtils::getBaseURL() . 'js/jquery.colorbox-min.js', array('jquery'), WORDFENCE_VERSION);
-			wp_enqueue_script('jquery.wfdataTables', wfUtils::getBaseURL() . 'js/jquery.dataTables.js', array('jquery'), WORDFENCE_VERSION);
+			wp_enqueue_script('jquery.wfdataTables', wfUtils::getBaseURL() . 'js/jquery.dataTables.min.js', array('jquery'), WORDFENCE_VERSION);
 			wp_enqueue_script('jquery.qrcode', wfUtils::getBaseURL() . 'js/jquery.qrcode.min.js', array('jquery'), WORDFENCE_VERSION);
 			//wp_enqueue_script('jquery.tools', wfUtils::getBaseURL() . 'js/jquery.tools.min.js', array('jquery'));
 			wp_enqueue_script('wordfenceAdminjs', wfUtils::getBaseURL() . 'js/admin.js', array('jquery'), WORDFENCE_VERSION);
@@ -4887,20 +4908,8 @@ HTML;
 		}
 		
 		if (is_admin()) { //Back end only
-			$homeurl = '';
-			if (function_exists('get_bloginfo') && empty($homeurl)) {
-				if (is_multisite()) {
-					$homeurl = network_home_url();
-					$homeurl = rtrim($homeurl, '/'); //Because previously we used get_bloginfo and it returns http://example.com without a '/' char.
-				}
-				else {
-					$homeurl = home_url();
-				}
-				
-				if (wfConfig::get('wp_home_url') !== $homeurl) {
-					wfConfig::set('wp_home_url', $homeurl);
-				}
-			}
+			wfUtils::refreshCachedHomeURL();
+			wfUtils::refreshCachedSiteURL();
 		}
 
 		if (!WFWAF_AUTO_PREPEND || WFWAF_SUBDIRECTORY_INSTALL) {
@@ -6025,6 +6034,7 @@ HTML
 			$user = get_user_by('email', trim($cData['comment_author_email']));
 			if($user){
 				wfConfig::inc('totalSpamStopped');
+				wfActivityReport::logBlockedComment(wfUtils::getIP(), 'anon');
 				return 0; //hold for moderation if the user is not signed in but used a members email
 			}
 		}
@@ -6034,6 +6044,7 @@ HTML
 			try {
 				if($wf->isBadComment($cData['comment_author'], $cData['comment_author_email'], $cData['comment_author_url'],  $cData['comment_author_IP'], $cData['comment_content'])){
 					wfConfig::inc('totalSpamStopped');
+					wfActivityReport::logBlockedComment(wfUtils::getIP(), 'gsb');
 					return 'spam';
 				}
 			} catch(Exception $e){
@@ -6061,6 +6072,7 @@ HTML
 					));
 				if(is_array($res) && isset($res['spam']) && $res['spam'] == 1){
 					wfConfig::inc('totalSpamStopped');
+					wfActivityReport::logBlockedComment(wfUtils::getIP(), 'reputation');
 					return 'spam';
 				}
 			} catch(Exception $e){
@@ -6925,6 +6937,8 @@ to your httpd.conf if using Apache, or find documentation on how to disable dire
 	 */
 	public static function processAttackData() {
 		global $wpdb;
+		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
+		
 		$waf = wfWAF::getInstance();
 		if ($waf->getStorageEngine()->getConfig('attackDataKey', false) === false) {
 			$waf->getStorageEngine()->setConfig('attackDataKey', mt_rand(0, 0xfff));
@@ -7124,6 +7138,7 @@ LIMIT %d", $lastSendTime, $limit));
 
 	public static function syncAttackData($exit = true) {
 		global $wpdb;
+		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
 		$waf = wfWAF::getInstance();
 		$lastAttackMicroseconds = $wpdb->get_var("SELECT MAX(attackLogTime) FROM {$wpdb->base_prefix}wfHits");
 		if ($waf->getStorageEngine()->hasNewerAttackData($lastAttackMicroseconds)) {

@@ -27,6 +27,31 @@ function kleo_setup_messages_nav( $menu_item ) {
 	return $menu_item;
 }
 
+function kleo_bp_mobile_messages() {
+
+	$output = '';
+	$url = bp_loggedin_user_domain() . bp_get_messages_slug();
+	$count = bp_get_total_unread_messages_count();
+	
+	if ($count > 0 ) {
+		$alert = 'new-alert';
+	} else {
+		$alert = 'no-alert';
+	}
+	
+	if ( sq_kleo()->get_option( 'mobile_messages' ) ) {
+		$icon = sq_kleo()->get_option( 'mobile_messages' );
+	} else {
+		$icon = 'mail';
+	}
+	
+	$title = '<span class="notify-items sq-messages-mobile">' .
+	            '<i class="icon-' . $icon . '"></i> <span class="kleo-notifications ' . $alert . '">' . $count . '</span>' .
+	         '</span>';
+	$output .= '<a title="' . __( 'View Messages', 'kleo_framework' ) . '" class="notify-contents" href="' . $url .'">' . $title . '</a>';
+	echo $output;
+}
+
 function kleo_menu_messages( $item_output = '', $item = null, $depth = 1, $args = null ) {
 	
 	if( ! isset( $item ) ) {
@@ -55,6 +80,7 @@ function kleo_menu_messages( $item_output = '', $item = null, $depth = 1, $args 
 	if ( isset( $item->icon ) && $item->icon != '' ) {
 		
 		$icon = $item->icon;
+		sq_kleo()->set_option('mobile_messages', $icon );
 		$title_icon = '<i class="icon-' . $icon . '"></i>';
 		
 		if ( $item->iconpos == 'after' ) {
@@ -67,6 +93,9 @@ function kleo_menu_messages( $item_output = '', $item = null, $depth = 1, $args 
 	} else {
 		$title = $item->title;
 	}
+
+	//If we have the menu item then add it to the mobile menu
+	add_action( 'kleo_mobile_header_icons', 'kleo_bp_mobile_messages', 9 );
 	
 	/* Menu style */
 	$atts = array();
@@ -80,7 +109,7 @@ function kleo_menu_messages( $item_output = '', $item = null, $depth = 1, $args 
 		}
 	}
 	
-	$class = 'notify-contents';
+	$class = 'notify-contents js-activated';
 	$class .= isset($atts['class']) ? ' ' . $atts['class'] : '';
 	
 	$output .= '<a class="' . $class . '" href="' . $url . '" title="' . $attr_title . '">'

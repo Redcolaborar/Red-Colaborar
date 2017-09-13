@@ -571,11 +571,11 @@ section.container-wrap.border-bottom.half-section:before {
   bottom: 0;
 }
 section.container-wrap.half-section {
-  background-image: -webkit-linear-gradient(0deg, #ffffff, #ffffff);
-  background-image: -moz-linear-gradient(0deg, #ffffff, #ffffff);
-  background-image: -o-linear-gradient(0deg, #ffffff, #ffffff);
-  background-image: -ms-linear-gradient(0deg, #ffffff, #ffffff);
-  background-image: linear-gradient(0deg, #ffffff, #ffffff);
+  background-image: -webkit-linear-gradient(0deg, #fff, #fff);
+  background-image: -moz-linear-gradient(0deg, #fff, #fff);
+  background-image: -o-linear-gradient(0deg, #fff, #fff);
+  background-image: -ms-linear-gradient(0deg, #fff, #fff);
+  background-image: linear-gradient(0deg, #fff, #fff);
   -webkit-background-size: 50% 100%;
   -moz-background-size: 50% 100%;
   background-size: 50% 100%;
@@ -2238,6 +2238,9 @@ a.ajax_view_all:after {
   position: absolute;
   top: -7px;
   right: 0;
+}
+.kleo-toggle-menu.open .kleo-toggle-submenu {
+  display: block;
 }
 .kleo-notifications-nav ul {
   counter-reset: section;

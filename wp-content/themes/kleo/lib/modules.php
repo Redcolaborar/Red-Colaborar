@@ -371,6 +371,7 @@ class SQ_Modules_Config {
 	function detect_plugin_change( $plugin ) {
 		$this->sq_modules->remove_file( 'plugins' );
 		$this->sq_modules->remove_file( 'combined' );
+		kleo_write_dynamic_css_file();
 	}
 
 }

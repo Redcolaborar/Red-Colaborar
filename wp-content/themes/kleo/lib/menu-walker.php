@@ -63,9 +63,10 @@ if ( ! class_exists( 'kleo_walker_nav_menu' ) ) {
 
 				$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args ) );
 
-				if ( $args->has_children && $depth === 1 ) {
-					$class_names .= ' dropdown-submenu';
-				}
+                /* Add dropdown-submenu class to li's that have in it a UL structure */
+                if ( $args->has_children && $depth >= 1 ) {
+                    $class_names .= ' dropdown-submenu';
+                }
 				elseif($args->has_children) {
 					$class_names .= ' dropdown';
                     if( isset( $item->mega ) ){
@@ -160,7 +161,7 @@ if ( ! class_exists( 'kleo_walker_nav_menu' ) ) {
 
 				$item_output .= $args->link_before . apply_filters( 'the_title', $title, $item->ID ) . $args->link_after;
 
-				$item_output .= ( $args->has_children && in_array($depth, array(0,1))) ? ' <span class="caret"></span></a>' : '</a>';
+				$item_output .= ( $args->has_children ) ? ' <span class="caret"></span></a>' : '</a>';
 				$item_output .= $args->after;
 
 				//custom filters

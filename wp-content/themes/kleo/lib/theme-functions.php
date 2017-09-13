@@ -1,5 +1,5 @@
 <?php
-define( 'KLEO_THEME_VERSION', '4.2.8' );
+define( 'KLEO_THEME_VERSION', '4.2.11' );
 
 /* Configuration array */
 global $kleo_config;
@@ -538,6 +538,8 @@ if ( ! function_exists( 'kleo_get_search_menu_item' ) ) {
 
 
 		ob_start();
+		$value = isset( $_REQUEST['s'] ) ? esc_attr( $_REQUEST['s'] ) : '';
+		$placeholder = esc_html__( "Start typing to search...", "kleo_framework" );
 		?>
 		<a class="search-trigger" href="#"><i class="icon icon-search"></i></a>
 		<div class="kleo-search-wrap searchHidden" id="ajax_search_container">
@@ -545,9 +547,7 @@ if ( ! function_exists( 'kleo_get_search_menu_item' ) ) {
 			      data-context="<?php echo $context; ?>">
 				<?php echo $hidden; ?>
 				<input name="<?php echo $input_name; ?>" class="ajax_s form-control" autocomplete="off" type="text"
-				       value="<?php if ( isset( $_REQUEST['s'] ) ) {
-					       echo esc_attr( $_REQUEST['s'] );
-				       } ?>" placeholder="<?php _e( "Start typing to search...", "kleo_framework" ); ?>">
+				       value="<?php echo $value; ?>" placeholder="<?php echo $placeholder; ?>" required>
 				<span class="kleo-ajax-search-loading"><i class="icon-spin6 animate-spin"></i></span>
 			</form>
 			<div class="kleo_ajax_results"></div>

@@ -1223,20 +1223,25 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
     left: 0;
     top: 30% !important;
     position: fixed;
-    margin: 0px auto;
+    margin: 0 auto;
     width: 60%;
+    max-width: 600px;
     border: rgba(0,0,0, 0.1) solid 1px;
     z-index: 999;
     box-shadow: 0 0 50px rgba(0,0,0, 0.3);
 }
 #sitewide-notice #message #close-notice {
-    display: block;
-    float: right;
-    margin-top: 0px;
-    background-color: #efefef;
-    padding: 2px 10px;
-    color: #000;
-    text-transform: uppercase;
+  display: block;
+  float: right;
+  margin-top: 0px;
+  background-color: #ffffff;
+  padding: 2px 10px;
+  color: #aaa;
+  text-transform: uppercase;
+  position: absolute;
+  right: 0;
+  top: 0;
+  border: none;
 }
 #sitewide-notice p { margin: 0; }
 .buddypress div#message.error p {
@@ -1344,9 +1349,13 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
 #buddypress .profile .standard-form div.checkbox label:first-child,
 #buddypress #register-page .standard-form div.checkbox label:first-child,
 #buddypress .profile .standard-form div.radio > label:first-child,
-#buddypress #register-page .standard-form div.radio > label:first-child{
+#buddypress #register-page .standard-form div.radio > label:first-child {
 	margin-left: -20px;
 	font-weight: bold;	
+}
+#buddypress .profile .standard-form .field-visibility-settings div.radio > label:first-child,
+#buddypress #register-page .standard-form .field-visibility-settings div.radio > label:first-child {
+  margin-left: 0;
 }
 #buddypress .standard-form#sidebar-login-form label {
 	margin-top: 5px;
@@ -1833,7 +1842,6 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
 #buddypress table.wp-profile-fields tr td.label,
 #buddypress table.messages-notices tr td.label,
 #buddypress table.forum tr td.label {
-	font-weight: bold;
 	width: 25%;
 	border-radius: 0;
 	color: inherit;
@@ -2017,9 +2025,15 @@ body.activity-permalink #buddypress div.activity-comments div.acomment-content {
 	margin-top: 3px;
 	text-decoration: none;
 	color: #8A6D3B;
-	background-color: #fdfaec;
-	border-left: 3px solid #FAEBCC;
+	background-color: #fff;
+	border:none;
 	
+}
+.buddypress #sitewide-notice p {
+  color: #333;
+  background-color: #fff;
+  border-left: none;
+  padding: 20px;
 }
 .buddypress div#item-header {
     background: url(../../assets/img/heading.png) repeat-x 0 115px;
@@ -3527,6 +3541,95 @@ User avatar in menu
     border: none;
     padding: 0;
 }
+
+/* --------------------------------------------------
+	 3.12 - Buddypress Overlay Menu - v.4.2
+----------------------------------------------------- */
+
+/*body.is-user-profile.bp-overlay-menu .bp-full-width-profile div#item-header,
+body.bp-overlay-menu div#item-header {
+  padding-bottom: 120px !important;
+}*/
+
+body.bp-overlay-menu div#item-header,
+body.is-user-profile.bp-overlay-menu .bp-full-width-profile div#item-header {
+  padding-bottom: 10px !important;
+}
+body.bp-header-small.is-user-profile.bp-overlay-menu .bp-full-width-profile div#item-header,
+body.bp-header-small.bp-overlay-menu div#item-header {
+  padding-bottom: inherit !important;
+}
+
+body.bp-header-small.bp-overlay-menu div#item-header {
+  min-height: 280px;
+}
+
+/*body.bp-header-small.bp-overlay-menu #item-header-avatar {
+  transform: translateY(-50%);
+}*/
+
+.bp-overlay-menu #buddypress div#item-nav {
+  /*margin-bottom: 62px;*/
+  margin-top: 60px;
+  padding-left: 10px;
+  position: relative;
+  z-index: 30;
+  border-bottom-width: 0;
+}
+
+.bp-overlay-menu #buddypress div#item-nav .responsive-tabs {
+  margin-bottom: 0;
+}
+.bp-overlay-menu #buddypress div.item-list-tabs ul li.dropdown.pull-right.tabdrop.open {
+  right: 0 !important;
+}
+
+.bp-overlay-menu #buddypress div#item-nav .tabdrop .dropdown-menu li a {
+  color: inherit;
+}
+.bp-overlay-menu #buddypress div#item-nav ul li.tabdrop a:before {
+  color: inherit !important;
+  min-width: 32px;
+}
+.bp-overlay-menu #buddypress div#item-nav ul li.current a {
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+}
+
+/* color with cover image */
+.bp-overlay-menu.is-user-profile #buddypress div#item-nav ul li a {
+  color: rgba(255,255,255,0.7);
+}
+.bp-overlay-menu.is-user-profile #buddypress div#item-nav ul li a:before {
+  color: rgba(255,255,255,0.7) !important;
+}
+
+@media screen and (max-width: 480px) {
+
+  .bp-overlay-menu #buddypress div#item-nav {
+    margin-top: 30px;
+  }
+
+  .bp-overlay-menu #buddypress div#item-nav ul li.dropdown a.dropdown-toggle:before {
+    background: rgba(255,255,255,0.2);
+  }
+
+  .bp-overlay-menu #buddypress div#item-nav .responsive-tabs {
+    overflow: visible;
+  }
+
+  #buddypress div#item-nav .responsive-tabs > li {
+    opacity: 0;
+    transition: opacity 0.4s ease 0.4s;
+  }
+  #buddypress div#item-nav .responsive-tabs > li.tabdrop {
+    opacity: 1;
+  }
+  .bp-overlay-menu #buddypress div#item-nav {
+    padding-left: 20px;
+  }
+}
+
 
 /*--------------------------------------------------------------
 4.0 - Media Queries

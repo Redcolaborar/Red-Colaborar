@@ -67,8 +67,8 @@ if (!class_exists('BBoss_Global_Search_Members')):
 			if( $only_totalrow_count ){
 				$COLUMNS .= " COUNT( DISTINCT u.id ) ";
 			} else {
-				$COLUMNS .= " DISTINCT u.id, 'members' as type, u.display_name LIKE '%%%s%%' AS relevance, a.date_recorded as entry_date ";
-				$query_placeholder[] = $search_term;
+				$COLUMNS .= " DISTINCT u.id, 'members' as type, u.display_name LIKE %s AS relevance, a.date_recorded as entry_date ";
+				$query_placeholder[] = '%'. $search_term .'%';
 			}
 			
 			$FROM = " {$wpdb->users} u JOIN {$bp->members->table_name_last_activity} a ON a.user_id=u.id ";
@@ -95,11 +95,11 @@ if (!class_exists('BBoss_Global_Search_Members')):
 
 					if ( 'user_meta' === $user_field ) {
 						//Search in user meta table for terms
-						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE meta_value LIKE '%%%s%%' ) ";
-						$query_placeholder[] = $search_term;
+						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE meta_value LIKE %s ) ";
+						$query_placeholder[] = '%'. $search_term .'%';
 					} else {
-						$conditions_wp_user_table[] = $user_field . " LIKE '%%%s%%' ";
-						$query_placeholder[] = $search_term;
+						$conditions_wp_user_table[] = $user_field . " LIKE %s ";
+						$query_placeholder[] = '%'. $search_term .'%';
 					}
 
 				}
@@ -147,15 +147,15 @@ if (!class_exists('BBoss_Global_Search_Members')):
 					}
 					
 					if( !empty( $selected_xprofile_fields ) ){
-						//u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE '%%%s%%' )
-						$clause_xprofile_table = "u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE ( value LIKE '%%%s%%' AND field_id IN ( ";
+						//u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s )
+						$clause_xprofile_table = "u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE ( value LIKE %s AND field_id IN ( ";
 						$clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
 						$clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
 						$clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
 						$clause_xprofile_table .= ") ) ) ";
 
 						$where_fields[] = $clause_xprofile_table;
-						$query_placeholder[] = $search_term;
+						$query_placeholder[] = '%'. $search_term .'%';
 					}
 				}
 			}
@@ -174,11 +174,11 @@ if (!class_exists('BBoss_Global_Search_Members')):
                                 foreach ( $split_search_term as $k => $sterm ) {
                                     
                                     if ( $k == 0 ) {
-                                        $clause_search_string_table .= "meta_value LIKE '%%%s%%'";
-                                        $query_placeholder[] = $sterm;
+                                        $clause_search_string_table .= "meta_value LIKE %s";
+										$query_placeholder[] = '%'. $sterm .'%';
                                     } else {
-                                        $clause_search_string_table .= "AND meta_value LIKE '%%%s%%'";
-                                        $query_placeholder[] = $sterm;
+                                        $clause_search_string_table .= "AND meta_value LIKE %s";
+										$query_placeholder[] = '%'. $sterm .'%';
                                     }
                                     
                                 }
@@ -203,6 +203,8 @@ if (!class_exists('BBoss_Global_Search_Members')):
 			}
                         
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
+
+			//var_dump( $sql );
 
                         return apply_filters( 
                             'BBoss_Global_Search_Members_sql', 

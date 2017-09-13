@@ -96,6 +96,28 @@ do_action( 'bp_before_member_header' ); ?>
  */
 do_action( 'bp_after_member_header' ); ?>
 
+<?php if ( sq_option( 'bp_nav_overlay', 0 ) == 1 ) : ?>
+	<div id="item-nav">
+		<div class="item-list-tabs no-ajax" id="object-nav" aria-label="<?php esc_attr_e( 'Member primary navigation', 'buddypress' ); ?>" role="navigation">
+			<ul class="responsive-tabs">
+				
+				<?php bp_get_displayed_user_nav(); ?>
+				
+				<?php
+				
+				/**
+				 * Fires after the display of member options navigation.
+				 *
+				 * @since 1.2.4
+				 */
+				do_action( 'bp_member_options_nav' ); ?>
+
+			</ul>
+		</div>
+	</div>
+	<!-- #item-nav -->
+<?php endif; ?>
+
 <div id="template-notices" role="alert" aria-atomic="true">
 	<?php
 

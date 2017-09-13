@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2017-02-07 03:03:03+00:00\n"
+"POT-Creation-Date: 2017-06-06 13:57:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -37,15 +37,15 @@ msgid "General Settings"
 msgstr ""
 
 #: includes/admin.php:192
-msgid "Items To Search"
+msgid "Items to Search"
 msgstr ""
 
 #: includes/admin.php:193
-msgid "AutoSuggest"
+msgid "Autosuggest"
 msgstr ""
 
 #: includes/admin.php:194
-msgid "AutoSuggest number of items"
+msgid "Autosuggest number of items"
 msgstr ""
 
 #: includes/admin.php:198
@@ -95,15 +95,15 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/class.BBoss_Global_Search_Helper.php:302
+#: includes/class.BBoss_Global_Search_Helper.php:307
 msgid "View all results for '%s'"
 msgstr ""
 
-#: includes/class.BBoss_Global_Search_Helper.php:310
+#: includes/class.BBoss_Global_Search_Helper.php:315
 msgid "Nothing found for '%s'"
 msgstr ""
 
-#: includes/class.BBoss_Global_Search_Helper.php:714
+#: includes/class.BBoss_Global_Search_Helper.php:719
 msgid "All"
 msgstr ""
 
@@ -116,38 +116,42 @@ msgid "Blog Posts"
 msgstr ""
 
 #: includes/functions.php:304
-msgid "Post Comments"
+msgid "Pages"
 msgstr ""
 
 #: includes/functions.php:305
+msgid "Post Comments"
+msgstr ""
+
+#: includes/functions.php:306
 msgid "Members"
 msgstr ""
 
-#: includes/functions.php:310
+#: includes/functions.php:311
 msgid "Forums"
 msgstr ""
 
-#: includes/functions.php:311
+#: includes/functions.php:312
 msgid "Forums Topics"
 msgstr ""
 
-#: includes/functions.php:312
+#: includes/functions.php:313
 msgid "Forums Replies"
 msgstr ""
 
-#: includes/functions.php:317
+#: includes/functions.php:318
 msgid "Groups"
 msgstr ""
 
-#: includes/functions.php:318
+#: includes/functions.php:319
 msgid "Activity"
 msgstr ""
 
-#: includes/functions.php:319
+#: includes/functions.php:320
 msgid "Messages"
 msgstr ""
 
-#: includes/functions.php:330
+#: includes/functions.php:331
 msgid "Activity Comment"
 msgstr ""
 
@@ -181,28 +185,28 @@ msgstr ""
 msgid "Click &ldquo;Send Invites&rdquo; to finish sending your new invitations."
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:250
+#: includes/search-types/class.BBoss_Global_Search_Members.php:252
 msgid "Account"
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:253
+#: includes/search-types/class.BBoss_Global_Search_Members.php:255
 msgid "Username/Login"
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:254
+#: includes/search-types/class.BBoss_Global_Search_Members.php:256
 msgid "Display Name"
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:255
+#: includes/search-types/class.BBoss_Global_Search_Members.php:257
 msgid "Email"
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:256
+#: includes/search-types/class.BBoss_Global_Search_Members.php:258
 msgid "User Meta"
 msgstr ""
 
-#: includes/search-types/class.BBoss_Global_Search_Posts.php:164
-msgid "Post Meta"
+#: includes/search-types/class.BBoss_Global_Search_Posts.php:181
+msgid "%s Meta"
 msgstr ""
 
 #: templates/loop/activity.php:42 templates/loop/message.php:19

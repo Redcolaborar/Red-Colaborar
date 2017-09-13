@@ -17,8 +17,7 @@ if (!class_exists('BBoss_Global_Search_Groups')):
 		/**
 		 * Insures that only one instance of Class exists in memory at any
 		 * one time. Also prevents needing to define globals all over the place.
-		 *
-		 * @since 1.0.0
+		 ** @since 1.0.0
 		 *
 		 * @return object BBoss_Global_Search_Groups
 		 */
@@ -66,11 +65,11 @@ if (!class_exists('BBoss_Global_Search_Groups')):
 			
 			$sql = " SELECT ";
 			
-			if( $only_totalrow_count ){
+			if ( $only_totalrow_count ) {
 				$sql .= " COUNT( DISTINCT g.id ) ";
 			} else {
-				$sql .= " DISTINCT g.id, 'groups' as type, g.name LIKE '%%%s%%' AS relevance, gm2.meta_value as entry_date ";
-				$query_placeholder[] = $search_term;
+				$sql .= " DISTINCT g.id, 'groups' as type, g.name LIKE %s AS relevance, gm2.meta_value as entry_date ";
+				$query_placeholder[] = '%'.$wpdb->esc_like( $search_term ).'%';
 			}
 						
 			$sql .= " FROM 
@@ -81,34 +80,33 @@ if (!class_exists('BBoss_Global_Search_Groups')):
 						AND g.id = gm2.group_id 
 						AND gm2.meta_key = 'last_activity' 
 						AND gm1.meta_key = 'total_member_count' 
-						AND ( g.name LIKE '%%%s%%' OR g.description LIKE '%%%s%%' )
+						AND ( g.name LIKE %s OR g.description LIKE %s )
 				";
-			$query_placeholder[] = $search_term;
-			$query_placeholder[] = $search_term;
+			$query_placeholder[] = '%'.$wpdb->esc_like( $search_term ).'%';
+			$query_placeholder[] = '%'.$wpdb->esc_like( $search_term ).'%';
                         
-                        //String Search
-                        
-                        if (function_exists('bp_bpla') && 'yes' == bp_bpla()->option('enable-for-groups') ) {
-                                
-                                $split_search_term = explode(' ', $search_term);
+			/** LOCATION AUTOCOMPLETE SEARCH ************************************************/
 
-                                $sql .= "OR g.id IN ( SELECT group_id FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = 'bbgs_group_search_string' AND ";
+			if (function_exists('bp_bpla') && 'yes' == bp_bpla()->option('enable-for-groups') ) {
 
-                                foreach ( $split_search_term as $k => $sterm ) {
+					$split_search_term = explode(' ', $search_term );
 
-                                    if ( $k == 0 ) {
-                                        $sql .= "meta_value LIKE '%%%s%%'";
-                                        $query_placeholder[] = $sterm;
-                                    } else {
-                                        $sql .= "AND meta_value LIKE '%%%s%%'";
-                                        $query_placeholder[] = $sterm;
-                                    }
+					$sql .= "OR g.id IN ( SELECT group_id FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = 'bbgs_group_search_string' AND ";
 
-                                }
-                                $sql .= " ) ";
-                        
-                        }
-                            
+					foreach ( $split_search_term as $k => $sterm ) {
+
+						if ( $k == 0 ) {
+							$sql .= "meta_value LIKE %s";
+							$query_placeholder[] = '%'.$wpdb->esc_like( $sterm ) . '%';
+						} else {
+							$sql .= "AND meta_value LIKE %s";
+							$query_placeholder[] = '%'.$wpdb->esc_like( $sterm ) .'%';
+						}
+
+					}
+					$sql .= " ) ";
+
+			}
 			
 			/**
 			 * Properly handle hidden groups.
@@ -137,7 +135,7 @@ if (!class_exists('BBoss_Global_Search_Groups')):
 			}
 			
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
-            
+
             return apply_filters( 
                 'BBoss_Global_Search_Groups_sql', 
                 $sql, 
@@ -156,11 +154,15 @@ if (!class_exists('BBoss_Global_Search_Groups')):
 
 			//now we have all the posts
 			//lets do a groups loop
-			$args = array( 'include'=>$group_ids, 'per_page'=>count($group_ids) );
+			$args = array( 'include'=>$group_ids, 'per_page'=>count($group_ids), 'search_terms' => false );
 			if( is_user_logged_in() ){
 				$args['show_hidden'] = true;
 			}
-			
+                        
+                        if (function_exists('bp_bpla') ) {
+                            $args['search_terms'] = ' ';
+                        }
+                            
 			if( bp_has_groups( $args ) ){
 				while ( bp_groups() ){
 					bp_the_group();

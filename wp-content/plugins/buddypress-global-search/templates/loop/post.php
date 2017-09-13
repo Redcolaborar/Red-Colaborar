@@ -5,7 +5,7 @@
 
     <div class="entry-content entry-summary">
 
-        <?php the_excerpt(); ?>
+        <?php echo make_clickable( get_the_excerpt() ); ?>
 
     </div><!-- .entry-content -->
 </li>

@@ -3269,6 +3269,37 @@ function kleo_vc_manipulate_shortcodes() {
         ),
         "description" => "Show read more button and post likes"
     ));
+	
+	vc_add_param( "vc_posts_grid", array(
+		'param_name'  => 'load_more',
+		'heading'     => __( 'Enable Load More', 'kleo_framework' ),
+		'description' => 'Enable Load more posts via AJAX.',
+		'type'        => 'checkbox',
+		'class' => 'hide hidden',
+		'holder'      => 'div',
+		'value'       => array(
+			'Yes'    => 'yes',
+		),
+	));
+	
+	vc_add_param( "vc_posts_grid", array(
+		'param_name'  => 'ajax_post',
+		'heading'     => '',
+		'description' => '',
+		'type'        => 'sq_hidden',
+		'class' => 'hide hidden',
+		'holder'      => 'div',
+		'value'       => '',
+	));
+	vc_add_param( "vc_posts_grid", array(
+		'param_name'  => 'ajax_paged',
+		'heading'     => '',
+		'description' => '',
+		'type'        => 'sq_hidden',
+		'class' => 'hide hidden',
+		'holder'      => 'div',
+		'value'       => '',
+	));
 
     vc_add_param ('vc_posts_grid', $el_class );
 
@@ -3522,8 +3553,8 @@ function kleo_vc_manipulate_shortcodes() {
                         ),
 	                    array(
 		                    'param_name'  => 'ajax',
-		                    'heading'     => __( 'Enable AJAX on filters .', 'kleo_framework' ),
-		                    'description' => 'When clicking filters will send an AJAX request to get specific category items. Works best when you have pagination',
+		                    'heading'     => __( 'Enable AJAX on filter or pagination.', 'kleo_framework' ),
+		                    'description' => 'When clicking filters will send an AJAX request to get specific category items.Same goes for pagination',
 		                    'type'        => 'checkbox',
 		                    'class' => 'hide hidden',
 		                    'holder'      => 'div',
@@ -5042,6 +5073,16 @@ function kleo_vc_manipulate_shortcodes_after() {
         //Finally "mutate" param with new values
         vc_update_shortcode_param( 'vc_row', $param );
     }
+	
+	
+	vc_add_shortcode_param( 'sq_hidden', 'sq_vc_hidden_param' );
+	function sq_vc_hidden_param( $settings, $value ) {
+		return '<div class="sq-param-block" style="display: none;">'
+		       .'<input name="' . esc_attr( $settings['param_name'] ) . '" class="wpb_vc_param_value' .
+		       esc_attr( $settings['param_name'] ) . ' ' .
+		       esc_attr( $settings['type'] ) . '_field" type="hidden" value="' . esc_attr( $value ) . '" />'
+		       .'</div>';
+	}
 }
 add_action( 'vc_after_init', 'kleo_vc_manipulate_shortcodes_after' );
 

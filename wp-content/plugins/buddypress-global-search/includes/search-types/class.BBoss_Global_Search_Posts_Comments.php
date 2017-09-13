@@ -57,14 +57,14 @@ if (!class_exists('BBoss_Global_Search_Posts_Comments')):
 			if( $only_totalrow_count ){
 				$sql .= " COUNT( DISTINCT comment_ID ) ";
 			} else {
-				$sql .= " DISTINCT comment_ID AS id, 'posts_comments' as type, comment_content LIKE '%%%s%%' AS relevance, comment_date as entry_date  ";
-				$query_placeholder[] = $search_term;
+				$sql .= " DISTINCT comment_ID AS id, 'posts_comments' as type, comment_content LIKE %s AS relevance, comment_date as entry_date  ";
+				$query_placeholder[] = '%'. $search_term .'%';
 			}
 
 
-			$sql .= " FROM {$wpdb->comments} WHERE 1=1 AND comment_content LIKE '%%%s%%' AND comment_approved = 1 ";
+			$sql .= " FROM {$wpdb->comments} WHERE 1=1 AND comment_content LIKE %s AND comment_approved = 1 ";
 
-			$query_placeholder[] = $search_term;
+			$query_placeholder[] = '%'.$search_term .'%';
 
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 

@@ -30,7 +30,7 @@ $top_menu = wp_nav_menu( array(
 
 $primary_menu = wp_nav_menu( array(
         'theme_location'    => 'primary',
-        'depth'             => 3,
+        'depth'             => 6,
         'container'         => 'div',
         'container_class'   => 'primary-menu collapse navbar-collapse nav-collapse',
         'menu_class'        => 'nav navbar-nav',
@@ -43,7 +43,7 @@ $primary_menu = wp_nav_menu( array(
 
 $secondary_menu = wp_nav_menu( array(
 		'theme_location'    => 'secondary',
-		'depth'             => 3,
+		'depth'             => 6,
 		'container'         => 'div',
 		'container_class'   => 'secondary-menu collapse navbar-collapse nav-collapse',
 		'menu_class'        => 'nav navbar-nav',

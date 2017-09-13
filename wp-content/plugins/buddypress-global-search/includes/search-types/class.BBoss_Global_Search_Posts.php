@@ -12,40 +12,22 @@ if (!class_exists('BBoss_Global_Search_Posts')):
 	 *
 	 */
 	class BBoss_Global_Search_Posts extends BBoss_Global_Search_Type {
-		private $type = 'posts';
-		
-		/**
-		 * Insures that only one instance of Class exists in memory at any
-		 * one time. Also prevents needing to define globals all over the place.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @see buddyboss_global_search()
-		 *
-		 * @return object BBoss_Global_Search_Posts
-		 */
-		public static function instance() {
-			// Store the instance locally to avoid private static replication
-			static $instance = null;
-
-			// Only run these methods if they haven't been run previously
-			if (null === $instance) {
-				$instance = new BBoss_Global_Search_Posts();
-
-				add_action( 'bboss_global_search_settings_item_posts', array( $instance, 'print_search_options' ) );
-			}
-
-			// Always return the instance
-			return $instance;
-		}
+		private $pt_name;
+		private $search_type;
 
 		/**
-		 * A dummy constructor to prevent this class from being loaded more than once.
+		 * A real constructor. Since we do want multiple copies of this class.
+		 * The idea is to have one object for each searchable custom post type.
 		 *
 		 * @since 1.0.0
 		 */
-		private function __construct() { /* Do nothing here */
+		public function __construct( $pt_name, $search_type ) {
+			$this->pt_name = $pt_name;
+			$this->search_type =$search_type;
+
+			add_action( "bboss_global_search_settings_item_{$this->search_type}", array( $this, 'print_search_options' ) );
 		}
+
 		
 		public function sql( $search_term, $only_totalrow_count=false ){
 			/* an example UNION query :- 
@@ -80,37 +62,67 @@ if (!class_exists('BBoss_Global_Search_Posts')):
 			if( $only_totalrow_count ){
 				$sql .= " COUNT( DISTINCT id ) ";
 			} else {
-				$sql .= " DISTINCT id , 'posts' as type, post_title LIKE '%%%s%%' AS relevance, post_date as entry_date  ";
-				$query_placeholder[] = $search_term;
+				$sql .= " DISTINCT id , %s as type, post_title LIKE %s AS relevance, post_date as entry_date  ";
+				$query_placeholder[] = $this->search_type;
+				$query_placeholder[] = '%'. $search_term .'%';
 			}
+
+			$sql .= " FROM {$wpdb->posts} p ";
 
 
 			/* ++++++++++++++++++++++++++++++++
 			 * wp_posts table fields
 			 +++++++++++++++++++++++++++++++ */
 			$items_to_search = buddyboss_global_search()->option('items-to-search');
-			$post_fields = array();
-			foreach( $items_to_search as $item ){
-				//should start with member_field_ prefix
+			$post_fields 	 = array();
+			$tax 			 = array();
+			foreach( $items_to_search as $item ) {
+
 				//see print_search_options
 				if( strpos( $item, 'post_field_' )===0 ){
 					$post_field = str_replace( 'post_field_', '', $item );
 					$post_fields[$post_field] = true;
 				}
+
+				if ( strpos( $item, '-tax-' ) ) {
+					$tax[] = str_replace( $this->search_type.'-tax-', '', $item );
+				}
 			}
 
-			$sql .= " FROM {$wpdb->posts} WHERE 1=1 AND ( (post_title LIKE '%%%s%%') OR ( (post_content LIKE '%%%s%%') AND (post_content NOT LIKE '%%[%%%s%%]%%') )";
-
-			if ( ! empty( $post_fields['post_meta'] ) ) {
-				$sql .= " OR ( ID IN (SELECT post_id FROM {$wpdb->postmeta} WHERE meta_value LIKE '%%%s%%' ) )";
-				$query_placeholder[] = $search_term;
+			//Tax query left join
+			if ( ! empty( $tax ) ) {
+				$sql .= " LEFT JOIN {$wpdb->term_relationships} r ON p.ID = r.object_id ";
 			}
 
-			$sql .= ") AND post_type IN ('post', 'page') AND post_status = 'publish' ";
+			//WHERE
+			$sql .= ' WHERE 1=1 AND ( p.post_title LIKE %s OR p.post_content LIKE %s ';
+			$query_placeholder[] = '%'. $search_term .'%';
+			$query_placeholder[] = '%'. $search_term .'%';
 
-			$query_placeholder[] = $search_term;
-			$query_placeholder[] = $search_term;
-			$query_placeholder[] = $search_term;
+			//Tax query
+			if ( ! empty( $tax ) ) {
+
+				$tax_in_arr = array_map( function( $t_name ) {
+					return "'" . $t_name . "'";
+				}, $tax );
+
+				$tax_in = implode( ', ', $tax_in_arr );
+
+				$sql .= " OR  r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON 
+					  t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN ({$tax_in}) )";
+					$query_placeholder[] = '%'. $search_term .'%';
+					$query_placeholder[] = '%'. $search_term .'%';
+			}
+
+			//Meta query
+			if ( ! empty( $post_fields[$this->pt_name.'_meta'] ) ) {
+				$sql .= " OR p.ID IN (SELECT post_id FROM {$wpdb->postmeta} WHERE meta_value LIKE %s )";
+				$query_placeholder[] = '%'. $search_term .'%';
+			}
+
+			//Post should be publish
+			$sql .= ") AND p.post_type = '{$this->pt_name}' AND p.post_status = 'publish' ";
+
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
             return apply_filters( 
@@ -131,13 +143,14 @@ if (!class_exists('BBoss_Global_Search_Posts')):
 
 			//now we have all the posts
 			//lets do a wp_query and generate html for all posts
-			$qry = new WP_Query( array( 'post_type' =>array( 'post', 'page' ), 'post__in'=>$post_ids ) );
+			$qry = new WP_Query( array( 'post_type' => $this->pt_name, 'post__in'=>$post_ids ) );
+
 			if( $qry->have_posts() ){
 				while( $qry->have_posts() ){
 					$qry->the_post();	
 					$result = array(
 						'id'	=> get_the_ID(),
-						'type'	=> $this->type,
+						'type'	=> $this->search_type,
 						'title'	=> get_the_title(),
 						'html'	=> buddyboss_global_search_buffer_template_part( 'loop/post', $template_type, false ),
 					);
@@ -150,24 +163,37 @@ if (!class_exists('BBoss_Global_Search_Posts')):
 
 
 		/**
-		 * What fields members should be searched on?
-		 * Prints options to search through username, email, nicename/displayname.
-		 * Prints xprofile fields, if xprofile component is active.
+		 * What taxonomy should be searched on?
+		 * Should search on the Post Meta?
 		 *
-		 * @since 1.1.0
+		 * Prints options to search through all registered taxonomies with give
+		 * post type e.g $this->cpt_name
+		 *
+		 * Print options to search through Post Meta
 		 */
 		function print_search_options( $items_to_search ){
+			global $wp_taxonomies;
 			echo "<div class='wp-posts-fields' style='margin: 10px 0 10px 30px'>";
 			//echo "<p class='wp-post-part-name' style='margin: 5px 0'><strong>" . __('Account','buddypress-global-search') . "</strong></p>";
 
-			$fields = array(
-				'post_meta'	    => __( 'Post Meta', 'buddypress-global-search' ),
-			);
+			/**  Post Meta Field **********************************/
 
-			foreach( $fields as $field=>$label ){
-				$item = 'post_field_' . $field;
-				$checked = !empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-				echo "<label><input type='checkbox' value='{$item}' name='buddyboss_global_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+			$label 		= sprintf( __('%s Meta', 'buddypress-global-search' ), ucfirst( $this->pt_name ) );
+			$item 		= 'post_field_' . $this->pt_name.'_meta';
+			$checked 	= ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
+
+			echo "<label><input type='checkbox' value='{$item}' name='buddyboss_global_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+
+			/** Post Taxonomies Fields *********************************/
+			$pt_taxonomy = get_object_taxonomies( $this->pt_name ) ;
+
+			foreach ( $pt_taxonomy as $tax ) {
+
+				$label 		= ucwords( str_replace( '_', ' ', $tax ) );
+				$value 		= $this->search_type.'-tax-'.$tax;
+				$checked 	= !empty( $items_to_search ) && in_array( $value, $items_to_search ) ? ' checked' : '';
+
+				echo "<label><input type='checkbox' value='{$value}' name='buddyboss_global_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
 			}
 
 			echo "</div><!-- .wp-user-fields -->";

@@ -23,8 +23,8 @@ if (!class_exists('BBoss_Global_Search_bbPress')):
 			if( $only_totalrow_count ){
 				$sql .= " COUNT( DISTINCT id ) ";
 			} else {
-				$sql .= " DISTINCT id , '{$this->type}' as type, post_title LIKE '%%%s%%' AS relevance, post_date as entry_date  ";
-				$query_placeholder[] = $search_term;
+				$sql .= " DISTINCT id , '{$this->type}' as type, post_title LIKE %s AS relevance, post_date as entry_date  ";
+				$query_placeholder[] = '%'. $search_term .'%';
 			}
 			
 			$sql .= " FROM 
@@ -33,15 +33,15 @@ if (!class_exists('BBoss_Global_Search_bbPress')):
 						1=1 
 						AND (
 								(
-										(post_title LIKE '%%%s%%')
-									OR 	(post_content LIKE '%%%s%%')
+										(post_title LIKE %s)
+									OR 	(post_content LIKE %s)
 								)
 							) 
 						AND post_type = '{$this->type}'
 						AND post_status = 'publish' 
 				";
-			$query_placeholder[] = $search_term;
-			$query_placeholder[] = $search_term;
+			$query_placeholder[] = '%'. $search_term .'%';
+			$query_placeholder[] = '%'. $search_term .'%';
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
             return apply_filters( 

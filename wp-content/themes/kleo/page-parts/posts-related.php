@@ -4,7 +4,8 @@
 $args=array(
     'post__not_in' => array($post->ID),
     'showposts'=> 8,
-    'orderby' => 'rand' //random posts
+    'orderby' => 'rand', //random posts
+    'order'   => 'ASC' //most recent first
 );
 
 //logic for blog posts

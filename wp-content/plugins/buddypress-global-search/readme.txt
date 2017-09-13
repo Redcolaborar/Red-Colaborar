@@ -3,8 +3,8 @@ Contributors: buddyboss
 Donate link: https://www.buddyboss.com/donate/
 Tags: buddypress, search, social networking, activity, profiles, messaging, friends, groups, forums, notifications, settings, social, community, networks, networking
 Requires at least: 3.8
-Tested up to: 4.7.2
-Stable tag: 1.1.7
+Tested up to: 4.7.5
+Stable tag: 1.1.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,22 @@ For BuddyPress customizations, submit your request at [BuddyBoss](https://www.bu
 2. **Admin** - set which components should be searchable
 
 == Changelog ==
+
+= 1.1.8 =
+* Fix - Subset per page items fix
+* Fix - Label changes caps to lower case
+* Fix - Words with Apostrophe are not searchable
+* Fix - Post category search
+* Fix - Remove slashes from View all link
+* Fix - Escaping fix
+* Fix - esc_like added
+* Fix - Group search unset search_terms
+* Fix - Links are not clickable on the search result page
+* Fix - (send to) input field remembers name after inputting first name
+* Fix - Add option to Select Post and Pages options separate
+* Fix - A post title and post content aren’t coming into the Ajax search result when it contain a shortcode
+* Fix - Strip shortcode in Ajax search result
+* Fix - autosuggest location search result page fix
 
 = 1.1.7 =
 * New - Compatibility with Groups location search when using [Location Autocomplete for BuddyPress](https://www.buddyboss.com/product/locations-for-buddypress/)

@@ -301,6 +301,7 @@ function buddyboos_global_search_items() {
 
 	$items = array(
 		'posts'		            => __( 'Blog Posts', 'buddypress-global-search' ),
+		'pages'		            => __( 'Pages', 'buddypress-global-search' ),
 		'posts_comments'		=> __( 'Post Comments', 'buddypress-global-search' ),
 		'members'	            => __( 'Members', 'buddypress-global-search' ),
 	);

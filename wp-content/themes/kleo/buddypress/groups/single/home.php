@@ -7,8 +7,9 @@
  */
 
 ?>
-
+<?php if ( sq_option( 'bp_full_group', 0 ) == 0 || sq_option( 'bp_nav_overlay', 0 ) == 0 ) : ?>
 <div id="buddypress">
+<?php endif; ?>
 
     <?php if ( bp_has_groups() ) : while ( bp_groups() ) : bp_the_group(); ?>
 
@@ -41,7 +42,8 @@
               </div><!-- #item-header -->
             </div>
         <?php endif;?>
-    
+	
+	    <?php if ( ! sq_option( 'bp_nav_overlay', 0 ) == 1 ) : ?>
         <div class="col-sm-12">
           <div id="item-nav">
             <div class="item-list-tabs no-ajax" id="object-nav" aria-label="<?php esc_attr_e( 'Group primary navigation', 'buddypress' ); ?>" role="navigation">
@@ -62,6 +64,7 @@
             </div>
           </div><!-- #item-nav -->
         </div>
+	    <?php endif; ?>
     
     <div id="item-body" class="col-sm-12">
 
@@ -162,5 +165,7 @@
 		do_action( 'bp_after_group_home_content' ); ?>
 
 	<?php endwhile; endif; ?>
-
+	
+<?php if ( sq_option( 'bp_full_group', 0 ) == 0 || sq_option( 'bp_nav_overlay', 0 ) == 0 ) : ?>
 </div><!-- #buddypress -->
+<?php endif; ?>

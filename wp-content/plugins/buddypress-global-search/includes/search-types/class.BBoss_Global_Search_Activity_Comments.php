@@ -65,8 +65,8 @@ if (!class_exists('BBoss_Global_Search_Activity_Comment')):
 			if( $only_totalrow_count ){
 				$sql .= " COUNT( DISTINCT id ) ";
 			} else {
-				$sql .= " DISTINCT a.id , 'activity_comment' as type, a.content LIKE '%%%s%%' AS relevance, a.date_recorded as entry_date  ";
-				$query_placeholder[] = $search_term;
+				$sql .= " DISTINCT a.id , 'activity_comment' as type, a.content LIKE %s AS relevance, a.date_recorded as entry_date  ";
+				$query_placeholder[] = '%'.$wpdb->esc_like( $search_term ).'%';
 			}
 			
 			//searching only activity updates, others don't make sense
@@ -75,11 +75,11 @@ if (!class_exists('BBoss_Global_Search_Activity_Comment')):
 					WHERE 
 						1=1 
 						AND is_spam = 0 
-						AND a.content LIKE '%%%s%%' 
+						AND a.content LIKE %s 
 						AND a.hide_sitewide = 0 
 						AND a.type = 'activity_comment'
 				";
-			$query_placeholder[] = $search_term;
+			$query_placeholder[] = '%'.$wpdb->esc_like( $search_term ).'%';
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
             
             return apply_filters( 

@@ -49,9 +49,9 @@ function kleo_get_required_plugins() {
 			// The plugin name
 			'slug'               => 'js_composer',
 			// The plugin slug (typically the folder name)
-			'version'            => kleo_get_plugin_version( 'js_composer', '5.1.1', $kleo_rem_plugin_transient ),
+			'version'            => kleo_get_plugin_version( 'js_composer', '5.2.1', $kleo_rem_plugin_transient ),
 			// E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
-			'source'             => kleo_get_plugin_src( 'js_composer', '5.1.1', false ),
+			'source'             => kleo_get_plugin_src( 'js_composer', '5.2.1', false ),
 			// The plugin source
 			'required'           => true,
 			// If false, the plugin is only 'recommended' instead of required
@@ -312,9 +312,9 @@ function kleo_get_required_plugins() {
 			// The plugin slug (typically the folder name)
 			'required'           => false,
 			// If false, the plugin is only 'recommended' instead of required
-			'version'            => '1.9.11',
+			'version'            => '1.9.15',
 			// E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
-			'source'             => 'https://github.com/Automattic/sensei/archive/version/1.9.11.zip',
+			'source'             => 'https://github.com/Automattic/sensei/archive/version/1.9.15.zip',
 			// The plugin source
 			'force_activation'   => false,
 			// If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
@@ -396,8 +396,10 @@ function kleo_get_plugin_version( $name, $version, $reset_transient = false ) {
 	}
 	$final_version = $version;
 
-	if ( $force_remote_check == false && get_transient( 'kleo_' . $name ) ) {
-		$final_version = get_transient( 'kleo_' . $name );
+	if ( $force_remote_check == false ) {
+		if ( get_transient( 'kleo_' . $name ) ) {
+			$final_version = get_transient( 'kleo_' . $name );
+		}
 	} else {
 		$version_get = wp_remote_get( 'http://updates.seventhqueen.com/check/kleo/plugin_version.php?name=' . $name );
 		// Check for error
@@ -408,7 +410,7 @@ function kleo_get_plugin_version( $name, $version, $reset_transient = false ) {
 			if ( ! is_wp_error( $url_version ) ) {
 				$final_version = $url_version;
 
-				//set transient for 1 week
+				//set transient
 				set_transient( 'kleo_' . $name, $url_version, $transient );
 			}
 		}

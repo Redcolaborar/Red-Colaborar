@@ -6,6 +6,9 @@
  * @since 1.6
  */
 
+/* Dynamic styles */
+require_once( KLEO_LIB_DIR . '/plugin-buddypress/dynamic.php' );
+
 if ( bp_is_active('notifications') ) {
     require_once( KLEO_LIB_DIR . '/plugin-buddypress/menu-notifications.php' );
 }
@@ -314,12 +317,11 @@ if ( ! function_exists( 'kleo_bp_page_options' ) ) {
     /**
      * Set Buddypress page layout based of individual page settings
      */
-    function kleo_bp_page_options()
-    {
+    function kleo_bp_page_options() {
 
         $current_page_id = kleo_bp_get_page_id();
 
-        if (!$current_page_id) {
+        if ( ! $current_page_id ) {
             return false;
         }
 
@@ -377,6 +379,10 @@ function kleo_bp_body_classes( $classes = array() ) {
 		if ( bp_is_user() || ( bp_is_single_item() && bp_is_groups_component() ) ) {
 			$classes[] = 'bp-light-icons';
 		}
+	}
+	
+	if ( sq_option( 'bp_nav_overlay', 0 ) == 1 ) {
+		$classes[] = 'bp-overlay-menu';
 	}
 
 	return $classes;

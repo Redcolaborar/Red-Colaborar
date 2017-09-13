@@ -48,26 +48,6 @@ $icon_wrapper = false;
 $icon_html = false;
 $attributes = array();
 
-$colors = array(
-	'blue' => '#5472d2',
-	'turquoise' => '#00c1cf',
-	'pink' => '#fe6c61',
-	'violet' => '#8d6dc4',
-	'peacoc' => '#4cadc9',
-	'chino' => '#cec2ab',
-	'mulled-wine' => '#50485b',
-	'vista-blue' => '#75d69c',
-	'orange' => '#f7be68',
-	'sky' => '#5aa1e3',
-	'green' => '#6dab3c',
-	'juicy-pink' => '#f4524d',
-	'sandy-brown' => '#f79468',
-	'purple' => '#b97ebb',
-	'black' => '#2a2a2a',
-	'grey' => '#ebebeb',
-	'white' => '#ffffff',
-);
-
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 //parse link
@@ -178,8 +158,8 @@ if ( 'custom' === $style ) {
 	}
 } elseif ( 'gradient' === $style || 'gradient-custom' === $style ) {
 
-	$gradient_color_1 = $colors[ $gradient_color_1 ];
-	$gradient_color_2 = $colors[ $gradient_color_2 ];
+	$gradient_color_1 = vc_convert_vc_color( $gradient_color_1 );
+	$gradient_color_2 = vc_convert_vc_color( $gradient_color_2 );
 
 	$button_text_color = '#fff';
 	if ( 'gradient-custom' === $style ) {

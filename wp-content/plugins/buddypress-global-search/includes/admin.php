@@ -189,9 +189,9 @@ if (!class_exists('BuddyBoss_Global_Search_Admin')):
 			add_settings_section( 'general_section', __( 'General Settings', 'buddypress-global-search' ), array($this, 'section_general'), __FILE__);
 			//add_settings_section( 'style_section', 'Style Settings', array( $this, 'section_style' ), __FILE__ );
 			//general options
-			add_settings_field('items-to-search', __( 'Items To Search', 'buddypress-global-search' ), array($this, 'setting_items_to_search'), __FILE__, 'general_section');
-			add_settings_field('enable-ajax-search', __( 'AutoSuggest', 'buddypress-global-search' ), array($this, 'setting_enable_ajax_search'), __FILE__, 'general_section');
-			add_settings_field('items-per-page', __( 'AutoSuggest number of items', 'buddypress-global-search' ), array($this, 'setting_items_per_page'), __FILE__, 'general_section');
+			add_settings_field('items-to-search', __( 'Items to Search', 'buddypress-global-search' ), array($this, 'setting_items_to_search'), __FILE__, 'general_section');
+			add_settings_field('enable-ajax-search', __( 'Autosuggest', 'buddypress-global-search' ), array($this, 'setting_enable_ajax_search'), __FILE__, 'general_section');
+			add_settings_field('items-per-page', __( 'Autosuggest number of items', 'buddypress-global-search' ), array($this, 'setting_items_per_page'), __FILE__, 'general_section');
 		}
 		
 		function register_support_settings() {

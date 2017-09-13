@@ -2239,6 +2239,9 @@ a.ajax_view_all:after {
   top: -7px;
   right: 0;
 }
+.kleo-toggle-menu.open .kleo-toggle-submenu {
+  display: block;
+}
 .kleo-notifications-nav ul {
   counter-reset: section;
 }

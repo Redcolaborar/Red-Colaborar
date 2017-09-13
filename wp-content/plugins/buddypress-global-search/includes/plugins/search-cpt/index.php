@@ -26,6 +26,7 @@ function bboss_global_search_option_cpt_search( $items_to_search ){
 		foreach( $cpts as $cpt=>$cpt_obj ){
 			$checked = !empty( $items_to_search ) && in_array( 'cpt-' . $cpt, $items_to_search ) ? ' checked' : '';
 			echo "<label><input type='checkbox' value='cpt-{$cpt}' name='buddyboss_global_search_plugin_options[items-to-search][]' {$checked}>{$cpt_obj->label}</label><br>";
+			do_action( 'bboss_global_search_settings_item_'.$cpt, $items_to_search );
 		}
 	}
 }

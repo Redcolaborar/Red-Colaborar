@@ -7760,6 +7760,9 @@ a.ajax_view_all:after {
   top: -7px;
   right: 0;
 }
+.kleo-toggle-menu.open .kleo-toggle-submenu {
+  display: block;
+}
 .kleo-notifications-nav ul {
   counter-reset: section;
 }
@@ -18911,7 +18914,7 @@ body.is-user-profile .profile-cover-inner {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#a6000000', GradientType=0);
   /* IE6-9 */
 }
-body.is-user-profile.bp-header-small .profile-cover-inner {
+body.is-user-profile.bp-header-small:not(.bp-overlay-menu) .profile-cover-inner {
   background: none;
 }
 /* --------------------------------------------------

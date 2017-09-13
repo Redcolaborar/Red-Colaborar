@@ -26,7 +26,7 @@
 					<div class="sq-col-6">
 						<h3 class="sq-lead-title">Hello and thanks for using KLEO theme</h3>
 						
-						<p>We are supper happy that you are now part of our community.<br>
+						<p>We are super happy that you are now part of our community.<br>
 							Please follow the steps on this page to setup your theme. It is totally optional but it will greatly help you get started with KLEO.</p>
 						<p>After you went through the above steps, make sure to also check the advanced <strong><a href="<?php echo admin_url('admin.php?page=kleo_options');?>">Theme options</a></strong></p>
 					</div>

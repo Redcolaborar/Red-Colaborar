@@ -2743,16 +2743,16 @@ var KLEO = KLEO || {};
 					    if (response.statusNotif == 'success') {
 						    if (response.countNotif == '0') {
 							    $('.kleo-notifications-nav .minicart-buttons').hide();
-							    $(".kleo-notifications-nav .kleo-notifications").removeClass("new-alert").addClass("no-alert");
+							    $(".kleo-notifications-nav .kleo-notifications, .sq-notify-mobile .kleo-notifications").removeClass("new-alert").addClass("no-alert");
 							    $(".kleo-notifications-nav .submenu-inner").removeClass("has-notif");
 						    } else {
 							    $('.kleo-notifications-nav').addClass("kleo-loading");
-							    $(".kleo-notifications-nav .kleo-notifications").removeClass("no-alert").addClass("new-alert");
+							    $(".kleo-notifications-nav .kleo-notifications, .sq-notify-mobile .kleo-notifications").removeClass("no-alert").addClass("new-alert");
 							    $(".kleo-notifications-nav .submenu-inner").addClass("has-notif");
 							    $('.kleo-notifications-nav .minicart-buttons').show();
 						    }
 
-						    $(".kleo-notifications-nav .kleo-notifications").text(response.countNotif);
+						    $(".kleo-notifications-nav .kleo-notifications, .sq-notify-mobile .kleo-notifications").text(response.countNotif);
 						    $('.kleo-notifications-nav .kleo-submenu-item').remove();
 						    $('.kleo-notifications-nav .submenu-inner').prepend(response.dataNotif);
 					    } else {
@@ -2762,16 +2762,16 @@ var KLEO = KLEO || {};
 					    if (response.statusMessages == 'success') {
 						    if (response.countMessages == '0') {
 							    $('.kleo-messages-nav .minicart-buttons').hide();
-							    $(".kleo-messages-nav .kleo-notifications").removeClass("new-alert").addClass("no-alert");
+							    $(".kleo-messages-nav .kleo-notifications, .sq-messages-mobile .kleo-notifications").removeClass("new-alert").addClass("no-alert");
 							    $(".kleo-messages-nav .submenu-inner").removeClass("has-notif");
 						    } else {
 							    $('.kleo-messages-nav').addClass("kleo-loading");
-							    $(".kleo-messages-nav .kleo-notifications").removeClass("no-alert").addClass("new-alert");
+							    $(".kleo-messages-nav .kleo-notifications, .sq-messages-mobile .kleo-notifications").removeClass("no-alert").addClass("new-alert");
 							    $(".kleo-messages-nav .submenu-inner").addClass("has-notif");
 							    $('.kleo-messages-nav .minicart-buttons').show();
 						    }
 
-						    $(".kleo-messages-nav .kleo-notifications").text(response.countMessages);
+						    $(".kleo-messages-nav .kleo-notifications, .sq-messages-mobile .kleo-notifications").text(response.countMessages);
 						    $('.kleo-messages-nav .kleo-submenu-item').remove();
 						    $('.kleo-messages-nav .submenu-inner').prepend(response.dataMessages);
 					    } else {
@@ -3338,7 +3338,7 @@ var KLEO = KLEO || {};
 
             // Activate Hover menu
             if (KLEO.isotope.viewport().width > 992) {
-                $('#header .js-activated').dropdownHover({delay: 100}).dropdown();
+                $('#header .js-activated').dropdownHover({delay: 400}).dropdown();
             }
             $('.js-activated').off('click');
 
@@ -3353,7 +3353,7 @@ var KLEO = KLEO || {};
                 return false;
             });
 
-            KLEO.header.dropdownToggle();
+            //KLEO.header.dropdownToggle();
 
             KLEO.header.scrollTo();
 
@@ -3624,9 +3624,9 @@ var KLEO = KLEO || {};
 		        setTimeout( function() { scroll(0,0); }, 1);
 
 		        var myHash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
-		        if (myHash !== 'show-login' && $(window.location.hash).length) {
+		        if (myHash !== 'show-login' && myHash.substring(0,12) !== 'access_token' && $('#' + myHash).length) {
 			        $('html, body').animate({
-				        scrollTop: $(window.location.hash).offset().top - KLEO.header.calcTopHeight()
+				        scrollTop: $('#' + myHash).offset().top - KLEO.header.calcTopHeight()
 			        }, 1000);
 		        }
 	        }

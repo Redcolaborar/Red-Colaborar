@@ -77,7 +77,7 @@ switch ( $source ) {
 
 	case 'external_link':
 		$images = vc_value_from_safe( $custom_srcs );
-		$images = explode( ',', $custom_srcs );
+		$images = explode( ',', $images );
 		break;
 }
 

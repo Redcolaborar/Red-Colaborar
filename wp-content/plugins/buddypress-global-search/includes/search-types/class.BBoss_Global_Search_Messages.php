@@ -115,15 +115,15 @@ if (!class_exists('BBoss_Global_Search_Messages')):
 			if( $only_totalrow_count ){
 				$sql .= " COUNT( DISTINCT m.id ) ";
 			} else {
-				$sql .= " DISTINCT m.id , 'messages' as type, m.message LIKE '%%%s%%' AS relevance, m.date_sent AS entry_date ";
-				$query_placeholder[] = $search_term;
+				$sql .= " DISTINCT m.id , 'messages' as type, m.message LIKE %s AS relevance, m.date_sent AS entry_date ";
+				$query_placeholder[] = '%'. $search_term .'%';
 			}
 			
 			$sql .= " FROM 
 						{$bp->messages->table_name_messages} m LEFT JOIN {$bp->messages->table_name_recipients} r ON m.thread_id = r.thread_id 
 					WHERE 
 							r.is_deleted = 0 
-						AND ( m.subject LIKE '%%%s%%' OR m.message LIKE '%%%s%%' ) 
+						AND ( m.subject LIKE %s OR m.message LIKE %s ) 
 						AND (
 							( r.user_id = %d AND r.sender_only = 0 ) 
 							OR 
@@ -131,13 +131,15 @@ if (!class_exists('BBoss_Global_Search_Messages')):
 						) 
 				";
 						
-			$query_placeholder[] = $search_term;
-			$query_placeholder[] = $search_term;
+			$query_placeholder[] = '%'. $search_term .'%';
+			$query_placeholder[] = '%'. $search_term .'%';
 			$query_placeholder[] = get_current_user_id();
 			$query_placeholder[] = get_current_user_id();
 			
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
-            
+
+			//var_dump( $sql );
+			
             return apply_filters( 
                 'BBoss_Global_Search_Messages_sql', 
                 $sql, 

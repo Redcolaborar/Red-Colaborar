@@ -1267,9 +1267,12 @@ if (!function_exists('kleo_bp_member_stats_func')) {
 }
 
 
-if (!function_exists('kleo_total_members')) {
+if ( ! function_exists( 'kleo_total_members' ) ) {
     function kleo_total_members( $atts, $content = null ) {
-			return bp_get_total_member_count();
+    	if ( function_exists( 'bp_is_active' ) ) {
+		    return bp_get_total_member_count();
+	    }
+	    return '';
     }
     add_shortcode('kleo_total_members', 'kleo_total_members');
     add_filter('kleo_tinymce_shortcodes', create_function('$args','$args["buddypress"][] = array("name" => "Total members", "category" => "buddypress", "code" => "[kleo_total_members]"); return $args;'));

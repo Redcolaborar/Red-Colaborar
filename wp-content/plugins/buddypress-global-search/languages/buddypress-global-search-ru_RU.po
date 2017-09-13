@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyPress Global Search v1.1.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2017-01-12 08:13:27+00:00\n"
+"POT-Creation-Date: 2017-06-06 13:57:27+00:00\n"
 "PO-Revision-Date: 2016-07-09 01:42+0600\n"
 "Last-Translator: Airat Halitov <airat.halitov@gmail.com>\n"
 "Language-Team: Airat Halitov <airat.halitov@gmail.com>\n"
@@ -34,15 +34,17 @@ msgid "General Settings"
 msgstr "Общие настройки"
 
 #: includes/admin.php:192
-msgid "Items To Search"
+#, fuzzy
+msgid "Items to Search"
 msgstr "Пункты для поиска"
 
 #: includes/admin.php:193
-msgid "AutoSuggest"
+#, fuzzy
+msgid "Autosuggest"
 msgstr "Автоматическое предложение"
 
 #: includes/admin.php:194
-msgid "AutoSuggest number of items"
+msgid "Autosuggest number of items"
 msgstr ""
 
 #: includes/admin.php:198
@@ -95,15 +97,15 @@ msgstr "Скрыть это уведомление"
 msgid "Cheatin&#8217; huh?"
 msgstr "Барахлит, да?"
 
-#: includes/class.BBoss_Global_Search_Helper.php:302
+#: includes/class.BBoss_Global_Search_Helper.php:307
 msgid "View all results for '%s'"
 msgstr "Смотреть все результаты для '%s'"
 
-#: includes/class.BBoss_Global_Search_Helper.php:310
+#: includes/class.BBoss_Global_Search_Helper.php:315
 msgid "Nothing found for '%s'"
 msgstr "Ничего не найдено для '%s'"
 
-#: includes/class.BBoss_Global_Search_Helper.php:714
+#: includes/class.BBoss_Global_Search_Helper.php:719
 msgid "All"
 msgstr "Все"
 
@@ -116,38 +118,43 @@ msgid "Blog Posts"
 msgstr "Статьи блога"
 
 #: includes/functions.php:304
+#, fuzzy
+msgid "Pages"
+msgstr "Сообщения"
+
+#: includes/functions.php:305
 msgid "Post Comments"
 msgstr "Комментарии статей"
 
-#: includes/functions.php:305
+#: includes/functions.php:306
 msgid "Members"
 msgstr "Пользователи"
 
-#: includes/functions.php:310
+#: includes/functions.php:311
 msgid "Forums"
 msgstr "Форумы"
 
-#: includes/functions.php:311
+#: includes/functions.php:312
 msgid "Forums Topics"
 msgstr "Темы форума"
 
-#: includes/functions.php:312
+#: includes/functions.php:313
 msgid "Forums Replies"
 msgstr "Ответы форума"
 
-#: includes/functions.php:317
+#: includes/functions.php:318
 msgid "Groups"
 msgstr "Группы"
 
-#: includes/functions.php:318
+#: includes/functions.php:319
 msgid "Activity"
 msgstr "Новости"
 
-#: includes/functions.php:319
+#: includes/functions.php:320
 msgid "Messages"
 msgstr "Сообщения"
 
-#: includes/functions.php:330
+#: includes/functions.php:331
 msgid "Activity Comment"
 msgstr "Комментарии новостей"
 
@@ -170,9 +177,9 @@ msgstr ""
 "BuddyPress Global Search создан опытными разработчиками из BuddyBoss, "
 "которые также предлагают премиум <a href=\"https://www.buddyboss.com/themes/"
 "\" target=_\"blank\">темы</a>, <a href=\"https://www.buddyboss.com/plugin/\" "
-"target=_\"blank\">плагины</a> и <a href=\"https://www.buddyboss.com/solutions/"
-"\" target=_\"blank\">комплексные решения</a> для построения вашей социальной "
-"сети."
+"target=_\"blank\">плагины</a> и <a href=\"https://www.buddyboss.com/"
+"solutions/\" target=_\"blank\">комплексные решения</a> для построения вашей "
+"социальной сети."
 
 #: includes/main-class.php:449
 msgid "Loading Suggestions"
@@ -189,29 +196,30 @@ msgstr ""
 "Кликните &ldquo;Отправить приглашения&rdquo;, чтобы закончить отправку ваших "
 "приглашений."
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:250
+#: includes/search-types/class.BBoss_Global_Search_Members.php:252
 msgid "Account"
 msgstr "Аккаунт"
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:253
+#: includes/search-types/class.BBoss_Global_Search_Members.php:255
 msgid "Username/Login"
 msgstr "Username/Login"
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:254
+#: includes/search-types/class.BBoss_Global_Search_Members.php:256
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:255
+#: includes/search-types/class.BBoss_Global_Search_Members.php:257
 msgid "Email"
 msgstr "Email"
 
-#: includes/search-types/class.BBoss_Global_Search_Members.php:256
+#: includes/search-types/class.BBoss_Global_Search_Members.php:258
 msgid "User Meta"
 msgstr "Пользовательские метаданные"
 
-#: includes/search-types/class.BBoss_Global_Search_Posts.php:164
-msgid "Post Meta"
-msgstr "Метаданные статей"
+#: includes/search-types/class.BBoss_Global_Search_Posts.php:181
+#, fuzzy
+msgid "%s Meta"
+msgstr "Пользовательские метаданные"
 
 #: templates/loop/activity.php:42 templates/loop/message.php:19
 msgid "View Conversation"
@@ -276,3 +284,6 @@ msgid ""
 msgstr ""
 "Извините, но ничего не найдено по вашему запросу. Попробуйте еще раз с "
 "другими ключевыми словами."
+
+#~ msgid "Post Meta"
+#~ msgstr "Метаданные статей"

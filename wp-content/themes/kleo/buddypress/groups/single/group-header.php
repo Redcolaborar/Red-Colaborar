@@ -128,6 +128,29 @@ do_action( 'bp_before_group_header' );
  */
 do_action( 'bp_after_group_header' ); ?>
 
+<?php if ( sq_option( 'bp_nav_overlay', 0 ) == 1 ) : ?>
+
+	<div id="item-nav">
+		<div class="item-list-tabs no-ajax" id="object-nav" aria-label="<?php esc_attr_e( 'Group primary navigation', 'buddypress' ); ?>" role="navigation">
+			<ul class="responsive-tabs">
+				
+				<?php bp_get_options_nav(); ?>
+				
+				<?php
+				
+				/**
+				 * Fires after the display of group options navigation.
+				 *
+				 * @since 1.2.0
+				 */
+				do_action( 'bp_group_options_nav' ); ?>
+
+			</ul>
+		</div>
+	</div><!-- #item-nav -->
+
+<?php endif; ?>
+
 <div id="template-notices" role="alert" aria-atomic="true">
 	<?php
 

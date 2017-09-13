@@ -21,7 +21,17 @@ if ( ! function_exists( 'kleo_breadcrumb' ) ) {
 	 * @return string|bool
 	 */
 	function kleo_breadcrumb( $args = array() ) {
-		$breadcrumb_filter = apply_filters( 'kleo_breadcrumb_data', false );
+	    $breadcrumb_filter = false;
+
+        if ( function_exists('yoast_breadcrumb') ) {
+            $yoast_breadcrumb = yoast_breadcrumb('<div class="kleo_framework breadcrumb">','</div>','false');
+
+            if($yoast_breadcrumb) {
+                $breadcrumb_filter = yoast_breadcrumb('<div class="kleo_framework breadcrumb">','</div>','false');
+            }
+        }
+
+		$breadcrumb_filter = apply_filters( 'kleo_breadcrumb_data', $breadcrumb_filter );
 		if ( $breadcrumb_filter ) {
 			return $breadcrumb_filter;
 		}
