@@ -285,7 +285,7 @@ class H5PDefaultStorage implements \H5PFileStorage {
    * @return string
    */
   public function getContent($file_path) {
-    return file_get_contents($this->path . $file_path);
+    return file_get_contents($file_path);
   }
 
   /**
@@ -299,7 +299,7 @@ class H5PDefaultStorage implements \H5PFileStorage {
     // Prepare directory
     if (empty($contentId)) {
       // Should be in editor tmp folder
-      $path = ($this->alteditorpath !== NULL ? $this->alteditorpath : $this->path . '/editor');
+      $path = $this->getEditorPath();
     }
     else {
       // Should be in content folder
@@ -319,7 +319,7 @@ class H5PDefaultStorage implements \H5PFileStorage {
       copy($_FILES['file']['tmp_name'], $path);
     }
 
-    return $path;
+    return $file;
   }
 
   /**
@@ -333,7 +333,7 @@ class H5PDefaultStorage implements \H5PFileStorage {
   public function cloneContentFile($file, $fromId, $toId) {
     // Determine source path
     if ($fromId === 'editor') {
-      $sourcepath = ($this->alteditorpath !== NULL ? $this->alteditorpath : "{$this->path}/editor");
+      $sourcepath = $this->getEditorPath();
     }
     else {
       $sourcepath = "{$this->path}/content/{$fromId}";
@@ -356,6 +356,49 @@ class H5PDefaultStorage implements \H5PFileStorage {
     }
 
     copy($sourcepath, $targetpath);
+  }
+
+  /**
+   * Copy a content from one directory to another. Defaults to cloning
+   * content from the current temporary upload folder to the editor path.
+   *
+   * @param string $source path to source directory
+   * @param string $contentId Id of content
+   *
+   * @return object Object containing h5p json and content json data
+   */
+  public function moveContentDirectory($source, $contentId = NULL) {
+    if ($source === NULL) {
+      return NULL;
+    }
+
+    if ($contentId === NULL || $contentId == 0) {
+      $target = $this->getEditorPath();
+    }
+    else {
+      // Use content folder
+      $target = "{$this->path}/content/{$contentId}";
+    }
+
+    $contentSource = $source . DIRECTORY_SEPARATOR . 'content';
+    $contentFiles = array_diff(scandir($contentSource), array('.','..', 'content.json'));
+    foreach ($contentFiles as $file) {
+      if (is_dir("{$contentSource}/{$file}")) {
+        self::copyFileTree("{$contentSource}/{$file}", "{$target}/{$file}");
+      }
+      else {
+        copy("{$contentSource}/{$file}", "{$target}/{$file}");
+      }
+    }
+
+    // Successfully loaded content json of file into editor
+    $h5pJson = $this->getContent($source . DIRECTORY_SEPARATOR . 'h5p.json');
+    $contentJson = $this->getContent($contentSource . DIRECTORY_SEPARATOR . 'content.json');
+
+    return (object) array(
+      'h5pJson' => $h5pJson,
+      'contentJson' => $contentJson
+    );
   }
 
   /**
@@ -383,7 +426,29 @@ class H5PDefaultStorage implements \H5PFileStorage {
     $path = "{$this->path}/content/{$contentId}/{$file}";
     if (file_exists($path)) {
       unlink($path);
+
+      // Clean up any empty parent directories to avoid cluttering the file system
+      $parts = explode('/', $path);
+      while (array_pop($parts) !== NULL) {
+        $dir = implode('/', $parts);
+        if (is_dir($dir) && count(scandir($dir)) === 2) { // empty contains '.' and '..'
+          rmdir($dir); // Remove empty parent
+        }
+        else {
+          return; // Not empty
+        }
+      }
     }
+  }
+
+  /**
+   * Check if server setup has write permission to
+   * the required folders
+   *
+   * @return bool True if site can write to the H5P files folder
+   */
+  public function hasWriteAccess() {
+    return self::dirReady($this->path);
   }
 
   /**
@@ -471,5 +536,14 @@ class H5PDefaultStorage implements \H5PFileStorage {
     }
 
     return TRUE;
+  }
+
+  /**
+   * Easy helper function for retrieving the editor path
+   *
+   * @return string Path to editor files
+   */
+  private function getEditorPath() {
+    return ($this->alteditorpath !== NULL ? $this->alteditorpath : "{$this->path}/editor");
   }
 }

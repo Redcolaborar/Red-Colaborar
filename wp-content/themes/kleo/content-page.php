@@ -19,7 +19,7 @@ if ( get_cfield( 'centered_text' ) == 1 ) {
 <article id="post-<?php the_ID(); ?>" <?php post_class( $extra_classes ); ?>>
 
 	<?php
-	if ( kleo_postmedia_enabled( 'page_media', 0 ) ) {
+	if ( kleo_postmedia_enabled( 'page_media', 0, true ) ) {
 
 		$slides = get_cfield( 'slider' );
 		$audio  = get_cfield( 'audio' );

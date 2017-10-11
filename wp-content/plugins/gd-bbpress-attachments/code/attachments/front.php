@@ -373,5 +373,3 @@ class gdbbAtt_Front {
 
 global $gdbbpress_attachments_front;
 $gdbbpress_attachments_front = new gdbbAtt_Front();
-
-?>

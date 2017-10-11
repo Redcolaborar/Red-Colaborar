@@ -40,6 +40,14 @@ The exceptions to this license are as follows:
 
 
 #######################  Changelog ######################
+= 4.0.8 September 17th 2017 =
+* Fix: handle user's singular featured image height in singular. Fixes #1166.
+* Fix: correct horizontal positioning of the primary navbar menu. Fixes #1175.
+* Fix: fix slider textual fields wrong truncation. Fixes #1168.
+* Imp : Gallery img sizes. Fixes #1165.
+* Imp : improved customizer js code
+* Updated : about admin page
+
 = 4.0.7 September 7th 2017 =
 * Fix: menu centered wrongly displayed in ie/edge. Fixes #1163
 * Fix: Menu centered in desktop => scrolling up and down close to top is not well handled. Fixes #1161

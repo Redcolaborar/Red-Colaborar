@@ -26,6 +26,21 @@ $rand_id = rand( 0, 1000 );
 
 		<?php do_action( 'rtmedia_gallery_after_title_container' ); ?>
 
+		<div id="rtm-media-options" class="rtm-media-options <?php echo ( function_exists( 'rtmedia_media_search_enabled' ) && rtmedia_media_search_enabled() ? 'rtm-media-search-enable': '' );  ?>">
+			<?php do_action( 'rtmedia_media_gallery_shortcode_actions' ); ?>
+			
+			<?php /**
+			 * Show media search if search_filter="true"
+			 */
+			if ( isset( $shortcode_attr['attr']['search_filter'] )  ) {
+				if ( 'true' === $shortcode_attr['attr']['search_filter'] ) {
+					add_search_filter( $shortcode_attr['attr'] );
+				}
+				unset( $shortcode_attr['attr']['search_filter'] );
+			} ?>
+
+		</div>
+
     <?php } else {
         ?>
         <div id="rtm-gallery-title-container" class="clearfix">

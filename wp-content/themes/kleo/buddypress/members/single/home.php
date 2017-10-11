@@ -23,7 +23,7 @@
   
   <div class="row">
 
-      <?php if( sq_option( 'bp_full_profile', 0 ) == 0 ): ?>
+      <?php if( sq_option( 'bp_full_profile', 0 ) == 0 ) : ?>
       <div class="col-sm-12">
           <div id="item-header" role="complementary">
 

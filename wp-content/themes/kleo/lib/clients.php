@@ -34,7 +34,7 @@ class Clients_Post_Type extends Post_types {
 			'has_archive' => true,
 			'hierarchical' => false,
 			'menu_position' => 20, // Below "Pages"
-			'supports' => array( 'title', 'thumbnail' )
+			'supports' => apply_filters( 'kleo_clients_cpt_supports', array( 'title', 'thumbnail' ) )
 		);
 
 		register_post_type( 'kleo_clients', $args );

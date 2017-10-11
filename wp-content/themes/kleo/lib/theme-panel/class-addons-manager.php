@@ -158,7 +158,7 @@ class SQ_Addons_Manager {
 	 * @param  string $slug The slug used in the addons config file for the child theme
 	 * @return string A json formatted value
 	 */
-	function enable_child_theme( $slug ){
+	function enable_child_theme( $slug ) {
 
 		$status = $this->get_plugin_status( $slug );
 

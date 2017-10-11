@@ -9,7 +9,8 @@
  * @copyright 2014 Joubel
  */
 ?>
-<div class="wrap">
+<div class="wrap h5p-settings-container">
+  <?php \H5P_Plugin_Admin::print_messages(); ?>
   <h2><?php print esc_html(get_admin_page_title()); ?></h2>
   <?php if ($save !== NULL): ?>
     <div id="setting-error-settings_updated" class="updated settings-error">
@@ -19,20 +20,6 @@
   <form method="post">
     <table class="form-table">
       <tbody>
-        <tr valign="top">
-          <th scope="row"><?php _e("External communication", $this->plugin_slug); ?></th>
-          <td>
-            <label>
-              <input name="ext_communication" type="checkbox" value="true"<?php if ($ext_communication): ?> checked="checked"<?php endif; ?>/>
-              <?php _e("I wish to aid in the development of H5P by contributing anonymous usage data", $this->plugin_slug); ?>
-            </label>
-            <p class="h5p-setting-desc">
-              <?php _e("Disabling this option will prevent your site from fetching the newest H5P updates.", $this->plugin_slug); ?><br/>
-              <?php _e("You will have to manually download the Content Type updates from H5P.org and then upload them to your site.", $this->plugin_slug); ?><br/>
-              <?php printf(wp_kses(__('You can read more about <a href="%s" target="_blank">which data is collected</a> on h5p.org.', $this->plugin_slug), array('a' => array('href' => array(), 'target' => array()))), 'https://h5p.org/tracking-the-usage-of-h5p'); ?>
-            </p>
-          </td>
-        </tr>
         <tr valign="top">
           <th scope="row"><?php _e("Toolbar Below Content", $this->plugin_slug); ?></th>
           <td>
@@ -123,7 +110,7 @@
           </td>
         </tr>
         <tr valign="top">
-          <th scope="row"><?php _e("Save content state", $this->plugin_slug); ?></th>
+          <th scope="row"><?php _e("Save Content State", $this->plugin_slug); ?></th>
           <td>
             <label>
               <input name="save_content_state" type="checkbox" value="true"<?php if ($save_content_state): ?> checked="checked"<?php endif; ?>/>
@@ -136,7 +123,7 @@
           </td>
         </tr>
         <tr valign="top">
-          <th scope="row"><?php _e("Add content method", $this->plugin_slug); ?></th>
+          <th scope="row"><?php _e("Add Content Method", $this->plugin_slug); ?></th>
           <td class="h5p-action-bar-settings">
             <div>
               <?php _e('When adding H5P content to posts and pages using the "Add H5P" button:', $this->plugin_slug); ?>
@@ -146,7 +133,7 @@
                 <input type="radio" name="insert_method" value="id"
                   <?php if ($insert_method == "id"): ?>checked="checked"<?php endif; ?>
                 />
-                <?php _e("Reference content by id", $this->plugin_slug); ?></th>
+                <?php _e("Reference content by id", $this->plugin_slug); ?>
               </label>
             </div>
             <div>
@@ -154,7 +141,7 @@
                 <input type="radio" name="insert_method" value="slug"
                   <?php if ($insert_method == "slug"): ?>checked="checked"<?php endif; ?>
                 />
-                <?php printf(wp_kses(__('Reference content by <a href="%s" target="_blank">slug</a>', $this->plugin_slug), array('a' => array('href' => array(), 'target' => array()))), 'https://en.wikipedia.org/wiki/Semantic_URL#Slug'); ?></th>
+                <?php printf(wp_kses(__('Reference content by <a href="%s" target="_blank">slug</a>', $this->plugin_slug), array('a' => array('href' => array(), 'target' => array()))), 'https://en.wikipedia.org/wiki/Semantic_URL#Slug'); ?>
               </label>
             </div>
           </td>
@@ -168,6 +155,40 @@
             </label>
             <p class="h5p-setting-desc">
               <?php _e("Makes it possible to use content types that rely upon a Learning Record Store to function properly, like the Questionnaire content type.", $this->plugin_slug); ?>
+            </p>
+            <label class="h5p-hub-setting">
+              <input
+                class="h5p-settings-disable-hub-checkbox"
+                name="enable_hub"
+                type="checkbox"
+                value="true"
+                <?php if ($enable_hub): ?> checked="checked"<?php endif; ?>/>
+              <?php _e("Use H5P Hub", $this->plugin_slug); ?>
+            </label>
+            <p class="h5p-setting-desc">
+              <?php _e("It's strongly encouraged to keep this option <strong>enabled</strong>. The H5P Hub provides an easy interface for getting new content types and keeping existing content types up to date. In the future, it will also make it easier to share and reuse content. If this option is disabled you'll have to install and update content types through file upload forms.", $this->plugin_slug); ?>
+            </p>
+          </td>
+        </tr>
+<!--        <tr valign="top">-->
+<!--          <th scope="row">--><?php //_e("Site Key", $this->plugin_slug); ?><!--</th>-->
+<!--          <td>-->
+<!--            <input id="h5p-site-key" name="site_key" type="text" maxlength="36" data-value="--><?php //print $site_key ?><!--" placeholder="--><?php //print ($site_key ? '********-****-****-****-************' : __('Empty', $this->plugin_slug)) ?><!--"/>-->
+<!--            <button type="button" class="h5p-reveal-value" data-control="h5p-site-key" data-hide="--><?php //_e("Hide", $this->plugin_slug); ?><!--">--><?php //_e("Reveal", $this->plugin_slug); ?><!--</button>-->
+<!--            <p class="h5p-setting-desc">-->
+<!--              --><?php //_e("The site key is a secret used to uniquely identifies the site with the Hub.", $this->plugin_slug); ?>
+<!--            </p>-->
+<!--          </td>-->
+<!--        </tr>-->
+        <tr valign="top">
+          <th scope="row"><?php _e("Usage Statistics", $this->plugin_slug); ?></th>
+          <td>
+            <label>
+              <input name="send_usage_statistics" type="checkbox" value="true"<?php if ($send_usage_statistics): ?> checked="checked"<?php endif; ?>/>
+              <?php _e("Automatically contribute usage statistics", $this->plugin_slug); ?>
+            </label>
+            <p class="h5p-setting-desc">
+              <?php printf(wp_kses(__("Usage statistics numbers will automatically be reported to help the developers better understand how H5P is used and to determine potential areas of improvement. Read more about which <a href=\"%s\" target=\"_blank\">data is collected on h5p.org</a>.", $this->plugin_slug), array('a' => array('href' => array(), 'target' => array()))), 'https://h5p.org/tracking-the-usage-of-h5p'); ?>
             </p>
           </td>
         </tr>

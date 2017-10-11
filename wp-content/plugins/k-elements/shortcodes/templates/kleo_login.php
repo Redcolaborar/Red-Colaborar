@@ -9,7 +9,7 @@
  * @since K Elements 4.0
  */
 
-$show = $login_title = $lostpass_title = $login_link = $lostpass_link = $register_link = $show_for_users = $el_class = '';
+$show = $login_title = $lostpass_title = $login_link = $lostpass_link = $register_link = $show_for_users = $autofocus_login_field = $el_class = '';
 
 extract( shortcode_atts( array(
     'show'      => 'login', // or lostpass ( default form to show )
@@ -21,6 +21,7 @@ extract( shortcode_atts( array(
     'style' => 'white',
     'input_size' => 'normal',
     'show_for_users' => '',
+    'autofocus_login_field' => '',
     'el_class' => '',
 ), $atts ) );
 
@@ -34,9 +35,14 @@ if ( is_user_logged_in() ) {
     $show_content = true;
 }
 
+
 if( $show_content ) {
 
     ob_start();
+
+    if( $autofocus_login_field == '' ) {
+        $autofocus_login_field = 'autofocus';
+    }
 
     if( $register_link == '' ){
         $register_link = function_exists('bp_is_active') ? bp_get_signup_page() : get_bloginfo('url') . "/wp-login.php?action=register";
@@ -74,7 +80,7 @@ if( $show_content ) {
                 </div>
                 <form action="<?php echo wp_login_url(apply_filters('kleo_modal_login_redirect', '')); ?>" id="login_form" name="login_form" method="post" class="kleo-form-signin">
                     <?php wp_nonce_field('kleo-ajax-login-nonce', 'security'); ?>
-                    <input type="text" id="username" autofocus required name="log" class="form-control" value="" placeholder="<?php esc_html_e("Username", 'k-elements'); ?>">
+                    <input type="text" id="username" <?php if( $autofocus_login_field == 'autofocus' ) { echo $autofocus_login_field; } ?> required name="log" class="form-control" value="" placeholder="<?php esc_html_e("Username", 'k-elements'); ?>">
                     <input type="password" id="password" required value="" name="pwd" class="form-control" placeholder="<?php esc_html_e("Password", 'k-elements'); ?>">
                     <div id="kleo-login-result"></div>
                     <button class="btn btn-lg btn-default btn-block" type="submit"><?php esc_html_e("Sign in", "k-elements"); ?></button>

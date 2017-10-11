@@ -238,12 +238,10 @@ class H5PLibraryAdmin {
     $this->add_admin_assets();
     H5P_Plugin_Admin::add_script('library-list', 'h5p-php-library/js/h5p-library-list.js');
 
-    // Updates
-    $update_available = get_option('h5p_update_available', 0);
-    $current_update = get_option('h5p_current_update', 0);
-    $updates_available = ($update_available !== 0 && $current_update !== 0 && $current_update < $update_available ? 1 : 0);
+    // Load content type cache time
+    $last_update = get_option('h5p_content_type_cache_updated_at', '');
+    $hubOn = get_option('h5p_hub_is_enabled', TRUE);
 
-    H5P_Plugin_Admin::print_messages();
     include_once('views/libraries.php');
     $plugin->print_settings($settings, 'H5PAdminIntegration');
   }
@@ -263,7 +261,7 @@ class H5PLibraryAdmin {
       if (isset($_FILES['h5p_file'])) {
         // If file upload, we're uploading libraries
 
-        if ($_FILES['h5p_file']['error'] === 0) {
+        if ($_FILES['h5p_file']['error'] == UPLOAD_ERR_OK) {
           // No upload errors, try to install package
           check_admin_referer('h5p_library', 'lets_upgrade_that'); // Verify form
           $plugin_admin = H5P_Plugin_Admin::get_instance();
@@ -271,13 +269,13 @@ class H5PLibraryAdmin {
         }
         else {
           $phpFileUploadErrors = array(
-            1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
-            2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
-            3 => 'The uploaded file was only partially uploaded',
-            4 => 'No file was uploaded',
-            6 => 'Missing a temporary folder',
-            7 => 'Failed to write file to disk.',
-            8 => 'A PHP extension stopped the file upload.',
+            UPLOAD_ERR_INI_SIZE   => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+            UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+            UPLOAD_ERR_PARTIAL    => 'The uploaded file was only partially uploaded',
+            UPLOAD_ERR_NO_FILE    => 'No file was uploaded',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk.',
+            UPLOAD_ERR_EXTENSION  => 'A PHP extension stopped the file upload.',
           );
 
           $errorMessage = $phpFileUploadErrors[$_FILES['h5p_file']['error']];
@@ -285,22 +283,13 @@ class H5PLibraryAdmin {
         }
         return;
       }
-      elseif ($task === NULL) {
-        // No files, we must be trying to auto download & update
+      elseif (filter_input(INPUT_POST, 'sync_hub')) {
+        check_admin_referer('h5p_sync', 'sync_hub'); // Verify form
 
-        check_admin_referer('h5p_update', 'download_update'); // Verify form
-        if (!H5P_Plugin_Admin::download_h5p_libraries(TRUE)) {
-          // Ignore update if it failed, user must manually update.
-          update_option('h5p_current_update', get_option('h5p_update_available', 0));
-          H5P_Plugin_Admin::set_error(
-              vsprintf(
-                wp_kses(
-                  __('Unfortunately, we were unable to update your installed content types. You must manually download the update from <a href="%s" target="_blank">H5P.org</a>, and then upload it through the <em>Upload Libraries</em> section. If you need futher assistance, please file a <a href="%s" target="_blank">support request</a> or check out our <a href="%s" target="_blank">forum</a>.', $this->plugin_slug),
-                  array('a' => array('href' => array(), 'target' => array()), 'em' => array())
-                ),
-                array(esc_url('https://h5p.org/update-all-content-types'), esc_url('https://wordpress.org/support/plugin/h5p'), esc_url('https://h5p.org/forum'))
-              ));
-        }
+        // Update content type cache
+        $plugin = H5P_Plugin::get_instance();
+        $core = $plugin->get_h5p_instance('core');
+        $core->updateContentTypeCache();
       }
     }
 

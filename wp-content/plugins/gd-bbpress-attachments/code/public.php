@@ -8,5 +8,3 @@ function d4p_bba_o($name) {
     global $gdbbpress_attachments;
     return $gdbbpress_attachments->o[$name];
 }
-
-?>

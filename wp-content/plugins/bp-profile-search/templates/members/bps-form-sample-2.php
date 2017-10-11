@@ -15,7 +15,7 @@
 	if ($F->location == 'directory')
 	{
 ?>
-	<div class="bps_header">
+	<div class="bps_header" style="clear: both;">
 		<?php echo $F->header; ?>
 
 <?php
@@ -40,7 +40,7 @@
 <?php
 	}
 
-	echo "<form action='$F->action' method='$F->method' id='$form_id'>\n";
+	echo "<form action='$F->action' method='$F->method' id='$form_id' class='bps_form'>\n";
 
 	foreach ($F->fields as $f)
 	{

@@ -24,7 +24,7 @@ class gdbbA_Admin {
         if (isset($_GET['proupgradebba']) && $_GET['proupgradebba'] == 'hide') {
             global $gdbbpress_attachments;
 
-            $gdbbpress_attachments->o['upgrade_to_pro_240'] = 0;
+            $gdbbpress_attachments->o['upgrade_to_pro_250'] = 0;
 
             update_option('gd-bbpress-attachments', $gdbbpress_attachments->o);
 
@@ -44,15 +44,15 @@ class gdbbA_Admin {
     function upgrade_notice() {
         global $gdbbpress_attachments;
 
-        if ($gdbbpress_attachments->o['upgrade_to_pro_240'] == 1) {
+        if ($gdbbpress_attachments->o['upgrade_to_pro_250'] == 1) {
             $no_thanks = add_query_arg('proupgradebba', 'hide');
 
             echo '<div class="updated d4p-updated">';
                 echo __("Thank you for using this plugin. Please, take a few minutes and check out the GD bbPress Toolbox Pro plugin with many new and improved features.", "gd-bbpress-attachments");
                 echo '<br/>'.__("Buy GD bbPress Toolbox Pro version or Dev4Press Plugins Pack and get 15% discount using this coupon", "gd-bbpress-attachments");
                 echo ': <strong style="color: #c00;">GDBBPTOPRO</strong><br/>';
-                echo '<strong><a href="https://bbpress.dev4press.com/" target="_blank">'.__("Official Website", "gd-bbpress-attachments")."</a></strong> | ";
-                echo '<strong><a href="https://pack.dev4press.com/" target="_blank">'.__("Dev4Press Plugins Pack", "gd-bbpress-attachments")."</a></strong> | ";
+                echo '<strong><a href="https://plugins.dev4press.com/gd-bbpress-toolbox/" target="_blank">'.__("Official Website", "gd-bbpress-attachments")."</a></strong> | ";
+                echo '<strong><a href="https://club.dev4press.com/" target="_blank">'.__("Dev4Press Plugins Pack", "gd-bbpress-attachments")."</a></strong> | ";
                 echo '<a href="'.$no_thanks.'">'.__("Don't display this message anymore", "gd-bbpress-attachments")."</a>.";
             echo '</div>';
         }
@@ -84,7 +84,7 @@ class gdbbA_Admin {
     function plugin_links($links, $file) {
         if ($file == 'gd-bbpress-attachments/gd-bbpress-attachments.php' ){
             $links[] = '<a href="edit.php?post_type=forum&page=gdbbpress_attachments&tab=faq">'.__("FAQ", "gd-bbpress-attachments").'</a>';
-            $links[] = '<a target="_blank" style="color: #cc0000; font-weight: bold;" href="https://bbpress.dev4press.com/">'.__("Upgrade to GD bbPress Toolbox Pro", "gd-bbpress-attachments").'</a>';
+            $links[] = '<a target="_blank" style="color: #cc0000; font-weight: bold;" href="https://plugins.dev4press.com/gd-bbpress-toolbox/">'.__("Upgrade to GD bbPress Toolbox Pro", "gd-bbpress-attachments").'</a>';
         }
 
         return $links;
@@ -131,5 +131,3 @@ class gdbbA_Admin {
 
 global $gdbbpress_a_admin;
 $gdbbpress_a_admin = new gdbbA_Admin();
-
-?>

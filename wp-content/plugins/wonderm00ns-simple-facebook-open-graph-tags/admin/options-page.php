@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package Facebook Open Graph, Google+ and Twitter Card Tags
+ * @version 2.1.2
+ */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
@@ -9,7 +13,7 @@ wp_enqueue_media();
 
 
 	<h1><?php echo WEBDADOS_FB_PLUGIN_NAME ?> (<?php echo WEBDADOS_FB_VERSION; ?>)</h1><br class="clear"/>
-	<p><?php _e( 'Please set some default values and which tags should, or should not, be included. It may be necessary to exclude some tags if other plugins are already including them.', 'wd-fb-og' ); ?></p>
+	<p><?php _e( 'Please set some default values and which tags should, or should not, be included. It may be necessary to exclude some tags if other plugins are already including them.', 'wonderm00ns-simple-facebook-open-graph-tags' ); ?></p>
 
 	<div class="columns-2 webdados_fb_admin_left" id="post-body">
 		<div class="menu_div metabox-holder" id="tabs">
@@ -26,37 +30,37 @@ wp_enqueue_media();
 						<li>
 							<a class="nav-tab" href="#tabs-1" data-tab-index="0">
 								<i class="dashicons-before dashicons-admin-generic"></i>
-								<?php _e( 'General', 'wd-fb-og' ) ?>
+								<?php _e( 'General', 'wonderm00ns-simple-facebook-open-graph-tags' ) ?>
 							</a>
 						</li>
 						<li>
 							<a class="nav-tab" href="#tabs-2" data-tab-index="1">
 								<i class="dashicons-before dashicons-facebook-alt"></i>
-								<?php _e( 'Open Graph', 'wd-fb-og' ) ?>
+								<?php _e( 'Open Graph', 'wonderm00ns-simple-facebook-open-graph-tags' ) ?>
 							</a>
 						</li>
 						<li>
 							<a class="nav-tab" href="#tabs-3" data-tab-index="2">
 								<i class="dashicons-before dashicons-twitter"></i>
-								<?php _e( 'Cards', 'wd-fb-og' ) ?>
+								<?php _e( 'Cards', 'wonderm00ns-simple-facebook-open-graph-tags' ) ?>
 							</a>
 						</li>
 						<li>
 							<a class="nav-tab" href="#tabs-4" data-tab-index="3">
 								<i class="dashicons-before dashicons-googleplus"></i>
-								<?php _e( 'Schema', 'wd-fb-og' ) ?>
+								<?php _e( 'Schema', 'wonderm00ns-simple-facebook-open-graph-tags' ) ?>
 							</a>
 						</li>
 						<li>
 							<a class="nav-tab" href="#tabs-5" data-tab-index="4">
 								<i class="dashicons-before dashicons-admin-site"></i>
-								<?php _e( 'SEO tags', 'wd-fb-og' ) ?>
+								<?php _e( 'SEO tags', 'wonderm00ns-simple-facebook-open-graph-tags' ) ?>
 							</a>
 						</li>
 						<li>
 							<a class="nav-tab" href="#tabs-6" data-tab-index="5">
 								<i class="dashicons-before dashicons-layout"></i>
-								<?php _e( '3rd party', 'wd-fb-og' ) ?>
+								<?php _e( '3rd party', 'wonderm00ns-simple-facebook-open-graph-tags' ) ?>
 							</a>
 						</li>
 					</ul>

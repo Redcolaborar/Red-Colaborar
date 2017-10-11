@@ -1123,14 +1123,39 @@ if ( ! function_exists( 'kleo_frontend_files' ) ) :
 		wp_enqueue_script( 'mediaelement' );
 		wp_enqueue_script( 'app' );
 
-		$regular_logo = sq_option_url( 'logo', '' );
-		if ( is_singular() && get_cfield( 'logo' ) ) {
-			$regular_logo = get_cfield( 'logo' );
+
+		$regular_logo = sq_option_url('logo', '');
+		if (is_singular() && get_cfield('logo')) {
+			$regular_logo = get_cfield('logo');
 		}
-		$retina_logo = sq_option_url( 'logo_retina' ) != '' ? sq_option_url( 'logo_retina' ) : '';
-		if ( is_singular() && get_cfield( 'logo_retina' ) ) {
-			$retina_logo = get_cfield( 'logo_retina' );
+		$retina_logo = sq_option_url('logo_retina') != '' ? sq_option_url('logo_retina') : '';
+		if (is_singular() && get_cfield('logo_retina')) {
+			$retina_logo = get_cfield('logo_retina');
 		}
+
+		if( wp_is_mobile() ) {
+			$mobile_logo = false;
+			if(sq_option_url('mobile_logo', '') != '') {
+				$regular_logo = sq_option_url('mobile_logo', '');
+				$mobile_logo = true;
+			}
+			if (is_singular() && get_cfield('mobile_logo')) {
+				$regular_logo = get_cfield('mobile_logo');
+				$mobile_logo = true;
+			}
+			if($mobile_logo) {
+				add_filter('kleo_logo', function ($logo) use ($regular_logo) {
+					return $regular_logo;
+				});
+			}
+			if( sq_option_url('mobile_logo_retina') != '' ) {
+				$retina_logo = sq_option_url('mobile_logo_retina');
+			}
+			if (is_singular() && get_cfield('mobile_logo_retina')) {
+				$retina_logo = get_cfield('mobile_logo_retina');
+			}
+		}
+
 		$header_height              = intval( sq_option( 'menu_height', 88 ) );
 		$header_height_scrolled     = intval( sq_option( 'menu_height_scrolled', '' ) );
 		$header_two_height          = intval( sq_option( 'menu_two_height', 88 ) );

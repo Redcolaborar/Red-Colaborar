@@ -4,18 +4,18 @@ if (!defined('ABSPATH')) exit;
 
 class gdbbPressAttachments_Defaults {
     var $default_options = array(
-        'version' => '2.4',
-        'date' => '2016.09.24.',
-        'build' => 2148,
+        'version' => '2.5',
+        'date' => '2017.09.20.',
+        'build' => 2157,
         'status' => 'Stable',
         'product_id' => 'gd-bbpress-attachments',
         'edition' => 'free',
         'revision' => 0,
-        'upgrade_to_pro_240' => 1,
+        'upgrade_to_pro_250' => 1,
         'grid_topic_counter' => 1,
         'grid_reply_counter' => 1,
         'delete_attachments' => 'detach',
-        'include_always' => 0,
+        'include_always' => 1,
         'include_js' => 1,
         'include_css' => 1,
         'hide_from_visitors' => 1,
@@ -53,5 +53,3 @@ $d4p_upload_error_messages = array(
     __("Temporary folder for upload is missing.", "gd-bbpress-attachments"),
     __("Server extension restriction stopped upload.", "gd-bbpress-attachments")
 );
-
-?>

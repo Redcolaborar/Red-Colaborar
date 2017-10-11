@@ -1,5 +1,7 @@
 <?php
 
+if (!defined('ABSPATH')) exit;
+
 if (!class_exists('gdbbp_Error')) {
     class gdbbp_Error {
         var $errors = array();
@@ -90,5 +92,3 @@ if (!function_exists('d4p_is_user_admin')) {
         }
     }
 }
-
-?>

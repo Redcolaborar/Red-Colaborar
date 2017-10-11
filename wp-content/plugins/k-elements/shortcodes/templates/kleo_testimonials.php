@@ -85,7 +85,7 @@ if ( have_posts() ) {
 					<div class="testimonial-image">
 						<?php 
 						if ( $thumb = get_post_thumbnail_id() ) {
-							$img_url = wp_get_attachment_url( $thumb, 'full' );
+							$img_url = wp_get_attachment_url( $thumb );
 							$image = aq_resize( $img_url, 65, 65, true, true, true );
 							if( $image ) {
 								echo '<img src="'.$image.'" alt="">';

@@ -18,6 +18,7 @@ function kleo_add_messages_nav_item( $menu_items ) {
 add_filter( 'kleo_setup_nav_item_messages' , 'kleo_setup_messages_nav' );
 function kleo_setup_messages_nav( $menu_item ) {
 	$menu_item->classes[] = 'kleo-toggle-menu kleo-messages';
+	$menu_item->classes[] = 'dropdown-submenu';
 	if ( ! is_user_logged_in() ) {
 		$menu_item->_invalid = true;
 	} else {
@@ -109,14 +110,17 @@ function kleo_menu_messages( $item_output = '', $item = null, $depth = 1, $args 
 		}
 	}
 	
-	$class = 'notify-contents js-activated';
+	$class = 'notify-contents';
+	if ( $depth === 0 ) {
+		$class .= ' js-activated';
+	}
 	$class .= isset($atts['class']) ? ' ' . $atts['class'] : '';
 	
 	$output .= '<a class="' . $class . '" href="' . $url . '" title="' . $attr_title . '">'
 	           . '<span class="notify-items"> ' . $title . ' <span class="kleo-notifications ' . $alert . '">' . $count . '</span></span>'
 	           . '</a>';
 	
-	$output .= '<div class="kleo-toggle-submenu"><ul class="submenu-inner' . $status . '">';
+	$output .= '<div class="kleo-toggle-submenu dropdown-menu sub-menu"><ul class="submenu-inner' . $status . '">';
 	
 	$message_list = kleo_bp_messages_get_list();
 	

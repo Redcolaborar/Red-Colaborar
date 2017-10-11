@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package Facebook Open Graph, Google+ and Twitter Card Tags
+ * @version 2.1.2
+ */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
@@ -22,7 +26,7 @@ class Webdados_FB {
 		$this->version = $version;
 		$this->options = $this->load_options();
 		$this->load_dependencies();
-		$this->set_locale();
+		//$this->set_locale();
 		$this->call_global_hooks();
 		if ( is_admin() ) $this->call_admin_hooks();
 		if ( !is_admin() ) $this->call_public_hooks();
@@ -41,6 +45,7 @@ class Webdados_FB {
 			'fb_image_use_content' => 0,
 			'fb_image_use_media' => 0,
 			'fb_image_use_default' => 1,
+			'fb_adv_disable_image_size' => 0,
 			//OG
 			'fb_title_show' => 1,
 			'fb_sitename_show' => 1,
@@ -133,6 +138,7 @@ class Webdados_FB {
 			'fb_image_use_content'				=>	'intval',
 			'fb_image_use_media'				=>	'intval',
 			'fb_image_use_default'				=>	'intval',
+			'fb_adv_disable_image_size'			=>	'intval',
 			'fb_image_min_size'					=>	'intval',
 			'fb_show_wpseoyoast'				=>	'intval',
 			'fb_show_aioseop'					=>	'intval',
@@ -194,7 +200,8 @@ class Webdados_FB {
 
 	/* Translations */
 	private function set_locale() {
-		load_plugin_textdomain( 'wd-fb-og', false, dirname(plugin_basename(__FILE__)) . '/../lang/' );
+		//load_plugin_textdomain( 'wonderm00ns-simple-facebook-open-graph-tags', false, dirname(plugin_basename(__FILE__)) . '/../lang/' );
+		load_plugin_textdomain( 'wonderm00ns-simple-facebook-open-graph-tags' );
 	}
 
 	/* Global hooks */

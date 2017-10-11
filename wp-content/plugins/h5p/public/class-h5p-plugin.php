@@ -24,7 +24,7 @@ class H5P_Plugin {
    * @since 1.0.0
    * @var string
    */
-  const VERSION = '1.7.11';
+  const VERSION = '1.9.4';
 
   /**
    * The Unique identifier for this plugin.
@@ -98,7 +98,7 @@ class H5P_Plugin {
     add_action('init', array('H5P_Plugin', 'check_for_updates'), 1);
 
     // Add menu options to admin bar.
-    add_action('admin_bar_menu', array($this, 'admin_bar'));
+    add_action('admin_bar_menu', array($this, 'admin_bar'), 999);
   }
 
   /**
@@ -140,6 +140,9 @@ class H5P_Plugin {
     // Check for library updates
     $plugin = self::get_instance();
     $plugin->get_library_updates();
+
+    // Always check setup requirements when activating
+    update_option('h5p_check_h5p_requirements', TRUE);
 
     // Cleaning rutine
     wp_schedule_event(time() + (3600 * 24), 'daily', 'h5p_daily_cleanup');
@@ -250,9 +253,38 @@ class H5P_Plugin {
       drop_library_css TEXT NULL,
       semantics TEXT NOT NULL,
       tutorial_url VARCHAR(1023) NOT NULL,
+      has_icon INT UNSIGNED NOT NULL DEFAULT 0,
       PRIMARY KEY  (id),
       KEY name_version (name,major_version,minor_version,patch_version),
       KEY runnable (runnable)
+    ) {$charset};");
+
+    // Keep track of h5p libraries content type cache
+    dbDelta("CREATE TABLE {$wpdb->base_prefix}h5p_libraries_hub_cache (
+      id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+      machine_name VARCHAR(127) NOT NULL,
+      major_version INT UNSIGNED NOT NULL,
+      minor_version INT UNSIGNED NOT NULL,
+      patch_version INT UNSIGNED NOT NULL,
+      h5p_major_version INT UNSIGNED,
+      h5p_minor_version INT UNSIGNED,
+      title VARCHAR(255) NOT NULL,
+      summary TEXT NOT NULL,
+      description TEXT NOT NULL,
+      icon VARCHAR(511) NOT NULL,
+      created_at INT UNSIGNED NOT NULL,
+      updated_at INT UNSIGNED NOT NULL,
+      is_recommended INT UNSIGNED NOT NULL,
+      popularity INT UNSIGNED NOT NULL,
+      screenshots TEXT,
+      license TEXT,
+      example VARCHAR(511) NOT NULL,
+      tutorial VARCHAR(511),
+      keywords TEXT,
+      categories TEXT,
+      owner VARCHAR(511),
+      PRIMARY KEY  (id),
+      KEY name_version (machine_name,major_version,minor_version,patch_version)
     ) {$charset};");
 
     // Keep track of h5p library dependencies
@@ -301,9 +333,10 @@ class H5P_Plugin {
     ) {$charset};");
 
     dbDelta("CREATE TABLE {$wpdb->prefix}h5p_tmpfiles (
+      id INT UNSIGNED NOT NULL AUTO_INCREMENT,
       path VARCHAR(255) NOT NULL,
       created_at INT UNSIGNED NOT NULL,
-      PRIMARY KEY  (path),
+      PRIMARY KEY  (id),
       KEY created_at (created_at)
     ) {$charset};");
 
@@ -314,9 +347,13 @@ class H5P_Plugin {
     add_option('h5p_copyright', TRUE);
     add_option('h5p_icon', TRUE);
     add_option('h5p_track_user', TRUE);
-    add_option('h5p_ext_communication', TRUE);
     add_option('h5p_save_content_state', FALSE);
     add_option('h5p_save_content_frequency', 30);
+    add_option('h5p_site_key', get_option('h5p_h5p_site_uuid', FALSE));
+    add_option('h5p_content_type_cache_updated_at', 0);
+    add_option('h5p_check_h5p_requirements', FALSE);
+    add_option('h5p_hub_is_enabled', TRUE);
+    add_option('h5p_send_usage_statistics', TRUE);
   }
 
   /**
@@ -354,6 +391,8 @@ class H5P_Plugin {
    * @since 1.2.0
    */
   public static function check_for_updates() {
+    global $wpdb;
+
     $current_version = get_option('h5p_version');
     if ($current_version === self::VERSION) {
       return; // Same version as before
@@ -368,12 +407,32 @@ class H5P_Plugin {
     // Split version number
     $v = self::split_version($current_version);
 
+    $between_1710_1713 = ($v->major === 1 && $v->minor === 7 && $v->patch >= 10 && $v->patch <= 13); // Target 1.7.10, 1.7.11, 1.7.12, 1.7.13
+    if ($between_1710_1713) {
+      // Fix tmpfiles table manually :-)
+      $wpdb->query("ALTER TABLE {$wpdb->prefix}h5p_tmpfiles ADD COLUMN id INT UNSIGNED NOT NULL AUTO_INCREMENT FIRST, DROP PRIMARY KEY, ADD PRIMARY KEY(id)");
+    }
+
     // Check and update database
     self::update_database();
 
+    $pre_120 = ($v->major < 1 || ($v->major === 1 && $v->minor < 2)); // < 1.2.0
+    $pre_180 = ($v->major < 1 || ($v->major === 1 && $v->minor < 8)); // < 1.8.0
+
     // Run version specific updates
-    if ($v->major < 1 || ($v->major === 1 && $v->minor < 2)) { // < 1.2.0
+    if ($pre_120) {
+      // Re-assign all permissions
       self::upgrade_120();
+    }
+    elseif ($pre_180) {
+      // Do not run if upgrade_120 runs
+      // Does only add the new permissions
+      self::upgrade_180();
+    }
+
+    if ($pre_180) {
+      // Force requirements check when hub is introduced.
+      update_option('h5p_check_h5p_requirements', TRUE);
     }
 
     // Keep track of which version of the plugin we have.
@@ -438,6 +497,26 @@ class H5P_Plugin {
   }
 
   /**
+   * Add new permissions introduced with hub in 1.8.0.
+   *
+   * @since 1.8.0
+   * @global \WP_Roles $wp_roles
+   */
+  public static function upgrade_180() {
+    global $wp_roles;
+    if (!isset($wp_roles)) {
+      $wp_roles = new WP_Roles();
+    }
+
+    $all_roles = $wp_roles->roles;
+    foreach ($all_roles as $role_name => $role_info) {
+      $role = get_role($role_name);
+
+      self::map_capability($role, $role_info, 'edit_others_pages', 'install_recommended_h5p_libraries');
+    }
+  }
+
+  /**
    * Remove duplicate keys that might have been created by a bug in dbDelta.
    *
    * @since 1.2.0
@@ -486,6 +565,7 @@ class H5P_Plugin {
         self::map_capability($role, $role_info, 'install_plugins', 'disable_h5p_security');
       }
       self::map_capability($role, $role_info, 'manage_options', 'manage_h5p_libraries');
+      self::map_capability($role, $role_info, 'edit_others_pages', 'install_recommended_h5p_libraries');
       self::map_capability($role, $role_info, 'edit_others_pages', 'edit_others_h5p_contents');
       self::map_capability($role, $role_info, 'edit_posts', 'edit_h5p_contents');
       self::map_capability($role, $role_info, 'read', 'view_h5p_results');
@@ -607,14 +687,14 @@ class H5P_Plugin {
       // Absolute urls are used to enqueue assets.
       $url = array('abs' => $upload_dir['baseurl'] . '/h5p');
 
+      // Relative URLs are used to support both http and https in iframes.
+      $url['rel'] = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $url['abs']);
+
       // Check for HTTPS
       if (is_ssl() && substr($url['abs'], 0, 5) !== 'https') {
         // Update protocol
         $url['abs'] = 'https' . substr($url['abs'], 4);
       }
-
-      // Relative URLs are used to support both http and https in iframes.
-      $url['rel'] = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $url['abs']);
     }
 
     return $absolute ? $url['abs'] : $url['rel'];
@@ -920,20 +1000,46 @@ class H5P_Plugin {
    * @param array $assets
    */
   public function enqueue_assets(&$assets) {
-    $abs_url = $this->get_h5p_url(TRUE);
     $rel_url = $this->get_h5p_url();
+    $abs_url = $this->get_h5p_url(TRUE);
+
+    // Enqueue JavaScripts
     foreach ($assets['scripts'] as $script) {
-      $url = $rel_url . $script->path . $script->version;
+      if (preg_match('/^https?:\/\//i', $script->path)) {
+        // Absolute path
+        $url = $script->path;
+        $enq = $script->path;
+      }
+      else {
+        // Relative path
+        $url = $rel_url . $script->path;
+        $enq = $abs_url . $script->path;
+      }
+
+      // Make sure each file is only loaded once
       if (!in_array($url, self::$settings['loadedJs'])) {
         self::$settings['loadedJs'][] = $url;
-        wp_enqueue_script($this->asset_handle(trim($script->path, '/')), $abs_url . $script->path, array(), str_replace('?ver', '', $script->version));
+        wp_enqueue_script($this->asset_handle(trim($script->path, '/')), $enq, array(), urlencode(str_replace('?ver=', '', $script->version)));
       }
     }
+
+    // Enqueue stylesheets
     foreach ($assets['styles'] as $style) {
-      $url = $rel_url . $style->path . $style->version;
+      if (preg_match('/^https?:\/\//i', $style->path)) {
+        // Absolute path
+        $url = $style->path;
+        $enq = $style->path;
+      }
+      else {
+        // Relative path
+        $url = $rel_url . $style->path;
+        $enq = $abs_url . $style->path;
+      }
+
+      // Make sure each file is only loaded once
       if (!in_array($url, self::$settings['loadedCss'])) {
         self::$settings['loadedCss'][] = $url;
-        wp_enqueue_style($this->asset_handle(trim($style->path, '/')), $abs_url . $style->path, array(), str_replace('?ver', '', $style->version));
+        wp_enqueue_style($this->asset_handle(trim($style->path, '/')), $enq, array(), urlencode(str_replace('?ver=', '', $style->version)));
       }
     }
   }
@@ -957,6 +1063,7 @@ class H5P_Plugin {
   public function get_core_settings() {
     $current_user = wp_get_current_user();
 
+    $core = $this->get_h5p_instance('core');
     $settings = array(
       'baseUrl' => get_site_url(),
       'url' => $this->get_h5p_url(),
@@ -968,37 +1075,9 @@ class H5P_Plugin {
       'saveFreq' => get_option('h5p_save_content_state', FALSE) ? get_option('h5p_save_content_frequency', 30) : FALSE,
       'siteUrl' => get_site_url(),
       'l10n' => array(
-        'H5P' => array(
-          'fullscreen' => __('Fullscreen', $this->plugin_slug),
-          'disableFullscreen' => __('Disable fullscreen', $this->plugin_slug),
-          'download' => __('Download', $this->plugin_slug),
-          'copyrights' => __('Rights of use', $this->plugin_slug),
-          'embed' => __('Embed', $this->plugin_slug),
-          'size' => __('Size', $this->plugin_slug),
-          'showAdvanced' => __('Show advanced', $this->plugin_slug),
-          'hideAdvanced' => __('Hide advanced', $this->plugin_slug),
-          'advancedHelp' => __('Include this script on your website if you want dynamic sizing of the embedded content:', $this->plugin_slug),
-          'copyrightInformation' => __('Rights of use', $this->plugin_slug),
-          'close' => __('Close', $this->plugin_slug),
-          'title' => __('Title', $this->plugin_slug),
-          'author' => __('Author', $this->plugin_slug),
-          'year' => __('Year', $this->plugin_slug),
-          'source' => __('Source', $this->plugin_slug),
-          'license' => __('License', $this->plugin_slug),
-          'thumbnail' => __('Thumbnail', $this->plugin_slug),
-          'noCopyrights' => __('No copyright information available for this content.', $this->plugin_slug),
-          'downloadDescription' => __('Download this content as a H5P file.', $this->plugin_slug),
-          'copyrightsDescription' => __('View copyright information for this content.', $this->plugin_slug),
-          'embedDescription' => __('View the embed code for this content.', $this->plugin_slug),
-          'h5pDescription' => __('Visit H5P.org to check out more cool content.', $this->plugin_slug),
-          'contentChanged' => __('This content has changed since you last used it.', $this->plugin_slug),
-          'startingOver' => __("You'll be starting over.", $this->plugin_slug),
-          'confirmDialogHeader' => __('Confirm action', $this->plugin_slug),
-          'confirmDialogBody' => __('Please confirm that you wish to proceed. This action is not reversible.', $this->plugin_slug),
-          'cancelLabel' => __('Cancel', $this->plugin_slug),
-          'confirmLabel' => __('Confirm', $this->plugin_slug)
-        )
-      )
+        'H5P' => $core->getLocalization(),
+      ),
+      'hubIsEnabled' => get_option('h5p_hub_is_enabled', TRUE) == TRUE
     );
 
     if ($current_user->ID) {
@@ -1161,7 +1240,7 @@ class H5P_Plugin {
    * @since 1.2.0
    */
   public function get_library_updates() {
-    if (get_option('h5p_ext_communication', TRUE)) {
+    if (get_option('h5p_hub_is_enabled', TRUE) || get_option('h5p_send_usage_statistics', TRUE)) {
       $core = $this->get_h5p_instance('core');
       $core->fetchLibrariesMetadata();
     }

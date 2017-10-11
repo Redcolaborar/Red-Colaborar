@@ -5,7 +5,7 @@ function bps_escaped_form_data ()
 	list ($form, $location) = bps_template_args ();
 
 	$meta = bps_meta ($form);
-	list ($x, $fields) = bps_get_fields ();
+	list (, $fields) = bps_get_fields ();
 
 	$F = new stdClass;
 	$F->id = $form;
@@ -15,7 +15,12 @@ function bps_escaped_form_data ()
 	$F->toggle_text = bps_wpml ($form, '-', 'toggle form', $meta['button']);
 
 	$dirs = bps_directories ();
-	$F->action = $dirs[bps_wpml_id ($meta['action'])]->link;
+	$F->action = $location == 'directory'?
+		parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH):
+		$dirs[bps_wpml_id ($meta['action'])]->link;
+
+	if (defined ('DOING_AJAX'))
+		$F->action = parse_url ($_SERVER['HTTP_REFERER'], PHP_URL_PATH);
 
 	$F->method = $meta['method'];
 	$F->fields = array ();
@@ -25,11 +30,17 @@ function bps_escaped_form_data ()
 		if (empty ($fields[$id]))  continue;
 
 		$f = clone $fields[$id];
-		if ($meta['field_mode'][$k] == 'range')  { $f->display = 'range'; $f->type = bps_displayXsearch_form ($f); }
+		$mode = $meta['field_mode'][$k];
+		$f->display = bps_field_display ($f->display, $mode, $f);
+		if ($mode == 'range' || $mode == 'age_range')  { $f->display = 'range'; $f->type = bps_displayXsearch_form ($f); }
 
 		$f->label = $f->name;
 		$custom_label = bps_wpml ($form, $id, 'label', $meta['field_label'][$k]);
-		if (!empty ($custom_label))  $f->label = $custom_label;
+		if (!empty ($custom_label))
+		{
+			$f->label = $custom_label;
+			$F->fields[] = bps_set_hidden_field ($f->code. '_label', $f->label);
+		}
 
 		$custom_desc = bps_wpml ($form, $id, 'comment', $meta['field_desc'][$k]);
 		if ($custom_desc == '-')
@@ -37,23 +48,27 @@ function bps_escaped_form_data ()
 		else if (!empty ($custom_desc))
 			$f->description = $custom_desc;
 
-		if ($form != bps_active_form () || !isset ($f->filter))
+		if (!bps_active_form ($form) || !isset ($f->filter))
 		{
 			$f->min = $f->max = $f->value = '';
 			$f->values = array ();
+		}
+		else
+		{
+			$f->min = isset ($f->value['min'])? $f->value['min']: '';
+			$f->max = isset ($f->value['max'])? $f->value['max']: '';
+			$f->values = (array)$f->value;
 		}
 
 		$f = apply_filters ('bps_field_data_for_filters', $f);	// to be removed
 		$f = apply_filters ('bps_field_data_for_search_form', $f);	// to be removed
 		do_action ('bps_field_before_search_form', $f);
-		$F->fields[] = $f;
 
-		if (!empty ($custom_label))
-			$F->fields[] = bps_set_hidden_field ($f->code. '_label', $custom_label);
+		if ($mode != '')  $f->code .= '_'. $mode;
+		$F->fields[] = $f;
 	}
 
-	$F->fields[] = bps_set_hidden_field ('text_search', $meta['searchmode']);
-	$F->fields[] = bps_set_hidden_field ('bp_profile_search', $form);
+	$F->fields[] = bps_set_hidden_field (BPS_FORM, $form);
 
 	$F = apply_filters ('bps_search_form_data', $F);  // to be removed
 	do_action ('bps_before_search_form', $F);
@@ -78,18 +93,27 @@ function bps_escaped_form_data ()
 function bps_escaped_filters_data ()
 {
 	$F = new stdClass;
-	$F->action = parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+	$action = parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+	$action = add_query_arg (BPS_FORM, 'clear', $action);
+	$F->action = esc_url ($action);
+	
 	$F->fields = array ();
 
-	list ($x, $fields) = bps_get_fields ();
+	list (, $fields) = bps_get_fields ();
 	foreach ($fields as $field)
 	{
 		if (!isset ($field->filter))  continue;
 
 		$f = clone $field;
-		if ($f->filter == 'range')  $f->display = 'range';
+		$f->display = bps_field_display ($f->display, $f->filter, $f);
+		if ($f->filter == 'range' || $f->filter == 'age_range')  $f->display = 'range';
 
 		if (empty ($f->label))  $f->label = $f->name;
+
+		$f->min = isset ($f->value['min'])? $f->value['min']: '';
+		$f->max = isset ($f->value['max'])? $f->value['max']: '';
+		$f->values = (array)$f->value;
 
 		$f = apply_filters ('bps_field_data_for_filters', $f);	// to be removed
 		$f = apply_filters ('bps_field_data_for_search_form', $f);	// to be removed

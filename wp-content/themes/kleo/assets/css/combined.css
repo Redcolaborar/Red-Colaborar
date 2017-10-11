@@ -7655,7 +7655,6 @@ a.ajax_view_all:after {
   /*display: block !important;*/
   list-style: none;
   width: 300px;
-  top: 100%;
   left: auto;
   right: -10px;
   z-index: 2;
@@ -7664,6 +7663,9 @@ a.ajax_view_all:after {
   box-shadow: 2px 2px 3px rgba(102, 102, 102, 0.1);
   border-radius: 0 0 3px 3px;
   transition: all 0.3s ease-in-out 0s;
+}
+.navbar-nav > .kleo-toggle-menu .kleo-toggle-submenu {
+  top: 100%;
 }
 .navbar-transparent.on-dark-bg .kleo-toggle-menu .kleo-toggle-submenu {
   /*background: rgba(255,255,255, 0.3);*/
@@ -7674,7 +7676,7 @@ a.ajax_view_all:after {
 .navbar-transparent .kleo-toggle-menu .kleo-toggle-submenu {
   border-color: transparent !important;
 }
-.kleo-toggle-menu .kleo-toggle-submenu:before {
+.navbar-nav > .kleo-toggle-menu .kleo-toggle-submenu:before {
   position: absolute;
   display: block;
   content: "";

@@ -3,8 +3,8 @@ Contributors: icc0rz, fnoks, falcon28
 Donate link: http://h5p.org
 Tags: interactive content, content, interactive video, quiz, drag and drop, multiple choice, hot spots, collage, memory game, cloze test, game, free, export, elearning, e-learning, learning, education, xAPI, html5, responsive
 Requires at least: 3.8.1
-Tested up to: 4.7
-Stable tag: 1.7.11
+Tested up to: 4.8
+Stable tag: 1.9.4
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
@@ -288,3 +288,69 @@ Added Dutch translation for editor. Thanks to otacke!
 
 = 1.7.11 =
 Fixed fieldset overflow bug in Editor.
+
+= 1.7.12 =
+Fixed issue when generating export for some sites where the web server would report a false document_root.
+
+= 1.7.13 =
+Fixed editor issue related to a problem with fieldsets in IE (not able to expand)
+
+= 1.8.0 =
+Added H5P Hub interface for selecting and installing content types
+Improved requirements checking
+Added support for important description in editor
+Minor improvements and bug fixes
+
+= 1.8.1 =
+Removed functions dependendant on PHP >5.4.
+
+= 1.8.3 =
+Fixed support for combining header styles with other text formating options.
+Added .wav files to whitelist.
+Added video quality naming option (currently, only used by Interactive Video).
+Only allow for a single video source when using YouTube (others doesn't work).
+Improved keyboard navigation with H5P Hub.
+Updated NL and DE translations.
+Other minor bug fixes and improvements.
+
+= 1.8.4 =
+Changed H5P's weight in the 'Create New' menu to avoid always being place on top.
+Improved SQL mode compatibility.
+Improved requirement checks compatibility with different PHP versions.
+Added version selector for the different licenses.
+Added support for localized licenses.
+Minor code improvements in core.
+Updated translations.
+Minor design layout improvements in editor.
+Added external event for when changing and loading library in editor.
+
+= 1.9.0 =
+Improved H5P Hub error handling.
+Removed warnings in PHP 7.0+ when checking requirements due to bytes conversion.
+Added version selector when selecting content license.
+Added support for localizing content licenses.
+Made the built-in fullscreen button keyboard accessible.
+Improved the confirmation dialog positioning.
+Improved the handling of temporary files as they're uploaded.
+Added vtt and webvtt to the default file upload whitelist.
+Improved font-family validation regex pattern. Big thanks to Cornel Les.
+Moved the list description text to be consistent with other editor fields.
+Improved the YouTube regexp matching pattern. Big thanks to Otacke!
+Improved copyright button for media fields.
+Improved editor number fields to support feedback ranges.
+Improved editor number fields error messages to be consistent with other fields.
+Removed update button in H5P Hub when the users doesn't have access to upated libraries.
+Other minor editor improvements.
+Fixed support for absolute URLs for content types embedded through div.
+
+= 1.9.1 =
+Fixed content not loading due to wrong URL for multisites on the same domain. Big thanks to Joachim Happel for contributing the fix.
+
+= 1.9.2 =
+Fixed 'div' content not loading on sites residing in sub directories, changes fix for multisites as well.
+
+= 1.9.3 =
+Improved the fix introduced in 1.9.2 as it was not tested well enough.
+
+= 1.9.4 =
+Something went wrong with the release of 1.9.3.

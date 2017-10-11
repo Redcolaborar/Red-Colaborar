@@ -19,7 +19,7 @@
 	else
 	{
 ?>
-	<div class="item-list-tabs bps_header">
+	<div class="item-list-tabs bps_header" style="clear: both;">
 	  <ul>
 		<li><?php echo $F->header; ?></li>
 <?php
@@ -45,7 +45,7 @@
 <?php
 	}
 
-	echo "<form action='$F->action' method='$F->method' id='$form_id' class='standard-form'>\n";
+	echo "<form action='$F->action' method='$F->method' id='$form_id' class='standard-form bps_form'>\n";
 
 	$j = 0;
 	foreach ($F->fields as $f)

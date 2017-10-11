@@ -1,18 +1,13 @@
 <div class="d4p-information">
-    <div class="d4p-plugin" style="margin-top: 1em;">
-        <h3>GD Press Tools Pro</h3>
-        <a target="_blank" href="https://tools.dev4press.com/"><?php _e("Plugin Home Website", "gd-bbpress-attachments"); ?></a><br/>
-        <a target="_blank" href="https://plugins.dev4press.com/gd-press-tools/"><?php _e("Home on Dev4Press", "gd-bbpress-attachments"); ?></a>
-    </div>
     <div class="d4p-plugin">
         <h3>GD Knowledge Base Pro</h3>
-        <a target="_blank" href="https://knowledge.dev4press.com/"><?php _e("Plugin Home Website", "gd-bbpress-attachments"); ?></a><br/>
-        <a target="_blank" href="https://plugins.dev4press.com/gd-taxonomies-tools/"><?php _e("Home on Dev4Press", "gd-bbpress-attachments"); ?></a>
+        <a target="_blank" href="https://plugins.dev4press.com/gd-knowledge-base/"><?php _e("Plugin Home Website", "gd-bbpress-attachments"); ?></a><br/>
+        <a target="_blank" href="https://xscape.info/gd-knowledge-base/"><?php _e("Plugin Demo", "gd-bbpress-attachments"); ?></a>
     </div>
     <div class="d4p-plugin" style="margin-top: 1em; border-bottom: none;">
         <h3>GD Rating System Pro</h3>
-        <a target="_blank" href="https://rating.dev4press.com/"><?php _e("Plugin Home Website", "gd-bbpress-attachments"); ?></a><br/>
-        <a target="_blank" href="https://plugins.dev4press.com/gd-rating-system/"><?php _e("Home on Dev4Press", "gd-bbpress-attachments"); ?></a>
+        <a target="_blank" href="https://plugins.dev4press.com/gd-rating-system/"><?php _e("Plugin Home Website", "gd-bbpress-attachments"); ?></a><br/>
+        <a target="_blank" href="https://xscape.info/gd-rating-system/"><?php _e("Plugin Demo", "gd-bbpress-attachments"); ?></a>
     </div>
 </div>
 
@@ -25,6 +20,7 @@
     <a target="_blank" href="https://plugins.dev4press.com/gd-seo-toolbox/">GD SEO Toolbox Pro</a><br/>
     <a target="_blank" href="https://plugins.dev4press.com/gd-content-tools/">GD Content Tools Pro</a><br/>
     <a target="_blank" href="https://plugins.dev4press.com/gd-swift-navigator/">GD Swift Navigator Pro</a><br/>
+    <a target="_blank" href="https://plugins.dev4press.com/gd-press-tools/">GD Press Tools Pro</a>
     <h3><?php _e("More Free Plugins", "gd-bbpress-attachments"); ?></h3>
     <a target="_blank" href="https://plugins.dev4press.com/gd-rating-system/">GD Rating System</a><br/>
     <a target="_blank" href="https://plugins.dev4press.com/gd-pages-navigator/">GD Pages Navigator</a><br/>

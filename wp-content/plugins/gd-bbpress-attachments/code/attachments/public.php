@@ -44,5 +44,3 @@ function d4p_topic_attachments_count($topic_id, $include_replies = false) {
 function d4p_bbattachment_handle_upload_error(&$file, $message) {
     return new WP_Error("wp_upload_error", $message);
 }
-
-?>

@@ -52,14 +52,15 @@ function bps_clear_directory ()
 	$dirs = bps_directories ();
 	$current = parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-	foreach ($dirs as $dir)  if ($dir->link == $current)
-	{
-		add_filter ('bp_directory_members_search_form', 'bps_idem');
+	foreach ($dirs as $dir) {
+		if ($dir->link == $current) {
+			add_filter ('bp_directory_members_search_form', 'bps_idem');
 
-		wp_enqueue_script ('bps-directory', plugins_url ('bps-directory.js', __FILE__), array ('bp-jquery-cookie'), BPS_VERSION);
-		$_COOKIE['bp-members-scope'] = 'all';
-		unset ($_COOKIE['bp-members-filter']);
-		break;
+			wp_enqueue_script ('bps-directory', plugins_url ('bps-directory.js', __FILE__), array ('bp-jquery-cookie'), BPS_VERSION);
+			$_COOKIE['bp-members-scope'] = 'all';
+			unset ($_COOKIE['bp-members-filter']);
+			break;
+		}
 	}
 }
 

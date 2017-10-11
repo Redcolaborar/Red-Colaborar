@@ -2,9 +2,9 @@
 Contributors: webdados, wonderm00n
 Donate link: http://blog.wonderm00n.com/2011/10/14/wordpress-plugin-simple-facebook-open-graph-tags/
 Tags: facebook, open graph, open graph protocol, share, social, meta, rss, twitter card, twitter, schema, google+, g+, google, google plus, image, like, seo, search engine optimization, woocommerce, yoast seo, wordpress seo, woocommerce, subheading, php7
-Requires at least: 4.0
+Requires at least: 4.5
 Tested up to: 4.7.3
-Stable tag: 2.0.8.2
+Stable tag: 2.1.2
 Inserts Facebook Open Graph, Google+/Schema.org, Twitter and SEO Meta Tags into your WordPress Website for more efficient sharing results.
 
 == Description ==
@@ -28,8 +28,8 @@ Our settings page is discreetly kept under "Options", as it should, instead of t
 * **og:title**: From post/page/archive/tag/... title.
 * **og:site_name**: From blog title.
 * **og:url**: From the post/page permalink.
-* **og:description**: From post/page excerpt if it exist, or from post/page content. From category/tag description on it's pages, if it exist. From tagline, or custom text, on all the others.
-* **og:image**: From a specific custom field of the post/page, or if not set from the post/page featured/thumbnail image, or if it doesn't exist from the first image in the post content, or if it doesn't exist from the first image on the post media gallery, or if it doesn't exist from the default image defined on the options menu. The same image chosen here will be used and enclosure/media:content on the RSS feed.
+* **og:description**: From our specific custom field of the post/page, or if not set post/page excerpt if it exist, or from post/page content. From category/tag description on it's pages, if it exist. From tagline, or custom text, on all the others.
+* **og:image**: From our specific custom field of the post/page, or if not set from the post/page featured/thumbnail image, or if it doesn't exist from the first image in the post content, or if it doesn't exist from the first image on the post media gallery, or if it doesn't exist from the default image defined on the options menu. The same image chosen here will be used and enclosure/media:content on the RSS feed.
 * **og:image:width** and **og:image:height**: Image dimensions.
 * **og:type**: "website" or "blog" for the homepage, "product" for WooCommerce products and "article" for all the others.
 * **article:author**: From the user (post author) Faceboook Profile URL.
@@ -97,18 +97,23 @@ We like to work with everybody, so (if you want to) our plugin can even integrat
 
 1. Are you using a big enough image? The minimum image size is 200x200 pixels but we recommend 1200x630.
 2. Are you sure you only have one `og:image` tag on the source code? Make sure you're not using more than one plugin to set OG tags?
-3. Go to the [Facebook URL Debugger](https://developers.facebook.com/tools/debug/), insert your URL, click `Debug`. Then click on `Scrape again` to make sure Facebook gets the current version of your HTML code and not a cached version. If the image that shows up on the preview (bottom of the page) is the correct one, then the tags are well set and it "should" be the one that Facebook uses when sharing the post. If it still does not use the correct image when sharing, despite the debugger shows it correctly, there's nothing more we can do about that. That's just Facebook being Facebook.
+3. Go to the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/), insert your URL, click `Debug`. Then click on `Scrape again` to make sure Facebook gets the current version of your HTML code and not a cached version. If the image that shows up on the preview (bottom of the page) is the correct one, then the tags are well set and it "should" be the one that Facebook uses when sharing the post. If it still does not use the correct image when sharing, despite the debugger shows it correctly, there's nothing more we can do about that. That's just Facebook being Facebook.
 
 = When I save/edit my post I get the "Facebook Open Graph Tags cache NOT updated/purged" error. Should I worry? =
 
 Each time you edit a post, if the option "Try to update Facebook Open Graph Tags cache when saving the post" is activated, we'll try to notify Facebook of the changes so it clears up it's cache and read the new Open Graph tags of this specific URL.
-If this is a new post and it's the first time you're saving it, the error is "normal" and you should ignore it (wer're looking at a workaround to not show you this error).
-If this is not a new post and it's not the first time you're saving it, and if this happens always, then maybe your server does not support calling remote URLs with PHP and you should disable the "Try to update Facebook Open Graph Tags cache when saving the post" option. In that scenario we recommend you to use the [Facebook URL Debugger](https://developers.facebook.com/tools/debug/) to `Fetch new scrape information` each time you update your post.
+If this is a new post and it's the first time you're saving it, the error is "normal" and you should ignore it (we're looking at a workaround to not show you this error).
+If this is not a new post and it's not the first time you're saving it, and if this happens always, then maybe your server does not support calling remote URLs with PHP and you should disable the "Try to update Facebook Open Graph Tags cache when saving the post" option. In that scenario we recommend you to use the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) to `Fetch new scrape information` each time you update your post.
+Sometimes the plugin just can't update the Facebook cache itself and you may need to do it manually on the link provided above.
 
 = Can this plugin get content from "random plugin"? =
 
 If there's a popular plugin you think we could get content from to use on the meta tags, use the support forum to tell us that.
-If you are a plugin or theme author you can always use our filters `fb_og_title`, `fb_og_desc`, `fb_og_url`, `fb_og_type`, `fb_type_schema`, `fb_og_image`, `fb_og_image_additional`, `fb_og_image_overlay` and `fb_og_locale` to customize the Open Graph (and other) meta tags output.
+If you are a plugin or theme author you can always use our filters `fb_og_title`, `fb_og_desc`, `fb_og_url`, `fb_og_type`, `fb_type_schema`, `fb_og_image`, `fb_og_image_additional`, `fb_og_image_overlay`, `fb_og_locale`, `fb_og_app_id`, `fb_og_thumb_fill_color`, `fb_og_output` and `fb_og_enabled` to customize the Open Graph (and other) meta tags output.
+
+= What is the array structure for the `fb_og_image_additional` filter?
+
+Chouck out this [code snippet](https://gist.github.com/webdados/ef5d5db01f01bee6041c2b2e0950d73a).
 
 = There's a similar plugin on the repository, by Heateor. Is this the same? =
 It's similar, yes. They've forked our plugin and gave no credits whatsoever for our original work.
@@ -120,6 +125,24 @@ We DO NOT provide email support for this plugin. If you send us an email asking 
 2. Or we can give you a quote on premium email/phone support if you prefer to
 
 == Changelog ==
+
+= 2.1.2 =
+* Fix the fact that we are using `sanitize_textarea_field()` that only exists since 4.7.0 although we had a 4.0 minimum requirement (Thanks @l3lackcat)
+* Fix the textdomain on a couple of gettext calls
+* Bumped the `Requires at least tag` to 4.5 (to encourage the ecosystem to have WordPress updated)
+* Added code snippet example for the `fb_og_image_additional` filter
+
+= 2.1.1 =
+* Fix on the gettext calls and textdomain so that Glotpress correctly loads translations
+
+= 2.1 =
+* New description field on our metabox on post/pages that will override the excerpt or content if filled
+* Load the translations from wordpress.org Glotpress and not from the local folder
+* Added the `fb_og_app_id` filter so that plugins or themes can override the Open Graph Facebook App ID
+
+= 2.0.9 =
+* New option to disable getting the image size and possibly avoid fatal errors (white screen of death) on some edge cases
+* New `fb_og_disable` filter to completely disable the output based on the developer own rules - DUPLICATE - Use `fb_og_enabled` instead and return false to it.
 
 = 2.0.8.2 =
 * New `fb_og_output` filter on the plugin global output
@@ -141,7 +164,7 @@ We DO NOT provide email support for this plugin. If you send us an email asking 
 
 = 2.0.6.3 =
 * When using the overlay PNG option, the image is filled with previously filled with white in case the original OG image is a transparent PNG
-* The `fb_og_thumb_fill_color` can be used to use another color other than white, by returning an array with the rgb value
+* The `fb_og_thumb_fill_color` filter can be used to use another color other than white, by returning an array with the rgb value
 
 = 2.0.6.2 =
 * On some server configurations using an overlay PNG would result on a 404 error on the `og:image` url
@@ -218,10 +241,10 @@ We DO NOT provide email support for this plugin. If you send us an email asking 
 * Better SubHeading plugin compatibility (choose either to add it Before or After the title)
 * Description set the same value as the title if it's empty
 * Correct `og:type` for WPML root pages
-* Added the fb_og_type filter so that plugins or themes can override the Open Graph Type
+* Added the `fb_og_type` filter so that plugins or themes can override the Open Graph Type
 
 = 1.7.1 =
-* Added the fb_og_url filter so that plugins or themes can override the Open Graph URL
+* Added the `fb_og_url` filter so that plugins or themes can override the Open Graph URL
 
 = 1.7 =
 * WordPress 4.4, WooCommerce 2.4.12 and PHP 7 compatibility check - All good!
@@ -231,7 +254,7 @@ We DO NOT provide email support for this plugin. If you send us an email asking 
 * Several tweaks on the settings page
 
 = 1.6.3 =
-* Added the fb_og_locale filter so that plugins or themes can override the Open Graph locale tag
+* Added the `fb_og_locale` filter so that plugins or themes can override the Open Graph locale tag
 
 = 1.6.2.2 =
 * Bug fix: Google+, Twitter and Facebook profile fields would not be available on the user profile if Yoast SEO was not active
@@ -307,7 +330,7 @@ We DO NOT provide email support for this plugin. If you send us an email asking 
 * Fix: esc_attr on all tags
 
 = 1.2 =
-* Added filters for title, description and images, so another plugin or theme can override these values. The filters are fb_og_title, fb_og_desc and fb_og_image
+* Added filters for title, description and images, so another plugin or theme can override these values. The filters are `fb_og_title`, `fb_og_desc` and `fb_og_image`
 
 = 1.1.2 =
 * Fix: Specific post image was not working properly

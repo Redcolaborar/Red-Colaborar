@@ -16,6 +16,7 @@ function kleo_add_notifications_nav_item( $menu_items ) {
 add_filter('kleo_setup_nav_item_notifications' , 'kleo_setup_notifications_nav');
 function kleo_setup_notifications_nav( $menu_item ) {
     $menu_item->classes[] = 'kleo-toggle-menu';
+    $menu_item->classes[] = 'dropdown-submenu';
     if ( ! is_user_logged_in() ) {
         $menu_item->_invalid = true;
     } else {
@@ -104,14 +105,17 @@ if (! function_exists( 'kleo_menu_notifications' )) {
             }
         }
 
-        $class = 'notify-contents js-activated';
+        $class = 'notify-contents';
+	    if ( $depth === 0 ) {
+		    $class .= ' js-activated';
+	    }
         $class .= isset($atts['class']) ? ' ' . $atts['class'] : '';
 
         $output .= '<a class="' . $class . '" href="' . $url . '" title="' . $attr_title . '">'
                    . '<span class="notify-items"> ' . $title . ' <span class="kleo-notifications ' . $alert . '">' . $count . '</span></span>'
                    . '</a>';
 
-        $output .= '<div class="kleo-toggle-submenu"><ul class="submenu-inner' . $status . '">';
+        $output .= '<div class="kleo-toggle-submenu dropdown-menu sub-menu"><ul class="submenu-inner' . $status . '">';
 
         if ( ! empty( $notifications ) ) {
             foreach ( (array) $notifications as $notification ) {

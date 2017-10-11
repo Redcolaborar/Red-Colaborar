@@ -24,18 +24,19 @@
     margin-right: 15px;
     padding: 0 15px 15px 0;
     border-right: 1px solid #CCCCCC;
-    width: 440px;
+    width: 460px;
     float: left;
 }
 
 .d4p-settings-second, .d4p-information-second {
-    width: 440px;
+    width: 460px;
     float: left;
     padding: 0 0 15px;
 }
 
 .d4p-settings .form-table th, .d4p-settings-second .form-table th  {
     padding: 5px;
+    width: 220px;
 }
 
 .d4p-settings .form-table td, .d4p-settings-second .form-table td {

@@ -491,7 +491,7 @@ function pmpro_data_set( $field, $value ) {
 	
 	//print_r($value);
 	global $kleo_pay_settings, $wpdb;
-	$sqlQuery = "SELECT * FROM $wpdb->pmpro_membership_levels ";
+	$sqlQuery = "SELECT * FROM $wpdb->pmpro_membership_levels";
 	$levels   = $wpdb->get_results( $sqlQuery, OBJECT );
 	echo '<table class="membership-settings">';
 	foreach ( $kleo_pay_settings as $pays ) :

@@ -19,14 +19,14 @@
                     </td>
                 </tr>
                 <tr valign="top">
-                    <th scope="row"><label for="max_to_upload"><?php _e("Maximum files to upload", "gd-bbpress-attachments"); ?></label></th>
+                    <th scope="row"><label for="max_to_upload"><?php _e("Maximum files to upload at once", "gd-bbpress-attachments"); ?></label></th>
                     <td>
                         <input type="text" class="small-text" value="<?php echo $options["max_to_upload"]; ?>" id="max_to_upload" name="max_to_upload" />
                         <span class="description"><?php _e("For single topic or reply", "gd-bbpress-attachments"); ?></span>
                     </td>
                 </tr>
                 <tr valign="top">
-                    <th scope="row"><label for="hide_from_visitors"><?php _e("Hide list of attachements from visitors", "gd-bbpress-attachments"); ?></label></th>
+                    <th scope="row"><label for="hide_from_visitors"><?php _e("Hide attachements from visitors", "gd-bbpress-attachments"); ?></label></th>
                     <td>
                         <input type="checkbox" <?php if ($options["hide_from_visitors"] == 1) echo " checked"; ?> name="hide_from_visitors" />
                     </td>
@@ -76,13 +76,13 @@
                 <tr valign="top">
                     <th scope="row"><label for="include_js"><?php _e("Include JavaScript", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["include_js"] == 1) echo " checked"; ?> name="include_js" />
+                        <input type="checkbox" <?php if ($options["include_js"] == 1) { echo " checked"; } ?> name="include_js" />
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="include_css"><?php _e("Include CSS", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["include_css"] == 1) echo " checked"; ?> name="include_css" />
+                        <input type="checkbox" <?php if ($options["include_css"] == 1) { echo " checked"; } ?> name="include_css" />
                     </td>
                 </tr>
             </tbody>
@@ -93,7 +93,7 @@
                 <tr valign="top">
                     <th scope="row"><label for="include_always"><?php _e("Always Include", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["include_always"] == 1) echo " checked"; ?> name="include_always" />
+                        <input type="checkbox" <?php if ($options["include_always"] == 1) { echo " checked"; } ?> name="include_always" />
                     </td>
                 </tr>
             </tbody>
@@ -108,25 +108,25 @@
                 <tr valign="top">
                     <th scope="row"><label for="log_upload_errors"><?php _e("Activated", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["log_upload_errors"] == 1) echo " checked"; ?> name="log_upload_errors" />
+                        <input type="checkbox" <?php if ($options["log_upload_errors"] == 1) { echo " checked"; } ?> name="log_upload_errors" />
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="errors_visible_to_admins"><?php _e("Visible to administrators", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["errors_visible_to_admins"] == 1) echo " checked"; ?> name="errors_visible_to_admins" />
+                        <input type="checkbox" <?php if ($options["errors_visible_to_admins"] == 1) { echo " checked"; } ?> name="errors_visible_to_admins" />
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="errors_visible_to_moderators"><?php _e("Visible to moderators", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["errors_visible_to_moderators"] == 1) echo " checked"; ?> name="errors_visible_to_moderators" />
+                        <input type="checkbox" <?php if ($options["errors_visible_to_moderators"] == 1) { echo " checked"; } ?> name="errors_visible_to_moderators" />
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="errors_visible_to_author"><?php _e("Visible to author", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["errors_visible_to_author"] == 1) echo " checked"; ?> name="errors_visible_to_author" />
+                        <input type="checkbox" <?php if ($options["errors_visible_to_author"] == 1) { echo " checked"; } ?> name="errors_visible_to_author" />
                     </td>
                 </tr>
             </tbody>
@@ -177,13 +177,13 @@
                 <tr valign="top">
                     <th scope="row"><label for="attachment_icon"><?php _e("Attachment Icon", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["attachment_icon"] == 1) echo " checked"; ?> name="attachment_icon" />
+                        <input type="checkbox" <?php if ($options["attachment_icon"] == 1) { echo " checked"; } ?> name="attachment_icon" />
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="attchment_icons"><?php _e("File Type Icons", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["attchment_icons"] == 1) echo " checked"; ?> name="attchment_icons" />
+                        <input type="checkbox" <?php if ($options["attchment_icons"] == 1) { echo " checked"; } ?> name="attchment_icons" />
                     </td>
                 </tr>
             </tbody>
@@ -195,19 +195,19 @@
                 <tr valign="top">
                     <th scope="row"><label for="image_thumbnail_active"><?php _e("Activated", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["image_thumbnail_active"] == 1) echo " checked"; ?> name="image_thumbnail_active" />
+                        <input type="checkbox" <?php if ($options["image_thumbnail_active"] == 1) { echo " checked"; } ?> name="image_thumbnail_active" />
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="image_thumbnail_caption"><?php _e("With caption", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["image_thumbnail_caption"] == 1) echo " checked"; ?> name="image_thumbnail_caption" />
+                        <input type="checkbox" <?php if ($options["image_thumbnail_caption"] == 1) { echo " checked"; } ?> name="image_thumbnail_caption" />
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="image_thumbnail_inline"><?php _e("In line", "gd-bbpress-attachments"); ?></label></th>
                     <td>
-                        <input type="checkbox" <?php if ($options["image_thumbnail_inline"] == 1) echo " checked"; ?> name="image_thumbnail_inline" />
+                        <input type="checkbox" <?php if ($options["image_thumbnail_inline"] == 1) { echo " checked"; } ?> name="image_thumbnail_inline" />
                     </td>
                 </tr>
                 <tr valign="top">

@@ -17,7 +17,11 @@ if ( 'xmlhttprequest' === strtolower( $_rt_ajax_request ) ) {
 	$rt_ajax_request = true;
 }
 ?>
-<div id="buddypress">
+
+<?php if ( sq_option( 'bp_full_profile', 0 ) == 0 || sq_option( 'bp_full_group', 0 ) == 0 || sq_option( 'bp_nav_overlay', 0 ) == 0 ) : ?>
+	<div id="buddypress">
+<?php endif; ?>
+
 <?php
 //if it's not an ajax request, load headers
 if ( ! $rt_ajax_request ) {
@@ -58,20 +62,22 @@ if ( ! $rt_ajax_request ) {
 		
 				</div>
 			<?php endif; ?>
-		
-			<div class="col-sm-12">
-				<div id="item-nav">
-					<div class="item-list-tabs no-ajax" id="object-nav" role="navigation">
-						<ul class="responsive-tabs">
-							
-							<?php bp_get_displayed_user_nav(); ?>
-							
-							<?php do_action( 'bp_member_options_nav' ); ?>
-		
-						</ul>
-					</div>
-				</div><!--#item-nav-->
-			</div>
+	
+			<?php if ( ! sq_option( 'bp_nav_overlay', 0 ) == 1 ) : ?>
+				<div class="col-sm-12">
+					<div id="item-nav">
+						<div class="item-list-tabs no-ajax" id="object-nav" role="navigation">
+							<ul class="responsive-tabs">
+								
+								<?php bp_get_displayed_user_nav(); ?>
+								
+								<?php do_action( 'bp_member_options_nav' ); ?>
+			
+							</ul>
+						</div>
+					</div><!--#item-nav-->
+				</div>
+			<?php endif ?>
 		
 			<div id="item-body" class="col-sm-12">
 			
@@ -105,20 +111,22 @@ if ( ! $rt_ajax_request ) {
 						</div><!--#item-header-->
 					</div>
 				<?php endif; ?>
-			
-				<div class="col-sm-12">
-					<div id="item-nav">
-						<div class="item-list-tabs no-ajax" id="object-nav" role="navigation">
-							<ul class="responsive-tabs">
-								
-								<?php bp_get_options_nav(); ?>
-								
-								<?php do_action( 'bp_group_options_nav' ); ?>
-			
-							</ul>
-						</div>
-					</div><!-- #item-nav -->
-				</div>
+	
+				<?php if ( ! sq_option( 'bp_nav_overlay', 0 ) == 1 ) : ?>
+					<div class="col-sm-12">
+						<div id="item-nav">
+							<div class="item-list-tabs no-ajax" id="object-nav" role="navigation">
+								<ul class="responsive-tabs">
+									
+									<?php bp_get_options_nav(); ?>
+									
+									<?php do_action( 'bp_group_options_nav' ); ?>
+				
+								</ul>
+							</div>
+						</div><!-- #item-nav -->
+					</div>
+				<?php endif; ?>
 			
 			
 				<div id="item-body" class="col-sm-12">
@@ -176,7 +184,10 @@ if ( ! $rt_ajax_request ) {
 }
 //close all markup
 ?>
-	</div><!--#buddypress-->
+	<?php if ( sq_option( 'bp_full_profile', 0 ) == 0 || sq_option( 'bp_full_group', 0 ) == 0 || sq_option( 'bp_nav_overlay', 0 ) == 0 ) : ?>
+		</div><!--#buddypress-->
+	<?php endif; ?>
+
 <?php
 //get_sidebar($template_type);
 //get_footer($template_type);

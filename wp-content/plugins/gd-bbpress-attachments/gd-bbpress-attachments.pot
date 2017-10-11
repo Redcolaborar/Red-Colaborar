@@ -54,7 +54,6 @@ msgid "Official Website"
 msgstr ""
 
 #: code/admin.php:54
-#: forms/tabs/toolbox.php:9
 msgid "Dev4Press Plugins Pack"
 msgstr ""
 
@@ -210,12 +209,10 @@ msgstr ""
 
 #: forms/attachments/meta_forum.php:19
 #: forms/attachments/meta_forum.php:20
-#: forms/tabs/attachments.php:21
 msgid "Maximum files to upload"
 msgstr ""
 
 #: forms/attachments/meta_forum.php:24
-#: forms/tabs/attachments.php:28
 msgid "Hide list of attachements from visitors"
 msgstr ""
 
@@ -292,8 +289,16 @@ msgstr ""
 msgid "These settings can be overriden for individual forums."
 msgstr ""
 
+#: forms/tabs/attachments.php:21
+msgid "Maximum files to upload at once"
+msgstr ""
+
 #: forms/tabs/attachments.php:24
 msgid "For single topic or reply"
+msgstr ""
+
+#: forms/tabs/attachments.php:28
+msgid "Hide attachements from visitors"
 msgstr ""
 
 #: forms/tabs/attachments.php:35
@@ -430,8 +435,8 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
-#: forms/tabs/attachments.php:213
-msgid "CSS class"
+#: forms/tabs/attachments.php:207
+msgid "In line"
 msgstr ""
 
 #: forms/tabs/attachments.php:172
@@ -462,8 +467,8 @@ msgstr ""
 msgid "With caption"
 msgstr ""
 
-#: forms/tabs/attachments.php:207
-msgid "In line"
+#: forms/tabs/attachments.php:213
+msgid "CSS class"
 msgstr ""
 
 #: forms/tabs/attachments.php:219
@@ -496,21 +501,19 @@ msgstr ""
 
 #: forms/tabs/d4p.php:3
 #: forms/tabs/d4p.php:8
-#: forms/tabs/d4p.php:13
 msgid "Plugin Home Website"
 msgstr ""
 
 #: forms/tabs/d4p.php:4
 #: forms/tabs/d4p.php:9
-#: forms/tabs/d4p.php:14
-msgid "Home on Dev4Press"
+msgid "Plugin Demo"
 msgstr ""
 
-#: forms/tabs/d4p.php:19
+#: forms/tabs/d4p.php:14
 msgid "Other Premium Plugins"
 msgstr ""
 
-#: forms/tabs/d4p.php:27
+#: forms/tabs/d4p.php:23
 msgid "More Free Plugins"
 msgstr ""
 
@@ -528,6 +531,10 @@ msgstr ""
 
 #: forms/tabs/toolbox.php:8
 msgid "Toolbox Pro vs Free plugins"
+msgstr ""
+
+#: forms/tabs/toolbox.php:9
+msgid "Dev4Press PLugins Club Membership"
 msgstr ""
 
 #: forms/tabs/toolbox.php:13

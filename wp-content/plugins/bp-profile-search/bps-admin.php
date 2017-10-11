@@ -1,5 +1,13 @@
 <?php
 
+add_action ('add_meta_boxes', 'bps_add_meta_boxes');
+function bps_add_meta_boxes ()
+{
+	add_meta_box ('bps_fields_box', __('Form Fields', 'bp-profile-search'), 'bps_fields_box', 'bps_form', 'normal');
+	add_meta_box ('bps_attributes', __('Form Attributes', 'bp-profile-search'), 'bps_attributes', 'bps_form', 'side');
+	add_meta_box ('bps_directory', __('Add to Directory', 'bp-profile-search'), 'bps_directory', 'bps_form', 'side');
+}
+
 function bps_fields_box ($post)
 {
 	$bps_options = bps_meta ($post->ID);
@@ -73,6 +81,12 @@ function _bps_field_select ($groups, $name, $id, $value)
 
 function _bps_filter_select ($filters, $name, $id, $value)
 {
+	if (count ($filters) == 0)
+	{
+		echo '<strong class="bps_col5" style="color:red;">&nbsp;&nbsp;'. __('undefined', 'bp-profile-search'). '</strong>';
+		return false;
+	}
+
 	echo "<select class='bps_col5' name='$name' id='$id'>\n";
 	foreach ($filters as $key => $label)
 	{
@@ -154,20 +168,10 @@ function bps_directory ($post)
 <?php
 }
 
-function bps_searchmode ($post)
+add_action ('save_post', 'bps_update_meta', 10, 2);
+function bps_update_meta ($form, $post)
 {
-	$options = bps_meta ($post->ID);
-?>
-	<select name="options[searchmode]" id="searchmode">
-		<option value='LIKE' <?php selected ($options['searchmode'], 'LIKE'); ?>><?php _e('contains', 'bp-profile-search'); ?></option>
-		<option value='EQUAL' <?php selected ($options['searchmode'], 'EQUAL'); ?>><?php _e('is', 'bp-profile-search'); ?></option>
-		<option value='ISLIKE' <?php selected ($options['searchmode'], 'ISLIKE'); ?>><?php _e('is like', 'bp-profile-search'); ?></option>
-	</select>
-<?php
-}
-
-function bps_update_meta ($form)
-{
+	if ($post->post_type != 'bps_form' || $post->post_status != 'publish')  return false;
 	if (empty ($_POST['options']) && empty ($_POST['bps_options']))  return false;
 
 	$meta = array ();
@@ -200,7 +204,7 @@ function bps_update_meta ($form)
 		$j = $j + 1;
 	}
 
-	foreach (array ('directory', 'template', 'header', 'toggle', 'button', 'method', 'action', 'searchmode') as $key)
+	foreach (array ('directory', 'template', 'header', 'toggle', 'button', 'method', 'action') as $key)
 		$meta[$key] = stripslashes ($_POST['options'][$key]);
 
 	bps_set_wpml ($form, '-', 'header', $meta['header']);

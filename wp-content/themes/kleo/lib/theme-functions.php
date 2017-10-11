@@ -1,5 +1,5 @@
 <?php
-define( 'KLEO_THEME_VERSION', '4.2.11' );
+define( 'KLEO_THEME_VERSION', '4.2.12' );
 
 /* Configuration array */
 global $kleo_config;
@@ -1336,13 +1336,20 @@ if ( ! function_exists( 'kleo_postmeta_enabled' ) ) {
  *
  * @return int
  */
-function kleo_postmedia_enabled( $media_option = 'blog_media_status', $default = 1 ) {
+function kleo_postmedia_enabled( $media_option = 'blog_media_status', $default = 1, $is_singular = false ) {
 
 
 	global $conditional_thumb;
 	global $wp_query;
+	
+	if ( $is_singular === true ) {
+		$condition = is_singular();
+	} else {
+		$condition = is_single();
+	}
+	
 
-	if ( ! is_singular() ) {
+	if ( ! $condition ) {
 
 		//check for shortcode thumbnail condition
 		if ( isset( $conditional_thumb ) ) {

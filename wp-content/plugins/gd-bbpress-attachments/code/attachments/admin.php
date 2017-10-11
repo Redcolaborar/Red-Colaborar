@@ -132,5 +132,3 @@ class gdbbAtt_Admin {
 
 global $gdbbpress_attachments_admin;
 $gdbbpress_attachments_admin = new gdbbAtt_Admin();
-
-?>

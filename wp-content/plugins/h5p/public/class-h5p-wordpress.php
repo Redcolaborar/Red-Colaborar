@@ -36,7 +36,12 @@ class H5PWordPress implements H5PFrameworkInterface {
    * @return array
    */
   public function getMessages($type) {
-    return isset($this->messages[$type]) ? $this->messages[$type] : NULL;
+    if (empty($this->messages[$type])) {
+      return NULL;
+    }
+    $messages = $this->messages[$type];
+    $this->messages[$type] = array();
+    return $messages;
   }
 
   /**
@@ -67,6 +72,14 @@ class H5PWordPress implements H5PFrameworkInterface {
   private function getH5pPath() {
     $plugin = H5P_Plugin::get_instance();
     return $plugin->get_h5p_path();
+  }
+
+  /**
+   * Get the URL to a library file
+   */
+  public function getLibraryFileUrl($libraryFolderName, $fileName) {
+    $upload_dir = wp_upload_dir();
+    return $upload_dir['baseurl'] . '/h5p/libraries/' . $libraryFolderName . '/' . $fileName;
   }
 
   /**
@@ -227,6 +240,9 @@ class H5PWordPress implements H5PFrameworkInterface {
     if (!isset($library['fullscreen'])) {
       $library['fullscreen'] = 0;
     }
+    if (!isset($library['hasIcon'])) {
+      $library['hasIcon'] = 0;
+    }
     if ($new) {
       $wpdb->insert(
           $wpdb->prefix . 'h5p_libraries',
@@ -242,7 +258,8 @@ class H5PWordPress implements H5PFrameworkInterface {
             'preloaded_js' => $preloadedJs,
             'preloaded_css' => $preloadedCss,
             'drop_library_css' => $dropLibraryCss,
-            'semantics' => $library['semantics']
+            'semantics' => $library['semantics'],
+            'has_icon' => $library['hasIcon'] ? 1 : 0
           ),
           array(
             '%s',
@@ -256,7 +273,8 @@ class H5PWordPress implements H5PFrameworkInterface {
             '%s',
             '%s',
             '%d',
-            '%s'
+            '%s',
+            '%d'
           )
         );
       $library['libraryId'] = $wpdb->insert_id;
@@ -273,7 +291,8 @@ class H5PWordPress implements H5PFrameworkInterface {
             'preloaded_js' => $preloadedJs,
             'preloaded_css' => $preloadedCss,
             'drop_library_css' => $dropLibraryCss,
-            'semantics' => $library['semantics']
+            'semantics' => $library['semantics'],
+            'has_icon' => $library['hasIcon'] ? 1 : 0
           ),
           array('id' => $library['libraryId']),
           array(
@@ -285,7 +304,8 @@ class H5PWordPress implements H5PFrameworkInterface {
             '%s',
             '%s',
             '%d',
-            '%s'
+            '%s',
+            '%d'
           ),
           array('%d')
         );
@@ -536,6 +556,7 @@ class H5PWordPress implements H5PFrameworkInterface {
             '%d',
             '%s',
             '%d',
+            '%d'
           )
         );
     }
@@ -549,7 +570,8 @@ class H5PWordPress implements H5PFrameworkInterface {
 
     $library = $wpdb->get_row($wpdb->prepare(
         "SELECT id as libraryId, name as machineName, title, major_version as majorVersion, minor_version as minorVersion, patch_version as patchVersion,
-          embed_types as embedTypes, preloaded_js as preloadedJs, preloaded_css as preloadedCss, drop_library_css as dropLibraryCss, fullscreen, runnable, semantics
+          embed_types as embedTypes, preloaded_js as preloadedJs, preloaded_css as preloadedCss, drop_library_css as dropLibraryCss, fullscreen, runnable,
+          semantics, has_icon as hasIcon
         FROM {$wpdb->prefix}h5p_libraries
         WHERE name = %s
         AND major_version = %d
@@ -842,24 +864,38 @@ class H5PWordPress implements H5PFrameworkInterface {
   /**
    * Implements fetchExternalData
    */
-  public function fetchExternalData($url, $data = NULL) {
+  public function fetchExternalData($url, $data = NULL, $blocking = TRUE, $stream = NULL) {
+    @set_time_limit(0);
+    $options = array(
+      'timeout' => !empty($blocking) ? 30 : 0.01,
+      'stream' => !empty($stream),
+      'filename' => !empty($stream) ? $stream : FALSE
+    );
+
     if ($data !== NULL) {
       // Post
-      $response = wp_remote_post($url, array('body' => $data));
+      $options['body'] = $data;
+      $response = wp_remote_post($url, $options);
     }
     else {
       // Get
-      $response = wp_remote_get($url);
+
+      if (empty($options['filename'])) {
+        // Support redirects
+        $response = wp_remote_get($url);
+      }
+      else {
+        // Use safe when downloading files
+        $response = wp_safe_remote_get($url, $options);
+      }
     }
 
     if (is_wp_error($response)) {
       //$error_message = $response->get_error_message();
+      return FALSE;
     }
     elseif ($response['response']['code'] === 200) {
-      return $response['body'];
-    }
-    else {
-
+      return empty($response['body']) ? TRUE : $response['body'];
     }
 
     return NULL;
@@ -1021,7 +1057,7 @@ class H5PWordPress implements H5PFrameworkInterface {
   /**
    * Implements afterExportCreated
    */
-  public function afterExportCreated() {
+  public function afterExportCreated($content, $filename) {
     // Clear cached value for dirsize.
     delete_transient('dirsize_cache');
   }
@@ -1042,7 +1078,7 @@ class H5PWordPress implements H5PFrameworkInterface {
 
   /**
    * Implements hasPermission
-   * 
+   *
    * @method hasPermission
    * @param  H5PPermission    $permission
    * @param  int              $contentUserId
@@ -1053,7 +1089,87 @@ class H5PWordPress implements H5PFrameworkInterface {
       case H5PPermission::DOWNLOAD_H5P:
       case H5PPermission::EMBED_H5P:
         return self::currentUserCanEdit($contentUserId);
+
+      case H5PPermission::CREATE_RESTRICTED:
+      case H5PPermission::UPDATE_LIBRARIES:
+        return current_user_can('manage_h5p_libraries');
+
+      case H5PPermission::INSTALL_RECOMMENDED:
+        current_user_can('install_recommended_h5p_libraries');
+
     }
     return FALSE;
+  }
+
+  /**
+   * Replaces existing content type cache with the one passed in
+   *
+   * @param object $contentTypeCache Json with an array called 'libraries'
+   *  containing the new content type cache that should replace the old one.
+   */
+  public function replaceContentTypeCache($contentTypeCache) {
+    global $wpdb;
+
+    // Replace existing content type cache
+    $wpdb->query("TRUNCATE TABLE {$wpdb->base_prefix}h5p_libraries_hub_cache");
+    foreach ($contentTypeCache->contentTypes as $ct) {
+      // Insert into db
+      $wpdb->insert("{$wpdb->base_prefix}h5p_libraries_hub_cache", array(
+        'machine_name'      => $ct->id,
+        'major_version'     => $ct->version->major,
+        'minor_version'     => $ct->version->minor,
+        'patch_version'     => $ct->version->patch,
+        'h5p_major_version' => $ct->coreApiVersionNeeded->major,
+        'h5p_minor_version' => $ct->coreApiVersionNeeded->minor,
+        'title'             => $ct->title,
+        'summary'           => $ct->summary,
+        'description'       => $ct->description,
+        'icon'              => $ct->icon,
+        'created_at'        => self::dateTimeToTime($ct->createdAt),
+        'updated_at'        => self::dateTimeToTime($ct->updatedAt),
+        'is_recommended'    => $ct->isRecommended === TRUE ? 1 : 0,
+        'popularity'        => $ct->popularity,
+        'screenshots'       => json_encode($ct->screenshots),
+        'license'           => json_encode(isset($ct->license) ? $ct->license : array()),
+        'example'           => $ct->example,
+        'tutorial'          => isset($ct->tutorial) ? $ct->tutorial : '',
+        'keywords'          => json_encode(isset($ct->keywords) ? $ct->keywords : array()),
+        'categories'        => json_encode(isset($ct->categories) ? $ct->categories : array()),
+        'owner'             => $ct->owner
+      ), array(
+        '%s',
+        '%d',
+        '%d',
+        '%d',
+        '%d',
+        '%d',
+        '%s',
+        '%s',
+        '%s',
+        '%s',
+        '%d',
+        '%d',
+        '%d',
+        '%d',
+        '%s',
+        '%s',
+        '%s',
+        '%s',
+        '%s',
+        '%s',
+        '%s'
+      ));
+    }
+  }
+
+  /**
+   * Convert datetime string to unix timestamp
+   *
+   * @param string $datetime
+   * @return int unix timestamp
+   */
+  public static function dateTimeToTime($datetime) {
+    $dt = new DateTime($datetime);
+    return $dt->getTimestamp();
   }
 }

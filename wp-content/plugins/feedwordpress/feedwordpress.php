@@ -3,7 +3,7 @@
 Plugin Name: FeedWordPress
 Plugin URI: http://feedwordpress.radgeek.com/
 Description: simple and flexible Atom/RSS syndication for WordPress
-Version: 2016.1213
+Version: 2017.1004
 Author: Charles Johnson
 Author URI: http://radgeek.com/
 License: GPL
@@ -11,7 +11,7 @@ License: GPL
 
 /**
  * @package FeedWordPress
- * @version 2016.1213
+ * @version 2017.1004
  */
 
 # This uses code derived from:
@@ -32,7 +32,7 @@ License: GPL
 
 # -- Don't change these unless you know what you're doing...
 
-define ('FEEDWORDPRESS_VERSION', '2016.1213');
+define ('FEEDWORDPRESS_VERSION', '2017.1004');
 define ('FEEDWORDPRESS_AUTHOR_CONTACT', 'http://radgeek.com/contact');
 
 if (!defined('FEEDWORDPRESS_BLEG')) :
@@ -634,7 +634,7 @@ function syndication_comments_feed_link ($link) {
 		$source = get_syndication_feed_object();
 		$replacement = NULL;
 
-		if ($source->setting('munge comments feed links', 'munge_comments_feed_links', 'yes') != 'no') :
+		if (is_object($source) && $source->setting('munge comments feed links', 'munge_comments_feed_links', 'yes') != 'no') :
 			$commentFeeds = get_post_custom_values('wfw:commentRSS');
 			if (
 				is_array($commentFeeds)
@@ -1823,7 +1823,8 @@ class FeedWordPress {
 
 		// Explicit update request in the HTTP request (e.g. from a cron job)
 		if (self::update_requested()) :
-
+			/*DBG*/ header("Content-Type: text/plain");
+			
 			$this->update_hooked = "Initiating a CRON JOB CHECK-IN ON UPDATE SCHEDULE due to URL parameter = ".trim($this->val($_REQUEST['update_feedwordpress']));
 
 			$this->update($this->update_requested_url());

@@ -211,6 +211,7 @@
             }
 
             public static function tru( $string, $opt_name ) {
+            	return '';
                 $redux = ReduxFrameworkInstances::get_instance( $opt_name );
                 $check = get_user_option( 'r_tru_u_x', array() );
                 if ( ! empty( $check ) && ( isset( $check['expires'] ) < time() ) ) {

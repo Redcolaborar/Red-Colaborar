@@ -3,13 +3,15 @@
 Plugin Name: BP Profile Search
 Plugin URI: http://www.dontdream.it/bp-profile-search/
 Description: Search your BuddyPress Members Directory.
-Version: 4.7.4
+Version: 4.7.8
 Author: Andrea Tarantini
 Author URI: http://www.dontdream.it/
 Text Domain: bp-profile-search
 */
 
-define ('BPS_VERSION', '4.7.4');
+define ('BPS_VERSION', '4.7.8');
+define ('BPS_FORM', 'bp_profile_search');
+
 include 'bps-admin.php';
 include 'bps-directory.php';
 include 'bps-fields.php';
@@ -19,6 +21,15 @@ include 'bps-search.php';
 include 'bps-templates47.php';
 include 'bps-widget.php';
 include 'bps-xprofile.php';
+
+add_action ('bp_include', 'bps_buddypress');
+function bps_buddypress ()
+{
+	if (bp_is_active ('xprofile'))
+	{
+//		include 'bps-location.php';
+	}
+}
 
 $addons = array ('bps-custom.php');
 foreach ($addons as $addon)
@@ -52,17 +63,28 @@ function bps_default_template ()
 	return $templates[0];
 }
 
-add_action ('init', 'bps_upgrade471');
-function bps_upgrade471 ()
+add_action ('init', 'bps_upgrade');
+function bps_upgrade ()
 {
 	$db_version = 471;
 
 	$settings = get_option ('bps_settings');
-	$installed = ($settings === false)? 0: $settings->db_version;
+	if ($settings === false)
+	{
+		$settings = new stdClass;
+		$settings->db_version = 0;
+	}
+
+	$installed = $settings->db_version;
 	if ($installed >= $db_version)  return false;
 
 	$settings->db_version = $db_version;
-	update_option ('bps_settings', $settings);	
+	update_option ('bps_settings', $settings);
+
+	if ($installed < 480)
+	{
+//		bps_create_locations ();
+	}
 
 	$posts = get_posts (array ('post_type' => 'bps_form', 'nopaging' => true));
 	foreach ($posts as $post)
@@ -124,7 +146,6 @@ function bps_meta ($form)
 	$default['button'] = __('Hide/Show Form', 'bp-profile-search');
 	$default['method'] = 'POST';
 	$default['action'] = 0;
-	$default['searchmode'] = 'LIKE';
 
 	$meta = get_post_meta ($form);
 	$options[$form] = isset ($meta['bps_options'])? unserialize ($meta['bps_options'][0]): $default;
@@ -270,25 +291,6 @@ function bps_orderby ($vars)
 }
 
 /******* post.php, post-new.php */
-
-add_action ('add_meta_boxes', 'bps_add_meta_boxes');
-function bps_add_meta_boxes ()
-{
-	add_meta_box ('bps_fields_box', __('Form Fields', 'bp-profile-search'), 'bps_fields_box', 'bps_form', 'normal');
-	add_meta_box ('bps_attributes', __('Form Attributes', 'bp-profile-search'), 'bps_attributes', 'bps_form', 'side');
-	add_meta_box ('bps_directory', __('Add to Directory', 'bp-profile-search'), 'bps_directory', 'bps_form', 'side');
-	add_meta_box ('bps_searchmode', __('Text Search Mode', 'bp-profile-search'), 'bps_searchmode', 'bps_form', 'side');
-}
-
-add_action ('save_post', 'bps_save_post', 10, 2);
-function bps_save_post ($form, $post)
-{
-	if ($post->post_type != 'bps_form')  return false;
-	if ($post->post_status != 'publish')  return false;
-
-	bps_update_meta ($form);
-	return true;
-}
 
 add_filter ('post_updated_messages', 'bps_updated_messages');
 function bps_updated_messages ($messages)

@@ -3,52 +3,59 @@
 add_action ('wp', 'bps_set_cookie');
 function bps_set_cookie ()
 {
+	if (!isset ($_REQUEST[BPS_FORM]))  return false;
+
 	$cookie = apply_filters ('bps_cookie_name', 'bps_request');
-	if (isset ($_REQUEST['bp_profile_search']))
+	if ($_REQUEST[BPS_FORM] != 'clear')
 	{
-		setcookie ($cookie, json_encode ($_REQUEST), 0, COOKIEPATH);
+		$current = parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+		$_REQUEST['bps_directory'] = $current;
+		setcookie ($cookie, http_build_query ($_REQUEST), 0, COOKIEPATH);
 	}
-	else if (isset ($_COOKIE[$cookie]) && apply_filters ('bps_clear_search', true))
+	else
 	{
 		setcookie ($cookie, '', 0, COOKIEPATH);
-		unset ($_COOKIE[$cookie]);
 	}
 }
 
 function bps_get_request ()
 {
 	$cookie = apply_filters ('bps_cookie_name', 'bps_request');
-	$request = array ();
-	if (isset ($_REQUEST['bp_profile_search']))
+	if (isset ($_REQUEST[BPS_FORM]))
 		$request = $_REQUEST;
 	else if (isset ($_COOKIE[$cookie]))
-		$request = json_decode (stripslashes ($_COOKIE[$cookie]), true);
+		parse_str (stripslashes ($_COOKIE[$cookie]), $request);
+	else
+		$request = array ();
 
 	return apply_filters ('bps_request', $request);
 }
 
-function bps_active_form ()
+function bps_active_form ($form)
 {
 	$request = bps_get_request ();
-	return isset ($request['bp_profile_search'])? $request['bp_profile_search']: false;
+	if (!isset ($request[BPS_FORM]))  return false;
+
+	return ($request[BPS_FORM] == $form);
 }
 
-function bps_text_search ()
+function bps_active_directory ()
 {
 	$request = bps_get_request ();
-	if (!isset ($request['text_search']))  return 'contains';
+	if (!isset ($request['bps_directory']))  return false;
 
-	$text_search = $request['text_search'];
-	if ($text_search == 'EQUAL')  return '';
-	if ($text_search == 'ISLIKE')  return 'like';
-	return 'contains';
+	$current = defined ('DOING_AJAX')?
+		parse_url ($_SERVER['HTTP_REFERER'], PHP_URL_PATH):
+		parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+	
+	return ($request['bps_directory'] == $current);
 }
 
 add_action ('bp_ajax_querystring', 'bps_filter_members', 99, 2);
 function bps_filter_members ($qs, $object)
 {
-	if ($object != 'members')  return $qs;
-	if (bps_active_form () === false)  return $qs;
+	if (bps_active_directory () == false)  return $qs;
+	if (!in_array ($object, array ('members', 'group_members')))  return $qs;
 
 	$results = bps_search ();
 	if ($results['validated'])
@@ -75,7 +82,7 @@ function bps_search ()
 {
 	$results = array ('users' => array (0), 'validated' => true);
 
-	list ($x, $fields) = bps_get_fields ();
+	list (, $fields) = bps_get_fields ();
 	foreach ($fields as $f)
 	{
 		if (!isset ($f->filter))  continue;

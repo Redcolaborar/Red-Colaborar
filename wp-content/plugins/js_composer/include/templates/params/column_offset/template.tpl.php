@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php if ( '1' === vc_settings()->get( 'not_responsive_css' ) ) :  ?>
 		<div class="wpb_alert wpb_content_element vc_alert_rounded wpb_alert-warning">
 			<div class="messagebox_text">
-				<p><?php printf( __( 'Responsive design settings are currently disabled. You can enable them in Visual Composer <a href="%s">settings page</a> by unchecking "Disable responsive content elements".', 'js_composer' ), admin_url( 'admin.php?page=vc-general' ) ) ?></p>
+				<p><?php printf( __( 'Responsive design settings are currently disabled. You can enable them in WPBakery Page Builder <a href="%s">settings page</a> by unchecking "Disable responsive content elements".', 'js_composer' ), admin_url( 'admin.php?page=vc-general' ) ) ?></p>
 			</div>
 		</div>
 	<?php endif ?>

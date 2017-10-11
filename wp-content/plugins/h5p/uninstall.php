@@ -83,6 +83,7 @@ function _h5p_uninstall() {
   $wpdb->query("DROP TABLE {$wpdb->prefix}h5p_libraries_cachedassets");
   $wpdb->query("DROP TABLE {$wpdb->prefix}h5p_counters");
   $wpdb->query("DROP TABLE {$wpdb->prefix}h5p_events");
+  $wpdb->query("DROP TABLE {$wpdb->prefix}h5p_tmpfiles");
 
   // Remove settings
   delete_option('h5p_version');
@@ -105,6 +106,11 @@ function _h5p_uninstall() {
   delete_option('h5p_multisite_capabilities');
   delete_option('h5p_site_type');
   delete_option('h5p_enable_lrs_content_types');
+  delete_option('h5p_site_key');
+  delete_option('h5p_content_type_cache_updated_at');
+  delete_option('h5p_check_h5p_requirements');
+  delete_option('h5p_hub_is_enabled');
+  delete_option('h5p_send_usage_statistics');
 
   // Clean out file dirs.
   $upload_dir = wp_upload_dir();
@@ -127,6 +133,8 @@ function _h5p_uninstall() {
   }
 }
 
+global $wpdb;
+$wpdb->query("DROP TABLE {$wpdb->base_prefix}h5p_libraries_hub_cache");
 
 if (!is_multisite()) {
   // Simple uninstall for single site
@@ -134,7 +142,6 @@ if (!is_multisite()) {
 }
 else {
   // Run uninstall on each site in the network.
-  global $wpdb;
   $blog_ids = $wpdb->get_col("SELECT blog_id FROM {$wpdb->blogs}");
   $original_blog_id = get_current_blog_id();
 

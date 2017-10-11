@@ -12,25 +12,38 @@
 
 <div class="wrap">
   <h2><?php print esc_html(get_admin_page_title()); ?></h2>
-  <?php if ($updates_available): ?>
-    <form method="post" enctype="multipart/form-data">
-      <h3 class="h5p-admin-header"><?php esc_html_e('Update All Libraries', $this->plugin_slug); ?></h3>
+  <?php if ($hubOn): ?>
+    <h3><?php esc_html_e('Content Type Cache'); ?></h3>
+    <form method="post" id="h5p-update-content-type-cache">
       <div class="h5p postbox">
-        <div class="h5p-text-holder" id="h5p-download-update">
-          <p><?php print esc_html_e('There are updates available for your H5P content types.', $this->plugin_slug) ?></p>
-          <p><?php printf(wp_kses(__('You can read about why it\'s important to update and the benefits from doing so on the <a href="%s" target="_blank">Why Update H5P</a> page.', $this->plugin_slug), array('a' => array('href' => array(), 'target' => array()))), esc_url('https://h5p.org/why-update')); ?>
-          <br/><?php print esc_html_e('The page also list the different changelogs, where you can read about the new features introduced and the issues that have been fixed.', $this->plugin_slug) ?></p>
-          <p>
-            <?php if ($current_update > 1): ?>
-              <?php printf(wp_kses(__('The version you\'re running is from <strong>%s</strong>.', $this->plugin_slug), array('strong' => array(), 'em' => array())), date('Y-m-d', $current_update)); ?><br/>
-            <?php endif; ?>
-            <?php printf(wp_kses(__('The most recent version was released on <strong>%s</strong>.', $this->plugin_slug), array('strong' => array(), 'em' => array())), date('Y-m-d', $update_available)); ?>
-          </p>
-          <p><?php print esc_html_e('You can use the button below to automatically download and update all of your content types.', $this->plugin_slug) ?></p>
-          <?php wp_nonce_field('h5p_update', 'download_update'); ?>
+        <div class="h5p-text-holder">
+          <p><?php print esc_html_e('Making sure the content type cache is up to date will ensure that you can view, download and use the latest libraries. This is different from updating the libraries themselves.', $this->plugin_slug) ?></p>
+          <table class="form-table">
+            <tbody>
+            <tr valign="top">
+              <th scope="row"><?php _e("Last update", $this->plugin_slug); ?></th>
+              <td>
+                <?php
+                if ($last_update !== '') {
+                  echo date_i18n('l, F j, Y H:i:s', $last_update);
+                }
+                else {
+                  echo 'never';
+                }
+                ?>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
         <div class="h5p-button-holder">
-          <input type="submit" name="submit" value="<?php print esc_html_e('Download & Update', $this->plugin_slug) ?>" class="button button-primary button-large"/>
+          <?php wp_nonce_field('h5p_sync', 'sync_hub'); ?>
+          <input type="submit"
+                 name="updatecache"
+                 id="updatecache"
+                 class="button button-primary button-large"
+                 value=<?php esc_html_e('Update', $this->plugin_slug) ?>
+          />
         </div>
       </div>
     </form>

@@ -22,7 +22,7 @@ if ( ! class_exists( 'kleo_walker_nav_menu' ) ) {
 		 */
 		public function start_lvl( &$output, $depth = 0, $args = array() ) {
 			$indent = str_repeat( "\t", $depth );
-			$output .= "\n$indent<ul role=\"menu\" class=\"dropdown-menu sub-menu".($depth ===0?" pull-left":"")."\">\n";
+			$output .= "\n$indent<ul role=\"menu\" class=\"dropdown-menu sub-menu".( $depth === 0 ? " pull-left" : "" )."\">\n";
 		}
 
 		/**

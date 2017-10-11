@@ -7,11 +7,11 @@ function bps_get_fields ()
 
 	if (count ($groups))  return array ($groups, $fields);
 
-	$field_list = apply_filters ('bps_fields', array ());
+	$field_list = apply_filters ('bps_add_fields', array ());
 	foreach ($field_list as $f)
 	{
 		$f = apply_filters ('bps_field_setup_data', $f);  // to be removed
-		do_action ('bps_field_setup', $f);
+		do_action ('bps_edit_field', $f);
 		$groups[$f->group][] = array ('id' => $f->code, 'name' => $f->name);
 		$fields[$f->code] = $f;
 	}
@@ -33,38 +33,30 @@ function bps_parse_request ($fields, $request)
 		if ($k === false)  continue;
 
 		$f = $fields[$k];
-		$filter = ($key == $f->code)? '': substr ($key, strlen ($f->code));		// for PHP < 7.0.0
+		$filter = ($key == $f->code)? '': substr ($key, strlen ($f->code) + 1);
 		if (!bps_validate_filter ($filter, $f))  continue;
 
 		switch ($filter)
 		{
-		case '':
-			$f->filter = '';
+		default:
+			$f->filter = $filter;
 			$f->value = $value;
-			$f->values = (array)$f->value;
-			$f->min = $f->max = '';
 			break;
-		case '_min':
+		case 'range_min':
+		case 'age_range_min':
 			if (!is_numeric ($value))  break;
-			$f->filter = 'range';
-			$f->min = $value;
-			if ($f->type == 'datebox')  $f->min = (int)$f->min;
-			if ($f->type == 'birthdate')  $f->min = (int)$f->min;
-			if (!isset ($f->max))  $f->max = '';
-			$f->value = '';
-			$f->values = array ();
+			$f->filter = rtrim ($filter, '_min');
+			$f->value['min'] = $value;
+			if ($filter == 'age_range_min')  $f->value['min'] = (int)$f->value['min'];
 			break;
-		case '_max':
+		case 'range_max':
+		case 'age_range_max':
 			if (!is_numeric ($value))  break;
-			$f->filter = 'range';
-			$f->max = $value;
-			if ($f->type == 'datebox')  $f->max = (int)$f->max;
-			if ($f->type == 'birthdate')  $f->max = (int)$f->max;
-			if (!isset ($f->min))  $f->min = '';
-			$f->value = '';
-			$f->values = array ();
+			$f->filter = rtrim ($filter, '_max');
+			$f->value['max'] = $value;
+			if ($filter == 'age_range_max')  $f->value['max'] = (int)$f->value['max'];
 			break;
-		case '_label':
+		case 'label':
 			$f->label = stripslashes ($value);
 			break;
 		}
@@ -85,8 +77,9 @@ function bps_match_key ($key, $fields)
 
 function bps_validate_filter ($filter, $f)
 {
-	if ($filter == '_min' || $filter == '_max')  $filter = 'range';
-	if ($filter == '_label')  return true;
+	if ($filter == 'range_min' || $filter == 'range_max')  $filter = 'range';
+	if ($filter == 'age_range_min' || $filter == 'age_range_max')  $filter = 'age_range';
+	if ($filter == 'label')  return true;
 
 	return isset ($f->filters[$filter]);
 }

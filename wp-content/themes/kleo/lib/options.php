@@ -611,6 +611,22 @@ $sections[] = array(
 			'title'    => __( 'Logo Retina', 'kleo_framework' ),
 			'subtitle' => __( 'Upload retina logo. This is optional and should be double in size than normal logo.', 'kleo_framework' ),
 		),
+        array(
+			'id'       => 'mobile_logo',
+			'type'     => 'media',
+			'url'      => true,
+			'readonly' => false,
+			'title'    => __( 'Mobile Logo ', 'kleo_framework' ),
+			'subtitle' => __( 'Upload Mobile logo. This is will be shown only on mobile devices.', 'kleo_framework' ),
+		),
+        array(
+            'id'       => 'mobile_logo_retina',
+            'type'     => 'media',
+            'url'      => true,
+            'readonly' => false,
+            'title'    => __( 'Mobile Logo Retina', 'kleo_framework' ),
+            'subtitle' => __( 'Upload mobile retina logo. This is optional and should be double in size than normal logo and it will displayed only on mobile devices.', 'kleo_framework' ),
+        ),
 		array(
 			'id'       => 'favicon',
 			'type'     => 'media',

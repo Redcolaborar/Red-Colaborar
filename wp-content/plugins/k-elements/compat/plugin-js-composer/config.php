@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Visual Composer specific configurations
  * @package WordPress
  * @subpackage K Elements
@@ -54,9 +54,9 @@ vc_remove_element("vc_cta_button2");*/
 :: Visual Composer CSS replace classes
 ***************************************************/
 
- 
+
 function kleo_css_classes_for_vc_row_and_vc_column( $class_string, $tag ) {
-	
+
 	if($tag=='vc_row' || $tag=='vc_row_inner') {
 			$class_string = str_replace('vc_row-fluid', 'row', $class_string);
 	}
@@ -73,7 +73,7 @@ function kleo_css_classes_for_vc_row_and_vc_column( $class_string, $tag ) {
 			$class_string = str_replace('vc_span11', 'col-sm-11', $class_string);
 			$class_string = str_replace('vc_span12', 'col-sm-12', $class_string);
 			$class_string = str_replace('wpb_column', 'kleo_column', $class_string);
-			
+
 	}
 
 	return $class_string;
@@ -3269,7 +3269,7 @@ function kleo_vc_manipulate_shortcodes() {
         ),
         "description" => "Show read more button and post likes"
     ));
-	
+
 	vc_add_param( "vc_posts_grid", array(
 		'param_name'  => 'load_more',
 		'heading'     => __( 'Enable Load More', 'kleo_framework' ),
@@ -3281,7 +3281,7 @@ function kleo_vc_manipulate_shortcodes() {
 			'Yes'    => 'yes',
 		),
 	));
-	
+
 	vc_add_param( "vc_posts_grid", array(
 		'param_name'  => 'ajax_post',
 		'heading'     => '',
@@ -4102,6 +4102,19 @@ function kleo_vc_manipulate_shortcodes() {
                     "description" => __("The form will be displayed for registered users too if enabled. <br> " .
                         "Note: Use only on testing environment.")
                 ),
+                array(
+                    "type" => "dropdown",
+                    "holder" => "div",
+                    "class" => "hide hidden",
+                    "admin_label" => true,
+                    "heading" => __("Autofocus to the input field"),
+                    "param_name" => "autofocus_login_field",
+                    "value" => array(
+                        'Yes' => '',
+                        'No' => 'no',
+                    ),
+                    "description" => __("Will focus to the input to type directly and if the form isn't on page view will scroll direcly where the form it's placed. ")
+                ),
                 $el_class
             )
         )
@@ -4431,7 +4444,6 @@ function kleo_vc_manipulate_shortcodes() {
                         ),
                         "description" => __( "Allow plugins to hook into the form using bp_before_registration_submit_buttons" )
                     ),
-
 
                     $el_class
                 )
@@ -5073,8 +5085,8 @@ function kleo_vc_manipulate_shortcodes_after() {
         //Finally "mutate" param with new values
         vc_update_shortcode_param( 'vc_row', $param );
     }
-	
-	
+
+
 	vc_add_shortcode_param( 'sq_hidden', 'sq_vc_hidden_param' );
 	function sq_vc_hidden_param( $settings, $value ) {
 		return '<div class="sq-param-block" style="display: none;">'
@@ -5360,7 +5372,7 @@ function kleo_add_icons_to_vc_message() {
 		//Finally "mutate" param with new values
 		vc_update_shortcode_param( 'vc_message', $param );
 	}
-	
+
 
 	//Get current values stored in the width param in "Column" element
 	$param = WPBMap::getParam( 'vc_message', 'color' );
@@ -5369,7 +5381,7 @@ function kleo_add_icons_to_vc_message() {
 		//Finally "mutate" param with new values
 		vc_update_shortcode_param( 'vc_message', $param );
 	}
-	
+
 	//Get current values stored in the width param in "Column" element
 	$param = WPBMap::getParam( 'vc_message', 'message_box_style' );
 	if (is_array($param)) {

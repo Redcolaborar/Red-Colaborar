@@ -242,5 +242,3 @@ class gdbbPressAttachments {
 
 global $gdbbpress_attachments;
 $gdbbpress_attachments = new gdbbPressAttachments();
-
-?>

@@ -5,12 +5,12 @@
     <p><?php _e("Buy GD bbPress Toolbox Pro version or Dev4Press Plugins Pack and get 15% discount using this coupon", "gd-bbpress-attachments"); ?>: <strong style="color: #c00;">GDBBPTOPRO</strong></p>
 
     <h3><?php _e("Important links", "gd-bbpress-attachments"); ?></h3>
-    <a href="https://bbpress.dev4press.com/" target="_blank"><?php _e("Official Website", "gd-bbpress-attachments"); ?></a><br/>
-    <a href="https://bbpress.dev4press.com/toolbox-pro-vs-free-plugins/" target="_blank"><?php _e("Toolbox Pro vs Free plugins", "gd-bbpress-attachments"); ?></a><br/>
-    <a href="https://pack.dev4press.com/" target="_blank"><?php _e("Dev4Press Plugins Pack", "gd-bbpress-attachments"); ?></a><br/>
+    <a href="https://plugins.dev4press.com/gd-bbpress-toolbox/" target="_blank"><?php _e("Official Website", "gd-bbpress-attachments"); ?></a><br/>
+    <a href="https://plugins.dev4press.com/gd-bbpress-toolbox/articles/toolbox-pro-vs-free-plugins/" target="_blank"><?php _e("Toolbox Pro vs Free plugins", "gd-bbpress-attachments"); ?></a><br/>
+    <a href="https://club.dev4press.com/" target="_blank"><?php _e("Dev4Press PLugins Club Membership", "gd-bbpress-attachments"); ?></a><br/>
 </div>
 <div class="d4p-information-second" style="padding-top: 15px;">
-    <h2 style="padding-top: 0; font-weight: bold;"><a title="GD bbPress Toolbox" target="_blank" href="https://bbpress.dev4press.com/">GD bbPress Toolbox Pro</a></h2>
+    <h2 style="padding-top: 0; font-weight: bold;"><a title="GD bbPress Toolbox" target="_blank" href="https://plugins.dev4press.com/gd-bbpress-toolbox/">GD bbPress Toolbox Pro</a></h2>
     <h3><?php _e("Contains all features from", "gd-bbpress-attachments"); ?></h3>
     <ul>
         <li>GD bbPress Attachments</li>

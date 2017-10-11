@@ -360,6 +360,7 @@ class H5PContentAdmin {
         $content['id'] = $result;
         $this->set_content_tags($content['id'], filter_input(INPUT_POST, 'tags'));
         wp_safe_redirect(admin_url('admin.php?page=h5p&task=show&id=' . $result));
+        exit;
       }
     }
   }
@@ -422,6 +423,7 @@ class H5PContentAdmin {
    */
   public function display_new_content_page() {
     $contentExists = ($this->content !== NULL);
+    $hubIsEnabled = get_option('h5p_hub_is_enabled', TRUE);
 
     $plugin = H5P_Plugin::get_instance();
     $core = $plugin->get_h5p_instance('core');
@@ -432,11 +434,13 @@ class H5PContentAdmin {
     $parameters = $this->get_input('parameters', $contentExists ? $core->filterParameters($this->content) : '{}');
 
     // Determine upload or create
-    if (!$contentExists && !$this->has_libraries()) {
+    if (!$hubIsEnabled && !$contentExists && !$this->has_libraries()) {
       $upload = TRUE;
+      $examplesHint = TRUE;
     }
     else {
       $upload = (filter_input(INPUT_POST, 'action') === 'upload');
+      $examplesHint = FALSE;
     }
 
     // Filter/escape parameters, double escape that is...
@@ -617,18 +621,16 @@ class H5PContentAdmin {
    * Add custom media button for selecting H5P content.
    *
    * @since 1.1.0
-   * @return string
+   * @param string $editor_id
    */
-  public function add_insert_button() {
+  public function add_insert_button($editor_id = 'content') {
     $this->insertButton = TRUE;
 
-    $insert_method = get_option('h5p_insert_method', 'id');
-    $button_content =
-      '<a href="#" id="add-h5p" class="button" title="' . __('Insert H5P Content', $this->plugin_slug) . '" data-method="' . $insert_method . '">' .
-      __('Add H5P', $this->plugin_slug) .
-      '</a>';
-
-    return $button_content;
+    printf('<button type="button" id="add-h5p" class="button" title="%s" data-method="%s">%s</button>',
+        __('Insert interactive content', $this->plugin_slug),
+        get_option('h5p_insert_method', 'id'),
+        __('Add H5P', $this->plugin_slug)
+    );
   }
 
   /**
@@ -906,7 +908,8 @@ class H5PContentAdmin {
       $plugin = H5P_Plugin::get_instance();
       self::$h5peditor = new H5peditor(
         $plugin->get_h5p_instance('core'),
-        new H5PEditorWordPressStorage()
+        new H5PEditorWordPressStorage(),
+        new H5PEditorWordPressAjax()
       );
     }
 
@@ -979,7 +982,8 @@ class H5PContentAdmin {
       'libraryUrl' => plugin_dir_url('h5p/h5p-editor-php-library/h5peditor.class.php'),
       'copyrightSemantics' => $content_validator->getCopyrightSemantics(),
       'assets' => $assets,
-      'deleteMessage' => __('Are you sure you wish to delete this content?', $this->plugin_slug)
+      'deleteMessage' => __('Are you sure you wish to delete this content?', $this->plugin_slug),
+      'apiVersion' => H5PCore::$coreApi
     );
 
     if ($id !== NULL) {
@@ -990,6 +994,30 @@ class H5PContentAdmin {
   }
 
   /**
+   * Handle ajax request to install library from url
+   */
+  public function ajax_library_upload() {
+    $token = filter_input(INPUT_GET, 'token');
+    $filePath = $_FILES['h5p']['tmp_name'];
+    $editor = $this->get_h5peditor_instance();
+    $contentId = filter_input(INPUT_POST, 'contentId', FILTER_SANITIZE_NUMBER_INT);
+    $editor->ajax->action(H5PEditorEndpoints::LIBRARY_UPLOAD, $token, $filePath, $contentId);
+    exit;
+  }
+
+  /**
+   * Handle ajax request to install library from url
+   */
+  public function ajax_library_install() {
+    $token = filter_input(INPUT_GET, 'token');
+    $name = filter_input(INPUT_GET, 'id');
+
+    $editor = $this->get_h5peditor_instance();
+    $editor->ajax->action(H5PEditorEndpoints::LIBRARY_INSTALL, $token, $name);
+    exit;
+  }
+
+  /**
    * Get library details through AJAX.
    *
    * @since 1.0.0
@@ -997,16 +1025,20 @@ class H5PContentAdmin {
   public function ajax_libraries() {
     $editor = $this->get_h5peditor_instance();
 
+    // Get input
     $name = filter_input(INPUT_GET, 'machineName', FILTER_SANITIZE_STRING);
     $major_version = filter_input(INPUT_GET, 'majorVersion', FILTER_SANITIZE_NUMBER_INT);
     $minor_version = filter_input(INPUT_GET, 'minorVersion', FILTER_SANITIZE_NUMBER_INT);
 
-    header('Cache-Control: no-cache');
-    header('Content-type: application/json');
-
+    // Retrieve single library if name is specified
     if ($name) {
       $plugin = H5P_Plugin::get_instance();
-      print $editor->getLibraryData($name, $major_version, $minor_version, $plugin->get_language());
+      $plugin->get_h5p_instance('core');
+
+      $editor->ajax->action(H5PEditorEndpoints::SINGLE_LIBRARY, $name,
+        $major_version, $minor_version, $plugin->get_language(), '',
+        $plugin->get_h5p_path()
+      );
 
       // Log library load
       new H5P_Event('library', NULL,
@@ -1014,9 +1046,20 @@ class H5PContentAdmin {
           $name, $major_version . '.' . $minor_version);
     }
     else {
-      print $editor->getLibraries();
+      // Otherwise retrieve all libraries
+      $editor->ajax->action(H5PEditorEndpoints::LIBRARIES);
     }
+    exit;
+  }
 
+  /**
+   * Get content type cache
+   */
+  public function ajax_content_type_cache() {
+    $token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
+
+    $editor = $this->get_h5peditor_instance();
+    $editor->ajax->action(H5PEditorEndpoints::CONTENT_TYPE_CACHE, $token);
     exit;
   }
 
@@ -1026,52 +1069,11 @@ class H5PContentAdmin {
    * @since 1.1.0
    */
   public function ajax_files() {
-    global $wpdb;
-
-    $plugin = H5P_Plugin::get_instance();
-    $files_directory = $plugin->get_h5p_path();
-
-    if (!wp_verify_nonce(filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING), 'h5p_editor_ajax')) {
-      H5PCore::ajaxError(__('Invalid security token. Please reload the editor.', $this->plugin_slug));
-      exit;
-    }
-
-    // Get Content ID for upload
+    $token = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
     $contentId = filter_input(INPUT_POST, 'contentId', FILTER_SANITIZE_NUMBER_INT);
 
-    $file = new H5peditorFile($plugin->get_h5p_instance('interface'));
-    if (!$file->isLoaded()) {
-      H5PCore::ajaxError(__('File not found on server. Check file upload settings.', $this->plugin_slug));
-      exit;
-    }
-
-    if (function_exists('check_upload_size')) {
-      $upload = check_upload_size($_FILES['file']);
-      if ($upload['error'] != '0') {
-        H5PCore::ajaxError($upload['error']);
-        exit;
-      }
-    }
-
-    // Make sure file is valid
-    if ($file->validate()) {
-      $core = $plugin->get_h5p_instance('core');
-
-      // Save the valid file
-      $file_id = $core->fs->saveFile($file, $contentId);
-
-      // Keep track of temporary files so they can be cleaned up later.
-      $wpdb->insert($wpdb->prefix . 'h5p_tmpfiles',
-          array('path' => $file_id, 'created_at' => time()),
-          array('%s', '%d'));
-
-      // Clear cached value for dirsize.
-      delete_transient('dirsize_cache');
-    }
-
-    header('Cache-Control: no-cache');
-
-    $file->printResult();
+    $editor = $this->get_h5peditor_instance();
+    $editor->ajax->action(H5PEditorEndpoints::FILES, $token, $contentId);
     exit;
   }
 

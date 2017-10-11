@@ -212,6 +212,26 @@
   background: #d54e21;
   border-radius: 50%;
 }
+#h5p-site-key {
+  width: 400px;
+  font-family: Consolas,monaco,monospace;
+}
+.h5p-reveal-value {
+  cursor: pointer;
+}
+.h5p-hub-setting {
+  margin-top: 1em;
+  display: block;
+}
+.no-content-types-hint {
+  border: 1px solid #81c0e3;
+  background: #cde9f7;
+  padding: 0 1em;
+  margin: 1em 0;
+}
+.no-content-types-hint > p {
+  font-size: 1.125em
+}
 
 @media screen and (max-width: 782px) {
   .wrap h2 {

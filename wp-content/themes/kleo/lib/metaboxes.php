@@ -95,6 +95,17 @@ function kleo_metaboxes( array $meta_boxes ) {
 				'id'   => $prefix . 'logo_retina',
 				'type' => 'file',
 			),
+            array(
+				'name' => esc_html__( 'Custom Mobile Logo', 'kleo_framework' ),
+				'desc' => esc_html__( 'Use a custom mobile logo for this page and mobile devices only ', 'kleo_framework' ),
+				'id'   => $prefix . 'mobile_logo',
+				'type' => 'file',
+			),array(
+				'name' => esc_html__( 'Custom Retina Mobile Logo', 'kleo_framework' ),
+				'desc' => esc_html__( 'Use a custom retina mobile logo for this page and mobile devices only ', 'kleo_framework' ),
+				'id'   => $prefix . 'mobile_logo_retina',
+				'type' => 'file',
+			),
 			array(
 				'name'  => esc_html__( 'Main Menu Full Width', 'kleo_framework' ),
 				'desc'  => esc_html__( 'Check to enable full browser width menu style.', 'kleo_framework' ),

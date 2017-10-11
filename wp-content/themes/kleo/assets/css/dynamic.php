@@ -295,10 +295,15 @@ $bg_fallback = $section['bg'] == 'transparent' ? '#ffffff' : $section['bg'];
 .<?php echo $name; ?>-color .btn-primary:hover,
 .<?php echo $name; ?>-color .btn-see-through,
 .<?php echo $name; ?>-color .bordered-icons .feature-item:hover .feature-icon,
-.<?php echo $name; ?>-color .colored-icons.bordered-icons .feature-item:hover .feature-icon,
+.<?php echo $name; ?>-color .colored-icons.bordered-icons .feature-item:hover .feature-icon {
+	color: <?php echo $section['bg']; ?>;
+}
 .<?php echo $name; ?>-color .post-header:before,
 .<?php echo $name; ?>-color .bordered-icons .feature-item:hover .feature-icon,
-.<?php echo $name; ?>-color .colored-icons.bordered-icons .feature-item:hover .feature-icon,
+.<?php echo $name; ?>-color .colored-icons.bordered-icons .feature-item:hover .feature-icon
+{
+	border-color: <?php echo $section['bg']; ?>;
+}
 .<?php echo $name; ?>-color .callout-blockquote blockquote:after {
 	border-top-color: <?php echo $section['bg']; ?>;
 }
