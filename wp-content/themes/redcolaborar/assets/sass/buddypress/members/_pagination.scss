@@ -1,0 +1,17 @@
+//--------------------------------------------------------------
+// Pagination
+//--------------------------------------------------------------
+
+// Directory page.
+.directory & {
+
+	// Pagination
+	.pagination {
+		padding-top: 0;
+	} // pagination
+
+	// Bottom pagination
+	#pag-bottom {
+		margin-top: rem(-30);
+	} // #pag-bottom
+} // .directory &

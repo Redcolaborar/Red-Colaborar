@@ -64,21 +64,11 @@ function bps_display_form ($form, $template='', $location='')
 		return false;
 	}
 
-	if (empty ($template))  $template = bps_default_template ();
-	bps_set_template_args ($form, $location);
-	bps_call_template ($template);
+	if (empty ($template))
+		$template = bps_default_template ();
 
+	bps_call_template ($template, array ($form, $location));
 	return true;
-}
-
-add_action ('bp_before_directory_members_content', 'bps_display_filters');
-function bps_display_filters ()
-{
-	if (bps_active_directory ())
-	{
-		bps_set_template_args ('filters');
-		bps_call_template ('members/bps-filters');
-	}
 }
 
 add_shortcode ('bps_display', 'bps_show_form');
@@ -95,36 +85,38 @@ function bps_show_form ($attr, $content)
 	return ob_get_clean ();
 }
 
-function bps_set_template_args ()
-{
-	$GLOBALS['bps_template_args'] = func_get_args ();
-}
-
 function bps_template_args ()
 {
-	return $GLOBALS['bps_template_args'];
+	return end ($GLOBALS['bps_template_args']);
 }
 
-function bps_call_template ($template)
+function bps_call_template ($template, $args = array ())
 {
 	$version = BPS_VERSION;
-	$args = implode (', ', bps_template_args ());
+	echo "\n<!-- BP Profile Search $version $template -->\n";
 
-	echo "\n<!-- BP Profile Search $version $template ($args) -->\n";
+	$GLOBALS['bps_template_args'][] = $args;
 	$found = bp_get_template_part ($template);
+	array_pop ($GLOBALS['bps_template_args']);
+
 	if ($found)
 	{
-		$found = str_replace (WP_CONTENT_DIR, '', $found);
-		echo "\n<!-- template $found -->";
+		if (bps_debug ())
+		{
+			$found = str_replace (WP_CONTENT_DIR, '', $found);
+			echo "<!--\n";
+			echo "$found\n";
+			print_r ($args);
+			echo "-->\n";
+		}
 	}
 	else
 	{
 		printf ('<p class="bps_error">'. __('%s: Template "%s" not found.', 'bp-profile-search'). '</p>',
 		"<strong>BP Profile Search $version</strong>", $template);
 	}
-	echo "\n<!-- BP Profile Search - end -->\n";
 
-	return true;
+	echo "\n<!-- BP Profile Search end $template -->\n";
 }
 
 function bps_set_wpml ($form, $code, $key, $value)

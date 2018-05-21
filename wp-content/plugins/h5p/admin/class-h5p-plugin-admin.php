@@ -200,6 +200,18 @@ class H5P_Plugin_Admin {
           $scripts = array_merge($scripts, $core->getAssetsUrls($files['scripts']));
           $styles = array_merge($styles, $core->getAssetsUrls($files['styles']));
 
+          $additional_embed_head_tags = array();
+
+          /**
+           * Add support for additional head tags for embedded content.
+           * Very useful when adding xAPI events tracking code.
+           *
+           * @since 1.9.5
+           *
+           * @param array &$additional_embed_head_tags
+           */
+          do_action_ref_array('h5p_additional_embed_head_tags', array(&$additional_embed_head_tags));
+
           include_once(plugin_dir_path(__FILE__) . '../h5p-php-library/embed.php');
 
           // Log embed view
@@ -614,12 +626,12 @@ class H5P_Plugin_Admin {
     $plugin = H5P_Plugin::get_instance();
     $interface = $plugin->get_h5p_instance('interface');
 
-    foreach (array('updated', 'error') as $type) {
+    foreach (array('info', 'error') as $type) {
       $messages = $interface->getMessages($type);
       if (!empty($messages)) {
-        print '<div class="' . $type . '"><ul>';
+        print '<div class="' . ($type === 'info' ? 'updated' : $type) . '"><ul>';
         foreach ($messages as $message) {
-          print '<li>' . $message . '</li>';
+          print '<li>' . ($type === 'error' ? $message->message : $message) . '</li>';
         }
         print '</ul></div>';
       }

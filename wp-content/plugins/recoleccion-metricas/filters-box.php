@@ -96,6 +96,11 @@
 			</select>
 		</li>
 
+		<li>
+			<label>Limit</label>
+			<input name="filter_limit" class="text filter_limit" value="<?php echo ((isset($_GET['filter_limit'])) ? $_GET['filter_limit'] : 5000 ); ?>">
+		</li>
+
 		<br>
 
 		<li>

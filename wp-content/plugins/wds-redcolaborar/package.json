@@ -1,0 +1,24 @@
+{
+	"name": "wds-redcolaborar",
+	"title": "wds-redcolaborar",
+	"version": "1.0.0",
+	"description": "wds-redcolaborar",
+	"author": {
+		"name": "WebDevStudios",
+		"url": "https://webdevstudios.com"
+	},
+	"license": "GPLv2",
+	"devDependencies": {
+		"grunt": "latest",
+		"grunt-wp-i18n": "latest",
+		"grunt-contrib-clean": "latest",
+		"load-grunt-tasks": "latest",
+		"del": "latest",
+		"glob": "latest"
+	},
+	"scripts": {
+		"wds-redcolaborar": "dockunit",
+		"preversion": "npm test",
+		"version": "grunt version && git add ."
+	}
+}

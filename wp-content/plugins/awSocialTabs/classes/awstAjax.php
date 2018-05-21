@@ -28,12 +28,23 @@ class AwstAjax {
             $postLikes   = get_post_meta($postID, 'awst_like', true);
             $optionLikes = get_option('awst_like', true);
 
+            if ( ! is_array( $postLikes ) ) {
+							$postLikes = array();
+            }
+
+            if ( ! is_array( $likes ) ) {
+            	$likes = array();
+            }
+
+            if ( ! is_array( $optionLikes ) ) {
+            	$optionLikes = array();
+            }
+
             if(in_array($user_ID, $postLikes)){
                 $postLikes = array_diff($postLikes, array($user_ID));
             }else{
                 $postLikes[] =  $user_ID;
                 $liked = true;
-
             }
             $likes[] = $_POST['post_id'];
 

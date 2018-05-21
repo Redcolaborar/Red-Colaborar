@@ -79,6 +79,7 @@ class AwSocialTabs {
     }
 
     function commentFilter(){
+
         global $activities_template;
 
         $fav_count              =   !empty( $activities_template->activity->favorite_count ) ? $activities_template->activity->favorite_count : 0;
@@ -88,8 +89,15 @@ class AwSocialTabs {
         $type                   =   get_post_type($post_id);
         $typeOfBlock            =   $activity_get['activities'][0]->type;
 
-file_put_contents(dirname(__FILE__)."/../../activity_get.log", print_r($activity_get, true),FILE_APPEND);
-file_put_contents(dirname(__FILE__)."/../../activity_get.log", print_r("\n\n", true),FILE_APPEND);
+        if ( 0 === $post_id ) {
+        	$post_id = bp_get_activity_comment_id();
+        	$typeOfBlock = 'comment';
+        	$type = '';
+        }
+
+// file_put_contents(dirname(__FILE__)."/../../activity_get.log", print_r($activity_get, true),FILE_APPEND);
+// file_put_contents(dirname(__FILE__)."/../../activity_get.log", print_r("\n\n", true),FILE_APPEND);
+
 
         if (((strpos($typeOfBlock, 'comment') !== false) &&  ($type == '')))  {
 
@@ -576,7 +584,11 @@ file_put_contents(dirname(__FILE__)."/../../activity_get.log", print_r("\n\n", t
 
         $seletedOptions =   get_option('awSocialTabsPostOptions', true);
 
-        if( in_array($post_like, $seletedOptions )){
+        if ( ! is_array( $selectedOptions ) ) {
+        	$selectedOptions = array();
+        }
+
+        if( in_array($post_like, $seletedOptions ) ){
 
             $flag       =   true;
 

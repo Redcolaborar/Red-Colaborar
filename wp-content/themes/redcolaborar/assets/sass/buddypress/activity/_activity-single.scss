@@ -1,0 +1,45 @@
+//--------------------------------------------------------------
+// Single Activity Page
+//--------------------------------------------------------------
+.activity-permalink & {
+
+	.activity {
+
+		.activity-list {
+
+			.activity-content,
+			.activity-comments {
+				margin: 0;
+			} // .activity-content, .activity-comments
+
+			.activity-content {
+				padding: rem(25) rem(33);
+			} // .activity-content, .activity-comments
+
+			.activity-comments {
+				background-color: $color-aqua-freeze;
+
+				form,
+				> ul {
+					padding: rem(45) rem(33) 0;
+				} // form, > ul
+			} // .activity-comments
+
+			.activity-comments {
+
+				form {
+					clear: both;
+				} // form
+
+				// When comments are visible.
+				.bp-visible {
+					padding-top: rem(25);
+				} // .bp-visible
+
+				.show-hide-comments-trigger {
+					padding-top: rem(55);
+				} // .show-hide-comments-trigger
+			} // .activity-comments
+		} // .activity-list
+	} // .activity
+} // .activity-permalink &

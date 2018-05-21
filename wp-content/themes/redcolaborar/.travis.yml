@@ -1,0 +1,42 @@
+# Travis CI (MIT License) configuration file for WordPress theme wd_s.
+# @link https://travis-ci.org/
+
+# For use with the WordPress theme wd_s.
+# @link https://github.com/WebDevStudios/wd_s
+
+sudo: false
+language: php
+
+matrix:
+    fast_finish: true
+    include:
+        - php: '5.6'
+        - php: '7.0'
+        - php: '7.1'
+    allow_failures:
+        - php: '7.1'
+
+install:
+    - export PHPCS_DIR=~/.composer/vendor/bin/
+    - export SNIFFS_DIR=/tmp/sniffs
+    - nvm install node; nvm use node
+    - npm install --global eslint eslint-config-wordpress sass-lint
+    - composer global require "squizlabs/php_codesniffer=2.9.1"
+    - git clone --branch master --depth=50 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git $SNIFFS_DIR
+    - git clone --branch master --depth=50 https://github.com/wimg/PHPCompatibility.git $SNIFFS_DIR/PHPCompatibility
+
+before_script:
+    - cd $SNIFFS_DIR; git checkout tags/0.12.0; cd $TRAVIS_BUILD_DIR
+    - $PHPCS_DIR/phpcs --config-set installed_paths $SNIFFS_DIR; $PHPCS_DIR/phpcs -i
+    - phpenv rehash
+
+script:
+    - find -L ./ -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
+    - $PHPCS_DIR/phpcs -p -s -v -n . --standard=./phpcs.xml --extensions=php
+    - eslint --config ./.eslintrc.js './assets/scripts/concat' --quiet
+    - sass-lint --config ./.sass-lint.yml './assets/sass/**/*.scss' --verbose --no-exit
+
+notifications:
+  email: false
+  slack:
+    secure: lDFLE+EZrQu9phgxUFFekrH4nqdbeY/qDdOVYD4QRznHGdfNswn7HhVt7CAGjVHEiqkG9J6LzZCOxjy93TMoXgRr/hIBkqJI2oYDBwlEf0P3G0XiPEuWSQvm8Ao9N7nUoF2OlyeA44SRuFTrAbNKjlAw4Nwk08Ew3LjByREYJ6k=

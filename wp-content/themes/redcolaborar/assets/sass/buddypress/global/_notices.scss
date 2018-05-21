@@ -1,0 +1,46 @@
+//--------------------------------------------------------------
+// BuddyPress Notice Styles
+//--------------------------------------------------------------
+// sass-lint:disable no-qualifying-elements
+#buddypress,
+#sitewide-notice {
+
+	div#message {
+
+		// Success/Updated
+		&.updated p {
+			background-color: lighten($color-light-sea-green, 30%);
+			border-color: $color-elf-green;
+			color: $color-elf-green;
+		} // &.updated p
+
+		// Errors
+		&.error p {
+			background-color: lighten($color-burnt-orange, 30%);
+			border-color: $color-flame;
+			color: $color-flame;
+		} // &.updated p
+
+		// Warnings.
+		&.warning p {
+			background-color: lighten($color-picton-blue, 30%);
+			border-color: $color-cerulean;
+			color: $color-cerulean;
+		} // p.warning
+
+		// Default
+		p {
+			background-color: $color-submarine;
+			border-color: $color-gun-powder;
+			color: $color-text-main;
+			font-size: rem(16);
+		} // p
+	} // div#message
+
+	// Close button.
+	#close-notice {
+		@include size(rem(20));
+
+		line-height: 1.1;
+	} // #close-notice
+} // #buddypress, #sitewide-notice

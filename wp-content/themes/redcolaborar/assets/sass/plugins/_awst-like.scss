@@ -1,0 +1,55 @@
+//--------------------------------------------------------------
+// AWST Like (BuddyPress Like)
+//--------------------------------------------------------------
+// sass-lint:disable class-name-format
+// Like button
+.awst_like {
+	padding: 0;
+
+	// Like text.
+	.total_like {
+		color: $color-nevada;
+		margin-left: rem(25);
+		margin-top: 0;
+
+		&:active,
+		&:focus,
+		&:hover,
+		&:visited {
+			color: $color-nevada;
+			opacity: 1;
+		} // &:active, &:focus, &:hover, &:visited
+	} // .total_like
+
+	// The icon.
+	i {
+		@include size(0);
+
+		font-family: $font-sans;
+
+		// By default, let's show the hollow icon.
+		&::before {
+			@include position(absolute, 0 null null 0);
+			@include size(rem(20) rem(22));
+
+			background: url('assets/images/svg-icons/icon-like.svg') no-repeat center center;
+			background-size: 20px;
+			content: '';
+		} // &::before
+
+		// Show filled icon when there are likes
+		&.fa-thumbs-up {
+
+			&::before {
+				background: url('assets/images/svg-icons/icon-like-filled.svg') no-repeat center center;
+				background-size: 20px;
+			} // &::before
+		} // &.fa-thumbs-up
+	} // i
+
+	// The actual like button.
+	.awst_like_btn {
+		display: inline-block;
+		position: relative;
+	} // .awst_like_btn
+} // .awst_like

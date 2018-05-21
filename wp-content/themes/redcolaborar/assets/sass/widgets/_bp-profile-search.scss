@@ -1,0 +1,84 @@
+//--------------------------------------------------------------
+// BP Profile Search
+//--------------------------------------------------------------
+// sass-lint:disable class-name-format
+// sass-lint:disable no-qualifying-elements
+// sass-lint:disable nesting-depth
+.widget_bps_widget {
+
+	// Target buddypress.
+	#buddypress {
+
+		.standard-form {
+
+			// Submit button.
+			div.submit {
+				padding-top: rem(36);
+
+				// Override BP styles.
+				input[type='submit'] {
+					@extend .button-override-buddypress;
+				} // input[type='submit']
+			} // div.submit
+
+			// Form fields.
+			input[type='text'],
+			select {
+				@include padding(null rem(10));
+
+				background-color: $color-white;
+				border-radius: rem(3);
+
+				// When the input has focus.
+				&:focus {
+					background-color: $color-white;
+					border-color: $color-input-border-focus;
+					color: $color-black;
+					outline: none;
+				} // &:focus
+			} // input[type='text'], select
+
+			// Select.
+			select {
+				background: url('assets/images/svg-icons/icon-dropdown.svg') no-repeat 95% 50%;
+				height: rem(38);
+			} // select
+
+			// Multi-select.
+			select[multiple='multiple'] {
+				background: none;
+				height: auto;
+			} // select[multiple='multiple']
+		} // .standard-form
+	} // #buddypress
+} // .bps-form
+
+//--------------------------------------------------------------
+// BuddyPress Profile Search Filters
+//--------------------------------------------------------------
+#buddypress {
+
+	/// BuddyPress Search Filters
+	.bps_filters {
+		@include padding(rem(18));
+
+		background: $color-white;
+
+		// Clear link
+		a {
+			@extend .button;
+			@extend .small;
+
+			display: inline-block;
+			margin-top: rem(18);
+			min-width: inherit;
+			text-decoration: none;
+
+			// IE only.
+			.ie & {
+				padding-bottom: rem(30);
+				padding-top: rem(9.5);
+			} // .ie &
+		} // a
+	} // .bps_filters
+} // #buddypress

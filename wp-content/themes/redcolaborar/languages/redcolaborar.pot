@@ -1,0 +1,742 @@
+# Copyright (C) 2017 redcolaborar
+# This file is distributed under the same license as the redcolaborar package.
+msgid ""
+msgstr ""
+"Project-Id-Version: redcolaborar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: 404.php:17
+msgid "Sorry, this page doesn't exist."
+msgstr ""
+
+#: 404.php:22
+msgid "It seems we can't find what you're looking for. Perhaps searching can help."
+msgstr ""
+
+#: comments.php:24
+msgid "Comment section"
+msgstr ""
+
+#: comments.php:34
+msgctxt "comments title"
+msgid "%1$s thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] ""
+msgstr[1] ""
+
+#: comments.php:45, comments.php:71
+msgid "Comment navigation"
+msgstr ""
+
+#: comments.php:48, comments.php:74
+msgid "Older Comments"
+msgstr ""
+
+#: comments.php:49, comments.php:75
+msgid "Newer Comments"
+msgstr ""
+
+#: comments.php:89
+msgid "Comments are closed."
+msgstr ""
+
+#: footer.php:39
+msgid "Back to Top"
+msgstr ""
+
+#: footer.php:44
+msgid "Close Menu"
+msgstr ""
+
+#: functions.php:50
+msgid "Primary Menu"
+msgstr ""
+
+#: functions.php:51
+msgid "Mobile Menu"
+msgstr ""
+
+#: functions.php:52
+msgid "Footer Menu"
+msgstr ""
+
+#: functions.php:53
+msgid "Profile Bar Menu"
+msgstr ""
+
+#: functions.php:110
+msgid "Directory Sidebar"
+msgstr ""
+
+#: functions.php:111
+msgid "Default Sidebar"
+msgstr ""
+
+#: functions.php:119
+msgid "Widget area for %s"
+msgstr ""
+
+#: header.php:27
+msgid "Skip to content"
+msgstr ""
+
+#: header.php:46
+msgid "Open Menu"
+msgstr ""
+
+#: search.php:18
+msgid "Search Results for: %s"
+msgstr ""
+
+#: search.php:21
+msgid "Not what you were looking for? Try searching again below:"
+msgstr ""
+
+#: searchform.php:11
+msgid "To search this site, enter a search term"
+msgstr ""
+
+#: searchform.php:13
+msgid "Submit"
+msgstr ""
+
+#: template-acf.php:2
+msgid "Page with Content Blocks"
+msgstr ""
+
+#: template-scaffolding.php:2
+msgid "Scaffolding"
+msgstr ""
+
+#: template-sidebar-right.php:2
+msgid "Sidebar Right"
+msgstr ""
+
+#: inc/buddypress.php:35
+msgid "Private Message"
+msgstr ""
+
+#: inc/buddypress.php:262
+msgid "[&hellip;]"
+msgstr ""
+
+#: inc/buddypress.php:315
+msgid "Home"
+msgstr ""
+
+#: inc/buddypress.php:339
+msgid "Bookmarks"
+msgstr ""
+
+#: inc/buddypress.php:363, inc/buddypress.php:376
+msgid "Notifications"
+msgstr ""
+
+#: inc/buddypress.php:399
+msgid "Toggle Menu"
+msgstr ""
+
+#: inc/buddypress.php:423
+msgid "Log Out"
+msgstr ""
+
+#: inc/buddypress.php:442
+msgid "Log In"
+msgstr ""
+
+#: inc/buddypress.php:445
+msgid "Sign Up"
+msgstr ""
+
+#: inc/buddypress.php:490
+msgid "<a href=\"%1$s\">%2$s</a>"
+msgstr ""
+
+#: inc/buddypress.php:497
+msgid "<a href=\"%1$s\"> %2$s ago</a>"
+msgstr ""
+
+#: inc/buddypress.php:505
+msgid " in %1$s"
+msgstr ""
+
+#: inc/buddypress.php:537
+msgid "You are viewing the activity feed with search filters applied."
+msgstr ""
+
+#: inc/buddypress.php:537
+msgid "You are viewing your saved, default filtered view."
+msgstr ""
+
+#: inc/buddypress.php:545
+msgid "View All Activity"
+msgstr ""
+
+#: inc/buddypress.php:612
+msgid "Show all comments"
+msgstr ""
+
+#: inc/buddypress.php:613
+msgid "Hide comments"
+msgstr ""
+
+#: inc/buddypress.php:634, inc/buddypress.php:645, buddypress/activity/entry.php:102, buddypress/activity/entry.php:106, mediapress/default/buddypress/activity/entry.php:61, mediapress/default/buddypress/activity/entry.php:61
+msgid "Bookmark"
+msgstr ""
+
+#: inc/buddypress.php:637, inc/buddypress.php:648, buddypress/activity/entry.php:112, buddypress/activity/entry.php:116, mediapress/default/buddypress/activity/entry.php:63, mediapress/default/buddypress/activity/entry.php:63
+msgid "Remove Bookmark"
+msgstr ""
+
+#: inc/buddypress.php:640, inc/buddypress.php:651
+msgid "My Bookmarks"
+msgstr ""
+
+#: inc/extras.php:112, inc/extras.php:177
+msgid "Width must be an integer"
+msgstr ""
+
+#: inc/extras.php:116, inc/extras.php:181
+msgid "Height must be an integer"
+msgstr ""
+
+#: inc/extras.php:120
+msgid "Please provide a valid hex color value for background_color"
+msgstr ""
+
+#: inc/extras.php:124
+msgid "Please provide a valid hex color value for text_color"
+msgstr ""
+
+#: inc/extras.php:131, inc/extras.php:202
+msgid "WebDevStudios Placeholder Image"
+msgstr ""
+
+#: inc/hooks.php:95, inc/template-tags.php:432
+msgid "Read More"
+msgstr ""
+
+#: inc/hooks.php:106
+msgid "Read more..."
+msgstr ""
+
+#: inc/scaffolding.php:42
+msgid "Details"
+msgstr ""
+
+#: inc/scaffolding.php:51
+msgid "Description"
+msgstr ""
+
+#: inc/scaffolding.php:56
+msgid "Parameters"
+msgstr ""
+
+#: inc/scaffolding.php:63
+msgid "Arguments"
+msgstr ""
+
+#: inc/scaffolding.php:74
+msgid "Usage"
+msgstr ""
+
+#: inc/scaffolding.php:79
+msgid "HTML Output"
+msgstr ""
+
+#. translators: If there are characters in your language that are not
+#: inc/scripts.php:22
+msgctxt "Cabin font: on or off"
+msgid "on"
+msgstr ""
+
+#: inc/scripts.php:23
+msgctxt "Open Sans font: on or off"
+msgid "on"
+msgstr ""
+
+#: inc/template-tags.php:30
+msgctxt "post date"
+msgid "Posted on %s"
+msgstr ""
+
+#: inc/template-tags.php:36
+msgctxt "post author"
+msgid "by %s"
+msgstr ""
+
+#. translators: used between list items, there is a space after the comma
+#: inc/template-tags.php:53, inc/template-tags.php:60
+msgid ", "
+msgstr ""
+
+#: inc/template-tags.php:56
+msgid "Posted in %1$s"
+msgstr ""
+
+#: inc/template-tags.php:63
+msgid "Tagged %1$s"
+msgstr ""
+
+#: inc/template-tags.php:69
+msgid "Leave a comment"
+msgstr ""
+
+#: inc/template-tags.php:69
+msgid "1 Comment"
+msgstr ""
+
+#: inc/template-tags.php:69
+msgid "% Comments"
+msgstr ""
+
+#: inc/template-tags.php:76, template-parts/content-page.php:34
+msgid "Edit %s"
+msgstr ""
+
+#: inc/template-tags.php:94
+msgid "Please define default parameters in the form of an array."
+msgstr ""
+
+#: inc/template-tags.php:99
+msgid "Please define an SVG icon filename."
+msgstr ""
+
+#: inc/template-tags.php:383
+msgid "Link to %s"
+msgstr ""
+
+#: inc/template-tags.php:464
+msgid "More Information"
+msgstr ""
+
+#: inc/template-tags.php:466, inc/template-tags.php:467
+msgid "Search"
+msgstr ""
+
+#: inc/template-tags.php:488
+msgid " [&hellip;]"
+msgstr ""
+
+#: inc/template-tags.php:610
+msgid "Select a Topic"
+msgstr ""
+
+#: inc/template-tags.php:620
+msgid "* Required"
+msgstr ""
+
+#: page-parts/general-header-section.php:129
+msgid "Toggle navigation"
+msgstr ""
+
+#: template-parts/content-none.php:14
+msgid "Nothing Found"
+msgstr ""
+
+#: template-parts/content-none.php:24
+msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr ""
+
+#: template-parts/content-none.php:35
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr ""
+
+#: template-parts/content-none.php:38
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr ""
+
+#: template-parts/content-page.php:22, template-parts/content.php:43
+msgid "Pages:"
+msgstr ""
+
+#: template-parts/content.php:34
+msgid "Continue reading %s <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#: template-parts/sharing-icons.php:11
+msgid "Share This"
+msgstr ""
+
+#: template-parts/sharing-icons.php:19, template-parts/sharing-icons.php:22, buddypress/activity/entry.php:143
+msgid "Share on Twitter"
+msgstr ""
+
+#: template-parts/sharing-icons.php:31, template-parts/sharing-icons.php:34, buddypress/activity/entry.php:132
+msgid "Share on Facebook"
+msgstr ""
+
+#: template-parts/sharing-icons.php:43, template-parts/sharing-icons.php:46
+msgid "Share on LinkedIn"
+msgstr ""
+
+#: buddypress/activity/activity-loop.php:31, mediapress/default/gallery/media/views/lightbox/activity.php:49
+msgid "Load More"
+msgstr ""
+
+#: buddypress/activity/activity-loop.php:41
+msgid "Sorry, there was no activity found. Please try a different filter."
+msgstr ""
+
+#: buddypress/activity/entry.php:64, mediapress/default/buddypress/activity/entry.php:48, mediapress/default/buddypress/activity/entry.php:48
+msgid "View Conversation"
+msgstr ""
+
+#: buddypress/activity/entry.php:76
+msgid "%s Comment"
+msgstr ""
+
+#: buddypress/activity/entry.php:86
+msgid "Activity Menu"
+msgstr ""
+
+#: buddypress/activity/entry.php:127
+msgid "Facebook"
+msgstr ""
+
+#: buddypress/activity/entry.php:138
+msgid "Twitter"
+msgstr ""
+
+#: buddypress/activity/entry.php:153
+msgid "Delete"
+msgstr ""
+
+#: buddypress/activity/entry.php:209, mediapress/default/buddypress/activity/entry.php:97
+msgid "Comment"
+msgstr ""
+
+#: buddypress/activity/entry.php:213, mediapress/default/buddypress/activity/entry.php:100
+msgid "Post"
+msgstr ""
+
+#: buddypress/activity/entry.php:213, mediapress/default/buddypress/activity/entry.php:100
+msgid "Cancel"
+msgstr ""
+
+#: buddypress/activity/index.php:49, buddypress/activity/index.php:62
+msgid "Sitewide activities navigation"
+msgstr ""
+
+#: buddypress/activity/index.php:73
+msgid "All Members %s"
+msgstr ""
+
+#: buddypress/activity/index.php:90
+msgid "My Friends %s"
+msgstr ""
+
+#: buddypress/activity/index.php:109
+msgid "My Groups %s"
+msgstr ""
+
+#: buddypress/activity/index.php:126
+msgid "My Favorites %s"
+msgstr ""
+
+#: buddypress/activity/index.php:141
+msgid "Mentions"
+msgstr ""
+
+#: buddypress/activity/index.php:141
+msgctxt "Number of new activity mentions"
+msgid "%s new"
+msgid_plural "%s new"
+msgstr[0] ""
+msgstr[1] ""
+
+#: buddypress/activity/index.php:158
+msgid "Activity secondary navigation"
+msgstr ""
+
+#: buddypress/activity/index.php:160, buddypress/activity/index.php:160
+msgid "RSS Feed"
+msgstr ""
+
+#: buddypress/activity/index.php:160
+msgid "RSS"
+msgstr ""
+
+#: buddypress/activity/post-form.php:32
+msgid "What's new in %s, %s?"
+msgstr ""
+
+#: buddypress/activity/post-form.php:36
+msgid "What's new, %s?"
+msgstr ""
+
+#: buddypress/activity/post-form.php:44, buddypress/activity/post-form.php:46
+msgid "Write an article or share files"
+msgstr ""
+
+#: buddypress/activity/post-form.php:58
+msgid "Post Update"
+msgstr ""
+
+#: buddypress/activity/post-form.php:64
+msgid "Post in : "
+msgstr ""
+
+#: buddypress/activity/post-form.php:68
+msgid "Post in"
+msgstr ""
+
+#: buddypress/activity/post-form.php:72
+msgid "My Profile"
+msgstr ""
+
+#: buddypress/members/index.php:61
+msgid "Members directory"
+msgstr ""
+
+#: buddypress/members/members-loop.php:116
+msgid "Organization: "
+msgstr ""
+
+#: buddypress/members/members-loop.php:123
+msgid "Location: "
+msgstr ""
+
+#: buddypress/members/members-loop.php:139
+msgid "Active: "
+msgstr ""
+
+#: buddypress/members/members-loop.php:199
+msgid "Sorry, no members were found."
+msgstr ""
+
+#: inc/customizer/panels.php:21
+msgid "Site Options"
+msgstr ""
+
+#: inc/customizer/panels.php:22
+msgid "Other theme options."
+msgstr ""
+
+#: inc/customizer/panels.php:32
+msgid "Featured Posts Section"
+msgstr ""
+
+#: inc/customizer/panels.php:33
+msgid "Customize the text in the logged-out user featured post block."
+msgstr ""
+
+#: inc/customizer/sections.php:19
+msgid "Additional Scripts"
+msgstr ""
+
+#: inc/customizer/sections.php:29
+msgid "Social Media"
+msgstr ""
+
+#: inc/customizer/sections.php:30
+msgid "Links here power the display_social_network_links() template tag."
+msgstr ""
+
+#: inc/customizer/sections.php:40
+msgid "Header Customizations"
+msgstr ""
+
+#: inc/customizer/sections.php:50
+msgid "Footer Customizations"
+msgstr ""
+
+#: inc/customizer/sections.php:60
+msgid "Featured Posts"
+msgstr ""
+
+#: inc/customizer/sections.php:70
+msgid "Logged-In Users"
+msgstr ""
+
+#: inc/customizer/sections.php:80
+msgid "Logged-Out Users"
+msgstr ""
+
+#: inc/customizer/sections.php:90
+msgid "Call To Action"
+msgstr ""
+
+#: inc/customizer/settings.php:28
+msgid "Header Scripts"
+msgstr ""
+
+#: inc/customizer/settings.php:29
+msgid "Additional scripts to add to the header. Basic HTML tags are allowed."
+msgstr ""
+
+#: inc/customizer/settings.php:48
+msgid "Footer Scripts"
+msgstr ""
+
+#: inc/customizer/settings.php:49
+msgid "Additional scripts to add to the footer. Basic HTML tags are allowed."
+msgstr ""
+
+#: inc/customizer/settings.php:83
+msgid "%s URL"
+msgstr ""
+
+#: inc/customizer/settings.php:114
+msgid "Copyright Text"
+msgstr ""
+
+#: inc/customizer/settings.php:115
+msgid "The copyright text will be displayed in the footer. Basic HTML tags allowed."
+msgstr ""
+
+#: inc/customizer/settings.php:144
+msgid "Header Button"
+msgstr ""
+
+#: inc/customizer/settings.php:145
+msgid "Display a custom button in the header."
+msgstr ""
+
+#: inc/customizer/settings.php:149
+msgid "No button"
+msgstr ""
+
+#: inc/customizer/settings.php:150
+msgid "Trigger a search field"
+msgstr ""
+
+#: inc/customizer/settings.php:151
+msgid "Link to a custom URL"
+msgstr ""
+
+#: inc/customizer/settings.php:169
+msgid "Header Button URL"
+msgstr ""
+
+#: inc/customizer/settings.php:170
+msgid "Enter the URL or email address to be used by the button in the header."
+msgstr ""
+
+#: inc/customizer/settings.php:190
+msgid "Header Button Text"
+msgstr ""
+
+#: inc/customizer/settings.php:191
+msgid "Enter the text to be displayed in the button in the header."
+msgstr ""
+
+#: inc/customizer/settings.php:227
+msgid "Section Background Color"
+msgstr ""
+
+#: inc/customizer/settings.php:228
+msgid "Select the background color of the Featured Posts section."
+msgstr ""
+
+#: inc/customizer/settings.php:247
+msgid "Call To Action Title"
+msgstr ""
+
+#: inc/customizer/settings.php:248
+msgid "Enter the title to be displayed in the Call To Action block."
+msgstr ""
+
+#: inc/customizer/settings.php:269
+msgid "Call To Action Text"
+msgstr ""
+
+#: inc/customizer/settings.php:270
+msgid "Enter the text to be displayed in the Call To Action block."
+msgstr ""
+
+#: inc/customizer/settings.php:290
+msgid "Call To Action Button Text"
+msgstr ""
+
+#: inc/customizer/settings.php:291
+msgid "Enter the title to be used by the button in the Call To Action block."
+msgstr ""
+
+#: inc/customizer/settings.php:310
+msgid "Call To Action URL"
+msgstr ""
+
+#: inc/customizer/settings.php:311
+msgid "Enter the URL to be used by the button in the Call To Action block."
+msgstr ""
+
+#: inc/customizer/settings.php:332
+msgid "Background Color"
+msgstr ""
+
+#: inc/customizer/settings.php:333
+msgid "Select the background color of the CTA block."
+msgstr ""
+
+#: inc/customizer/settings.php:351
+msgid "Hide CTA Block"
+msgstr ""
+
+#: inc/customizer/settings.php:353
+msgid "Check this box to hide the CTA Block."
+msgstr ""
+
+#: inc/customizer/settings.php:370
+msgid "Show CTA Block First"
+msgstr ""
+
+#: inc/customizer/settings.php:372
+msgid "Check this box to show the CTA Block in the first column."
+msgstr ""
+
+#: inc/customizer/settings.php:390
+msgid "Post IDs"
+msgstr ""
+
+#: inc/customizer/settings.php:391
+msgid "Enter a comma-separate list of BuddyPress Activity Post IDs to feature. A maximum of three posts will be displayed. Posts will display in chronological order."
+msgstr ""
+
+#: template-parts/scaffolding/scaffolding-blank.php:11
+msgid "X"
+msgstr ""
+
+#: template-parts/scaffolding/scaffolding-buttons.php:12
+msgid "Buttons"
+msgstr ""
+
+#: template-parts/scaffolding/scaffolding-forms.php:12
+msgid "Forms"
+msgstr ""
+
+#: template-parts/scaffolding/scaffolding-globals.php:12
+msgid "Globals"
+msgstr ""
+
+#: template-parts/scaffolding/scaffolding-icons.php:12
+msgid "Icons"
+msgstr ""
+
+#: template-parts/scaffolding/scaffolding-typography.php:12
+msgid "Typography"
+msgstr ""
+
+#: buddypress/members/single/activity.php:11
+msgid "Member secondary navigation"
+msgstr ""
+
+#: buddypress/members/single/cover-image-header.php:43
+msgid "Organization of membership:"
+msgstr ""
+
+#: buddypress/members/single/cover-image-header.php:116
+msgid "Abilities: "
+msgstr ""
+
+#: mediapress/default/buddypress/activity/entry.php:55
+msgid "Reply <span>%s</span>"
+msgstr ""

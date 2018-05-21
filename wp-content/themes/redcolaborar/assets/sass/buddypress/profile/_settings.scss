@@ -1,0 +1,178 @@
+//--------------------------------------------------------------
+// Settings Pages/Views
+//--------------------------------------------------------------
+// sass-lint:disable no-qualifying-elements
+// sass-lint:disable no-color-literals
+// sass-lint:disable id-name-format
+// sass-lint:disable no-important
+
+// Form Settings.
+#settings-form,
+.standard-form,
+.bp-cover-image,
+.bp-cover-image-status,
+.bp-cover-image-manage,
+.profile-fields,
+.bp-avatar-nav,
+.bp-avatar,
+.bp-avatar-status {
+	max-width: 100%;
+
+	@include media($tablet-landscape) {
+		max-width: 75%;
+	}
+} // #settings-form, #standard-form, .profile-fields
+
+table.profile-fields,
+table.profile-settings,
+table.notification-settings,
+table.messages-notices,
+table.notifications {
+	background-color: $color-white;
+	border: 0;
+
+	thead {
+		background-color: $color-picton-blue;
+		color: $color-white;
+
+		tr {
+			background: transparent !important;
+		} // tr
+	} // thead
+
+	tr,
+	td {
+		border: 0;
+		font-size: rem(16);
+	} // tr, td
+
+	tr {
+		border-bottom: 1px solid $color-gallery;
+
+		&:last-child {
+			border-bottom: 0;
+		} // &:last-child
+
+		&.alt {
+			background-color: lighten($color-picton-blue, 45%);
+
+			td {
+				background: transparent !important;
+				color: $color-mineshaft;
+			} // td
+		} // &.alt
+	} // tr
+} // .profile-fields
+
+//-----------------------------------------
+// Table Overrides
+//-----------------------------------------
+table.profile-settings th.field-group-name,
+table.profile-settings td.field-name {
+	width: 30%;
+} // table.profile-settings th.field-group-name, table.profile-settings td.field-name
+
+
+//-----------------------------------------
+// Registration
+//-----------------------------------------
+.bp-user &,
+.register & {
+
+	input[type='submit'],
+	input[type='button'],
+	.button {
+		background-color: $color-button-background;
+		border: none;
+		color: $color-button-text;
+
+		&:hover,
+		&:active,
+		&:focus {
+			background-color: $color-button-background-hover;
+			border: none;
+		} // &:hover, &:active, &:focus
+	} // input[type='submit']
+
+	// Form.
+	form {
+
+		// Inputs.
+		input[type='checkbox'],
+		input[type='radio'] {
+			margin-right: rem(12);
+			top: rem(-1);
+		} // input[type='checkbox'], input[type='radio']
+	} // form
+
+	// Don't adjust buttons in the WYSIWYG editors.
+	.wp-core-ui {
+
+		// Get the core WP button styles.
+		.button {
+			background-color: $color-white;
+			border: 1px solid $color-silver;
+			color: $color-buddypress-gray;
+
+			&:hover,
+			&:active,
+			&:focus {
+				background-color: $color-white;
+				border: 1px solid #999;
+				color: $color-buddypress-gray;
+			} // &:hover, &:active, &:focus
+		}
+
+		// Visual/Text switchers.
+		.wp-switch-editor {
+			border-radius: 0;
+		} // .wp-switch-editor
+	}
+
+	// Input labels.
+	.field-visibility-settings-toggle,
+	.field-visibility-settings-notoggle {
+		margin-top: rem(12);
+	} // .field-visibility-settings-toggle, .field-visibility-settings-notoggle
+
+	// Field group containers.
+	.editfield {
+		margin-bottom: rem(12);
+	} // .editfield
+
+	// Navigation within the profile.
+	.button-nav {
+		@include list-reset;
+	} // .button-nav
+} // .bp-user &, .register &
+
+
+//-----------------------------------------
+// Profile
+//-----------------------------------------
+.my-profile & {
+
+	// Base settings container.
+	div.base,
+	.perfil-individual {
+
+		label,
+		.label {
+			border: none;
+			color: $color-text-main;
+			display: table-cell;
+		} // label, .label
+
+		// Heading.
+		h2 {
+			margin-bottom: rem(12);
+		} // h2
+	} // div.base, .perfil-individual
+} // .my-profile &
+
+//-----------------------------------------
+// Gallery data container
+//-----------------------------------------
+#latest_gallery_data_container {
+	margin-bottom: rem(25);
+} // #latest_gallery_data_container

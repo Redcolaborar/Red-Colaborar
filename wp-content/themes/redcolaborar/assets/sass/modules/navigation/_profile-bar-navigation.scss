@@ -1,0 +1,115 @@
+//--------------------------------------------------------------
+// Profilebar Navigation
+//--------------------------------------------------------------
+
+//-----------------------------------------
+// Profile Bar Menus
+//-----------------------------------------
+.profile-bar-menu,
+.user-profile-bar-menu {
+	@include list-reset;
+
+	li {
+		margin-bottom: rem(10);
+
+		&.spec {
+			display: none;
+		} // &.spec
+
+		a {
+			transition: $transition-color;
+
+			&:active,
+			&:focus,
+			&:hover {
+				color: $color-curious-blue;
+			} // &:active, &:focus, &:hover
+		} // a
+	} // li
+} // .profile-bar-menu, .user-profile-bar-menu
+
+//-----------------------------------------
+// User Profile Menu
+//-----------------------------------------
+.user-profile-bar-menu {
+	border-top: 1px solid $color-submarine;
+	margin-top: rem(15);
+	padding-top: rem(15);
+
+	li {
+		margin-bottom: rem(13);
+
+		// Hides gallery link
+		&#li-nav-mediapress {
+			display: none;
+		} // &#li-nav-mediapress
+
+		// Log Out Button
+		&.user-profile-logout {
+			border-top: 1px solid $color-submarine;
+			margin-top: rem(5);
+			padding-top: rem(15);
+
+			a {
+				color: $color-gun-powder;
+				font-size: rem(16);
+
+				&:active,
+				&:focus,
+				&:hover {
+					color: $color-elf-green;
+				} // &:active, &:focus, &:hover
+			} // a´
+		} // &.user-profile-logout
+
+		&#li-nav-notifications {
+			display: none;
+		} // &#notifications-personal-li
+
+		&:last-child {
+			margin-bottom: 0;
+		} // &:last-child
+
+		a {
+			color: $color-cerulean;
+			display: flex;
+			font-size: rem(14);
+			justify-content: flex-end;
+
+			@include media($tablet-landscape) {
+				justify-content: flex-start;
+			}
+
+			&#wp-logout {
+				display: none;
+			} // &#wp-logout
+
+			&:active,
+			&:focus,
+			&:hover {
+				color: $color-elf-green;
+			} // &:active, &:focus, &:hover
+
+			// Notification count
+			.count,
+			span {
+				@include padding(rem(4) rem(5));
+
+				background-color: $color-curious-blue;
+				border-radius: rem(75);
+				color: $color-white;
+				display: inline-block;
+				font-size: rem(9);
+				margin-left: rem(4);
+				margin-top: rem(-1);
+				min-height: rem(18);
+				min-width: rem(18);
+				text-align: center;
+			} // .count, span
+
+			.no-count {
+				display: none;
+			} // .no-count
+		} // a
+	} // li
+} // .user-profile-bar-menu

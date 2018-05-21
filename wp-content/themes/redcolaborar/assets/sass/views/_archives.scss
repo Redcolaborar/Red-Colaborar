@@ -1,0 +1,21 @@
+//--------------------------------------------------------------
+// Archive Pages
+//--------------------------------------------------------------
+.archive,
+.search-results,
+.blog {
+
+	article {
+
+		// Bottom margin.
+		&:not(:last-child) {
+			margin-bottom: rem(45);
+		} // &:not(:last-child)
+
+		&.post,
+		&.page {
+			background-color: $color-white;
+			padding: rem(25);
+		} // &.post, &.page
+	} // article: ;
+} // .archive, .search-results, .blog

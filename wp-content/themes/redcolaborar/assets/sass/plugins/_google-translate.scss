@@ -1,0 +1,28 @@
+//--------------------------------------------------------------
+// Google Translate Plugin
+//--------------------------------------------------------------
+
+// sass-lint:disable id-name-format
+// sass-lint:disable mixins-before-declarations
+
+#google_translate_element {
+	@include padding(rem(5));
+	@include position(fixed, null $gutter / 3.33 $gutter / 3.33 null);
+
+	background-color: $color-white;
+	border: 1px solid $color-submarine;
+	border-radius: rem(2);
+	z-index: 999;
+
+	@include media($tablet-landscape) {
+		@include position(fixed, null $gutter / 2 $gutter / 2 null);
+	}
+
+	.has-profile-bar & {
+		@include position(fixed, null $gutter / 3.33 rem(65) + $gutter / 3.33 null);
+
+		@include media($tablet-landscape) {
+			@include position(fixed, null $gutter / 2 $gutter / 2 null);
+		}
+	}
+} // #google_translate_element

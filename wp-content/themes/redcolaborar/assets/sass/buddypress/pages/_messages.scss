@@ -1,0 +1,60 @@
+//--------------------------------------------------------------
+// Profile Messages Page
+//--------------------------------------------------------------
+// sass-lint:disable no-qualifying-elements
+// sass-lint:disable nesting-depth
+// sass-lint:disable id-name-format
+.my-messages {
+
+	#buddypress {
+
+		#item-body {
+			// Tabs
+			div.item-list-tabs {
+
+				&#subnav {
+					flex-direction: column;
+					margin-bottom: $gutter / 2;
+
+					@include media($tablet-landscape) {
+						flex-direction: row;
+						margin-bottom: inherit;
+					}
+
+					// Message search container.
+					.message-search {
+						text-align: center;
+					} // .message-search
+
+					// Links
+					ul {
+						justify-content: center;
+						margin-bottom: $gutter / 2;
+
+						@include media($tablet-landscape) {
+							justify-content: flex-start;
+						}
+					} // ul
+				} // &#subnav
+			} // div.item-list-tabs
+		} // #item-body
+	} // #buddypress
+
+	// Message search form.
+	#search-message-form {
+
+		@include media($tablet-landscape) {
+			min-width: rem(375); // Set a min-width so the button will always sit inline.
+		}
+
+		#messages_search {
+			margin-bottom: $gutter / 2;
+			width: 100%;
+
+			@include media($tablet-portrait) {
+				margin-right: $gutter / 2;
+				width: auto;
+			}
+		} // #messages_search
+	} // #search-message-form
+} // .my-messages &

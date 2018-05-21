@@ -1,0 +1,39 @@
+//--------------------------------------------------------------
+// Widgets
+//--------------------------------------------------------------
+
+.widget {
+	margin: 0 0 rem(24);
+
+	// Make sure select elements fit in widgets.
+	select {
+		max-width: 100%;
+	} // select
+
+	// Extend the h3 style for the widget titles.
+	.widget-title {
+		@extend .h3 !optional;
+	} // .widget-title
+
+	// Working to have all form inputs be 100% width in sidebar.
+	#buddypress .standard-form input[type='text'],
+	select,
+	input[type='text'] {
+		width: 100%;
+	} // end form fields
+} // .widget
+
+// Search widget.
+.widget_search {
+
+	// Submit button.
+	.search-submit  {
+		display: none;
+	} // .search-submit
+
+	// Hide the label, but still let it be screen reader visible.
+	label {
+		clip: rect(1px, 1px, 1px, 1px);
+		position: absolute;
+	} // label
+} // .widget_search

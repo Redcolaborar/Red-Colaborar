@@ -2,8 +2,9 @@
 Contributors: dontdream
 Tags: buddypress, directory, members, users, profile, search, filter
 Requires at least: 4.4
-Tested up to: 4.8
-Stable tag: 4.7.8
+Tested up to: 4.9
+Requires PHP: 5.3
+Stable tag: 4.8.2
 
 Custom members search forms and results pages, and custom members directories for your BuddyPress site.
 
@@ -17,11 +18,9 @@ To display a search form...
 
 * in its Members directory: select *Add to Directory = Yes* in the form settings
 * in a sidebar or widget area: use the widget *Profile Search*
-* in a post or page: use the shortcode **[bps_display form='id of your form' template='name of your form template']**
+* in a post or page: use the shortcode<br><code>[bps_display form='id of your form' template='name of your form template']</code>
 
-To build a Members directory, use the shortcode:
-
-**[bps_directory template='name of your directory template' order_by='your directory sort options']**
+To build a Members directory, use the shortcode<br><code>[bps_directory template='name of your directory template' order_by='your directory sort options']</code>
 
 A detailed documentation is available on the plugin's site, see for instance [BP Profile Search](http://www.dontdream.it/bp-profile-search/), and the [Custom Directories](http://dontdream.it/bp-profile-search/custom-directories/) tutorial.
 
@@ -29,7 +28,7 @@ Requires at least BuddyPress 2.2 -- Tested up to BuddyPress 2.9
 
 == Installation ==
 
-Follow the standard plugin installation procedure.
+See the standard installation procedure, in [Managing Plugins](https://codex.wordpress.org/Managing_Plugins).
 
 == Screenshots ==
 
@@ -41,6 +40,18 @@ Follow the standard plugin installation procedure.
 
 == Changelog ==
 
+= 4.8.2 =
+* Fixed issue when calling a template inside a template
+= 4.8.1 =
+* Added ability to search by data in the *users* table
+* Added option to enable or disable *persistent search*
+* Removed the old interface for custom field types
+* See [BP Profile Search 4.8.1](http://dontdream.it/bp-profile-search-4-8-1/) for details
+= 4.8 =
+* Introduced *hidden filters* for custom directories, see [Custom Directories](http://dontdream.it/bp-profile-search/custom-directories/)
+* Developers: please switch to the [new interface for custom field types](http://dontdream.it/bp-profile-search/custom-profile-field-types/)
+= 4.7.9 =
+* Introduced new search mode *is one of*
 = 4.7.8 =
 * Improved display of the active filters
 * For developers: [new interface for custom field types](http://dontdream.it/bp-profile-search/custom-profile-field-types/)
@@ -52,7 +63,7 @@ Follow the standard plugin installation procedure.
 = 4.7.6 =
 * Fixed bug with custom field types introduced in 4.7.5
 = 4.7.5 =
-* Moved the search mode selection to the field level - Please review and *Update* all your search forms.
+* Moved the search mode selection to the field level
 = 4.7.4 =
 * Fixed bugs in WPML support
 = 4.7.3 =
@@ -219,10 +230,10 @@ Follow the standard plugin installation procedure.
 Security release, please update immediately!
 
 = 4.3 =
-Note: If you, or your theme, are using a modified 4.2.x or 4.3 template, you have to edit and update it to the current template structure before upgrading. If you haven't modified the built-in templates instead, you can upgrade safely.
+Note: If you, or your theme, are using a modified 4.2.x template, you have to edit and update it to the current template structure before upgrading. If you haven't modified the built-in templates instead, you can upgrade safely.
 
 = 4.1 =
-Note: If you are upgrading from version 4.0.x, you have to update your existing forms with your directory page selection. Go to *Users -> Profile Search*, *Edit* each form, select its *Form Action (Results Directory)* and *Update*.
+Note: If you are upgrading from version 4.0.x, you have to update your existing forms adding your directory page selection. Go to *Users -> Profile Search*, *Edit* each form, select its *Form Action (Results Directory)* and *Update*.
 
 = 4.0 =
 Note: BP Profile Search version 4 is not compatible with version 3. When you first upgrade to version 4, you have to reconfigure your BP Profile Search forms and widgets, and modify any BP Profile Search shortcodes and *do_action* codes you are using.

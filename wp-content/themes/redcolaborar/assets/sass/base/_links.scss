@@ -1,0 +1,19 @@
+//--------------------------------------------------------------
+// Global Link Styles
+//--------------------------------------------------------------
+
+a {
+	color: $color-link;
+	text-decoration: underline;
+	transition: $transition-opacity;
+
+	&:visited {
+		color: $color-link-visited;
+	} // &:visited
+
+	&:hover,
+	&:focus,
+	&:active {
+		color: $color-link-hover;
+	} // &:hover, &:focus, &:active
+} // a

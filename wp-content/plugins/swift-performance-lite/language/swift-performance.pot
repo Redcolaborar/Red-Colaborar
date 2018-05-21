@@ -1,0 +1,612 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Swift Performance\n"
+"POT-Creation-Date: 2017-07-30 14:08+0200\n"
+"PO-Revision-Date: 2017-07-30 14:07+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-WPHeader: performance.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: includes/puc/Puc/v4/Plugin/UpdateChecker.php:358
+msgid "Check for updates"
+msgstr ""
+
+#: includes/puc/Puc/v4/Plugin/UpdateChecker.php:404
+msgid "This plugin is up to date."
+msgstr ""
+
+#: includes/puc/Puc/v4/Plugin/UpdateChecker.php:406
+msgid "A new version of this plugin is available."
+msgstr ""
+
+#: includes/puc/Puc/v4/Plugin/UpdateChecker.php:408
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr ""
+
+#: includes/puc/Puc/v4/Vcs/PluginUpdateChecker.php:83
+msgid "There is no changelog available."
+msgstr ""
+
+#: includes/setup/setup.php:72 includes/setup/templates/purchase-key.php:1
+msgid "Purchase key"
+msgstr ""
+
+#: includes/setup/setup.php:72 includes/setup/setup.php:76
+msgid "Welcome"
+msgstr ""
+
+#: includes/setup/setup.php:76
+msgid "Analyze your site"
+msgstr ""
+
+#: includes/setup/setup.php:81
+msgid "Caching mode"
+msgstr ""
+
+#: includes/setup/setup.php:85 includes/setup/templates/manage-assets.php:2
+msgid "Manage Assets"
+msgstr ""
+
+#: includes/setup/setup.php:89 includes/setup/templates/images.php:2
+msgid "Images"
+msgstr ""
+
+#: includes/setup/setup.php:93
+msgid "Finish"
+msgstr ""
+
+#: includes/setup/setup.php:118
+msgid "Upload"
+msgstr ""
+
+#: includes/setup/setup.php:119
+msgid "Modify"
+msgstr ""
+
+#: includes/setup/setup.php:120
+msgid "Please wait..."
+msgstr ""
+
+#: includes/setup/setup.php:368
+msgid "Previous step"
+msgstr ""
+
+#: includes/setup/setup.php:370
+msgid "Skip this step"
+msgstr ""
+
+#: includes/setup/setup.php:374
+msgid "Continue"
+msgstr ""
+
+#: includes/setup/setup.php:446
+msgid "Couldn't connect to API server, please try again."
+msgstr ""
+
+#: includes/setup/setup.php:460
+msgid "Purchase Key is invalid"
+msgstr ""
+
+#: includes/setup/setup.php:486
+msgid "Swift Performance Setup Wizard - "
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+#: includes/setup/setup.php:516 performance.php:238 performance.php:434
+msgid "Swift Performance"
+msgstr ""
+
+#: includes/setup/templates/admin-footer.php:10
+#: includes/setup/templates/start-wizard.php:6
+msgid "Back to Dashboard"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:3 includes/setup/templates/finish.php:7
+msgid "Current Performance"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:5 includes/setup/templates/finish.php:9
+msgid "Mobile"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:6
+#: includes/setup/templates/analyze.php:25
+#: includes/setup/templates/finish.php:10
+#: includes/setup/templates/finish.php:29
+msgid "PageSpeed Score"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:24
+#: includes/setup/templates/finish.php:28
+msgid "Desktop"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:44
+msgid "Requirements"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:47
+#: includes/setup/templates/analyze.php:57
+msgid "Plugin conflicts"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:49
+#, php-format
+msgid "Please %sdeactivate%s the following plugins and refresh this page"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:61
+msgid "Enable Apache Modules"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:63
+msgid "Please enable the following Apache modules to get better performance"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:71
+msgid "Enabled Apache modules"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:75
+msgid ""
+"htaccess is not writable. Please change file permissions to get better "
+"performance"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:77
+msgid "Rewrites are working"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:81
+#: includes/setup/templates/images.php:17
+#: includes/setup/templates/images.php:28
+#: includes/setup/templates/images.php:39
+msgid "Image Optimizer and Compute API requires a valid purchase key"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:85
+msgid "API Connection error"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:86
+#, php-format
+msgid "API is not reachable. Please contact support %shere%s"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:88
+msgid "There is a new version available, please update now"
+msgstr ""
+
+#: includes/setup/templates/analyze.php:90
+msgid "API connection"
+msgstr ""
+
+#: includes/setup/templates/caching.php:2
+msgid "Caching"
+msgstr ""
+
+#: includes/setup/templates/caching.php:3
+msgid "Cache expiry mode"
+msgstr ""
+
+#: includes/setup/templates/caching.php:8
+msgid "Time based mode"
+msgstr ""
+
+#: includes/setup/templates/caching.php:9
+msgid ""
+"Best choice for most sites and webshops. WooCommerce, BBPress and Buddypress "
+"support is included"
+msgstr ""
+
+#: includes/setup/templates/caching.php:15
+msgid "Intelligent mode"
+msgstr ""
+
+#: includes/setup/templates/caching.php:16
+msgid ""
+"Choose intelligent mode if some of your pages are modified frequently (eg: "
+"live scores)"
+msgstr ""
+
+#: includes/setup/templates/caching.php:24
+msgid "Prebuild Cache Automatically"
+msgstr ""
+
+#: includes/setup/templates/caching.php:26
+msgid "Enable this option to prebuild the cache."
+msgstr ""
+
+#: includes/setup/templates/caching.php:32
+msgid "Enable Browser Cache"
+msgstr ""
+
+#: includes/setup/templates/caching.php:34
+msgid "Please enable mod_expires in order to work"
+msgstr ""
+
+#: includes/setup/templates/caching.php:37
+msgid ""
+"If you enable this option it will generate htacess/nginx rules for browser "
+"cache."
+msgstr ""
+
+#: includes/setup/templates/caching.php:43
+msgid "Enable Gzip"
+msgstr ""
+
+#: includes/setup/templates/caching.php:45
+msgid "Please enable mod_deflate and mod_filter in order to work"
+msgstr ""
+
+#: includes/setup/templates/caching.php:48
+msgid ""
+" If you enable this option it will generate htacess/nginx rules for gzip "
+"compression."
+msgstr ""
+
+#: includes/setup/templates/finish.php:5
+msgid "Your website is ready!"
+msgstr ""
+
+#: includes/setup/templates/finish.php:50
+#: modules/image-optimizer/templates/dashboard.tpl.php:4
+msgid "Optimize images"
+msgstr ""
+
+#: includes/setup/templates/finish.php:52
+msgid "Swift Performance Settings"
+msgstr ""
+
+#: includes/setup/templates/finish.php:53
+msgid "Back to dashboard"
+msgstr ""
+
+#: includes/setup/templates/finish.php:55
+msgid "What's next?"
+msgstr ""
+
+#: includes/setup/templates/finish.php:59
+msgid "Documentation"
+msgstr ""
+
+#: includes/setup/templates/finish.php:60
+msgid "Support"
+msgstr ""
+
+#: includes/setup/templates/finish.php:61
+msgid "Follow us on Envato"
+msgstr ""
+
+#: includes/setup/templates/images.php:7
+msgid "Enable Lazyload"
+msgstr ""
+
+#: includes/setup/templates/images.php:9
+msgid "Load images only when they appear in the browser’s viewport."
+msgstr ""
+
+#: includes/setup/templates/images.php:15
+msgid "Optimize images on upload"
+msgstr ""
+
+#: includes/setup/templates/images.php:20
+msgid ""
+"Enable if you would like to optimize the images during the upload using the "
+"our Image Optimization API service."
+msgstr ""
+
+#: includes/setup/templates/images.php:26
+msgid "Enable Lossy Optimization"
+msgstr ""
+
+#: includes/setup/templates/images.php:31
+msgid "Enable slightly lossy optimization for Image Optimizer"
+msgstr ""
+
+#: includes/setup/templates/images.php:37
+msgid "Keep Original Images"
+msgstr ""
+
+#: includes/setup/templates/images.php:42
+msgid ""
+"If you enable this option you will be able to keep and restore original "
+"images. It will take some storage"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:3
+msgid "Optimize static resources"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:8
+msgid "Cache only"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:9
+msgid "Use Swift Performance only for caching"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:15
+msgid "Minimal optimization"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:16
+msgid "Use caching and optimize static resources"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:22
+msgid "Full optimization"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:23
+msgid "Caching + Optimize static resources + Critical CSS"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:26
+msgid "Add a valid purchase key in order to use Compute API"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:34
+msgid "Bypass CSS Import"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:36
+msgid "Include imported CSS files in merged styles."
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:42
+msgid "Merge Assets in Background"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:44
+msgid ""
+"In some cases the generating the critical CSS takes some time. If you enable "
+"this option the plugin will generate it asynchronously in the background."
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:50
+msgid "Limit Simultaneous Threads"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:53
+msgid "Maximum threads"
+msgstr ""
+
+#: includes/setup/templates/manage-assets.php:56
+msgid ""
+"Limit maximum simultaneous threads. It can be useful on shared hosting "
+"environment to avoid 508 errors."
+msgstr ""
+
+#: includes/setup/templates/start-wizard.php:1
+msgid "Welcome to Swift Performance!"
+msgstr ""
+
+#: includes/setup/templates/start-wizard.php:2
+msgid ""
+"Thank you for choosing Swift Performance! The following few steps will help "
+"you to configure the basic settings and improve WordPress performance."
+msgstr ""
+
+#: includes/setup/templates/start-wizard.php:3
+msgid ""
+"If you don't want to continue the wizard, you can skip and return to the "
+"WordPress dashboard. Come back anytime if you change your mind!"
+msgstr ""
+
+#: includes/setup/templates/start-wizard.php:4
+msgid ""
+"Please note, that if you run the wizard it will reset current settings to "
+"the default!"
+msgstr ""
+
+#: includes/setup/templates/start-wizard.php:7
+msgid "Start Wizard"
+msgstr ""
+
+#: modules/cdn/cdn-manager.php:118
+msgid "No zones were found"
+msgstr ""
+
+#: modules/cdn/cdn-manager.php:124
+#, php-format
+msgid "Purge Cache: Zone Purged [id: %s]"
+msgstr ""
+
+#: modules/cdn/cdn-manager.php:130
+#, php-format
+msgid "Purge Cache: Unknown error[id: %s]"
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:60
+msgid "Preparing..."
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:61
+msgid "Done"
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:62
+msgid "Restart"
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:63
+msgid "Running"
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:64
+msgid "Progress:"
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:65
+msgid "Compression ratio:"
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:66
+msgid "All of your images are already optimized"
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:257
+msgid "Couldn't connect to API server: "
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:262
+msgid "API error: "
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:419
+msgid "Restore original"
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:420
+msgid "Optimize image"
+msgstr ""
+
+#: modules/image-optimizer/image-optimizer.php:430
+#: modules/image-optimizer/templates/dashboard.tpl.php:2 performance.php:442
+msgid "Image Optimizer"
+msgstr ""
+
+#: modules/image-optimizer/templates/dashboard.tpl.php:6
+msgid "All images"
+msgstr ""
+
+#: modules/image-optimizer/templates/dashboard.tpl.php:7
+msgid "Specific page"
+msgstr ""
+
+#: modules/image-optimizer/templates/dashboard.tpl.php:8
+msgid "Specific URL"
+msgstr ""
+
+#: modules/image-optimizer/templates/dashboard.tpl.php:17
+msgid "No title"
+msgstr ""
+
+#: modules/image-optimizer/templates/dashboard.tpl.php:23
+msgid "Start"
+msgstr ""
+
+#: performance.php:106
+msgid "Swift Performance Cache Expiry"
+msgstr ""
+
+#: performance.php:112
+msgid "Swift Performance Assets Cache Expiry"
+msgstr ""
+
+#: performance.php:129
+msgid "All cache cleared"
+msgstr ""
+
+#: performance.php:134 performance.php:284
+msgid "Assets cache cleared"
+msgstr ""
+
+#: performance.php:181
+msgid "Settings"
+msgstr ""
+
+#: performance.php:252 performance.php:275 performance.php:298
+#: performance.php:321
+msgid "Your session has expired. Please refresh the page and try again."
+msgstr ""
+
+#: performance.php:261
+msgid "Cache cleared"
+msgstr ""
+
+#: performance.php:307
+msgid "Prebuilding cache is in progress"
+msgstr ""
+
+#: performance.php:331
+msgid ""
+"It seems that your htaccess is writable, you don't need to add rules "
+"manually."
+msgstr ""
+
+#: performance.php:334
+msgid ""
+"It seems that your htaccess is NOT writable, you need to add rules manually."
+msgstr ""
+
+#: performance.php:338
+msgid "You need to add rewrite rules manually to your Nginx config file."
+msgstr ""
+
+#: performance.php:341
+msgid "Caching with rewrites currently available on Apache and Nginx only."
+msgstr ""
+
+#: performance.php:385
+msgid "Cache status"
+msgstr ""
+
+#: performance.php:385
+#, php-format
+msgid "%s cached pages"
+msgstr ""
+
+#: performance.php:385
+#, php-format
+msgid " (%s Mb)"
+msgstr ""
+
+#: performance.php:385
+msgid "Files:"
+msgstr ""
+
+#: performance.php:450
+msgid "Clear Cache"
+msgstr ""
+
+#: performance.php:458
+msgid "Clear Assets Cache"
+msgstr ""
+
+#: performance.php:467
+msgid "Purge CDN (All zones)"
+msgstr ""
+
+#: performance.php:474
+msgid "Setup Wizard"
+msgstr ""
+
+#: performance.php:576 performance.php:589 performance.php:614
+msgid "Advanced Cache Control doesn't supported on your server"
+msgstr ""
+
+#: performance.php:601
+msgid "Rewrite mode isn't supported on your server"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://swift-performance.swteplugins.com"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Boost your WordPress site"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "SWTE"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://swteplugins.com"
+msgstr ""

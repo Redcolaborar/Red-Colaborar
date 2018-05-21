@@ -10,9 +10,10 @@ Author URI: https://plugin-planet.com/
 Contributors: specialk, aldolat, WpBlogHost, jameswilkes, juliobox, lernerconsult
 Donate link: https://m0n.co/donate
 Requires at least: 4.1
-Tested up to: 4.8
-Stable tag: 20170730
-Version: 20170730
+Tested up to: 4.9
+Stable tag: 20180511
+Version: 20180511
+Requires PHP: 5.2
 Text Domain: block-bad-queries
 Domain Path: /languages
 License: GPLv2 or later
@@ -27,6 +28,9 @@ The fastest firewall plugin for WordPress.
 > Powerful protection from WP's __fastest__ firewall plugin.
 
 [Block Bad Queries](https://perishablepress.com/block-bad-queries/) (BBQ) is a simple, super-fast plugin that protects your site against malicious URL requests. BBQ checks all incoming traffic and quietly blocks bad requests containing nasty stuff like `eval(`, `base64_`, and excessively long request-strings. This is a simple yet solid solution for sites that are unable to use a [strong .htaccess firewall](https://perishablepress.com/6g/). 
+
+> GDPR-compliant: does not collect any user data
+> Gutenberg-compliant: works perfectly with or without Gutenberg
 
 **Awesome Features**
 
@@ -45,6 +49,7 @@ The fastest firewall plugin for WordPress.
 * Hassle-free security plugin that's easy to use
 * Thoroughly tested, error-free performance
 * Compatible with other security plugins
+* Regularly updated and "future proof"
 * Customize blocked strings via [Whitelist/Blacklist plugins](https://perishablepress.com/bbq-whitelist-blacklist/)
 
 **Pro Version**
@@ -101,9 +106,9 @@ I recently recorded a video tutorial series for Lynda.com on [how to secure Word
 Nope, just install and relax knowing that BBQ is protecting your site from bad URL requests.
 
 
-**I just installed this plugin and I don’t see NO MENU or any Settings whatsoever? Where is the settings?**
+**I don't see any Settings whatsoever? Where is the settings?**
 
-No settings page needed for BBQ! Everything is done automatically behind the scenes. Zero configuration required. The free version of BBQ is strictly plug-n-play, set-it-and-forget-it, with no settings to configure whatsoever. Just install, activate, and enjoy better security and robust protection against malicious requests. The Pro version of BBQ is just as fast and simple to use, but is much more powerful and includes robust settings to customize and fine-tune your firewall.
+No settings needed for BBQ! Everything is done automatically behind the scenes. Zero configuration required. The free version of BBQ is strictly plug-n-play, set-it-and-forget-it, with no settings to configure whatsoever. Just install, activate, and enjoy better security and robust protection against malicious requests. The Pro version of BBQ is just as fast and simple to use, but is much more powerful and includes robust settings to customize and fine-tune your firewall.
 
 
 **Is BBQ free version compatible with Wordfence? Does it makes sense to use both?**
@@ -137,6 +142,11 @@ Nope! BBQ is available in the following flavors:
 So you can check out the Standalone PHP Script for sites that are not running WordPress.
 
 
+**Do you offer any other security plugins?**
+
+Yes, check out [Blackhole for Bad Bots](https://wordpress.org/plugins/blackhole-bad-bots/) to protect your site against bad bots. I also have a [video course on WordPress security](https://m0n.co/securewp), for more plugin recommendations and lots of tips and tricks.
+
+
 **Got a question?**
 
 Send any questions or feedback via my [contact form](https://perishablepress.com/contact/).
@@ -154,16 +164,37 @@ I develop and maintain this free plugin with love for the WordPress community. T
 
 And/or purchase one of my premium WordPress plugins:
 
-* [BBQ Pro](https://plugin-planet.com/bbq-pro/) - Pro version of Block Bad Queries
-* [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) - Pro version of Blackhole for Bad Bots
-* [SES Pro](https://plugin-planet.com/ses-pro/) - Super-simple &amp; flexible email signup forms
-* [USP Pro](https://plugin-planet.com/usp-pro/) - Pro version of User Submitted Posts
+* [BBQ Pro](https://plugin-planet.com/bbq-pro/) - Super fast WordPress firewall
+* [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) - Automatically block bad bots
+* [Banhammer Pro](https://plugin-planet.com/banhammer-pro/) - Monitor traffic and ban the bad guys
+* [USP Pro](https://plugin-planet.com/usp-pro/) - Unlimited front-end forms
 
 Links, tweets and likes also appreciated. Thank you! :)
 
 
 
 == Changelog ==
+
+**2018/05/11**
+
+* Adds `xrumer` to blocked query strings and request URIs
+* Adds `indoxploi` to blocked query strings and request URIs
+* Generates new translation template
+* Tests on WordPress 5.0
+
+**2017/11/01**
+
+* Updates readme.txt :)
+* Tests on WordPress 4.9
+
+**2017/10/19**
+
+* Changes `\/\.tar` to `\.tar` in Request patterns
+* Changes `\/\.bash` to `\.bash` in Request patterns
+* Adds new User Agent patterns: `shellshock`, `md5sum`, `\/bin\/bash`
+* Adds new Request patterns: `@@`, `@eval`, `\/file\:`, `\/php\:`, `\.cmd`, `\.bat`, `\.htacc`, `\.htpas`, `\.pass`, `usr\/bin\/perl`, `var\/lib\/php`, `wp-config\.php`
+* Adds new Query String patterns: `@@`, `\(0x`, `0x3c62723e`, `\(\)\}`, `\:\;\}\;`, `\;\!--\=`, `@eval`, `eval\(`, `base64_`, `UNION(.*)SELECT`, `\/config\.`, `\/wwwroot`, `\/makefile`, `\$_session`, `\$_request`, `\$_env`, `\$_server`, `\$_post`, `\$_get`, `phpinfo\(`, `shell_exec\(`, `file_get_contents`, `allow_url_include`, `disable_functions`, `auto_prepend_file`, `open_basedir`, `(benchmark|sleep)(\s|%20)*\(`
+* Tests on WordPress 4.9
 
 **2017/07/30**
 
@@ -300,5 +331,3 @@ Links, tweets and likes also appreciated. Thank you! :)
 * 2011/02/21 - Updated readme.txt file
 * 2009/12/30 - Added check for admin users
 * 2009/12/30 - Additional request strings added
-
-

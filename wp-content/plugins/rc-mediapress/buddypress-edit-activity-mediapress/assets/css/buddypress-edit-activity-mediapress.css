@@ -1,0 +1,117 @@
+
+#buddypress-edit-activity-wrapper-mp .mpp-container {
+  margin: 20px 0;
+}
+
+#buddypress-edit-activity-wrapper-mp #mpp-shortcode-upload-gallery-id {
+  margin: 20px 0;
+}
+
+#buddypress-edit-activity-wrapper-mp #mpp-upload-feedback-shortcode,
+#mpp-upload-feedback-activity {
+  display: none;
+}
+
+#buddypress-edit-activity-wrapper-mp .mpp-uploading-media-list .mpp-uploaded-media-item {
+  position: relative;
+  width: 49%;
+  display: inline-block;
+  border: 1px solid #eee;
+  padding: 10px;
+  margin-bottom: 15px;
+  margin-right: 5px;
+}
+
+#buddypress-edit-activity-wrapper-mp .mpp-uploading-media-list .mpp-uploaded-media-item img {
+    width: 100px;
+    display: inline-block;
+    margin-right: 15px;
+    float: left;
+}
+
+.mpp-attached-media-item {
+  border-radius: 3px;
+}
+
+.mpp-media-holder.removed {
+  opacity: 0.3;
+}
+
+.mpp-media-holder {
+  position: relative;
+  width: fit-content;
+  display: inline-block;
+  margin-left: 15px;
+  margin-bottom: 15px;
+}
+
+.rc-audio .mpp-media-holder {
+  min-width: 320px;
+  width: 100% !important;
+}
+
+.featured-activity .mpp-media-holder {
+    margin-left: 0;
+    padding-left: 15px;
+}
+
+.mejs-time {
+  height: 40px;
+}
+
+.rc-video .mpp-media-holder {
+  min-width: 320px;
+}
+
+.beam_delete_media_btn {
+  background-color: #c0392b;
+  color: #fff !important;
+  padding: 4px 7px;
+  border-radius: 0 3px 0 3px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 18px;
+  display: none;
+}
+
+.beam_delete_media_btn:hover {
+  background-color: #e74c3c;
+}
+
+li.activity-item:not(.loading-edit) > .activity-loading-edit {
+  display: none;
+}
+
+li.activity-item.loading-edit > .activity-loading-edit {
+  background-color: rgba(255,255,255,0.7);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+}
+
+li.activity-item > .activity-loading-edit .loading_gif {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  background-size: 50px 50px !important;
+}
+
+.mpp-media-holder .mpp-audio-content img {
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+/*.mpp-media-holder .mpp-item-content .wp-video {
+  display: inline-block;
+  text-align: center;
+}*/
+
+.mejs-container, .mejs-container .mejs-controls, .mejs-embed, .mejs-embed body {
+  background: transparent;
+}

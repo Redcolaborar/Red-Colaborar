@@ -6,7 +6,7 @@
  * @package    Members
  * @subpackage Includes
  * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2017, Justin Tadlock
+ * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
  * @link       https://themehybrid.com/plugins/members
  * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
@@ -157,5 +157,22 @@ class Role {
 			// Check if we have caps.
 			$this->has_caps = 0 < $this->granted_cap_count;
 		}
+	}
+
+	/**
+	 * Magic method for getting media object properties.  Let's keep from failing if a theme
+	 * author attempts to access a property that doesn't exist.
+	 *
+	 * @since  2.0.2
+	 * @access public
+	 * @param  string  $property
+	 * @return mixed
+	 */
+	public function get( $property ) {
+
+		if ( 'label' === $property )
+			return members_translate_role( $this->name );
+
+		return isset( $this->$property ) ? $this->$property : false;
 	}
 }

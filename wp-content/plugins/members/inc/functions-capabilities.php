@@ -5,7 +5,7 @@
  * @package    Members
  * @subpackage Includes
  * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2017, Justin Tadlock
+ * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
  * @link       https://themehybrid.com/plugins/members
  * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
@@ -371,6 +371,23 @@ function members_get_hidden_caps() {
 
 	// This is always a hidden cap and should never be added to the caps list.
 	$caps[] = 'do_not_allow';
+
+	// Network-level caps.
+	// These shouldn't show on single-site installs anyway.
+	// On multisite installs, they should be handled by a network-specific role manager.
+	$caps[] = 'create_sites';
+	$caps[] = 'delete_sites';
+	$caps[] = 'manage_network';
+	$caps[] = 'manage_sites';
+	$caps[] = 'manage_network_users';
+	$caps[] = 'manage_network_plugins';
+	$caps[] = 'manage_network_themes';
+	$caps[] = 'manage_network_options';
+	$caps[] = 'upgrade_network';
+
+	// This cap is needed on single site to set up a multisite network.
+	if ( is_multisite() )
+		$caps[] = 'setup_network';
 
 	// Unfiltered uploads.
 	if ( is_multisite() || ! defined( 'ALLOW_UNFILTERED_UPLOADS' ) || ! ALLOW_UNFILTERED_UPLOADS )

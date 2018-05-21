@@ -1,0 +1,157 @@
+//--------------------------------------------------------------
+// Header.
+//--------------------------------------------------------------
+// sass-lint:disable mixins-before-declarations
+.site-header {
+	@include padding(rem(11) null);
+
+	background-color: $color-white;
+	border-bottom: 1px solid $color-mercury;
+	max-width: 100%;
+	width: 100%;
+	z-index: 999;
+
+	@include media($tablet-landscape) {
+		@include padding(rem(23) null);
+		@include position(fixed, 0 null null 0);
+	}
+
+	&.scrolling {
+		@include padding(rem(7) null);
+
+		box-shadow: 0 0 rem(3) rem(3) rgba($color-black, 0.11);
+
+		.site-branding {
+
+			img {
+				max-height: rem(50);
+			} // img
+		} // .site-branding
+	} // &.scrolling
+
+	> .container {
+		@include padding(null 0);
+
+		align-items: center;
+		display: flex;
+	} // > .container
+
+	.admin-bar & {
+
+		@include media($tablet-landscape) {
+			margin-top: rem(32);
+		}
+	} // .admin-bar &
+} // .site-header
+
+// Site logo.
+.site-branding {
+	float: left;
+	max-width: rem(106);
+	min-width: rem(75);
+	padding-right: rem(25);
+
+	@include media($tablet-landscape) {
+		border-right: 1px solid $color-submarine;
+		margin-right: rem(25);
+		min-width: rem(106);
+	}
+
+	// Don't let the logo get out of control.
+	img {
+		max-height: rem(60);
+		width: auto;
+	} // img
+} // .site-branding
+
+
+//-----------------------------------------
+// Site Description.
+//-----------------------------------------
+.site-description {
+	font-size: rem(24);
+	margin: 0 0 rem(24) 0;
+
+	@include media(min-width $tablet-portrait max-width $tablet-landscape) {
+		clear: both;
+	}
+} // .site-description
+
+
+//-----------------------------------------
+// Header action container — Form Dropdown.
+//-----------------------------------------
+.site-header-action {
+	@include span-columns(12);
+
+	@include media($tablet-portrait) {
+		@include span-columns(5);
+	}
+
+	@include media($tablet-landscape) {
+		@include span-columns(4);
+
+		float: right;
+		margin-right: 0;
+	}
+
+	@include media($desktop) {
+		@include span-columns(3);
+
+		float: right;
+		margin-right: 0;
+	}
+
+	@include media($desktop-large) {
+		@include span-columns(2);
+
+		float: right;
+		margin-right: 0;
+	}
+} // .site-header-action
+
+
+//-----------------------------------------
+// Site header action cta buttons.
+//-----------------------------------------
+.site-header-action {
+
+	// Span the button the full width.
+	.button-link,
+	.cta-button {
+		color: $color-white;
+		display: block;
+		text-align: center;
+		text-decoration: none;
+		width: 100%;
+	} // .button-link, .cta-button
+} // .site-header-action
+
+
+//-----------------------------------------
+// Site header Action Searchform.
+//-----------------------------------------
+.site-header-action {
+
+	.search-form {
+		opacity: 0;
+		transition: $transition-opacity;
+		visibility: hidden;
+
+		// If the body class is there, show the form.
+		.search-form-visible & {
+			display: block;
+			opacity: 1;
+			transition: $transition-opacity;
+			visibility: visible;
+		} // .search-form-visible &
+	} // .search-form
+} // .site-header-action
+
+
+//-----------------------------------------
+// Main Navigation Container.
+//-----------------------------------------
+.main-navigation {
+	@include span-columns(12);
+} // .main-navigation

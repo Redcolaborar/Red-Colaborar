@@ -1,0 +1,38 @@
+//--------------------------------------------------------------
+// Registration Page
+//
+// Doing this here rather than in the BP partial as we need to
+// target in AND out of the #buddypress ID.
+//--------------------------------------------------------------
+.registration {
+
+	// Adjust the content container for no sidebar.
+	.primary {
+		background-color: $color-white;
+		padding: rem(25);
+		width: 100%;
+
+		// Target all the BP things to override.
+		#buddypress {
+
+			// Single column on small screens.
+			#basic-details-section,
+			#profile-details-section {
+
+				@include media(max-width $tablet-portrait) {
+					width: 100%;
+				}
+			} // #basic-details-section, #profile-details-section
+		} // #buddypress
+
+		.register-section {
+
+			+.register-section {
+
+				@include media(max-width $tablet-portrait) {
+					margin-top: rem(24);
+				}
+			} // +.register-section
+		} // .register-section
+	} // .primary
+} // .registration

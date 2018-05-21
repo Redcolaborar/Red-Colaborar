@@ -1,0 +1,805 @@
+# Copyright (C) 2017 redcolaborar
+# This file is distributed under the same license as the redcolaborar package.
+msgid ""
+msgstr ""
+"Project-Id-Version: redcolaborar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
+"_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.6\n"
+"Last-Translator: \n"
+"Language: es_ES\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: 404.php:17
+msgid "Sorry, this page doesn't exist."
+msgstr "404: Lo sentimos, esta página no existe."
+
+#: 404.php:22
+msgid ""
+"It seems we can't find what you're looking for. Perhaps searching can help."
+msgstr ""
+"Parece que no podemos encontrar lo que estás buscando. Puede que la "
+"búsqueda pueda ayudarle."
+
+#: comments.php:24
+msgid "Comment section"
+msgstr "Sección de comentarios"
+
+#: comments.php:34
+msgctxt "comments title"
+msgid "%1$s thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] ""
+msgstr[1] ""
+
+#: comments.php:45, comments.php:71
+msgid "Comment navigation"
+msgstr "Navagar por comentarios"
+
+#: comments.php:48, comments.php:74
+msgid "Older Comments"
+msgstr "Comentarios antiguos"
+
+#: comments.php:49, comments.php:75
+msgid "Newer Comments"
+msgstr "Nuevos comentarios"
+
+#: comments.php:89
+msgid "Comments are closed."
+msgstr "No se aceptan Comentarios."
+
+#: footer.php:39
+msgid "Back to Top"
+msgstr "^ Ir arriba ^"
+
+#: footer.php:44
+msgid "Close Menu"
+msgstr "Cerrar Menú"
+
+#: functions.php:50
+msgid "Primary Menu"
+msgstr "Menú primario"
+
+#: functions.php:51
+msgid "Mobile Menu"
+msgstr "Menú móvil"
+
+#: functions.php:52
+msgid "Footer Menu"
+msgstr "Menu Pie"
+
+#: functions.php:53
+msgid "Profile Bar Menu"
+msgstr "Menú de la barra de perfil"
+
+#: functions.php:110
+msgid "Directory Sidebar"
+msgstr "Barra Laterial de Directorio de Miembros"
+
+#: functions.php:111
+msgid "Default Sidebar"
+msgstr "Barra Lateral predeterminada"
+
+#: functions.php:119
+msgid "Widget area for %s"
+msgstr "Área de widgets para %s"
+
+#: header.php:27
+msgid "Skip to content"
+msgstr "Saltar al contenido"
+
+#: header.php:46
+msgid "Open Menu"
+msgstr "Abrir Menú"
+
+#: search.php:18
+msgid "Search Results for: %s"
+msgstr "Buscar Resultados para:  %s"
+
+#: search.php:21
+msgid "Not what you were looking for? Try searching again below:"
+msgstr "Si no encontraste lo que buscabas, intenta realizar otra búsqueda."
+
+#: searchform.php:11
+msgid "To search this site, enter a search term"
+msgstr "Introduzca un término de búsqueda"
+
+#: searchform.php:13
+msgid "Submit"
+msgstr "Publicar"
+
+#: template-acf.php:2
+msgid "Page with Content Blocks"
+msgstr "Bloques de Contenido"
+
+#: template-scaffolding.php:2
+msgid "Scaffolding"
+msgstr "Andamio"
+
+#: template-sidebar-right.php:2
+msgid "Sidebar Right"
+msgstr "Barra lateral derecha"
+
+#: inc/buddypress.php:35
+msgid "Private Message"
+msgstr "Mensaje privado"
+
+#: inc/buddypress.php:262
+msgid "[&hellip;]"
+msgstr " [&hellip;]"
+
+#: inc/buddypress.php:315
+msgid "Home"
+msgstr "Inicio"
+
+#: inc/buddypress.php:339
+msgid "Bookmarks"
+msgstr "Marcadores"
+
+#: inc/buddypress.php:363, inc/buddypress.php:376
+msgid "Notifications"
+msgstr "Notificaciones"
+
+#: inc/buddypress.php:399
+msgid "Toggle Menu"
+msgstr "Mostrar/Ocultar menú"
+
+#: inc/buddypress.php:423
+msgid "Log Out"
+msgstr "Cerrar sesión"
+
+#: inc/buddypress.php:442
+msgid "Log In"
+msgstr "Iniciar sesión"
+
+#: inc/buddypress.php:445
+msgid "Sign Up"
+msgstr "Registro"
+
+#: inc/buddypress.php:490
+msgid "<a href=\"%1$s\">%2$s</a>"
+msgstr "<a href=\"%1$s\">%2$s </a>"
+
+#: inc/buddypress.php:497
+msgid "<a href=\"%1$s\"> %2$s ago</a>"
+msgstr "<a href=\"%1$s\"> hace %2$s </a>"
+
+#: inc/buddypress.php:505
+msgid " in %1$s"
+msgstr " en %1$s"
+
+#: inc/buddypress.php:537
+msgid "You are viewing the activity feed with search filters applied."
+msgstr ""
+"Estas viendo la Actividad Reciente con los filtros de búsqueda activos."
+
+#: inc/buddypress.php:537
+msgid "You are viewing your saved, default filtered view."
+msgstr "Estas viendo tu versión personalizada de la Actividad Reciente."
+
+#: inc/buddypress.php:545
+msgid "View All Activity"
+msgstr "Mostrar toda la actividad"
+
+#: inc/buddypress.php:612
+msgid "Show all comments"
+msgstr "Mostrar todos los comentarios"
+
+#: inc/buddypress.php:613
+msgid "Hide comments"
+msgstr "Ocultar comentarios"
+
+#: inc/buddypress.php:634, inc/buddypress.php:645,
+#: buddypress/activity/entry.php:102, buddypress/activity/entry.php:106,
+#: mediapress/default/buddypress/activity/entry.php:61,
+#: mediapress/default/buddypress/activity/entry.php:61
+msgid "Bookmark"
+msgstr "Marcador"
+
+#: inc/buddypress.php:637, inc/buddypress.php:648,
+#: buddypress/activity/entry.php:112, buddypress/activity/entry.php:116,
+#: mediapress/default/buddypress/activity/entry.php:63,
+#: mediapress/default/buddypress/activity/entry.php:63
+msgid "Remove Bookmark"
+msgstr "Eliminar Marcador"
+
+#: inc/buddypress.php:640, inc/buddypress.php:651
+msgid "My Bookmarks"
+msgstr "Marcadores"
+
+#: inc/extras.php:112, inc/extras.php:177
+msgid "Width must be an integer"
+msgstr "Debe ser un número entero"
+
+#: inc/extras.php:116, inc/extras.php:181
+msgid "Height must be an integer"
+msgstr "Debe ser un número entero"
+
+#: inc/extras.php:120
+msgid "Please provide a valid hex color value for background_color"
+msgstr ""
+"Proporcione un valor de color hexadecimal válido para background_color"
+
+#: inc/extras.php:124
+msgid "Please provide a valid hex color value for text_color"
+msgstr "Por favor, escribe un código de color válido"
+
+#: inc/extras.php:131, inc/extras.php:202
+msgid "WebDevStudios Placeholder Image"
+msgstr "Imagen de Placeholder"
+
+#: inc/hooks.php:95, inc/template-tags.php:432
+msgid "Read More"
+msgstr "Leer más"
+
+#: inc/hooks.php:106
+msgid "Read more..."
+msgstr "Leer más..."
+
+#: inc/scaffolding.php:42
+msgid "Details"
+msgstr "Detalles"
+
+#: inc/scaffolding.php:51
+msgid "Description"
+msgstr "Descripción"
+
+#: inc/scaffolding.php:56
+msgid "Parameters"
+msgstr "Parámetros"
+
+#: inc/scaffolding.php:63
+msgid "Arguments"
+msgstr "Argumentos"
+
+#: inc/scaffolding.php:74
+msgid "Usage"
+msgstr "Activar el seguimiento de uso"
+
+#: inc/scaffolding.php:79
+msgid "HTML Output"
+msgstr "Ver HTML"
+
+#. translators: If there are characters in your language that are not
+#: inc/scripts.php:22
+msgctxt "Cabin font: on or off"
+msgid "on"
+msgstr "en"
+
+#: inc/scripts.php:23
+msgctxt "Open Sans font: on or off"
+msgid "on"
+msgstr "en"
+
+#: inc/template-tags.php:30
+msgctxt "post date"
+msgid "Posted on %s"
+msgstr "Publicado el %s"
+
+#: inc/template-tags.php:36
+msgctxt "post author"
+msgid "by %s"
+msgstr "por %s"
+
+#. translators: used between list items, there is a space after the comma
+#: inc/template-tags.php:53, inc/template-tags.php:60
+msgid ", "
+msgstr ", "
+
+#: inc/template-tags.php:56
+msgid "Posted in %1$s"
+msgstr "Publicado en %1$s"
+
+#: inc/template-tags.php:63
+msgid "Tagged %1$s"
+msgstr "Etiquetado como %1$s"
+
+#: inc/template-tags.php:69
+msgid "Leave a comment"
+msgstr "Deja un comentario"
+
+#: inc/template-tags.php:69
+msgid "1 Comment"
+msgstr "1 comentario"
+
+#: inc/template-tags.php:69
+msgid "% Comments"
+msgstr "% comentarios"
+
+#: inc/template-tags.php:76, template-parts/content-page.php:34
+msgid "Edit %s"
+msgstr "Editar %s"
+
+#: inc/template-tags.php:94
+msgid "Please define default parameters in the form of an array."
+msgstr "Defina los parámetros predeterminados en la forma de una matriz."
+
+#: inc/template-tags.php:99
+msgid "Please define an SVG icon filename."
+msgstr "Defina un nombre de archivo de icono de SVG."
+
+#: inc/template-tags.php:383
+msgid "Link to %s"
+msgstr "Enlace a %s"
+
+#: inc/template-tags.php:464
+msgid "More Information"
+msgstr "Ver más..."
+
+#: inc/template-tags.php:466, inc/template-tags.php:467
+msgid "Search"
+msgstr "Buscar"
+
+#: inc/template-tags.php:488
+msgid " [&hellip;]"
+msgstr "[&hellip;]"
+
+#: inc/template-tags.php:610
+msgid "Select a Topic"
+msgstr "Elija un Tema"
+
+#: inc/template-tags.php:620
+msgid "* Required"
+msgstr "* Requerido"
+
+#: page-parts/general-header-section.php:129
+msgid "Toggle navigation"
+msgstr "Activa la navegación"
+
+#: template-parts/content-none.php:14
+msgid "Nothing Found"
+msgstr "Nada Encontrado"
+
+#: template-parts/content-none.php:24
+msgid ""
+"Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr ""
+"¿Listo para publicar tu primer artículo? <a href=\"%1$s\">Empezar aquí</a>."
+
+#: template-parts/content-none.php:35
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
+msgstr ""
+"Lo sentimos, pero nada coincide con los términos de búsqueda. Inténtelo de "
+"nuevo con algunas palabras clave diferentes."
+
+#: template-parts/content-none.php:38
+msgid ""
+"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
+"searching can help."
+msgstr ""
+"Parece que no encontramos lo que buscas. Tal vez una nueva búsqueda le "
+"puede ayudar."
+
+#: template-parts/content-page.php:22, template-parts/content.php:43
+msgid "Pages:"
+msgstr "Páginas:"
+
+#: template-parts/content.php:34
+msgid "Continue reading %s <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Continuar leyendo %s <span class=\"meta-nav\">&rarr;</span>"
+
+#: template-parts/sharing-icons.php:11
+msgid "Share This"
+msgstr "Compartir esto"
+
+#: template-parts/sharing-icons.php:19, template-parts/sharing-icons.php:22,
+#: buddypress/activity/entry.php:143
+msgid "Share on Twitter"
+msgstr "Compartir en Twitter"
+
+#: template-parts/sharing-icons.php:31, template-parts/sharing-icons.php:34,
+#: buddypress/activity/entry.php:132
+msgid "Share on Facebook"
+msgstr "Compartir en Facebook"
+
+#: template-parts/sharing-icons.php:43, template-parts/sharing-icons.php:46
+msgid "Share on LinkedIn"
+msgstr "Compartir en LinkedIn"
+
+#: buddypress/activity/activity-loop.php:31,
+#: mediapress/default/gallery/media/views/lightbox/activity.php:49
+msgid "Load More"
+msgstr "Cargar más"
+
+#: buddypress/activity/activity-loop.php:41
+msgid "Sorry, there was no activity found. Please try a different filter."
+msgstr ""
+"Lo sentimos, no hemos encontrado actividad. Por favor, prueba un filtro "
+"diferente."
+
+#: buddypress/activity/entry.php:64,
+#: mediapress/default/buddypress/activity/entry.php:48,
+#: mediapress/default/buddypress/activity/entry.php:48
+msgid "View Conversation"
+msgstr "Ver conversacion"
+
+#: buddypress/activity/entry.php:76
+msgid "%s Comment"
+msgstr "%1$s Comentario"
+
+#: buddypress/activity/entry.php:86
+msgid "Activity Menu"
+msgstr "Menú de actividad"
+
+#: buddypress/activity/entry.php:127
+msgid "Facebook"
+msgstr "Facebook"
+
+#: buddypress/activity/entry.php:138
+msgid "Twitter"
+msgstr "Twitter"
+
+#: buddypress/activity/entry.php:153
+msgid "Delete"
+msgstr "Eliminar"
+
+#: buddypress/activity/entry.php:209,
+#: mediapress/default/buddypress/activity/entry.php:97
+msgid "Comment"
+msgstr "Comentario"
+
+#: buddypress/activity/entry.php:213,
+#: mediapress/default/buddypress/activity/entry.php:100
+msgid "Post"
+msgstr "Publicar"
+
+#: buddypress/activity/entry.php:213,
+#: mediapress/default/buddypress/activity/entry.php:100
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: buddypress/activity/index.php:49, buddypress/activity/index.php:62
+msgid "Sitewide activities navigation"
+msgstr "Navegación de la actividad en todo el sitio"
+
+#: buddypress/activity/index.php:73
+msgid "All Members %s"
+msgstr "Todos los miembros %s"
+
+#: buddypress/activity/index.php:90
+msgid "My Friends %s"
+msgstr "Mis amigos %s"
+
+#: buddypress/activity/index.php:109
+msgid "My Groups %s"
+msgstr "Mis grupos %s"
+
+#: buddypress/activity/index.php:126
+msgid "My Favorites %s"
+msgstr "Mis favoritos %s"
+
+#: buddypress/activity/index.php:141
+msgid "Mentions"
+msgstr "Menciones"
+
+#: buddypress/activity/index.php:141
+msgctxt "Number of new activity mentions"
+msgid "%s new"
+msgid_plural "%s new"
+msgstr[0] ""
+msgstr[1] ""
+
+#: buddypress/activity/index.php:158
+msgid "Activity secondary navigation"
+msgstr "Actividad navegación secundaria"
+
+#: buddypress/activity/index.php:160, buddypress/activity/index.php:160
+msgid "RSS Feed"
+msgstr "Entrada RSS"
+
+#: buddypress/activity/index.php:160
+msgid "RSS"
+msgstr "RSS"
+
+#: buddypress/activity/post-form.php:32
+msgid "What's new in %s, %s?"
+msgstr "¿Qué hay de nuevo en %s. %s?"
+
+#: buddypress/activity/post-form.php:36
+msgid "What's new, %s?"
+msgstr "Qué es nuevo, %s?"
+
+#: buddypress/activity/post-form.php:44, buddypress/activity/post-form.php:46
+msgid "Write an article or share files"
+msgstr "Que hay para compartir hoy?"
+
+#: buddypress/activity/post-form.php:58
+msgid "Post Update"
+msgstr "Publicar"
+
+#: buddypress/activity/post-form.php:64
+msgid "Post in : "
+msgstr "Publicar en: "
+
+#: buddypress/activity/post-form.php:68
+msgid "Post in"
+msgstr "(%) Comentarios"
+
+#: buddypress/activity/post-form.php:72
+msgid "My Profile"
+msgstr "Mi Perfil"
+
+#: buddypress/members/index.php:61
+msgid "Members directory"
+msgstr "Directorio de miembros"
+
+#: buddypress/members/members-loop.php:116
+msgid "Organization: "
+msgstr "Organización: "
+
+#: buddypress/members/members-loop.php:123
+msgid "Location: "
+msgstr "Localización: "
+
+#: buddypress/members/members-loop.php:139
+msgid "Active: "
+msgstr "Activo: "
+
+#: buddypress/members/members-loop.php:199
+msgid "Sorry, no members were found."
+msgstr "Lo sentimos, no hemos encontrado miembros."
+
+#: inc/customizer/panels.php:21
+msgid "Site Options"
+msgstr "Opciones de Sitio"
+
+#: inc/customizer/panels.php:22
+msgid "Other theme options."
+msgstr "Otras Opciones del tema."
+
+#: inc/customizer/panels.php:32
+msgid "Featured Posts Section"
+msgstr "Publicaciones Destacadas"
+
+#: inc/customizer/panels.php:33
+msgid "Customize the text in the logged-out user featured post block."
+msgstr ""
+"Personalizar el texto en el bloque de post recomendados de usuario "
+"desconectados."
+
+#: inc/customizer/sections.php:19
+msgid "Additional Scripts"
+msgstr "Scripts adicionales"
+
+#: inc/customizer/sections.php:29
+msgid "Social Media"
+msgstr "Redes Sociales"
+
+#: inc/customizer/sections.php:30
+msgid "Links here power the display_social_network_links() template tag."
+msgstr "Enlaces de aquí la plantilla display_social_network_links()."
+
+#: inc/customizer/sections.php:40
+msgid "Header Customizations"
+msgstr "Personalización de encabezado"
+
+#: inc/customizer/sections.php:50
+msgid "Footer Customizations"
+msgstr "Personalizaciones de pie de página"
+
+#: inc/customizer/sections.php:60
+msgid "Featured Posts"
+msgstr "Publicaciones Destacados"
+
+#: inc/customizer/sections.php:70
+msgid "Logged-In Users"
+msgstr "Usuarios Conectados"
+
+#: inc/customizer/sections.php:80
+msgid "Logged-Out Users"
+msgstr "Usuarios desconectados"
+
+#: inc/customizer/sections.php:90
+msgid "Call To Action"
+msgstr "Llamada a acción"
+
+#: inc/customizer/settings.php:28
+msgid "Header Scripts"
+msgstr "Scripts de encabezado"
+
+#: inc/customizer/settings.php:29
+msgid "Additional scripts to add to the header. Basic HTML tags are allowed."
+msgstr ""
+"Scripts adicionales para agregar al encabezado. Etiquetas básicas de HTML "
+"están permitidas."
+
+#: inc/customizer/settings.php:48
+msgid "Footer Scripts"
+msgstr "Scripts de pie de página"
+
+#: inc/customizer/settings.php:49
+msgid "Additional scripts to add to the footer. Basic HTML tags are allowed."
+msgstr ""
+"Scripts adicionales para agregar al pie de página. Etiquetas básicas de "
+"HTML están permitidas."
+
+#: inc/customizer/settings.php:83
+msgid "%s URL"
+msgstr "%s URL"
+
+#: inc/customizer/settings.php:114
+msgid "Copyright Text"
+msgstr "Texto del Copyright"
+
+#: inc/customizer/settings.php:115
+msgid ""
+"The copyright text will be displayed in the footer. Basic HTML tags allowed."
+msgstr ""
+"Se mostrará el texto de copyright en el pie de página. Básicas etiquetas "
+"HTML permitidas."
+
+#: inc/customizer/settings.php:144
+msgid "Header Button"
+msgstr "Botón de encabezado"
+
+#: inc/customizer/settings.php:145
+msgid "Display a custom button in the header."
+msgstr "Mostrar botón en el encabezado."
+
+#: inc/customizer/settings.php:149
+msgid "No button"
+msgstr "Ningún botón"
+
+#: inc/customizer/settings.php:150
+msgid "Trigger a search field"
+msgstr "Activar un campo de búsqueda"
+
+#: inc/customizer/settings.php:151
+msgid "Link to a custom URL"
+msgstr "URL personalizado"
+
+#: inc/customizer/settings.php:169
+msgid "Header Button URL"
+msgstr "URL del botón de encabezado"
+
+#: inc/customizer/settings.php:170
+msgid "Enter the URL or email address to be used by the button in the header."
+msgstr ""
+"Introduzca la URL o dirección de email para ser utilizado por el botón en "
+"el encabezado."
+
+#: inc/customizer/settings.php:190
+msgid "Header Button Text"
+msgstr "Texto del botón de encabezado"
+
+#: inc/customizer/settings.php:191
+msgid "Enter the text to be displayed in the button in the header."
+msgstr "Escriba el texto que desea mostrar en el botón de encabezado."
+
+#: inc/customizer/settings.php:227
+msgid "Section Background Color"
+msgstr "Color Fondo Sección"
+
+#: inc/customizer/settings.php:228
+msgid "Select the background color of the Featured Posts section."
+msgstr ""
+"Seleccione el color de fondo de la sección de las publicaciones destacadas."
+
+#: inc/customizer/settings.php:247
+msgid "Call To Action Title"
+msgstr "Título de la Llamada de Acción"
+
+#: inc/customizer/settings.php:248
+msgid "Enter the title to be displayed in the Call To Action block."
+msgstr "Escriba el título que se mostrará en el bloque llamado a la acción."
+
+#: inc/customizer/settings.php:269
+msgid "Call To Action Text"
+msgstr "Texto de  la llamada de acción"
+
+#: inc/customizer/settings.php:270
+msgid "Enter the text to be displayed in the Call To Action block."
+msgstr ""
+"Introduzca el texto que se mostrará en el bloque de llamado a la acción."
+
+#: inc/customizer/settings.php:290
+msgid "Call To Action Button Text"
+msgstr "Texto del botón de Llamada a la Acción"
+
+#: inc/customizer/settings.php:291
+msgid "Enter the title to be used by the button in the Call To Action block."
+msgstr ""
+"Escriba el título que utilizará el botón en el bloque llamado a la acción."
+
+#: inc/customizer/settings.php:310
+msgid "Call To Action URL"
+msgstr "URL de la llamada de acción"
+
+#: inc/customizer/settings.php:311
+msgid "Enter the URL to be used by the button in the Call To Action block."
+msgstr "Indica la URL que quieres usar en el botón de la llamada de acción."
+
+#: inc/customizer/settings.php:332
+msgid "Background Color"
+msgstr "Color de fondo"
+
+#: inc/customizer/settings.php:333
+msgid "Select the background color of the CTA block."
+msgstr "Seleccione el color de fondo del bloque de la llamada a la acción."
+
+#: inc/customizer/settings.php:351
+msgid "Hide CTA Block"
+msgstr "Ocultar este bloque"
+
+#: inc/customizer/settings.php:353
+msgid "Check this box to hide the CTA Block."
+msgstr "Marque esta casilla para ocultar el bloque de la llamada a la acción."
+
+#: inc/customizer/settings.php:370
+msgid "Show CTA Block First"
+msgstr ""
+"Mostrar al bloque de llamada a la acción antes de las publicaciones "
+"destacadas"
+
+#: inc/customizer/settings.php:372
+msgid "Check this box to show the CTA Block in the first column."
+msgstr ""
+"Marque esta casilla para mostrar el bloque de la llamada a la acción en la "
+"primera columna."
+
+#: inc/customizer/settings.php:390
+msgid "Post IDs"
+msgstr "IDs de publicacione"
+
+#: inc/customizer/settings.php:391
+msgid ""
+"Enter a comma-separate list of BuddyPress Activity Post IDs to feature. A "
+"maximum of three posts will be displayed. Posts will display in "
+"chronological order."
+msgstr ""
+"Escriba una lista separada por comas de ID de publicaciones (Post ID) a "
+"destacaer. Se mostrará un máximo de tres publicaciones Las publicaciones se "
+"mostrarán en orden cronológico."
+
+#: template-parts/scaffolding/scaffolding-blank.php:11
+msgid "X"
+msgstr "X"
+
+#: template-parts/scaffolding/scaffolding-buttons.php:12
+msgid "Buttons"
+msgstr "Botones"
+
+#: template-parts/scaffolding/scaffolding-forms.php:12
+msgid "Forms"
+msgstr "Formularios"
+
+#: template-parts/scaffolding/scaffolding-globals.php:12
+msgid "Globals"
+msgstr "Globales"
+
+#: template-parts/scaffolding/scaffolding-icons.php:12
+msgid "Icons"
+msgstr "Iconos"
+
+#: template-parts/scaffolding/scaffolding-typography.php:12
+msgid "Typography"
+msgstr "Tipografía"
+
+#: buddypress/members/single/activity.php:11
+msgid "Member secondary navigation"
+msgstr "Navegación secundaria de miembros"
+
+#: buddypress/members/single/cover-image-header.php:43
+msgid "Organization of membership:"
+msgstr "Organización de pertenencia:"
+
+#: buddypress/members/single/cover-image-header.php:116
+msgid "Abilities: "
+msgstr "Habilidades: "
+
+#: mediapress/default/buddypress/activity/entry.php:55
+msgid "Reply <span>%s</span>"
+msgstr "Responder <span>%s</span>"

@@ -1,0 +1,12 @@
+//--------------------------------------------------------------
+// BuddyPress
+//--------------------------------------------------------------
+
+@import 'global/index';
+@import 'activity/index';
+@import 'pages/index';
+
+#buddypress {
+	@import 'members/index';
+	@import 'profile/index';
+}

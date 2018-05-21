@@ -1,0 +1,143 @@
+//--------------------------------------------------------------
+// Base Layout
+//--------------------------------------------------------------
+// sass-lint:disable mixins-before-declarations
+// sass-lint:disable no-important
+//-----------------------------------------
+// Body
+// Removes positoning on body element added by plugin js.
+//-----------------------------------------
+body {
+	background-color: $color-athens-gray;
+	position: inherit !important;
+
+	// Get specific with a body class to avoid using important.
+	&.ready {
+		@include media(max-width $tablet-portrait) {
+			margin-top: 0;
+		}
+	} // &.ready
+} // body
+
+
+//-----------------------------------------
+// Basic structure
+//-----------------------------------------
+.container,
+.site-header {
+	@include padding(null $gutter / 4);
+
+	max-width: $max-width;
+	width: 100%;
+
+	@include media($container) {
+		@include padding(null 0);
+	}
+} // .container, .site-header
+
+.site-content {
+	@include padding(rem(15) null);
+
+	@include media($tablet-portrait) {
+		@include padding(rem(70) null);
+	}
+
+	@include media($tablet-landscape) {
+		margin-top: rem(92);
+	}
+
+	// No top padding on profile pages.
+	.buddypress-profile & {
+		padding-top: 0;
+	} // .buddypress-profile &
+} // .site-content
+
+
+//-----------------------------------------
+// Create Content/Sidebary layout
+//-----------------------------------------
+.has-sidebar {
+
+	.primary {
+		margin-left: 0;
+
+		@include media($tablet-landscape) {
+			@include span-columns(8);
+		}
+	} // .primary
+
+	.secondary {
+		@include padding(rem(18) rem(18) rem(20));
+
+		background-color: $color-white;
+		margin-bottom: rem(70);
+
+		@include media($tablet-landscape) {
+			@include span-columns(4);
+
+			margin-bottom: 0;
+		}
+	} // .secondary
+} // .has-sidebar
+
+
+//-----------------------------------------
+// Adjust for Profile Bar
+//-----------------------------------------
+.has-profile-bar {
+	margin-bottom: rem(64);
+
+	@include media($tablet-landscape) {
+		margin-bottom: 0;
+	}
+} // .has-profile-bar
+
+/// This is the outermost element for a module or block.
+///
+/// @name .grid-container
+/// @example html - Usage
+/// <div class="grid-container">
+///   <div class="grid-x">
+///     <div class="cell ...">I am a cell!</div>
+///   </div>
+/// </div>
+///
+.grid-container {
+	@include row;
+}
+
+/// This is the inner container for a module or block, and generally establishes the inner content width.
+///
+/// @name .grid-x
+/// @example html - Usage
+/// <div class="grid-container">
+///   <div class="grid-x">
+///     <div class="cell ...">I am a cellu!</div>
+///   </div>
+/// </div>;
+///
+.grid-x {
+	@include outer-container($max-width);
+} // .grid-x
+
+/// Create a generic, 100% width cell.
+///
+/// @name .cell
+/// @example html - Usage
+/// <div class="grid-container">
+///   <div class="grid-x">
+///     <div class="cell">100% width no matter what viewport</div>
+///   </div>
+/// </div>
+///
+.cell {
+	@include fill-parent;
+} // .cell
+
+
+//-----------------------------------------
+// Full Width
+//-----------------------------------------
+.full-width {
+	@include full-width;
+} // .full-width

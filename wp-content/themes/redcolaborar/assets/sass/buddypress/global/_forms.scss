@@ -1,0 +1,22 @@
+//--------------------------------------------------------------
+// Various BP Form Elements
+//--------------------------------------------------------------
+#buddypress {
+
+	select {
+
+		// If this is a bulk action select.
+		&[name*='bulk_action'],
+		&[name='sort_order'] {
+			width: unset;
+		} // &[name*='bulk_action']
+	} // select
+
+	// Filter dropdown container.
+	li {
+
+		&.filter {
+			width: 100%;
+		} // &.filter
+	} // li
+} // #buddypress

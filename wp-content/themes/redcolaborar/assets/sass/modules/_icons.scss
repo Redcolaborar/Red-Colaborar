@@ -1,0 +1,68 @@
+//--------------------------------------------------------------
+// Icons
+//--------------------------------------------------------------
+
+//-----------------------------------------
+// Close icon
+//-----------------------------------------
+.close {
+	cursor: pointer;
+	display: block;
+	margin-top: rem(-5);
+	outline: none;
+
+	&::before,
+	&::after {
+		@include size(rem(20) rem(3));
+
+		background: $color-white;
+		border-radius: $border-radius-thin;
+		content: '';
+		cursor: pointer;
+		display: block;
+		position: relative;
+	}
+
+	&::before {
+		top: rem(3);
+		transform: rotate(45deg);
+	}
+
+	&::after {
+		transform: rotate(-45deg);
+	}
+} // .cross
+
+
+//-----------------------------------------
+// Down arrow icon
+//-----------------------------------------
+.down-arrow {
+	cursor: pointer;
+	display: block;
+	margin-left: rem(10);
+	outline: none;
+	transition: $transition-transform;
+
+	&::before,
+	&::after {
+		@include size(rem(10) rem(2));
+
+		background: $color-gun-powder;
+		border-radius: $border-radius-thin;
+		content: '';
+		cursor: pointer;
+		display: block;
+		position: relative;
+	}
+
+	&::before {
+		left: rem(-6);
+		top: rem(2);
+		transform: rotate(45deg);
+	}
+
+	&::after {
+		transform: rotate(-225deg);
+	}
+} // .down-arrow

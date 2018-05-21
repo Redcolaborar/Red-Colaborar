@@ -33,13 +33,12 @@ function bps_xprofile_setup ($fields)
 				$f->description = str_replace ('&amp;', '&', stripslashes ($field->description));
 				$f->description = bps_wpml (0, $f->id, 'description', $f->description);
 				$f->type = $field->type;
+
 				$f->format = bps_xprofile_format ($field->type, $field->id);
 				$f->search = 'bps_xprofile_search';
-				if ($f->format != 'set')
-				{
-					$f->sort_directory = 'bps_xprofile_sort_directory';
-					$f->get_value = 'bps_xprofile_get_value';
-				}
+				$f->sort_directory = 'bps_xprofile_sort_directory';
+				$f->get_value = 'bps_xprofile_get_value';
+
 				$f->options = bps_xprofile_options ($field->id);
 				foreach ($f->options as $key => $label)
 					$f->options[$key] = bps_wpml (0, $f->id, 'option', $label);
@@ -47,7 +46,9 @@ function bps_xprofile_setup ($fields)
 				if ($f->format == 'custom')
 					do_action ('bps_custom_field', $f);
 
-				list ($f->filters, $f->display) = bps_xprofile_filters ($f->format, count ($f->options), $f);
+				if ($f->format == 'set')
+					unset ($f->sort_directory, $f->get_value);
+
 				$fields[] = $f;
 			}
 		}
@@ -61,60 +62,80 @@ function bps_xprofile_search ($f)
 	global $bp, $wpdb;
 
 	$value = $f->value;
-	$filter = bps_filterXquery ($f);
+	$filter = $f->format. '_'.  ($f->filter == ''? 'is': $f->filter);
 
 	$sql = array ('select' => '', 'where' => array ());
-
 	$sql['select'] = "SELECT user_id FROM {$bp->profile->table_name_data}";
 	$sql['where']['field_id'] = $wpdb->prepare ("field_id = %d", $f->id);
 
 	switch ($filter)
 	{
-	case 'range':
-		$min = isset ($value['min'])? $value['min']: '';
-		$max = isset ($value['max'])? $value['max']: '';
-
-		if ($min !== '')  $sql['where']['min'] = $wpdb->prepare ("value >= %f", $min);
-		if ($max !== '')  $sql['where']['max'] = $wpdb->prepare ("value <= %f", $max);
+	case 'integer_range':
+		if (isset ($value['min']))  $sql['where']['min'] = $wpdb->prepare ("value >= %d", $value['min']);
+		if (isset ($value['max']))  $sql['where']['max'] = $wpdb->prepare ("value <= %d", $value['max']);
 		break;
 
-	case 'age_range':
-		$min = isset ($value['min'])? $value['min']: '';
-		$max = isset ($value['max'])? $value['max']: '';
-		$time = time ();
-		$day = date ("j", $time);
-		$month = date ("n", $time);
-		$year = date ("Y", $time);
-		$ymin = $year - $max - 1;
-		$ymax = $year - $min;
-
-		if ($max !== '')  $sql['where']['age_min'] = $wpdb->prepare ("DATE(value) > %s", "$ymin-$month-$day");
-		if ($min !== '')  $sql['where']['age_max'] = $wpdb->prepare ("DATE(value) <= %s", "$ymax-$month-$day");
+	case 'decimal_range':
+		if (isset ($value['min']))  $sql['where']['min'] = $wpdb->prepare ("value >= %f", $value['min']);
+		if (isset ($value['max']))  $sql['where']['max'] = $wpdb->prepare ("value <= %f", $value['max']);
 		break;
 
-	case 'contains':
+	case 'date_range':
+		if (isset ($value['min']))  $sql['where']['min'] = $wpdb->prepare ("DATE(value) >= %s", $value['min']);
+		if (isset ($value['max']))  $sql['where']['max'] = $wpdb->prepare ("DATE(value) <= %s", $value['max']);
+		break;
+
+	case 'date_age_range':
+		$day = date ('j');
+		$month = date ('n');
+		$year = date ('Y');
+
+		if (isset ($value['max']))
+		{
+			$ymin = $year - $value['max'] - 1; 
+			$sql['where']['age_min'] = $wpdb->prepare ("DATE(value) > %s", "$ymin-$month-$day");
+		}
+		if (isset ($value['min']))
+		{
+			$ymax = $year - $value['min'];
+			$sql['where']['age_max'] = $wpdb->prepare ("DATE(value) <= %s", "$ymax-$month-$day");
+		}
+		break;
+
+	case 'text_contains':
+	case 'location_contains':
 		$value = str_replace ('&', '&amp;', $value);
 		$escaped = '%'. bps_esc_like ($value). '%';
 		$sql['where'][$filter] = $wpdb->prepare ("value LIKE %s", $escaped);
 		break;
 
-	case 'like':
+	case 'text_like':
+	case 'location_like':
 		$value = str_replace ('&', '&amp;', $value);
 		$value = str_replace ('\\\\%', '\\%', $value);
 		$value = str_replace ('\\\\_', '\\_', $value);
 		$sql['where'][$filter] = $wpdb->prepare ("value LIKE %s", $value);
 		break;
 
-	case '':
+	case 'text_is':
+	case 'location_is':
 		$value = str_replace ('&', '&amp;', $value);
 		$sql['where'][$filter] = $wpdb->prepare ("value = %s", $value);
 		break;
 
-	case 'num':
+	case 'integer_is':
+		$sql['where'][$filter] = $wpdb->prepare ("value = %d", $value);
+		break;
+
+	case 'decimal_is':
 		$sql['where'][$filter] = $wpdb->prepare ("value = %f", $value);
 		break;
 
-	case 'is_in':
+	case 'date_is':
+		$sql['where'][$filter] = $wpdb->prepare ("DATE(value) = %s", $value);
+		break;
+
+	case 'text_one_of':
 		$values = (array)$value;
 		$parts = array ();
 		foreach ($values as $value)
@@ -125,8 +146,8 @@ function bps_xprofile_search ($f)
 		$sql['where'][$filter] = '('. implode (' OR ', $parts). ')';
 		break;
 
-	case 'match_any':
-	case 'match_all':
+	case 'set_match_any':
+	case 'set_match_all':
 		$values = (array)$value;
 		$parts = array ();
 		foreach ($values as $value)
@@ -135,7 +156,7 @@ function bps_xprofile_search ($f)
 			$escaped = '%:"'. bps_esc_like ($value). '";%';
 			$parts[] = $wpdb->prepare ("value LIKE %s", $escaped);
 		}
-		$match = ($filter == 'match_any')? ' OR ': ' AND ';
+		$match = ($filter == 'set_match_any')? ' OR ': ' AND ';
 		$sql['where'][$filter] = '('. implode ($match, $parts). ')';
 		break;
 
@@ -177,7 +198,8 @@ function bps_xprofile_get_value ($f)
 		BP_XProfile_ProfileData::get_value_byid ($f->id, $users);
 	}
 
-	return BP_XProfile_ProfileData::get_value_byid ($f->id, $members_template->member->ID);
+	$value = BP_XProfile_ProfileData::get_value_byid ($f->id, $members_template->member->ID);
+	return stripslashes ($value);
 }
 
 function bps_xprofile_format ($type, $field_id)
@@ -185,11 +207,11 @@ function bps_xprofile_format ($type, $field_id)
 	$formats = array
 	(
 		'textbox'			=> array ('text', 'decimal'),
-		'number'			=> array ('integer'),		
+		'number'			=> array ('integer'),
 		'url'				=> array ('text'),
 		'textarea'			=> array ('text'),
-		'selectbox'			=> array ('text', 'integer', 'decimal', 'date'),
-		'radio'				=> array ('text', 'integer', 'decimal', 'date'),
+		'selectbox'			=> array ('text', 'decimal'),
+		'radio'				=> array ('text', 'decimal'),
 		'multiselectbox'	=> array ('set'),
 		'checkbox'			=> array ('set'),
 		'datebox'			=> array ('date'),
@@ -218,204 +240,19 @@ function bps_xprofile_options ($field_id)
 	return $options;
 }
 
-function bps_xprofile_filters ($format, $enum, $f)
-{
-	$filters = array ();
-
-	$selector = $format. ($enum? '/e': '');
-	switch ($selector)
-	{
-	case 'integer':
-	case 'decimal':
-	case 'integer/e':
-	case 'decimal/e':
-		$filters['']			= __('is', 'bp-profile-search');
-		$filters['range']		= __('range', 'bp-profile-search');
-		break;
-
-	case 'text':
-		$filters['contains']	= __('contains', 'bp-profile-search');
-		$filters['']			= __('is', 'bp-profile-search');
-		$filters['like']		= __('is like', 'bp-profile-search');
-		break;
-
-	case 'text/e':
-		$filters['']			= __('is', 'bp-profile-search');
-		break;
-
-	case 'date':
-		$filters['age_range']	= __('age range', 'bp-profile-search');
-		break;
-
-	case 'date/e':
-		$filters['']			= __('is', 'bp-profile-search');
-		$filters['age_range']	= __('age range', 'bp-profile-search');
-		break;
-
-	case 'set/e':
-		$filters['match_any']	= __('match any', 'bp-profile-search');
-		$filters['match_all']	= __('match all', 'bp-profile-search');
-		break;
-
-	case 'custom':
-	case 'custom/e':
-		$filters = bps_cft_filters ($f->type, $f);
-		return array ($filters, array ());
-
-	default:
-		return array (array (), array ());
-	}
-
-	$display = bps_xprofile_display ($format, $enum);
-	return array ($filters, $display);
-}
-
-function bps_cft_filters ($type, $f)
-{
-	$filters = array
-	(
-		'textbox'			=> array ('' => 'normal', 'range' => 'range'),
-		'number'			=> array ('' => 'normal', 'range' => 'range'),
-		'url'				=> array ('' => 'normal'),
-		'textarea'			=> array ('' => 'normal'),
-		'selectbox'			=> array ('' => 'normal', 'range' => 'range'),
-		'radio'				=> array ('' => 'normal', 'range' => 'range'),
-		'multiselectbox'	=> array ('' => 'normal'),
-		'checkbox'			=> array ('' => 'normal'),
-		'datebox'			=> array ('range' => 'range'),
-	);
-
-	$mapped = apply_filters ('bps_field_validation_type', $type, $f);			// to be removed
-	$mapped = apply_filters ('bps_field_type_for_validation', $mapped, $f);		// to be removed
-
-	if ($mapped != $type)
-		return isset ($filters[$mapped])? $filters[$mapped]: array ();
-
-	list (, , $range) = apply_filters ('bps_field_validation', array ('test', 'test', 'test'), $f);		// to be removed
-
-	if ($range === true)
-		return array ('range' => 'range');
-	else if ($range === false)
-		return array ('' => 'normal');
-	else
-		return array ();
-}
-
-function bps_xprofile_display ($format, $enum)
-{
-	$selector = $format. ($enum? '/e': '');
-
-	$new_display = array
-	(
-		'integer'		=> array ('' => 'integer', 'range' => 'integer_range'),
-		'decimal'		=> array ('' => 'decimal', 'range' => 'decimal_range'),
-		'text'			=> array ('' => 'text', 'contains' => 'text', 'like' => 'text'),
-		'date'			=> array ('age_range' => 'integer_range'),
-
-		'integer/e'		=> array ('' => array ('selectbox', 'radio'), 'range' => 'integer_range'),
-		'decimal/e'		=> array ('' => array ('selectbox', 'radio'), 'range' => 'decimal_range'),
-		'text/e'		=> array ('' => array ('selectbox', 'radio')),
-		'date/e'		=> array ('' => array ('selectbox', 'radio'), 'age_range' => 'integer_range'),
-		'set/e'			=> array ('match_any' => array ('checkbox', 'multiselectbox'), 'match_all'	=> array ('checkbox', 'multiselectbox')),
-	);
-
-	$display = array
-	(
-		'integer'		=> array ('' => 'number', 'range' => 'range'),
-		'decimal'		=> array ('' => 'textbox', 'range' => 'range'),
-		'text'			=> array ('' => 'textbox', 'contains' => 'textbox', 'like' => 'textbox'),
-		'date'			=> array ('age_range' => 'range'),
-
-		'integer/e'		=> array ('' => array ('selectbox', 'radio'), 'range' => 'range'),
-		'decimal/e'		=> array ('' => array ('selectbox', 'radio'), 'range' => 'range'),
-		'text/e'		=> array ('' => array ('selectbox', 'radio')),
-		'date/e'		=> array ('' => array ('selectbox', 'radio'), 'age_range' => 'range'),
-		'set/e'			=> array ('match_any' => array ('checkbox', 'multiselectbox'), 'match_all'	=> array ('checkbox', 'multiselectbox')),
-	);
-
-	return $display[$selector];
-}
-
-function bps_field_display ($display, $mode, $f)
-{
-	$display = isset ($display[$mode])? $display[$mode]: bps_displayXsearch_form ($f);
-	if (is_string ($display))  return $display;
-
-	$choice = apply_filters ('bps_field_display', $f->type, $f);
-	return in_array ($choice, $display)? $choice: $display[0];
-}
-
-function bps_filterXquery ($f)
-{
-	if ($f->format != 'custom')
-	{
-		if ($f->filter == 'range' || $f->filter == 'age_range')  return $f->filter;
-
-		switch ($f->type)
-		{
-		case 'number':
-			return 'num';
-
-		case 'selectbox':
-		case 'radio':
-			return 'is_in';
-		}
-
-		return $f->filter;
-	}
-
-	$type = apply_filters ('bps_field_query_type', $f->type, $f);		// to be removed
-	$type = apply_filters ('bps_field_type_for_query', $type, $f);		// to be removed
-	
-	if ($f->filter == 'range' || $f->filter == 'age_range')
-		return ($type == 'datebox')? 'age_range': 'range';
-
-	switch ($type)
-	{
-	case 'textbox':
-	case 'textarea':
-	case 'url':
-		return $f->filter;
-
-	case 'number':
-		return 'num';
-
-	case 'selectbox':
-	case 'radio':
-		return 'is_in';
-
-	case 'multiselectbox':
-	case 'checkbox':
-		return $f->filter;
-	}
-
-	return false;
-}
-
-function bps_displayXsearch_form ($f)
-{
-	$type = apply_filters ('bps_field_type_for_filters', $f->type, $f);		// to be removed
-	$type = apply_filters ('bps_field_type_for_search_form', $type, $f);	// to be removed
-
-	return $type;
-}
-
-add_filter ('bps_add_fields', 'bps_anyfield_setup', 99);
+add_filter ('bps_add_fields', 'bps_anyfield_setup');
 function bps_anyfield_setup ($fields)
 {
-	$f = new stdClass;
-
 	if (!function_exists ('bp_has_profile'))  return $fields;
 
+	$f = new stdClass;
 	$f->group = __('Other', 'bp-profile-search');
 	$f->code = 'field_any';
 	$f->name = __('Any field', 'bp-profile-search');
 	$f->description = __('Search every BP Profile Field', 'bp-profile-search');
-	$f->type = '';
-	$f->options = array ();
+
 	$f->format = 'text';
-	$f->filters = array ('contains' => __('contains', 'bp-profile-search'));
-	$f->display = array ('contains' => 'textbox');
+	$f->options = array ();
 	$f->search = 'bps_anyfield_search';
 
 	$fields[] = $f;
@@ -426,12 +263,29 @@ function bps_anyfield_search ($f)
 {
 	global $bp, $wpdb;
 
+	$filter = $f->filter;
 	$value = str_replace ('&', '&amp;', $f->value);
-	$escaped = '%'. bps_esc_like ($value). '%';
 
 	$sql = array ('select' => '', 'where' => array ());
 	$sql['select'] = "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data}";
-	$sql['where'][$f->filter] = $wpdb->prepare ("value LIKE %s", $escaped);
+
+	switch ($filter)
+	{
+	case 'contains':
+		$escaped = '%'. bps_esc_like ($value). '%';
+		$sql['where'][$filter] = $wpdb->prepare ("value LIKE %s", $escaped);
+		break;
+
+	case '':
+		$sql['where'][$filter] = $wpdb->prepare ("value = %s", $value);
+		break;
+
+	case 'like':
+		$value = str_replace ('\\\\%', '\\%', $value);
+		$value = str_replace ('\\\\_', '\\_', $value);
+		$sql['where'][$filter] = $wpdb->prepare ("value LIKE %s", $value);
+		break;
+	}
 
 	$sql = apply_filters ('bps_field_sql', $sql, $f);
 	$query = $sql['select']. ' WHERE '. implode (' AND ', $sql['where']);
@@ -450,11 +304,11 @@ function bps_membertype_setup ($fields)
 
 	$f = new stdClass;
 	$f->group = __('Other', 'bp-profile-search');
-	$f->code = 'membertype';
+	$f->code = 'member_type';
 	$f->name = __('Member type', 'bp-profile-search');
 	$f->description = __('Select the member type', 'bp-profile-search');
-	$f->type = '';
 
+	$f->format = 'text';
 	$f->options = array ();
 	foreach ($member_types as $type)
 	{
@@ -462,9 +316,6 @@ function bps_membertype_setup ($fields)
 		$f->options[$label] = $label;
 	}
 
-	$f->format = 'text';
-	$f->filters = array ('' => __('is', 'bp-profile-search'));
-	$f->display = array ('' => 'selectbox');
 	$f->search = 'bps_membertype_search';
 
 	$fields[] = $f;

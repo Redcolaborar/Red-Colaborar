@@ -4,6 +4,8 @@
  * BP Profile Search - form template 'bps-form-sample-2'
  *
  * See http://dontdream.it/bp-profile-search/form-templates/ if you wish to modify this template or develop a new one.
+ * A new or modified template should be moved to the 'buddypress/members' directory in your theme's root, otherwise it
+ * will be overwritten during the next plugin update.
  *
  */
 

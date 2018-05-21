@@ -214,8 +214,8 @@ class BuddyBoss_Edit_Activity {
 
 	public function assets(){
 		$assets_url = trailingslashit( BUDDYBOSS_EDIT_ACTIVITY_PLUGIN_URL ) . 'assets/';
-		//wp_enqueue_script( 'buddyboss-edit-activity', $assets_url . 'js/buddypress-edit-activity.js', array('jquery'), '1.0.5', true );
-		wp_enqueue_script( 'buddyboss-edit-activity', $assets_url . 'js/buddypress-edit-activity.min.js', array('jquery'), BUDDYBOSS_EDIT_ACTIVITY_PLUGIN_VERSION, true );
+		wp_enqueue_script( 'buddyboss-edit-activity', $assets_url . 'js/buddypress-edit-activity.js', array('jquery'), '1.0.5', true );
+		// wp_enqueue_script( 'buddyboss-edit-activity', $assets_url . 'js/buddypress-edit-activity.min.js', array('jquery'), BUDDYBOSS_EDIT_ACTIVITY_PLUGIN_VERSION, true );
 
 		add_action('wp_head', 'b_e_a_inline_styles');
 		function b_e_a_inline_styles() {

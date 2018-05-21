@@ -1,0 +1,34 @@
+/*
+Theme Name: Red Colaborar
+Theme URI: http://redcolaborar.org
+Author: WebDevStudios
+Author URI: http://webdevstudios.com/
+Description: A WDS Theme for Red Colaborar
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: redcolaborar
+
+This theme, like WordPress, is licensed under the GPL.
+
+Based on Underscores http://underscores.me/, (C) 2012-2017 Automattic, Inc.
+
+*/
+
+$output-bourbon-deprecation-warnings: false;
+@import 'bourbon';
+@import 'utilities/functions/index';
+@import 'utilities/variables/index';
+@import 'neat';
+@import 'utilities/mixins/index';
+@import 'utilities/helpers/index';
+@import 'assets/bower_components/normalize-css/normalize.css';
+@import 'assets/bower_components/animate.css/animate.css';
+
+@import 'base/index';
+@import 'structure/index';
+@import 'modules/index';
+@import 'plugins/index';
+@import 'views/index';
+@import 'widgets/index';
+@import 'buddypress/index';

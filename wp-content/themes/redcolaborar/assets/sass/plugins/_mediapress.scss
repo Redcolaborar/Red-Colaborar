@@ -1,0 +1,487 @@
+//--------------------------------------------------------------
+// Media Press Overrides
+//--------------------------------------------------------------
+
+// sass-lint:disable no-color-literals
+// sass-lint:disable no-qualifying-elements
+// sass-lint:disable mixins-before-declarations
+// sass-lint:disable no-important
+// sass-lint:disable class-name-format
+// sass-lint:disable id-name-format
+
+//-----------------------------------------
+// Media Popup
+//-----------------------------------------
+.image-container {
+	text-align: center;
+} // .image-container
+
+.mpp-lightbox-activity-container {
+
+	#mpp-whats-new {
+		height: rem(50) !important; // Override plugin styles.
+	} // #mpp-whats-new
+
+	.mpp-activity-header {
+
+		p {
+			background-color: transparent;
+			border: 0 !important; // Override plugin styles.
+			margin: 0 0 rem(10) 0 !important; // Override plugin styles.
+		} // p
+	} // .mpp-activity-header
+
+	.mpp-activity-meta {
+
+		a {
+			text-decoration: none !important; // Override plugin styles.
+
+			// Count
+			span {
+				background: $color-white !important;
+				color: $color-black;
+				display: inline-block;
+				margin-bottom: rem(7);
+				transition: $transition-button;
+			} // span
+
+			&:active,
+			&:focus,
+			&:hover {
+				background-color: $color-flame;
+				color: $color-white;
+			} // &:active, &:focus, &:hover
+		} // a
+	} // .mpp-activity-meta
+} // .mpp-lightbox-activity-container
+
+//-----------------------------------------
+// Lightbox Media Container
+//-----------------------------------------
+.mpp-lightbox-media-container,
+.mpp-lightbox-activity-container {
+	height: auto;
+	width: 100%;
+
+	.avatar {
+		border-radius: rem(75);
+	} // a img
+
+	a img.mpp-lightbox-single-media {
+		max-width: 100%;
+
+		@include media($tablet-landscape) {
+			max-width: 75%;
+		}
+	} // a img.mpp-lightbox-single-media
+} // .mpp-lightbox-media-container, .mpp-lightbox-activity-container
+
+.mpp-lightbox-content {
+	height: auto;
+	max-width: 90%;
+	width: 100%;
+
+	@include media($tablet-landscape) {
+		max-width: 75%;
+	}
+} // .mpp-lightbox-content
+
+.mpp-lightbox-media-meta {
+	max-width: 100%;
+} // .mpp-lightbox-media-meta
+
+.mpp-lightbox-media-description {
+	background: transparent;
+} // .mpp-lightbox-media-description
+
+// UL
+#mpp-activity-stream {
+	margin: 0;
+	padding: 0;
+
+	.activity-comments {
+		margin-left: 0 !important;
+	} // .activity-comments
+
+	.mpp-acomment-meta {
+		font-size: rem(12);
+	} // .mpp-acomment-meta
+
+	a:first-of-type {
+		color: $color-gun-powder;
+		font-size: rem(17);
+		font-weight: bold;
+		margin-right: rem(10);
+	} // p a:first-of-type
+} // #mpp-activity-stream
+
+.mfp-close {
+	padding: 0;
+	right: rem(15);
+	top: rem(48);
+
+	&:active,
+	&:focus,
+	&:hover {
+		background-color: transparent;
+		right: rem(15);
+		top: rem(48);
+	} // &:active, &:focus, &:hover
+} // .mfp-close
+
+// Submit Button
+#mpp-aw-whats-new-submit {
+	font-size: rem(14);
+	padding: rem(9.5) rem(30);
+} // #mpp-aw-whats-new-submit
+
+// Uploader Link
+.mpp-lightbox-uploader-link {
+
+	a {
+		color: $color-gun-powder;
+		font-size: rem(17);
+		font-weight: bold;
+		text-decoration: none;
+	} // a
+} // .mpp-lightbox-uploader-link
+
+// Avatar
+.mpp-activity-avatar {
+
+	a img,
+	.avatar {
+		border-radius: rem(75);
+	} // a img
+} // .mpp-activity-avatar
+
+// Header
+.mpp-activity-header {
+	p {
+
+		a {
+			color: $color-gun-powder;
+		} // a
+
+		a:first-of-type {
+			color: $color-gun-powder;
+			font-size: rem(17);
+			font-weight: bold;
+			margin-right: rem(10);
+		} // p a:first-of-type
+	} // p
+} // .mpp-activity-header
+
+.mpp-acomment-meta {
+
+	.activity-time-since {
+		color: $color-gun-powder;
+	} // .activity-time-since
+
+	a {
+
+		&:first-of-type {
+			color: $color-gun-powder;
+			font-size: rem(17);
+			font-weight: bold;
+			margin-right: rem(10);
+		} // p a:first-of-type
+	} // a
+} // .mpp-acomment-meta a
+
+
+//-----------------------------------------
+// Remove Favorite Button
+//-----------------------------------------
+.mpp-media-activity {
+
+	ul {
+		margin-left: 0 !important; // Overridde plugin styles.
+
+		.mpp-acomment-avatar {
+			width: rem(40);
+
+			ul {
+				.mpp-acomment-avatar {
+					width: rem(40);
+				} // .mpp-acomment-avatar
+			} // ul
+		} // .mpp-acomment-avatar
+	} // ul
+} // .mpp-media-activity
+
+.mpp-lightbox-activity-container .mpp-activity-meta {
+	float: right;
+
+	@include media($tablet-landscape) {
+		float: none;
+	}
+
+	a.fav {
+		display: none;
+	} // a.fav
+
+	.delete-activity,
+	.mpp-acomment-reply {
+		background-color: transparent;
+		color: $color-gun-powder;
+		font-family: $font-header;
+		font-size: rem(12) !important; // Override plugin styles.
+		font-weight: 700;
+		padding: 0;
+
+		// Count
+		span {
+			background-color: $color-cerulean !important; // Override plugin styles.
+			border-radius: rem(25);
+			color: $color-white;
+		} // span
+
+		&:active,
+		&:focus,
+		&:hover {
+			background-color: transparent;
+			color: $color-gun-powder;
+			opacity: 0.5;
+		} // &:active, &:focus, &:hover
+	} // .delete-activity,.mpp-acomment-reply
+} // .mpp-lightbox-activity-container .mpp-activity-meta
+
+// Reply container
+.mpp-activity-comments {
+	margin-left: 0 !important; // Override plugin styles
+
+	.mpp-acomment-content {
+		font-size: rem(16) !important; // Override plugin styles
+
+		p {
+			margin-bottom: rem(15);
+		} // p
+ 	} // .mpp-acomment-content
+} // .mpp-activity-comments
+
+.mpp-acomment-options {
+
+	.delete,
+	.mpp-acomment-reply {
+		background-color: transparent;
+		color: $color-gun-powder;
+		font-family: $font-header;
+		font-size: rem(12) !important; // Override plugin styles.
+		font-weight: 700;
+		padding: 0;
+
+		// Count
+		span {
+			background-color: $color-cerulean !important; // Override plugin styles.
+			border-radius: rem(25);
+			color: $color-white;
+		} // span
+
+		&:active,
+		&:focus,
+		&:hover {
+			background-color: transparent;
+			color: $color-gun-powder;
+			opacity: 0.5;
+		} // &:active, &:focus, &:hover
+	} // .delete-activity,.mpp-acomment-reply
+} // .mpp-acomment-options
+
+
+//-----------------------------------------
+// Image Containers
+//-----------------------------------------
+#mpp-activity-upload-buttons {
+	float: none;
+	margin-top: 0;
+
+	img {
+		@include size(rem(15));
+	} // img
+
+	#mpp-photo-upload,
+	#mpp-audio-upload,
+	#mpp-video-upload,
+	#mpp-doc-upload {
+		display: none;
+	} // #mpp-photo-upload, #mpp-audio-upload, #mpp-video-upload, #mpp-doc-upload
+} // #mpp-activity-upload-buttons
+
+.mpp-upload-buttons {
+	padding-right: rem(20) !important; // Force override plugin :(
+} // .mpp-upload-buttons
+
+
+//-----------------------------------------
+// Media List Activity
+//-----------------------------------------
+#mpp-uploaded-media-list-activity {
+	margin-top: rem(25);
+
+	ul {
+		margin: 0 !important; // Force override plugin :(
+	} // ul
+} // #mpp-uploaded-media-list-activity
+
+#mpp-upload-dropzone-activity {
+	margin-top: rem(15);
+} // #mpp-upload-dropzone-activity
+
+
+//-----------------------------------------
+// Gallery Container
+//-----------------------------------------
+#latest_gallery_data_container {
+	display: none !important; // Override styles.
+
+	.assign_laggery_label {
+		margin-right: rem(25);
+		width: auto;
+	} // .assign_laggery_label
+
+	.galley_selection {
+
+		select {
+			min-height: rem(48);
+			min-width: rem(200);
+		} // select
+	} // .galley_selection
+} // #latest_gallery_data_container
+
+
+//-----------------------------------------
+// Upload Button
+//-----------------------------------------
+.mpp-upload-buttons {
+	display: flex !important;
+} // .mpp-upload-buttons
+
+#mpp-all-upload {
+	@include size(rem(43) 0);
+
+	appearance: none;
+	background-color: $color-white;
+	background-image: url('assets/images/svg-icons/icon-camera.svg');
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size: rem(18);
+	border: 1px solid $color-input-border;
+	border-radius: rem(75);
+	color: $color-button-text;
+	display: none;
+	font-family: $font-header;
+	font-size: rem(14);
+	line-height: 1.5;
+	margin: 0;
+	max-height: 0;
+	overflow: hidden;
+	padding: 0;
+	transition: $transition-button;
+
+	&:active,
+	&:focus,
+	&:hover {
+		opacity: 0.5;
+	} // &:active, &:focus, &:hover
+
+	img {
+		display: none;
+	} // img
+} // mpp-all-upload
+
+//-----------------------------------------
+// Upload Results
+//-----------------------------------------
+#whats-new-form {
+
+	.mpp-uploading-media-list .mpp-uploaded-media-item {
+		background-color: $color-white;
+	} // .mpp-uploading-media-list .mpp-uploaded-media-item
+} // #whats-new-form
+
+//-----------------------------------------
+// File Drop Zone
+//-----------------------------------------
+#mpp-upload-dropzone-activity {
+	margin-bottom: $gutter * 1.5;
+} // #mpp-upload-dropzone-activity
+
+
+//-----------------------------------------
+// Media Navigation Arrows
+//-----------------------------------------
+.mfp-arrow {
+
+
+	&.mfp-arrow-left {
+		&::before {
+			border-right: rem(27) solid $color-burnt-orange;
+		} // &:before
+	} // &.mfp-arrow-left
+
+	&.mfp-arrow-right {
+		&::before {
+			border-left: rem(29) solid $color-burnt-orange;
+		} // &:before
+	} // &.mfp-arrow-right
+
+	&:active,
+	&:focus,
+	&:hover {
+		background-color: transparent;
+	} // &:active, &:focus, &:hover
+} // .mfp-arrow
+
+//-----------------------------------------
+// MediaPress Video Player.
+//-----------------------------------------
+.rc-video {
+
+	// Add space to the bottom, since we're moving the controls down a bit below.
+	padding-bottom: 27px;
+
+	.mpp-media-holder,
+	.wp-video {
+
+		// Make sure width= settings are overwritten and 100% is always used.
+		width: 100% !important;
+	}
+
+	.mpp-audio-player,
+	.mpp-media-holder {
+
+		// Remove unnecessary margin on container.
+		margin: 0;
+
+		// Make sure exact width's do not stick.
+		min-width: 0 !important;
+
+		// Remove unnecessary padding on container.
+		padding: 0;
+	}
+
+	.mpp-audio-content img {
+
+		// Do not show the thumbnail, sometimes they are 200px by 200px and are to small to up-scale.
+		display: none !important;
+	}
+
+	.mejs-container .mejs-controls,
+	.mejs-embed,
+	.mejs-embed body {
+
+		// Make the controls look better.
+		background: #000;
+
+		// Move the controls out of the video's way.
+		bottom: -40px;
+	}
+
+	.mejs-poster {
+
+		// Make sure that the cover image is always spread across the area.
+		background-position: center center;
+		background-size: cover;
+	}
+}

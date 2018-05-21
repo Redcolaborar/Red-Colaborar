@@ -60,6 +60,17 @@ sprintf (__('You can create a custom Members Directory page using the shortcode 
 __('To learn more, read the <a href="http://dontdream.it/bp-profile-search/custom-directories/" target="_blank">Custom Directories</a> tutorial.', 'bp-profile-search'). '
 </p>';
 
+	$title_04 = __('Persistent Search', 'bp-profile-search');
+	$content_04 = '
+<p>'.
+__('Enable or disable the <em>persistent search</em> feature.', 'bp-profile-search'). '
+<ul>
+<li>'. __('If enabled, a search is cleared when the user hits the <em>Clear</em> button', 'bp-profile-search'). '</li>
+<li>'. __('If disabled, a search is cleared when the user hits the <em>Clear</em> button, or navigates away from the results page', 'bp-profile-search'). '</li>
+</ul>'.
+__('This selection applies to all your forms at once.', 'bp-profile-search'). '
+</p>';
+
 	$sidebar = '
 <p><strong>'. __('For more information:', 'bp-profile-search'). '</strong></p>
 <p><a href="http://dontdream.it/bp-profile-search/" target="_blank">'. __('Documentation', 'bp-profile-search'). '</a></p>
@@ -73,6 +84,7 @@ __('To learn more, read the <a href="http://dontdream.it/bp-profile-search/custo
 	$screen->add_help_tab (array ('id' => 'bps_01', 'title' => $title_01, 'content' => $content_01));
 	$screen->add_help_tab (array ('id' => 'bps_03', 'title' => $title_03, 'content' => $content_03));
 	$screen->add_help_tab (array ('id' => 'bps_02', 'title' => $title_02, 'content' => $content_02));
+	$screen->add_help_tab (array ('id' => 'bps_04', 'title' => $title_04, 'content' => $content_04));
 
 	$screen->set_help_sidebar ($sidebar);
 

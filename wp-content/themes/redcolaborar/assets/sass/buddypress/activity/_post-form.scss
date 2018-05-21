@@ -1,0 +1,249 @@
+//--------------------------------------------------------------
+// Post Form Block
+//--------------------------------------------------------------
+
+// sass-lint:disable no-color-literals
+// sass-lint:disable no-qualifying-elements
+// sass-lint:disable mixins-before-declarations
+// sass-lint:disable no-important
+// sass-lint:disable class-name-format
+
+//-----------------------------------------
+// Container
+//-----------------------------------------
+#whats-new-form {
+	@include clearfix;
+	@include margin(0 0 rem(70) 0);
+	@include padding(0 0 rem(20) 0);
+
+	background-color: transparent;
+	border-bottom: 1px solid $color-aluminum;
+} // #whats-new-form
+
+
+//-----------------------------------------
+// Form Container
+//-----------------------------------------
+#whats-new-textarea {
+	margin-left: rem(65);
+	position: relative;
+	z-index: 999;
+
+	@include media($tablet-portrait) {
+		float: none;
+		margin-left: 0;
+		width: auto;
+		z-index: 100;
+	}
+
+	// Hide scrollbars on the textarea when small.
+	textarea {
+		overflow: hidden;
+	} // textarea
+
+	&.active textarea {
+		height: auto;
+		min-height: rem(150);
+		overflow: unset;
+	}
+} // #whats-new-textarea
+
+
+form#whats-new-form textarea {
+	border: 1px solid $color-input-border;
+	border-radius: rem(3);
+	color: $color-input-text;
+	line-height: 1.5;
+	margin-bottom: 0;
+	min-height: rem(51);
+
+	@include media($tablet-portrait) {
+		height: rem(190) !important; // Override plugin :(
+		padding: $padding-input;
+	}
+} // form#whats-new-form textarea
+
+.bp-screen-reader-text {
+	display: none;
+} // .bp-screen-reader-text
+
+
+//-----------------------------------------
+// Whats New Avatar
+//-----------------------------------------
+#whats-new-avatar {
+	border-radius: rem(75);
+	display: block;
+	margin-right: rem(10);
+	overflow: hidden;
+
+	@include media($tablet-portrait) {
+		display: none;
+	}
+} // #whats-new-avatar
+
+.activity-greeting {
+	display: none;
+} // .activity-greeting
+
+
+//-----------------------------------------
+// If Groups
+//-----------------------------------------
+#whats-new-post-in-box {
+	margin-bottom: rem(10);
+	margin-right: rem(15) !important; // Override plugin :(
+	margin-top: 0 !important; // Override plugin :(
+	width: auto !important; // Override plugin :(
+
+	@include media($tablet-landscape) {
+		margin-bottom: 0;
+	}
+} // #whats-new-post-in-box
+
+
+//-----------------------------------------
+// Fade In
+//-----------------------------------------
+@keyframes fadeIn {
+	0% {
+		max-height: 0 !important; // Override plugin :(
+		opacity: 0;
+	}
+
+	100% {
+		max-height: rem(500) !important; // Override plugin :(
+		opacity: 1;
+	}
+} // @keyframes fadein
+
+
+//-----------------------------------------
+// Options
+//-----------------------------------------
+#whats-new-options {
+	align-items: center;
+	animation: fadeIn 0.3s 0.7s ease-in 1 forwards;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	margin-top: rem(38);
+	opacity: 0;
+	text-align: center;
+
+	@include media($tablet-landscape) {
+		text-align: inherit;
+	}
+
+	#mpp-activity-upload-buttons {
+		margin-bottom: rem(18);
+		order: 2;
+
+		@include media($phone) {
+			padding-right: rem(10) !important;
+		}
+
+		@include media($tablet-portrait) {
+			margin-bottom: 0;
+		}
+	} // #mpp-activity-upload-buttons
+
+	.whats-new-dropdown {
+		margin-bottom: rem(20);
+		margin-right: rem(10);
+		position: relative;
+
+		@include media($tablet-portrait) {
+			margin-bottom: 0;
+			margin-right: auto;
+			width: auto;
+		}
+
+		// Span
+		.error {
+			@include position(absolute, rem(-15) null null 0);
+
+			color: $color-error;
+		} // .error
+	} // .whats-new-dropdown
+
+	#whats-new-submit {
+		margin-bottom: rem(27);
+		order: 99;
+
+		@include media($tablet-portrait) {
+			margin-bottom: 0;
+		}
+	} // #whats-new-submit
+} // #whats-new-options
+
+// Force behavior on active state.
+#whats-new-content.active {
+
+	#mpp-all-upload {
+		@include size(rem(43));
+
+		display: inline-block;
+		max-height: rem(500);
+	} // #mpp-all-upload
+
+	// Ensure that we're flexing our muscles.
+	#whats-new-options {
+		display: flex !important; // Override plugin
+		justify-content: center;
+		margin-bottom: rem(50);
+
+		@include media($tablet-portrait) {
+			justify-content: flex-start;
+		}
+	} // #whats-new-options
+} // #whats-new-content.active
+
+
+
+//-----------------------------------------
+// Form
+//-----------------------------------------
+form#whats-new-form {
+
+	#whats-new-content {
+		margin-left: 0;
+		padding: 0;
+	} // #whats-new-content
+
+	#whats-new-options select {
+		background-color: $color-white;
+		color: $color-input-text;
+		font-size: rem(17);
+		line-height: 1.5;
+		margin-top: 0;
+		max-width: 100%;
+		min-width: rem(240);
+
+		&#whats-new-post-in {
+			min-width: 0;
+		} // &#whats-new-post-in
+	} // #whats-new-options select
+
+	#whats-new-submit {
+		margin-top: rem(10);
+
+		@include media($tablet-portrait) {
+			margin-top: 0;
+		}
+
+		input {
+			width: 100%;
+
+			@include media($tablet-portrait) {
+				width: auto;
+			}
+
+			&:active,
+			&:hover,
+			&:focus {
+				border: 0;
+				color: $color-white;
+			} // &:active, &:hover, &:focus
+		} // input
+	} // #whats-new-submit
+} // form#whats-new-form

@@ -5,7 +5,7 @@
  * @package    Members
  * @subpackage Includes
  * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2017, Justin Tadlock
+ * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
  * @link       https://themehybrid.com/plugins/members
  * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
@@ -229,7 +229,7 @@ class Widget_Users extends \WP_Widget {
 			<select class="widefat" id="<?php echo $this->get_field_id( 'role' ); ?>" name="<?php echo $this->get_field_name( 'role' ); ?>">
 				<option value="" <?php selected( $instance['role'], '' ); ?>></option>
 				<?php foreach ( $roles as $name => $role ) : ?>
-					<option value="<?php echo esc_attr( $name ); ?>" <?php selected( $instance['role'], $name ); ?>><?php echo esc_html( $role->label ); ?></option>
+					<option value="<?php echo esc_attr( $name ); ?>" <?php selected( $instance['role'], $name ); ?>><?php echo esc_html( $role->get( 'label' ) ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>

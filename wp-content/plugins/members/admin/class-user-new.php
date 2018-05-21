@@ -5,7 +5,7 @@
  * @package    Members
  * @subpackage Admin
  * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2017, Justin Tadlock
+ * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
  * @link       https://themehybrid.com/plugins/members
  * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
@@ -117,7 +117,7 @@ final class User_New {
 							<li>
 								<label>
 									<input type="checkbox" name="members_user_roles[]" value="<?php echo esc_attr( $role->name ); ?>" <?php checked( in_array( $role->name, $new_user_roles ) ); ?> />
-									<?php echo esc_html( $role->label ); ?>
+									<?php echo esc_html( $role->get( 'label' ) ); ?>
 								</label>
 							</li>
 							<?php endif; ?>

@@ -1,0 +1,223 @@
+# Copyright (C) 2017 WebDevStudios
+# This file is distributed under the same license as the RedColaborar Modifications package.
+msgid ""
+msgstr ""
+"Project-Id-Version: RedColaborar Modifications 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wds-redcolaborar\n"
+"POT-Creation-Date: 2017-11-22 14:52:25+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: grunt-wp-i18n1.0.1\n"
+
+#: includes/class-app.php:66
+#. Translators: Displays a message if a plugin file is not passed.
+msgid "Invalid plugin file %1$s supplied to %2$s"
+msgstr ""
+
+#: includes/class-hashtags.php:131
+msgid "Yes"
+msgstr ""
+
+#: includes/class-hashtags.php:131
+msgid "No"
+msgstr ""
+
+#: includes/class-hashtags.php:146
+msgid "Autocomplete"
+msgstr ""
+
+#: includes/class-hashtags.php:195
+msgid "Enable Autocomplete"
+msgstr ""
+
+#: includes/class-hashtags.php:196
+msgid "Disable Autocomplete"
+msgstr ""
+
+#: includes/class-hashtags.php:226 includes/class-hashtags.php:251
+msgid "Hashtags"
+msgstr ""
+
+#: includes/class-hashtags.php:240
+msgid "Search Hashtags"
+msgstr ""
+
+#: includes/class-hashtags.php:241
+msgid "Popular Hashtags"
+msgstr ""
+
+#: includes/class-hashtags.php:242
+msgid "All Hashtags"
+msgstr ""
+
+#: includes/class-hashtags.php:243 includes/class-hashtags.php:244
+msgid "Parent Hashtag"
+msgstr ""
+
+#: includes/class-hashtags.php:245
+msgid "Edit Hashtag"
+msgstr ""
+
+#: includes/class-hashtags.php:246
+msgid "Update Hashtag"
+msgstr ""
+
+#: includes/class-hashtags.php:247
+msgid "Add New Hashtag"
+msgstr ""
+
+#: includes/class-hashtags.php:248
+msgid "New Hashtag Name"
+msgstr ""
+
+#: includes/class-hashtags.php:249
+msgid "Add or remove Hashtags"
+msgstr ""
+
+#: includes/class-hashtags.php:250
+msgid "Choose from most used Hashtags"
+msgstr ""
+
+#: includes/class-sidebar.php:143
+msgid "Save as my Default View"
+msgstr ""
+
+#: includes/class-sidebar.php:145
+msgid "Clear my Default View"
+msgstr ""
+
+#: includes/class-sidebar.php:901
+msgid "Search for posts or #hashtag"
+msgstr ""
+
+#: includes/class-sidebar.php:905
+msgid "Filter Search"
+msgstr ""
+
+#: includes/class-sidebar.php:919
+msgid "Categories"
+msgstr ""
+
+#: includes/class-sidebar.php:939
+msgid "Date"
+msgstr ""
+
+#: includes/class-sidebar.php:943
+msgid "After"
+msgstr ""
+
+#: includes/class-sidebar.php:946
+msgid "Before"
+msgstr ""
+
+#: includes/class-sidebar.php:960
+msgid "My Mentions"
+msgstr ""
+
+#: includes/class-sidebar.php:973
+msgid "My Bookmarks"
+msgstr ""
+
+#: includes/class-sidebar.php:978
+msgid "Apply"
+msgstr ""
+
+#: includes/class-sidebar.php:979
+msgid "Clear"
+msgstr ""
+
+#: includes/class-sidebar.php:1038
+msgid "Author"
+msgstr ""
+
+#: includes/class-sidebar.php:1042
+msgid "Search by username"
+msgstr ""
+
+#: includes/class-topics.php:202
+msgid "Topics"
+msgstr ""
+
+#: includes/class-topics.php:216
+msgid "Search Topics"
+msgstr ""
+
+#: includes/class-topics.php:217
+msgid "Popular Topics"
+msgstr ""
+
+#: includes/class-topics.php:218
+msgid "All Topics"
+msgstr ""
+
+#: includes/class-topics.php:219 includes/class-topics.php:220
+msgid "Parent Topic"
+msgstr ""
+
+#: includes/class-topics.php:221
+msgid "Edit Topic"
+msgstr ""
+
+#: includes/class-topics.php:222
+msgid "Update Topic"
+msgstr ""
+
+#: includes/class-topics.php:223
+msgid "Add New Topic"
+msgstr ""
+
+#: includes/class-topics.php:224
+msgid "New Topic Name"
+msgstr ""
+
+#: includes/class-topics.php:225
+msgid "Add or remove Topics"
+msgstr ""
+
+#: includes/class-topics.php:226
+msgid "Choose from most used Topics"
+msgstr ""
+
+#: includes/class-topics.php:227
+msgid "Activity Topics"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "RedColaborar Modifications"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "All modifications made my WebDevStudios to work with the recolaborar theme."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "WebDevStudios"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://webdevstudios.com"
+msgstr ""
+
+#: includes/class-hashtags.php:238
+msgctxt "Taxonomy Hashtags"
+msgid "Hashtags"
+msgstr ""
+
+#: includes/class-hashtags.php:239
+msgctxt "Taxonomy Hashtag"
+msgid "Hashtag"
+msgstr ""
+
+#: includes/class-topics.php:214
+msgctxt "Taxonomy Topics"
+msgid "Activity Topics"
+msgstr ""
+
+#: includes/class-topics.php:215
+msgctxt "Taxonomy Topic"
+msgid "Topic"
+msgstr ""

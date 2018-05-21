@@ -8,14 +8,17 @@ class H5PWordPress implements H5PFrameworkInterface {
    * @since 1.0.0
    * @var array
    */
-  protected $messages = array('error' => array(), 'updated' => array());
+  private $messages = array('error' => array(), 'info' => array());
 
   /**
    * Implements setErrorMessage
    */
-  public function setErrorMessage($message) {
+  public function setErrorMessage($message, $code = NULL) {
     if (current_user_can('edit_h5p_contents')) {
-      $this->messages['error'][] = $message;
+      $this->messages['error'][] = (object)array(
+        'code' => $code,
+        'message' => $message
+      );
     }
   }
 
@@ -24,7 +27,7 @@ class H5PWordPress implements H5PFrameworkInterface {
    */
   public function setInfoMessage($message) {
     if (current_user_can('edit_h5p_contents')) {
-      $this->messages['updated'][] = $message;
+      $this->messages['info'][] = $message;
     }
   }
 
@@ -57,7 +60,7 @@ class H5PWordPress implements H5PFrameworkInterface {
         $replacements[$key] = '<em>' . esc_html($replacement) . '</em>';
       }
     }
-    $message = preg_replace('/(!|@|%)[a-z0-9]+/i', '%s', $message);
+    $message = preg_replace('/(!|@|%)[a-z0-9-]+/i', '%s', $message);
 
     $plugin = H5P_Plugin::get_instance();
     $this->plugin_slug = $plugin->get_plugin_slug();
@@ -891,7 +894,7 @@ class H5PWordPress implements H5PFrameworkInterface {
     }
 
     if (is_wp_error($response)) {
-      //$error_message = $response->get_error_message();
+      $this->setErrorMessage($response->get_error_message(), 'failed-fetching-external-data');
       return FALSE;
     }
     elseif ($response['response']['code'] === 200) {

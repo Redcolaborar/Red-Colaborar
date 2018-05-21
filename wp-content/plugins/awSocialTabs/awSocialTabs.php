@@ -22,5 +22,28 @@ include('classes/awstFrontPages.php');
 include('awstMain.php');
 
 /*  create plugin object. */
-new AwSocialTabs;
-?>
+$AwSocialTabs = new AwSocialTabs;
+
+/**
+ * Always ensure the awSocialTabsPostOption always has settings we need to exist.
+ *
+ * @author Aubrey Portwood
+ * @since  Thursday, 11 30, 2017
+ */
+function wds_aw_social_tabs_options() {
+
+	// AwSocialTabs Options.
+	$options = get_option( 'awSocialTabsPostOptions', array() );
+
+	// The options we need to exist to get liking on comments and activity_updates in wd_s/redcolaborar.
+	$wds_options = array( /*'page_like',*/ 'comment_like' );
+	// $wds_options = array( 'page_like',  'comment_like' );
+
+	// The options with our options.
+	$new_options = array_merge( $options, $wds_options );
+
+	// Ensure the DB always has these.
+	update_option( 'awSocialTabsPostOptions', $new_options );
+}
+add_action( 'init', 'wds_aw_social_tabs_options' );
+

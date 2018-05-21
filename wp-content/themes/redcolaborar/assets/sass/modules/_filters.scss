@@ -1,0 +1,254 @@
+//--------------------------------------------------------------
+// Filters
+//--------------------------------------------------------------
+
+// The sidebar filters.
+#wds-recolaborar-sidebar-filters {
+	margin-bottom: rem(45);
+	max-height: rem(40);
+	overflow: hidden;
+	transition: max-height 0.5s ease-in-out;
+
+	@include media($tablet-landscape) {
+		max-height: rem(5000);
+		overflow: visible;
+	}
+
+	&.open-sidebar {
+		max-height: rem(5000);
+	} // &.open-form
+
+	&:only-child {
+		margin-bottom: 0;
+	} // &:only-child
+
+	// Give the form padding to avoid focus states being cut off.
+	form {
+		padding: 0 rem(4);
+	} // form
+
+	// Hide the toggle target initially.
+	.toggle-target {
+		display: block;
+		height: 0;
+		opacity: 0;
+		overflow: hidden;
+		padding-left: rem(10);
+		transition: 0.5s;
+
+		// Add a bit of spacing between the label and the title.
+		label:first-child {
+			margin-top: rem(7);
+		} // label:first-child
+	} // .toggle-target
+
+	// Then show it once it's parent is checked.
+	.toggle:checked ~ .toggle-target {
+		height: auto;
+		opacity: 1;
+		transition: 0.5s;
+	} // .toggle:checked ~ .toggle-target
+
+	// All form element containers.
+	.form-element {
+		margin-bottom: rem(10);
+
+		.search-field {
+			font-size: rem(16);
+			padding-right: rem(50);
+
+			// Chrome/Safari
+			&::-webkit-input-placeholder {
+				font-size: rem(16);
+
+				@include media($tablet-landscape) {
+					font-size: rem(13);
+				}
+
+				@include media($desktop) {
+					font-size: rem(16);
+				}
+			} // ::-webkit-input-placeholder
+
+			// Firefox
+			&::-moz-placeholder {
+				font-size: rem(16);
+
+				@include media($tablet-landscape) {
+					font-size: rem(13);
+				}
+
+				@include media($desktop) {
+					font-size: rem(16);
+				}
+			} // &::-moz-placeholder
+
+			// IE
+			&:-ms-input-placeholder {
+				font-size: rem(16);
+
+				@include media($tablet-landscape) {
+					font-size: rem(13);
+				}
+
+				@include media($desktop) {
+					font-size: rem(16);
+				}
+			} // &:-ms-input-placeholder
+		} // .search-field
+
+		&.search-form-element {
+			margin-bottom: rem(20);
+			position: relative;
+			width: 100%;
+
+			&::after {
+				@include position(absolute, 0 0 null null);
+				@include size(rem(42) 100%);
+
+				background-color: transparent;
+				background-image: url('assets/images/svg-icons/icon-search.svg');
+				background-position: 50% 50%;
+				background-repeat: no-repeat;
+				background-size: 16px 16px;
+				border-radius: 0;
+				content: '';
+				min-width: 0;
+				padding: 0;
+				text-indent: -9999em;
+			} // &::after
+		} // &.search-form-element
+	} // .form-element
+
+	// Filter title.
+	.form-element-title {
+		color: $color-elephant;
+		margin-bottom: rem(20);
+	} // h5
+
+	label {
+		color: $color-gun-powder;
+		display: inline-block;
+		width: auto;
+
+		// Target search input only.
+		&[for='search-field'] {
+			width: 100%;
+		} // &[for='search-field']
+
+		ul {
+			@include margin(rem(10) 0 0 rem(10));
+			@include padding(0);
+
+			list-style: none;
+
+			li {
+				color: $color-curious-blue;
+
+				label {
+					border-bottom: 0;
+					font-weight: 400;
+				} // label
+			} // li
+		} // ul
+	} // label
+
+	// Form fields.
+	input[type='text'],
+	input[type='date'],
+	input[type='username'] {
+		@include padding(rem(6));
+
+		min-height: rem(38);
+		width: 100%;
+	} // input[type='text'], input[type='date'], input[type='username']
+
+	// Username
+	input[type='username'] {
+		margin-top: rem(13);
+	} // input[type='username']
+
+	input[type='checkbox'] {
+		margin-right: rem(5);
+		margin-top: rem(-2);
+	} // input[type='checkbox']
+
+	// Button group.
+	.button-group {
+		margin-bottom: rem(5);
+		margin-top: rem(25);
+
+		.button {
+			text-decoration: none;
+		} // .button
+
+		button:first-child {
+			margin-right: rem(7);
+		} // .button:first-child
+	} // .button-group
+} // #wds-recolaborar-sidebar-filters
+
+// Date table.
+.ui-datepicker-calendar {
+
+	td {
+
+		// Remove last child border
+		&:last-child {
+			border-bottom: none;
+		} // &:last-child
+	} // td
+} // .ui-datepicker-calendar
+
+//-----------------------------------------
+// Filters Bar above Activity Stream
+//-----------------------------------------
+#buddypress {
+
+	.filters-bar {
+		align-items: center;
+		background-color: $color-white;
+		display: inline-flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		margin-bottom: rem(45);
+		padding: rem(25) rem(33);
+		text-align: center;
+		width: 100%;
+
+		@include media($tablet-portrait) {
+			flex-direction: row;
+			text-align: left;
+		}
+
+		.filter-message {
+			flex: 0 0 100%;
+			margin-bottom: rem(15);
+			width: 100%;
+
+			@include media($tablet-landscape) {
+				flex: 0 0 67%;
+				margin-bottom: 0;
+				width: 67%;
+			}
+		} // .filter-message
+
+		.button {
+			margin-top: rem(12);
+
+			@include media($tablet-portrait) {
+				margin-top: 0;
+			}
+
+			// Clear BP styles.
+			&:hover,
+			&:focus,
+			&:active {
+				border: none;
+				color: $color-white;
+				opacity: 1;
+			} // &:hover, &:focus, &:active
+		} // .button
+	} // .filters-bar
+} // #buddypress

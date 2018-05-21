@@ -1,0 +1,187 @@
+//--------------------------------------------------------------
+// Featured Posts Row on Homepage
+//--------------------------------------------------------------
+// sass-lint:disable no-color-literals
+// sass-lint:disable no-qualifying-elements
+// sass-lint:disable mixins-before-declarations
+.featured-posts {
+	position: relative;
+
+	// If we have a background color set.
+	&.has-bg-color {
+		margin-bottom: rem(45);
+		padding-top: rem(45);
+	} // &.has-bg-color
+
+	// Background color.
+	.featured-posts-bg-color {
+		@include position(absolute, 0 null null 50%);
+		@include size(100vw 100%);
+
+		transform: translateX(-50%);
+	} // .featured-posts-bg-color
+
+	// Grab some styles!
+	.featured-activity-list {
+		@extend .activity-list;
+	} // .featured-activity-list
+
+	&.cta-visible {
+
+		// Row/Column Styles.
+		ul.featured-activity-list.item-list {
+
+			@include media($desktop) {
+				display: flex;
+				justify-content: space-around;
+			}
+		} // ul.featured-activity-list.item-list
+
+		li {
+
+			&:not(:last-child) {
+
+				@include media($desktop) {
+					margin-right: rem(24);
+				}
+			} // &:not(:last-child)
+		} // li
+	} // &.cta-visible
+
+	&.cta-hidden {
+
+		// Row/Column Styles.
+		ul.featured-activity-list.item-list {
+
+			@include media($tablet-landscape) {
+				display: flex;
+				justify-content: space-around;
+			}
+		} // ul.featured-activity-list.item-list
+
+		li {
+
+			&:not(:last-child) {
+
+				@include media($tablet-landscape) {
+					margin-right: rem(24);
+				}
+			} // &:not(:last-child)
+		} // li
+	} // &.cta-hidden
+
+	// Set columns for our states.
+	li {
+		order: 1;
+		position: relative;
+		width: 100%;
+		word-break: break-word;
+		word-wrap: break-word;
+
+		@include media($tablet-landscape) {
+			flex: 1;
+			width: unset;
+		}
+
+		&.activity-item {
+			color: $color-buddypress-gray;
+		} // &.activity-item
+
+		&.post-card-register {
+			display: flex;
+			justify-content: center;
+
+			@include media($desktop) {
+				flex: 0 1 20%;
+				max-width: 20%;
+			}
+
+			// The inner container.
+			.card-content {
+				align-self: center;
+			} // .card-content
+		} // &.post-card-register
+
+		// If the CTA card is first.
+		&.cta-first {
+			order: 0;
+		} // &.cta-first
+	} // li
+
+	ul.featured-activity-list.item-list {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+
+		@include media(max-width $tablet-landscape) {
+			flex-wrap: wrap;
+		}
+
+		@include media($tablet-landscape) {
+			justify-content: space-between;
+		}
+
+		li {
+			clear: none;
+			float: none;
+			margin-bottom: rem(20);
+
+			@include media($tablet-landscape) {
+				margin-bottom: rem(45);
+			}
+
+			&:last-of-type {
+				margin-bottom: rem(45);
+			} // &:last-of-type
+
+			// Hide comments.
+			.acomment-container {
+				display: none;
+			} // .acomment-container
+		}
+	} // ul
+
+	.post-card-register {
+		background-color: $color-curious-blue;
+		color: $color-white;
+		padding: rem(25) rem(33);
+		text-align: center;
+	} // .post-card-register
+
+	.button-sign-up {
+		background-color: $color-white;
+		border-radius: rem(4);
+		color: $color-curious-blue;
+		display: block;
+		font-size: rem(19);
+		text-decoration: none;
+		transition: $transition-opacity;
+	} // .button-sign-up
+
+	.activity-avatar {
+		float: left;
+	} // .activity-avatar
+
+	// BP styles.
+	.bp-primary-action {
+
+		span {
+			font-size: 90%;
+			margin-left: rem(2);
+			padding: 0 rem(5);
+		} // span
+	} // .bp-primary-action
+
+	a {
+		text-decoration: none;
+	} // a
+
+	.activity-time-since {
+		color: $color-buddypress-gray;
+	} // .activity-time-since
+
+	// Hide comment form.
+	.activity-comments {
+		display: none;
+	} // .activity-comments
+} // .featured-posts

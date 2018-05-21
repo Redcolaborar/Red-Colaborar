@@ -57,34 +57,34 @@ class RM_Metricas {
 	}
 
 	function show_page() {
-		error_reporting( E_STRICT );
+		//error_reporting( E_STRICT );
 		global $wp_query, $wpdb;
 		
 		$wp_track_table = $wpdb->prefix . self::$tblname;
 
-		/* TRUNCATE DB , only for debugging */
+		// TRUNCATE DB , only for debugging
 		if (@$_GET['truncate']) {
 			$sql_q = "TRUNCATE TABLE ".$wp_track_table;
 			$results = $wpdb->get_results( $sql_q, OBJECT );
 		}
 
-		/* Let's start the sql query */
+		// Let's start the sql query
 		$sql_q = "SELECT * FROM ".$wp_track_table;
 
 		if (isset($_GET['filter_user'])) {
 			$wheres = array();
 
-			/* Filter by user */
+			// Filter by user
 			if ($_GET['filter_user'] != 0) {
 				$wheres[] = "user_id = '".$_GET['filter_user']."'";
 			}
 
-			/* Filter by action */
+			// Filter by action
 			if ($_GET['filter_action']) {
 				$wheres[] = "action = '".$_GET['filter_action']."'";
 			}
 
-			/* Dates */
+			// Dates
 			$wheres[] = "date >= '".strtotime($_GET['filter_from'])."'";
 			$wheres[] = "date <= '".strtotime($_GET['filter_to'])."'";
 
@@ -93,14 +93,15 @@ class RM_Metricas {
 			}
 		}
 
-		$sql_q .= " ORDER BY id DESC";
+		$sql_q .= " ORDER BY id DESC LIMIT 0, ". ( $_GET['filter_limit'] ? $_GET['filter_limit'] : 5000 );
 
 		
-		/* Get the results */
+		// Get the results
 		$results = $wpdb->get_results( $sql_q, OBJECT );
 
+		//echo $sql_q;
 
-		/* Let's first set the header and footer texts */
+		// Let's first set the header and footer texts
 		$header = $footer = array(
 			'User',
 			'Email',
@@ -116,10 +117,10 @@ class RM_Metricas {
 		$table_tr 			= array();
 		$last_user_login = array();
 
-		/* If results are grouped, lets create a temporary array with all the grouped data */
+		// If results are grouped, lets create a temporary array with all the grouped data 
 		if (@$_GET['filter_group_by'] != '') {
 
-			/* Grouped by time */
+			// Grouped by time 
 			if ($_GET['filter_group_by'] == 'time') {
 				$header[5] = 'Time';
 				$header[4] = 'Last login';
@@ -137,7 +138,7 @@ class RM_Metricas {
 						$results_grouped[$user_row->user_id]['time'] = $results_grouped[$user_row->user_id]['time']+$user_row->last_date_difference;
 					}
 
-					/* Lets save the last login for this user */
+					// Lets save the last login for this user 
 					if (!isset($last_user_login[$user_row->user_id])) {
 						$last_user_login[$user_row->user_id] = $user_row->date;
 					}
@@ -163,7 +164,7 @@ class RM_Metricas {
 				}
 			}
 
-			/* Grouped by number of logins */
+			// Grouped by number of logins 
 			if ($_GET['filter_group_by'] == 'logins') {
 				$header[5] = 'Logins';
 				$header[4] = 'Last login';
@@ -176,13 +177,13 @@ class RM_Metricas {
 					}
 
 					if (($user_row->last_date_difference) && ($user_row->last_date_difference <= 3600)) {
-						/* nothing */
+						// nothing 
 					}
 					else {
 						$results_grouped[$user_row->user_id]['logins']++;
 					}
 
-					/* Lets save the last login for this user */
+					// Lets save the last login for this user 
 					if (!isset($last_user_login[$user_row->user_id])) {
 						$last_user_login[$user_row->user_id] = $user_row->date;
 					}
@@ -211,7 +212,7 @@ class RM_Metricas {
 
 				$user_id = $user_row->user_id;
 
-				/* Set the action TD value */
+				// Set the action TD value 
 				switch ($user_row->action) {
 					case 'post':
 					case 'page':
@@ -252,7 +253,7 @@ class RM_Metricas {
 					$time_td = '<strong>SESSION START</strong>';
 				}
 
-				/* Set the line content */
+				// Set the line content 
 				$table_tr[] = array(
 					'<a href="'.get_edit_user_link($user_id).'">'.get_user_by('id', $user_id)->first_name.' '.get_user_by('id', $user_id)->last_name.' ('.get_user_by('id', $user_id)->user_login.')</a>',
 					get_userdata($user_id)->user_email,
@@ -265,25 +266,25 @@ class RM_Metricas {
 			}
 		}
 
-		/* Extra filtering */
+		// Extra filtering 
 		$filter_higher_than = $_GET['filter_higher_than'];
 		if ($filter_higher_than) {
 			foreach ($table_tr as $i => $tr_line) {
 				if ($tr_line[5] < $filter_higher_than) {
-					/* Lets 1st remove this number from the total column */
+					// Lets 1st remove this number from the total column 
 					if ($_GET['filter_group_by'] == 'time') {
 						$total_seconds = $total_seconds-$tr_line[5];
 					}
 					if ($_GET['filter_group_by'] == 'logins') {
 						$total_logins = $total_logins-$tr_line[5];
 					}
-					/* Unset item from the table tr list */
+					// Unset item from the table tr list 
 					unset($table_tr[$i]);
 				}
 			}
 		}
 
-		/* Ordering */
+		// Ordering 
 		$to_sort = $table_tr;
 		if ($_GET['filter_order_by'] == 'date') {
 			$table_tr = wnachv_array_orderby($to_sort, '4', SORT_DESC);
@@ -294,12 +295,12 @@ class RM_Metricas {
 
 		
 
-		/* Set dates and times */
+		// Set dates and times 
 		foreach ($table_tr as $i => $tr_line) {
-			/* dates */
+			// dates 
 			$table_tr[$i][4] = date( 'd/m/Y g:i a', $tr_line[4] );
 
-			/* time */
+			// time 
 			if ($_GET['filter_group_by'] != 'logins') {
 				if (is_numeric($table_tr[$i][5])) {
 					$seconds = $table_tr[$i][5];
@@ -314,9 +315,9 @@ class RM_Metricas {
 			}
 		}
 
-		/* Table Footer */
+		// Table Footer 
 		if (@$_GET['filter_group_by'] != '') {
-			/* Grouped by time */
+			// Grouped by time 
 			if ($_GET['filter_group_by'] == 'time') {
 				$hours = floor($total_seconds / 3600);
 				$mins = floor($total_seconds / 60 % 60);
@@ -324,13 +325,13 @@ class RM_Metricas {
 				$timeFormat = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
 				$footer[5] = $timeFormat;
 			}
-			/* Grouped by number of logins */
+			// Grouped by number of logins 
 			if ($_GET['filter_group_by'] == 'logins') {
 				$footer[5] = $total_logins;
 			}
 		}
 
-		/* Generate export */
+		// Generate export 
 		if ($_GET['generate_file']) {
 
 			$csv_separator = ';';
@@ -353,7 +354,7 @@ class RM_Metricas {
 
 			fputcsv($fp, $header, $csv_separator);
 			foreach ($table_tr as $tr) {
-				/* Strip tags */
+				// Strip tags 
 				$tr[0] = preg_replace('#<a.*?>(.*?)</a>#i', '\1', $tr[0]);
 				$tr[3] = preg_replace('#<a.*?>(.*?)</a>#i', '\1', $tr[3]);
 				$tr[5] = strip_tags($tr[5]);
@@ -429,6 +430,7 @@ class RM_Metricas {
 			</table>
 		</div>
 		<?php
+
 	}
 }
 

@@ -1,0 +1,9 @@
+//--------------------------------------------------------------
+// Activity Index
+//--------------------------------------------------------------
+@import 'activity';
+
+#buddypress {
+	@import 'post-form';
+	@import 'activity-single';
+} // #buddypress

@@ -1,0 +1,32 @@
+//--------------------------------------------------------------
+// TRANSITIONS
+//--------------------------------------------------------------
+
+////
+/// @group variables
+/// @author WebDevStudios
+////
+
+/// Background color transition.
+$transition-bg-color: background-color 0.2s ease-in-out;
+
+/// Color Transition
+$transition-color: color 0.3s ease-in-out;
+
+/// Opacity transition.
+$transition-opacity: opacity 0.5s ease;
+
+/// Border transition
+$transition-border: border 0.2s ease-in-out;
+
+/// All transitions. Use only in emergencies!
+$transition-all: all 0.5s ease-in-out;
+
+/// Transform transitions.
+$transition-transform: transform 0.5s ease-in-out;
+
+/// Transform Hamburger
+$transition-hamburger: transform 0.5s, background-color 0.3s ease-in-out;
+
+/// Transition background.
+$transition-button: background 0.3s, opacity 0.3s, max-height 0.3s, color 0.3s ease-in-out;

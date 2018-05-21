@@ -1,0 +1,104 @@
+//--------------------------------------------------------------
+// Messages
+//--------------------------------------------------------------
+// sass-lint:disable no-important
+.messages-notices {
+
+	// Clean up buttons.
+	.button {
+		display: block;
+
+		&:hover,
+		&:active,
+		&:focus {
+			border: none;
+			color: $color-button-text;
+		} // &:hover, &:active, &:focus
+
+		// Gimme some space!
+		+ .button {
+			margin-top: $gutter;
+		} // + .button
+	} // .button
+} // .messages-notices
+
+
+//-----------------------------------------
+// Messages List
+//-----------------------------------------
+#item-body {
+
+	#message-threads {
+
+		thead {
+
+			tr {
+				background-color: $color-submarine;
+			}
+		}
+
+		tr {
+
+			&.unread {
+
+				td {
+					background-color: $color-whitesmoke;
+					border-color: $color-submarine;
+				} // td
+			} // &.unread
+		} // tr.unread
+	} //#message-threads
+} // #item-body
+
+
+//-----------------------------------------
+// Single Message
+//-----------------------------------------
+.my-messages.view & {
+
+	#message-thread {
+
+		.highlight {
+			display: block !important; // To override plugin styles :(
+			margin-bottom: $gutter;
+			width: 100%;
+		} // .highlight
+
+		// Delete button.
+		.confirm {
+			display: inline-block;
+
+			&:hover,
+			&:active,
+			&:focus {
+				border: none;
+				color: $color-button-text;
+			} // &:hover, &:active, &:focus
+		} // .confirm
+	} // #message-thread
+} // .my-messages
+
+
+//-----------------------------------------
+// Composing Message
+//-----------------------------------------
+.my-messages.compose & {
+
+	// Highlighted username.
+	.friend-tab {
+		background-color: $color-white;
+		border: none;
+		clear: both;
+
+		.avatar {
+			border-radius: rem(1000);
+			margin-right: rem(6);
+		} // .avatar
+
+		// Name input field.
+		+ .send-to-input {
+			clear: both;
+			display: block;
+		} // + .send-to-input
+	} // .friend-tab
+} // .my-messages.compose &

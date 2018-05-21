@@ -1,0 +1,309 @@
+//--------------------------------------------------------------
+// Forms
+//--------------------------------------------------------------
+//sass-lint:disable no-qualifying-elements
+//sass-lint:disable no-important
+//sass-lint:disable id-name-format
+button,
+input,
+select,
+textarea {
+	font-size: 100%; // Corrects font size not being inherited in all browsers
+	margin: 0; // Addresses margins set differently in IE6/7, F3/4, S5, Chrome
+	vertical-align: baseline; // Improves appearance and consistency in all browsers
+} // button, input, select, textarea
+
+// Addresses excess padding in IE8/9
+input[type='checkbox'],
+input[type='radio'] {
+	padding: 0;
+} // input[type="checkbox"], input[type="radio"]
+
+// Remove the clear x icon in IE
+input[type='text']::-ms-clear,
+input[type='search']::-ms-clear {
+	display: none;
+} // input[type="text"]::-ms-clear, input[type="search"]::-ms-clear
+
+// Corrects inner padding and border displayed oddly in FF3/4
+// www.sitepen.com/blog/2008/05/14/the-devils-in-the-details-fixing-dojos-toolbar-buttons/
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+} // button::-moz-focus-inner, input::-moz-focus-inner
+
+input[type='text'],
+input[type='email'],
+input[type='url'],
+input[type='password'],
+input[type='search'],
+input[type='number'],
+input[type='tel'],
+input[type='range'],
+input[type='date'],
+input[type='month'],
+input[type='week'],
+input[type='time'],
+input[type='datetime'],
+input[type='datetime-local'],
+input[type='color'],
+input[type='username'],
+select,
+textarea,
+#buddypress div.activity-comments form textarea {
+	appearance: none;
+	background-color: $color-white;
+	border: 1px solid $color-input-border;
+	border-radius: rem(3);
+	color: $color-input-text;
+	line-height: 1.5;
+	max-height: rem(61);
+	padding: $padding-input;
+	width: 100%;
+
+	#buddypress .standard-form &,
+	#buddypress &,
+	#buddypress #signup_form.standard-form & {
+		max-width: 100%;
+		width: 100%;
+	} // #buddypress &, #buddypress .standard-form &
+
+	.ie & {
+		height: rem(43);
+	} // .ie &
+
+	// When the input has focus.
+	&:focus {
+		border-color: $color-input-border-focus;
+		color: $color-black;
+		outline: none;
+
+		// Chrome/Safari
+		&::-webkit-input-placeholder {
+			color: transparent;
+			opacity: 0;
+		} // ::-webkit-input-placeholder
+
+		// Firefox
+		&::-moz-placeholder {
+			color: transparent;
+			opacity: 0;
+		} // &::-moz-placeholder
+
+		// IE
+		&:-ms-input-placeholder {
+			color: transparent;
+			opacity: 0;
+		} // &:-ms-input-placeholder
+	} // &:focus
+
+	// Chrome/Safari
+	&::-webkit-input-placeholder {
+		color: $color-steel;
+		line-height: 1.5;
+		opacity: 1;
+	} // ::-webkit-input-placeholder
+
+	// Firefox
+	&::-moz-placeholder {
+		color: $color-steel;
+		opacity: 1;
+	} // &::-moz-placeholder
+
+	// IE
+	&:-ms-input-placeholder {
+		color: $color-steel;
+		opacity: 1;
+	} // &:-ms-input-placeholder
+} // input[type="text"], input[type="email"], input[type="url"], input[type="password"], input[type="search"], input[type="number"], input[type="tel"], input[type="range"], input[type="date"], input[type="month"], input[type="week"], input[type="time"], input[type="datetime"], input[type="datetime-local"], input[type="color"], select, textarea
+
+textarea {
+	@include size(100% auto);
+
+	overflow: auto; // Removes default vertical scrollbar in IE6/7/8/9
+	vertical-align: top; // Improves readability and alignment in all browsers
+} // textarea
+
+//-----------------------------------------
+// Radio/Checkbox Defaults
+//
+// Radio/Checkboxes absolutely cannot be
+// styled to match the comp on IE/Edge.
+// The closest I can get is to make the
+// checkmark color light blue.
+//-----------------------------------------
+input[type='radio'],
+input[type='checkbox'] {
+	@include size(rem(18));
+
+	border: none;
+	position: relative;
+	vertical-align: sub;
+
+	// IE 11/Edge checkmarks.
+	&::-ms-check {
+		border: 1px solid $color-steel;
+		box-shadow: inset 0 rem(1) rem(1) rgba($color-black, 0.1), 0 rem(1) rem(1) rgba($color-black, 0.2);
+		color:  $color-curious-blue;
+		padding: rem(1);
+	} // ::-ms-check
+} // input[type='radio'], input[type='checkbox']
+
+//-----------------------------------------
+// Radio/Checkbox defaults for non-MSFT browsers
+//-----------------------------------------
+// Defaults.
+input[type='radio'],
+input[type='checkbox'] {
+	@include size(rem(16));
+
+	appearance: none;
+	background: $color-white;
+	border: 1px solid $color-input-border;
+	border-radius: rem(2);
+} // input[type='radio'], input[type='checkbox']
+
+// Radio button.
+input[type='radio'] {
+	border-radius: 50%;
+
+	// When radio button is checked...
+	&:checked {
+
+		// Fake the "check".
+		&::after {
+			@include position(relative, rem(3) null null rem(3));
+			@include size(rem(8));
+
+			background-color: $color-niagra;
+			border-radius: 50%;
+			content: '';
+			display: block;
+		} // ::after
+	} // :checked
+} // input[type='radio']
+
+// Checkbox.
+input[type='checkbox'] {
+
+	// When the checkbox is checked...
+	&:checked {
+
+		// Fake the "check".
+		&::after {
+			@include position(relative, rem(6) null null rem(2));
+			@include size(rem(4) rem(2));
+
+			background-color: $color-niagra;
+			content: '';
+			display: block;
+			transform: rotate(35deg);
+		} // ::after
+
+		&::before {
+			@include position(relative, rem(6) null null rem(3));
+			@include size(rem(11) rem(2));
+
+			background-color: $color-niagra;
+			content: '';
+			display: block;
+			transform: rotate(-55deg);
+		}
+	} // :checked
+} // input[type='checkbox']
+
+//-----------------------------------------
+// Select Dropdown
+//-----------------------------------------
+#buddypress .standard-form select,
+select {
+	background-color: $color-white;
+	background-image: url('assets/images/svg-icons/icon-dropdown.svg');
+	background-position: calc(100% - 10px) 50%;
+	background-repeat: no-repeat;
+	color: $color-black;
+	height: rem(48);
+	padding: $padding-select-input;
+
+	// Override BP styles messing with focus states.
+	&:focus {
+		background-color: $color-white;
+		background-image: url('assets/images/svg-icons/icon-dropdown.svg');
+		background-position: calc(100% - 10px) 50%;
+		background-repeat: no-repeat;
+	} // &:focus
+
+	&[multiple='multiple'] {
+		background-image: none;
+		min-height: rem(150);
+
+		// Override BP styles messing with focus states.
+		&:focus {
+			background-image: none;
+		} // &:focus
+	} // &[multiple='multiple']
+
+	&.bp-xprofile-visibility {
+		background-position: calc(100% - 10px) 50%;
+	} // &.bp-xprofile-visibility
+
+	// IE 11.
+	&::-ms-expand {
+		display: none;
+	} // ::-ms-expand
+} // select, #buddypress .standard-form select
+
+// Select2 dropdowns.
+.select2-container {
+	max-width: 100% !important; // Override inline styles thrown on.
+	width: 100% !important; // Override inline styles thrown on.
+} // .select2-container
+
+//--------------------------------------------------------------
+// BuddyPress Select
+//--------------------------------------------------------------
+#buddypress .standard-form select {
+	min-width: rem(150);
+} // #buddypress .standard-form select,
+
+//-----------------------------------------
+// Searchform
+//-----------------------------------------
+.search-form {
+	display: inline-block;
+	max-height: rem(61);
+	position: relative;
+	width: 100%;
+
+	label {
+		display: inline;
+	} // label
+
+	.search-field {
+		font-size: rem(20);
+		line-height: 1.2;
+		min-height: rem(61);
+		padding-right: rem(75);
+	} // .search-field
+
+	.button-search {
+		@include position(absolute, 0 0 null null);
+		@include size(rem(75) 100%);
+
+		background-color: transparent;
+		background-image: url('assets/images/svg-icons/icon-search.svg');
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		background-size: rem(24);
+		border-radius: 0;
+		min-width: 0;
+		padding: 0;
+		text-indent: -9999em;
+	} // .button-search
+} // .searchform
+
+// On the search results page.
+.search-results-form {
+	margin: rem(35) 0 rem(45);
+} // .search-results-form

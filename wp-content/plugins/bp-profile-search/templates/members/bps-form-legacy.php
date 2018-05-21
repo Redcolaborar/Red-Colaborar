@@ -4,6 +4,8 @@
  * BP Profile Search - form template 'bps-form-legacy'
  *
  * See http://dontdream.it/bp-profile-search/form-templates/ if you wish to modify this template or develop a new one.
+ * A new or modified template should be moved to the 'buddypress/members' directory in your theme's root, otherwise it
+ * will be overwritten during the next plugin update.
  *
  */
 
@@ -91,6 +93,31 @@
 			echo "<textarea rows='5' cols='40' name='$f->code' id='$f->code'>$f->value</textarea>\n";
 			break;
 
+		case 'distance':
+			$within = __('Within', 'bp-profile-search');
+			$of = __('of', 'bp-profile-search');
+			$km = __('km', 'bp-profile-search');
+			$miles = __('miles', 'bp-profile-search');
+?>
+			<label for="<?php echo $f->unique_id; ?>"><?php echo $f->label; ?></label>
+			<span><?php echo $within; ?></span>
+			<input style="width: 4em;" type="number" min="1"
+				name="<?php echo $f->code. '[distance]'; ?>"
+				value="<?php echo $f->value['distance']; ?>">
+			<select name="<?php echo $f->code. '[units]'; ?>">
+				<option value="km" <?php selected ($f->value['units'], "km"); ?>><?php echo $km; ?></option>
+				<option value="miles" <?php selected ($f->value['units'], "miles"); ?>><?php echo $miles; ?></option>
+			</select>
+			<span><?php echo $of; ?></span>
+			<input style="width: 80%;" type="text" id="<?php echo $f->unique_id; ?>"
+				name="<?php echo $f->code. '[location]'; ?>"
+				value="<?php echo $f->value['location']; ?>"
+				placeholder="<?php _e('Start typing, then select a location', 'bp-profile-search'); ?>">
+			<img id="Btn_<?php echo $f->unique_id; ?>" style="cursor: pointer;" src="<?php echo plugins_url ('bp-profile-search/templates/members/locator.png'); ?>" title="<?php _e('get current location', 'bp-profile-search'); ?>">
+<?php
+			bps_autocomplete_script ($f);
+			break;
+
 		case 'selectbox':
 			echo "<label for='$f->code'>$f->label</label>\n";
 			echo "<select name='$f->code' id='$f->code'>\n";
@@ -147,7 +174,7 @@
 			break;
 
 		default:
-			echo "<p>BP Profile Search: don't know how to display the <em>$f->display</em> field type.</p>\n";
+			echo "<p>BP Profile Search: unknown display <em>$f->display</em> for field <em>$f->name</em>.</p>\n";
 			break;
 		}
 

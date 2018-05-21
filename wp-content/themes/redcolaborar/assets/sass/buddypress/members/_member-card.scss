@@ -1,0 +1,144 @@
+//--------------------------------------------------------------
+// Member Cards
+//--------------------------------------------------------------
+#members-list {
+	border-top: none;
+
+	li {
+		@include margin(null null rem(40) null);
+		@include padding(rem(16) rem(24) rem(16) rem(24));
+
+		background: $color-white;
+		border: 1px solid $color-submarine;
+		border-radius: 2px;
+		overflow: hidden;
+		position: relative;
+		width: 100%;
+
+		@include media($tablet-portrait) {
+			@include omega(2n);
+			@include span-columns(6.026);
+
+			margin-right: 3.5%;
+			min-height: rem(225); // Compensates for 4 lines.
+		}
+
+		@include media($desktop) {
+			min-height: rem(183);
+		}
+	} // li
+
+	// Item header.
+	.item-header {
+		min-height: rem(60);
+	} // .item-header
+
+	// Avatar container.
+	.item-avatar {
+
+		// The avatar.
+		.avatar {
+			@include size(rem(42));
+
+			border-radius: 50%;
+			overflow: hidden;
+		} // .avatar
+	} // .item-avatar
+
+	// Username/link.
+	.item-title {
+		font-family: $font-header;
+		font-size: rem(17);
+		font-weight: 700;
+
+		a {
+			text-decoration: none;
+
+			&:active,
+			&:hover,
+			&:focus {
+				opacity: 0.7;
+			} // &:active, &:hover, &:focus
+		} // a
+	} // .item-title
+
+	// Item meta.
+	.item-meta {
+		margin-top: rem(-4);
+	} // .item-meta
+
+	// Activity.
+	.activity {
+		color: $color-aluminum;
+		font-size: rem(12);
+	} // .activity
+
+	// Read more.
+	.activity-read-more {
+		margin-left: 0;
+	} // .activity-read-more
+
+	// Latest update.
+	.latest-update {
+		clear: both;
+		color: $color-river-bed;
+		font-size: rem(14);
+		margin-top: rem(9);
+
+		ul {
+			@include list-reset;
+
+			li {
+				background: transparent;
+				border: 0;
+				border-radius: 0;
+				float: none;
+				margin-bottom: rem(10);
+				margin-right: 0;
+				min-height: 0;
+				padding: 0;
+				width: 100%;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+
+				&.location {
+
+					.icon {
+						margin-bottom: rem(-3);
+					} // .icon
+				} // &.location
+			} // li
+		} // ul
+
+		// Read more link
+		.read-more {
+			text-decoration: none;
+		} // .read-more
+	} // .latest-update
+
+	// Message icon.
+	#send-private-message {
+		@include position(absolute, rem(20) rem(18) null null);
+
+		// Private message link.
+		a {
+			border: none;
+			display: block;
+			padding: 0;
+
+			// Remove default hover states.
+			&:hover,
+			&:active,
+			&:focus {
+				background-color: transparent;
+			} // &:hover, &:active, &:focus
+		} // a
+
+		// Message icon.
+		.icon {
+			@include size(18px);
+		} // .icon
+	} // .icon-icon-message
+} // #members-list

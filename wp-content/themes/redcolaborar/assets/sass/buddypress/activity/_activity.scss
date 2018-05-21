@@ -1,0 +1,624 @@
+//--------------------------------------------------------------
+// BP - Activity
+//--------------------------------------------------------------
+// sass-lint:disable no-color-literals
+// sass-lint:disable no-qualifying-elements
+// sass-lint:disable mixins-before-declarations
+// sass-lint:disable no-important
+// sass-lint:disable class-name-format
+
+.buddypress {
+
+	// Hide the auto refresh button when filtering.
+	&.filtering li.load-newest {
+		display: none;
+	}
+}
+
+#buddypress {
+
+	ul.activity-list.item-list {
+		border-top: 0;
+
+		li {
+			border-bottom: 0;
+			clear: both;
+			overflow: visible !important;
+
+			&.has-comments {
+				padding-bottom: 0;
+			} // &.has-comments
+
+			// Show all trigger.
+			&.show-all {
+				margin-bottom: rem(25);
+			} // &.show-all
+
+			// Mini cards
+			&.mini {
+
+				.acomment-container {
+					margin-left: 0;
+				} // .acomment-container
+
+				// The avatar.
+				.avatar {
+					@include size(rem(60));
+					margin-left: 0;
+				} // .avatar
+
+				.time-since {
+					font-size: rem(11);
+					font-weight: normal;
+				} // .time-since
+			} // &.mini
+
+			// Force embedded content to be position relative so we don't break the layout.
+			.wp-embedded-content {
+				position: relative !important; // To override inline styles.
+			} // .wp-embedded-content
+		} // li
+
+		// Look for child threads.
+		ul {
+
+			// Children deeper in the nesting.
+			ul {
+
+				@include media(max-width $tablet-portrait) {
+					margin-left: 0;
+				}
+			} // ul
+		} // ul
+	} // &.item-list
+
+	// Comment show/hide.
+	.show-hide-comments-trigger {
+		cursor: pointer;
+		display: none;
+		padding: rem(35) rem(33) 0;
+
+		&.is-visible {
+			display: inline-block;
+		} // &.is-visible
+	} // .show-hide-comments-trigger
+
+	// When comments are hidden.
+	.hide-extra-comments {
+
+		.comment-to-hide {
+			display: none;
+		} // .comment-to-hide
+	} // .hide-extra-comments
+
+	// When BP shows comments.
+	.bp-visible {
+
+		// Hide the show all button visually since BP is slow to remove it.
+		.show-all {
+			display: none;
+		} // .show-all
+	} // .bp-visible
+} // #buddypress, .featured-posts
+
+#buddypress,
+.featured-posts {
+
+	.activity,
+	.featured-activity {
+		color: $color-nevada;
+
+		a {
+
+			&:active,
+			&:focus,
+			&:hover,
+			&:visited {
+				opacity: 0.7;
+			} // &:active, &:focus, &:hover, &:visited
+
+			// Bookmark buttons.
+			&.fav,
+			&.unfav {
+				white-space: nowrap;
+			} // .fav, .unfav
+		} // a
+
+		// Activity item (li)
+		.activity-item {
+			background: $color-white;
+			margin-bottom: rem(20);
+			padding: 0;
+
+			@include media($tablet-landscape) {
+				margin-bottom: rem(45);
+			}
+
+			&:last-of-type {
+				margin-bottom: 0;
+			} // &:last-of-type
+
+			// The edit form.
+			.activity-inner {
+
+				textarea {
+					width: 100% !important; // Important to override inline styles.
+				} // textarea
+
+				.form-control {
+					background-position: 98% 50%;
+				} // .form-control
+
+				p {
+					font-size: rem(18);
+				} // p
+			} // .activity-inner
+		} // .activity-item
+
+		// Activity list
+		.activity-list {
+
+			.activity-content iframe {
+				margin-top: rem(10);
+			} // .activity-content iframe
+
+			// Avatar container.
+			.activity-avatar {
+				border: none;
+			} // .activity-avatar
+
+			// The avatar.
+			.avatar {
+				@include size(rem(60));
+
+				border-radius: 50%;
+				margin-right: 0;
+			} // .avatar
+
+			// Activity inner content container
+			.activity-inner {
+				clear: both;
+			} // .activity-inner
+
+			.activity-content {
+				@include padding(rem(25));
+
+				@include media($tablet-portrait) {
+					@include padding(rem(25) rem(33));
+				}
+
+				margin-left: 0;
+				position: static;
+
+				.activity-header {
+					@include margin(null rem(30) rem(23) rem(74));
+
+					font-size: rem(12);
+					min-height: rem(60);
+
+					p {
+						line-height: 1.5;
+					} // p
+
+					// User Name
+					a:first-of-type {
+						color: $color-gun-powder;
+						font-family: $font-header;
+						font-size: rem(17);
+						font-weight: bold;
+
+						&:active,
+						&:focus,
+						&:hover,
+						&:visited {
+							opacity: 1;
+							text-decoration: underline;
+						} // &:active, &:focus, &:hover, &:visited
+
+						// Add a line break.
+						&::after {
+							content: '\A';
+							white-space: pre;
+						} // &::after
+					} // a:first-of-type
+				} // .activity-header
+
+				.mejs-container {
+					background-color: $color-black;
+
+					button {
+						border-radius: 0;
+
+						&:hover,
+						&:active,
+						&:focus {
+							background-color: transparent;
+							opacity: 0.7;
+						} // &:hover, &:active, &:focus
+					} // button
+				} // .mejs-container
+			} // .activity-content
+		} // .activity-list
+
+		// Activity menu area.
+		.activity-meta {
+			border-top: 1px solid $color-seashell;
+			font-size: rem(14);
+			margin-top: rem(22);
+			padding-top: rem(12);
+
+			// These styles reset any button styles and also remove the animation added by the plugin.
+			.delete-activity,
+			.buddyboss_edit_activity,
+			.buddyboss_edit_activity.loading,
+			.buddyboss_edit_activity_cancel.loading,
+			.buddyboss_edit_activity_cancel {
+				@extend .no-styles;
+
+				animation: none;
+			} // .delete-activity,  .buddyboss_edit_activity,  .buddyboss_edit_activity.loading,  .buddyboss_edit_activity_cancel.loading,  .buddyboss_edit_activity_cancel
+
+			.acomment-container {
+				align-items: center;
+				display: flex;
+				margin-left: rem(120);
+				order: 1;
+
+				a {
+					align-items: center;
+					color: $color-nevada;
+					display: flex;
+					font-size: rem(14);
+					margin-left: rem(20);
+					padding-left: 0;
+					position: relative;
+
+					// Using CSS for comment icon to fix click issues.
+					&::before {
+						@include position(absolute, rem(7) null null rem(-20));
+						@include size(20px 16px);
+
+						background: url('assets/images/svg-icons/icon-comment.svg') no-repeat center center;
+						background-size: 20px 16px;
+						content: '';
+					} // &::before
+
+					&:active,
+					&:focus,
+					&:hover,
+					&:visited {
+						color: $color-nevada;
+						opacity: 0.7;
+					} // &:active, &:focus, &:hover, &:visited
+				} // a
+
+				// Number of comments
+				span {
+					background: transparent;
+					color: $color-nevada;
+				} // span
+
+				// Icon
+				.icon {
+					//@include size(rem(20) rem(16));
+				} // .icon
+			} // .acomment-container
+
+			// Activity menu trigger;
+			.bp-activity-menu-trigger {
+				@include position(absolute, rem(7) rem(16) null null);
+				@include size(rem(25));
+
+				display: block;
+				z-index: 10;
+
+				.icon-icon-more {
+					@include size(25px 32px);
+
+					margin-top: rem(-3);
+				} // .icon-icon-more
+			} // .bp-activity-menu-trigger
+		} // .activity-meta
+
+		// Activity content container. Holds the like and comments buttons.
+		.bp-activity-container {
+			align-items: center;
+			display: flex;
+		} // .bp-activity-container
+
+		// This holds the activity menu.
+		.bp-activity-menu-container {
+			@include position(absolute, rem(3) rem(3) null null);
+		} // .bp-activity-menu-container
+
+		// Activity card menu.
+		.bp-activity-menu {
+			@include padding(rem(10) rem(90) rem(10) rem(10));
+			@include position(absolute, 0 0 null null);
+
+			background-color: $color-white;
+			border: 1px solid $color-submarine;
+			border-radius: 2px;
+			box-shadow: 0 rem(2) rem(14) rem(5) rgba($color-black, 0.11);
+			display: none;
+
+			.bp-activity-menu-item {
+				@include margin(null null rem(20) null);
+
+				align-items: center;
+				display: flex;
+				flex-wrap: nowrap;
+
+				.button {
+					height: auto;
+				} // .button
+
+				> [class*='col-'] {
+					padding-left: 0;
+					padding-right: 0;
+				} // > [class*='col-']
+
+				&:last-of-type {
+					margin-bottom: 0;
+				} // &:last-of-type
+
+				a {
+					color: $color-nevada;
+					font-size: rem(16);
+					margin-left: rem(10);
+					padding: 0;
+					text-decoration: none;
+
+					&:active,
+					&:focus,
+					&:hover,
+					&:visited {
+						color: $color-nevada;
+						opacity: 0.7;
+					} // &:active, &:focus, &:hover, &:visited
+				}
+			} // .bp-activity-menu-item
+
+			// The menu icon.
+			.bp-activity-menu-item-icon {
+				display: flex;
+			} // .bp-activity-menu-item-icon
+
+			// Menu links.
+			.bp-activity-menu-item-link {
+				white-space: nowrap;
+			} // .bp-activity-menu-item-link
+
+			// Menu icons.
+			.icon {
+				@include size(rem(15));
+			} // .icon
+		} // .bp-activity-menu
+
+		// Activity Comments — Alt Styles.
+		div.activity-comments {
+
+			form .ac-textarea {
+				background-color: transparent;
+
+				textarea {
+					max-height: unset;
+				} // textarea
+			} // form .ac-textarea
+		} // div.activity-comments
+
+		// Activity Comments
+		.activity-comments {
+			@include margin(null null null 0);
+
+			background-color: $color-pattens-blue;
+
+			form.ac-form {
+				@include padding(rem(45) rem(20) 0);
+			} // form.ac-form
+
+			.ac-reply-content {
+				padding-right: 0;
+			} // .ac-reply-content
+
+			// Avatar.
+			.avatar {
+				@include size(rem(60));
+			} // .avatar
+
+			// Make sure we get proper hover states for posting comments button.
+			input[type='submit'] {
+				padding: rem(12) rem(35);
+
+				&:hover,
+				&:active,
+				&:focus {
+					border: 0;
+					color: $color-white;
+					padding: rem(12) rem(35);
+				}
+			} // input[type='submit']
+
+			> ul {
+				@include padding(rem(25));
+
+				margin-bottom: 0;
+
+				@include media($tablet-portrait) {
+					@include padding(rem(25) rem(33));
+				}
+			} // > ul
+
+			// Comment threads.
+			.activity-comments {
+				margin-bottom: 0;
+
+				.avatar {
+					@include size(rem(50));
+				} // .avatar
+
+				.acomment-meta,
+				.acomment-content {
+					margin-left: rem(65);
+				} //.acomment-meta, .acomment-content
+
+				.acomment-meta {
+
+					// Username link.
+					a:first-of-type {
+						color: $color-gun-powder;
+						font-family: $font-header;
+						font-size: rem(17);
+						font-weight: bold;
+
+						&:active,
+						&:focus,
+						&:hover,
+						&:visited {
+							opacity: 1;
+							text-decoration: underline;
+						} // &:active, &:focus, &:hover, &:visited
+					} // a:first-of-type
+				} // .acomment-meta
+			} // .activity-comments
+
+			li {
+				border-top: 0;
+			} // li
+
+			.acomment-meta,
+			.acomment-content,
+			.acomment-options {
+				margin-left: rem(75);
+			} //.acomment-meta, .acomment-content
+
+			.acomment-meta {
+
+				// Username link.
+				a:first-of-type {
+					color: $color-gun-powder;
+					font-family: $font-header;
+					font-size: rem(17);
+					font-weight: bold;
+					margin-right: rem(10);
+
+					&:active,
+					&:focus,
+					&:hover,
+					&:visited {
+						opacity: 1;
+						text-decoration: underline;
+					} // &:active, &:focus, &:hover, &:visited
+				} // a:first-of-type
+			} // .acomment-meta
+
+			// Comments.
+			.acomment-content {
+				color: $color-elephant;
+				font-size: rem(18);
+			} // .acomment-content
+
+			// Comment options.
+			.acomment-options {
+				clear: left;
+				margin-bottom: rem(24);
+
+				a {
+					color: $color-elephant;
+					font-size: rem(12);
+					font-weight: 700;
+					margin-right: rem(15);
+					text-transform: uppercase;
+
+					@include media(max-width $tablet-portrait) {
+						display: block !important; // Override !important from a plugin :(
+					}
+
+					&:last-child {
+						margin-right: 0;
+					} // &:last-child
+
+					.total_like {
+						font-size: rem(12);
+					} // .total_like
+				} // a
+			} // .acomment-options
+
+			// Like text.
+			.total_like {
+				color: $color-elephant;
+				font-size: rem(14);
+				margin-top: rem(2);
+			} // .total_like
+
+			// Reply container
+			.ac-reply-content {
+				margin-bottom: rem(45);
+				padding-right: rem(24);
+			} // .ac-reply-content
+
+			// Cancel button.
+			.ac-reply-cancel {
+
+				@include media(max-width $tablet-portrait) {
+					display: block;
+					margin-top: rem(12);
+				}
+
+				@include media($tablet-portrait) {
+					margin-left: rem(20);
+				}
+			} // .ac-reply-cancel
+
+			// Text area for adding comment.
+			.ac-textarea {
+				@include margin(0 0 rem(20) 0);
+				border: none;
+				padding: 0;
+
+				> textarea {
+					background-color: $color-white;
+				} // > textarea
+			} // .ac-textarea
+
+			// Like tweaks.
+			.awst_like {
+				text-decoration: none !important; // For overriding.
+			} // awst_like
+
+			.total_like {
+				position: static;
+				text-decoration: none;
+			} // .total_like
+
+		} // .activity-comments
+	} // .activity
+} // #buddypress, .featured-posts
+
+
+//-----------------------------------------
+// User Avatars
+//-----------------------------------------
+.default-avatar {
+	@include size(rem(60));
+
+	background-color: $color-aluminum;
+	border-radius: rem(1000);
+
+	#item-header-cover-image & {
+		@include size(rem(120));
+	} // #item-header-cover-image &
+
+	svg {
+		@include position(relative, 50% null null null);
+		@include size(30px);
+
+		display: block;
+		margin: 0 auto;
+		transform: translateY(-50%);
+
+		#item-header-cover-image & {
+			@include size(60px);
+		} // #item-header-cover-image &
+	} // svg
+} // .default-avatar

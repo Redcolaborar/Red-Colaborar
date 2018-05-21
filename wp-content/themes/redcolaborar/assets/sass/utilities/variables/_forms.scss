@@ -1,0 +1,35 @@
+//--------------------------------------------------------------
+// Global Form Variables
+//--------------------------------------------------------------
+
+////
+/// @group variables
+/// @author WebDevStudios
+////
+
+/// Button background.
+$color-button-background: $color-deep-carrot-orange;
+
+/// Button background on hover.
+$color-button-background-hover: $color-flame;
+
+/// Button text.
+$color-button-text: $color-white;
+
+/// Input border.
+$color-input-border: $color-gainsboro;
+
+/// Input focused color.
+$color-input-focus-text: $color-steel;
+
+// Input border color focus.
+$color-input-border-focus: $color-curious-blue;
+
+/// Input text.
+$color-input-text: $color-steel;
+
+/// Global input padding.
+$padding-input: rem(17.6) rem(10);
+
+/// Select input padding. Extra right padding for the down arrow.
+$padding-select-input: 0 rem(20) 0 rem(10);

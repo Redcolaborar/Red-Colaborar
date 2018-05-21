@@ -1,0 +1,12 @@
+//--------------------------------------------------------------
+// Sidebar Sticky Styles
+//--------------------------------------------------------------
+.secondary {
+	top: 0;
+	transition: top 0.2s ease-in-out;
+
+	// If sticky, make relative.
+	&.sticky {
+		position: relative;
+	} // &.sticky
+} // .secondary

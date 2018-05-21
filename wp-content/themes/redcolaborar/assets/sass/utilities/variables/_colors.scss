@@ -1,0 +1,127 @@
+//--------------------------------------------------------------
+//   colors
+//    - primary palette
+//    - grayscale
+//    - social media colors
+//       - $social-colors() map
+//
+//   elements & skinning
+//     - general
+//     - accessibility
+//     - links
+//-------------------------------------------------------------
+
+////
+/// @group variables
+/// @author webdevstudios
+////
+
+// primary palette
+$color-cloud-burst: #3e3e40;
+$color-elephant:    #3b3b43;
+$color-gun-powder:  #515158;
+$color-aluminum:    #95989e;
+$color-seashell:    #f3f6f8;
+$color-athens-gray: #eeeff1;
+$color-submarine:   #bbc1ca;
+$color-aqua-freeze: #eef7fd;
+
+$color-curious-blue:       #1f9fd2;
+$color-cerulean:           #1383ad;
+$color-picton-blue:        #26b3e3;
+$color-pattens-blue:	   #dff6fe;
+$color-catskill:           #f4f8fa;
+
+$color-deep-carrot-orange: #ef6e31;
+$color-flame:              #e06128;
+$color-burnt-orange:       #f97c44;
+
+$color-niagra:             #17a085;
+$color-elf-green:          #0d876e;
+$color-light-sea-green:    #49d483;
+
+$color-buddypress-gray: #767676;
+$color-error: #e00606;
+
+// grayscale
+$color-white: #ffffff;
+$color-black: #000001;
+$color-gray: #808080;
+$color-cod-gray: #111;
+$color-mineshaft: #333;
+$color-tundora: #454545;
+$color-dove-gray: #666;
+$color-gray-alt: #929292;
+$color-silver-chalice: #aaa;
+$color-silver: #ccc;
+$color-alto: #ddd;
+$color-gallery: #eee;
+$color-whitesmoke: #f1f1f1;
+$color-gainsboro: #ddd;
+$color-steel: #666;
+$color-river-bed: #454e5f;
+$color-mercury: #e6e6e6;
+$color-nevada:     #686f77;
+
+// social colors.
+$color-facebook: #3b5998;
+$color-twitter: #00aced;
+
+/// sass map used for creating color presentational classes.
+$theme-colors: (
+	cloud-burst: #323c50,
+	elephant:    #253541,
+	gun-powder:  #45435f,
+	aluminum:    #95989e,
+	seashell:    #f3f6f8,
+	submarine:   #bbc1ca,
+	aqua-freeze: #eef7fd,
+	curious-blue:       #1f9fd2,
+	cerulean:           #1383ad,
+	picton-blue:        #26b3e3,
+	catskill:           #f4f8fa,
+	deep-carrot-orange: #ef6e31,
+	flame:              #e06128,
+	burnt-orange:       #f97c44,
+	niagra:             #17a085,
+	elf-green:          #0d876e,
+	light-sea-green:    #49d483,
+	buddypress-gray: #767676,
+	white: #ffffff,
+	black: #000001,
+	gray: #808080,
+	cod-gray: #111,
+	mineshaft: #333,
+	tundora: #454545,
+	dove-gray: #666,
+	gray-alt: #929292,
+	silver-chalice: #aaa,
+	silver: #ccc,
+	alto: #ddd,
+	gallery: #eee,
+	whitesmoke: #f1f1f1,
+	gainsboro: #ddd,
+	steel: #666,
+	river-bed: #454e5f,
+	mercury: #e6e6e6,
+	nevada:     #686f77,
+	facebook: #3b5998,
+	twitter: #00aced
+);
+
+// elements & skinning
+
+// general
+$color-background-body: $color-white;
+$color-text-main: $color-cod-gray;
+$color-background-hr: $color-seashell;
+$color-border-abbr: $color-seashell;
+
+// accessibility
+$color-background-screen-reader: $color-seashell;
+$color-text-screen-reader: $color-curious-blue;
+
+// links
+$color-link: $color-curious-blue;
+$color-link-visited: $color-curious-blue;
+$color-link-hover: $color-curious-blue;

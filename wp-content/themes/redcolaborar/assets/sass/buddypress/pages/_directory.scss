@@ -1,0 +1,19 @@
+//--------------------------------------------------------------
+// BuddyPress Member/Directory Page
+//--------------------------------------------------------------
+.directory {
+
+	// Sidebar
+	.secondary {
+		margin-bottom: rem(45);
+
+		@include media($tablet-landscape) {
+			margin-top: 0;
+		}
+	} // .secondary
+
+	// Article
+	.hentry {
+		margin-bottom: 0;
+	} // .hentry
+} // .directory &

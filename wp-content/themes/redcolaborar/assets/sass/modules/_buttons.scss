@@ -1,0 +1,149 @@
+//--------------------------------------------------------------
+// Buttons
+//--------------------------------------------------------------
+// sass-lint:disable no-qualifying-elements
+button,
+.button,
+#buddypress a.button,
+#buddypress input[type='submit'],
+input[type='button'],
+input[type='reset'],
+input[type='submit'],
+.button-nav a {
+	appearance: none;
+	background-color: $color-button-background;
+	border: none;
+	border-radius: rem(75);
+	border-width: 0;
+	color: $color-button-text;
+	font-family: $font-header;
+	line-height: 1.5;
+	margin: 0;
+	padding: rem(12) rem(35);
+	transition: $transition-button;
+
+	&:disabled,
+	&[disabled] {
+		opacity: 0.5;
+	} // &:disabled, &[disabled]
+
+	&.small {
+		font-size: rem(14);
+		padding: rem(9.5) rem(30);
+	} // small
+
+	// IE 11 helper.
+	.ie & {
+		height: rem(43);
+		line-height: 1;
+
+		&.small {
+			height: rem(35);
+		} // &.small
+	} // .ie &
+
+	&:hover {
+		background-color: $color-button-background-hover;
+	} // &:hover
+
+	&:active,
+	&:focus {
+		background-color: $color-button-background-hover;
+	} // &:active, &:focus
+
+	// Button Blue
+	&.blue {
+		background-color: $color-curious-blue;
+
+		&:hover {
+			background-color: $color-cerulean;
+		} // &:hover
+
+		&:active,
+		&:focus {
+			background-color: $color-cerulean;
+		} // &:active, &:focus
+	} // &.blue
+
+	// Outline Button.
+	&.outline {
+		background-color: $color-white;
+		box-shadow: inset 0 0 0 rem(2) $color-aluminum;
+		color: $color-river-bed;
+
+		&:active,
+		&:hover,
+		&:focus {
+			background-color: $color-aluminum;
+			color: $color-white;
+		} // &:active, &:focus
+	} // &.outline
+
+	&.no-styles {
+		background-color: transparent;
+		border: none;
+		border-radius: 0;
+		color: $color-river-bed;
+		min-width: inherit;
+		padding: unset;
+
+		&:active,
+		&:hover,
+		&:focus {
+			background-color: transparent;
+			color: $color-river-bed;
+		} // &:active, &:hover, &:focus
+	} // &.no-styles
+} // button, input[type="button"], input[type="reset"], input[type="submit"]
+
+//--------------------------------------------------------------
+// Button Helpers
+//--------------------------------------------------------------
+// Use this as an extend to override the styles BP adds in.
+.button-override-buddypress {
+	animation: none;
+
+	&:hover,
+	&:active,
+	&:focus {
+		border: none;
+		color: $color-white;
+	} // &:hover, &:active &:focus
+} // .button-override-buddypress
+
+//-----------------------------------------
+// Back to TOp Button
+//-----------------------------------------
+.back-to-top-button {
+	@include padding(rem(10) rem(20));
+	@include position(fixed, null $gutter / 3.33 $gutter / 3.33 null);
+
+	background-color: rgba($color-black, 0.3);
+	color: $color-white;
+	display: none;
+	font-size: rem(12);
+	text-decoration: none;
+	transition: $transition-button;
+	z-index: 100;
+
+	@include media($tablet-landscape) {
+		@include position(fixed, null $gutter / 2 $gutter / 2 null);
+	}
+
+	.has-profile-bar & {
+		@include position(fixed, null $gutter / 3.33 rem(65) + $gutter / 3.33 null);
+
+		@include media($tablet-landscape) {
+			@include position(fixed, null $gutter / 2 $gutter / 2 null);
+		}
+	}
+
+	&:active,
+	&:focus,
+	&:hover,
+	&:visited {
+		background-color: rgba($color-black, 0.6);
+		color: $color-white;
+		text-decoration: none;
+	} // &:hover, &:focus, &:active
+} // .back-to-top-button

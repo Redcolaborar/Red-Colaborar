@@ -3,22 +3,24 @@
 Plugin Name: BP Profile Search
 Plugin URI: http://www.dontdream.it/bp-profile-search/
 Description: Search your BuddyPress Members Directory.
-Version: 4.7.8
+Version: 4.8.2
 Author: Andrea Tarantini
 Author URI: http://www.dontdream.it/
 Text Domain: bp-profile-search
 */
 
-define ('BPS_VERSION', '4.7.8');
+define ('BPS_VERSION', '4.8.2');
 define ('BPS_FORM', 'bp_profile_search');
 
 include 'bps-admin.php';
 include 'bps-directory.php';
+include 'bps-external.php';
 include 'bps-fields.php';
 include 'bps-form.php';
 include 'bps-help.php';
 include 'bps-search.php';
 include 'bps-templates47.php';
+include 'bps-templates48.php';
 include 'bps-widget.php';
 include 'bps-xprofile.php';
 
@@ -27,7 +29,7 @@ function bps_buddypress ()
 {
 	if (bp_is_active ('xprofile'))
 	{
-//		include 'bps-location.php';
+//		include ...
 	}
 }
 
@@ -68,23 +70,10 @@ function bps_upgrade ()
 {
 	$db_version = 471;
 
-	$settings = get_option ('bps_settings');
-	if ($settings === false)
-	{
-		$settings = new stdClass;
-		$settings->db_version = 0;
-	}
-
-	$installed = $settings->db_version;
+	$installed = bps_get_option ('db_version', 0);
 	if ($installed >= $db_version)  return false;
 
-	$settings->db_version = $db_version;
-	update_option ('bps_settings', $settings);
-
-	if ($installed < 480)
-	{
-//		bps_create_locations ();
-	}
+	bps_set_option ('db_version', $db_version);
 
 	$posts = get_posts (array ('post_type' => 'bps_form', 'nopaging' => true));
 	foreach ($posts as $post)
