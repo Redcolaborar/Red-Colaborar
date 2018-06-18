@@ -17,6 +17,79 @@ class AwstComman {
         }
     }
 
+    public function getLikesUserListByObjectId( $objectID, $objectType = 'post' ){
+
+      global $wpdb;
+
+      switch( $objectType ) {
+
+        case 'activity':
+
+          $sql = "SELECT * FROM  {$wpdb->prefix}usermeta WHERE `meta_key` IN('awst_like', 'bp_favorite_activities')  AND `meta_value` LIKE '%\"" . $objectID . "\"%' ";
+          $result = $wpdb->get_results( $sql, 'OBJECT' );
+
+          $user_ids = array();
+
+          foreach( $result as $item ) {
+            array_push( $user_ids, $item->user_id );
+          }
+
+          // filter duplicates
+          $user_ids = array_unique( $user_ids );
+
+          $sql      = "SELECT ID, user_nicename  FROM  {$wpdb->prefix}users WHERE `ID` IN('".implode("','",$user_ids)."')";
+          $result = $wpdb->get_results( $sql, 'OBJECT' );
+
+          break;
+
+        default:
+
+          $user_ids    = get_post_meta($objectID, 'awst_like', true);
+
+          $sql      = "SELECT ID, user_nicename  FROM  {$wpdb->prefix}users WHERE `ID` IN('".implode("','",$user_ids)."')";
+          $result = $wpdb->get_results( $sql, 'OBJECT' );
+
+      }
+
+      return $result;
+
+    }
+
+    public function getLikesByObjectId( $objectID, $objectType = 'post' ){
+
+      global $wpdb;
+
+      switch( $objectType ) {
+
+        case 'activity':
+
+          $sql = "SELECT * FROM  {$wpdb->prefix}usermeta WHERE `meta_key` IN('awst_like', 'bp_favorite_activities')  AND `meta_value` LIKE '%\"" . $objectID . "\"%' ";
+          $result = $wpdb->get_results( $sql, 'OBJECT' );
+
+          $user_ids = array();
+
+          foreach( $result as $item ) {
+            array_push( $user_ids, $item->user_id );
+          }
+
+          $sql      = "SELECT *  FROM  {$wpdb->prefix}users WHERE `ID` IN('".implode("','",$user_ids)."')";
+          $result = $wpdb->get_results( $sql, 'OBJECT' );
+
+          $totalLiked  = AwstComman::getLikes( $result );
+
+          break;
+
+        default:
+
+          $postmeta    = get_post_meta($objectID, 'awst_like', true);
+          $totalLiked  = AwstComman::getLikes( $postmeta );
+
+      }
+
+      return $totalLiked;
+
+    }
+
     public function isLiked($postmeta, $userID){
         if(in_array($userID, $postmeta)) {
             return true;
@@ -27,6 +100,9 @@ class AwstComman {
 
     /* function to get the admin page link */
     function getAdminUrl( $menuSlug, $items = null ) {
+
+      // var_dump( $items );
+
         $path = 'admin.php?page='.$menuSlug;
 
         if( ($items && is_array($items) ) ){
@@ -53,17 +129,17 @@ class AwstComman {
         return AwstComman::getStarsHtml($rating);
     }
     function getUserreviews($userids) {
-        
+
         $user     = array();
         $user['display_name'] = get_the_author_meta('display_name',$userids);
         $user['user_login'] = get_the_author_meta('user_login',$userids);
         $user['user_email'] = get_the_author_meta('user_email',$userids);
-        
+
         return $user;
     }
 
     function getUserReview($postids) {
-        
+
         global $wpdb;
         $sql = "SELECT * FROM wp_posts WHERE post_parent = $postids AND post_status = 'publish'";
         $result = $wpdb->get_results( $sql, 'OBJECT' );
@@ -191,7 +267,7 @@ class AwstComman {
                                 'posts_per_page' => -1,
                                 'order'          => 'DESC',
                                 'orderby'        => 'ID'
-                            ) 
+                            )
         );
 
         return $reviews;

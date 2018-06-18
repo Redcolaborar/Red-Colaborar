@@ -115,10 +115,20 @@ class AwstAdminPages {
     /* function to get the users that liked posts. */
     public function awst_likes() {
         $postID  = $_GET['id'];
-        $title   = get_the_title($postID);
 
-        $postmeta    = get_post_meta($postID, 'awst_like', true);
-        $totalLiked  = AwstComman::getLikes($postmeta);
+        $objectType = !empty( $_GET['object_type'] ) ? $_GET['object_type'] : 'post';
+
+        switch( $objectType ) {
+          case 'activity':
+            $activity = new BP_Activity_Activity( $postID );
+            $title   = $activity->content;
+            break;
+          default:
+            $title   = get_the_title($postID);
+        }
+
+
+        $totalLiked  = AwstComman::getLikesByObjectId( $postID, $objectType );
 
         $backUrl = AwstComman::getAdminUrl('awsocialtabs');
 

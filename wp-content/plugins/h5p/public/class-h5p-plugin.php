@@ -352,8 +352,9 @@ class H5P_Plugin {
     add_option('h5p_site_key', get_option('h5p_h5p_site_uuid', FALSE));
     add_option('h5p_content_type_cache_updated_at', 0);
     add_option('h5p_check_h5p_requirements', FALSE);
-    add_option('h5p_hub_is_enabled', TRUE);
-    add_option('h5p_send_usage_statistics', TRUE);
+    add_option('h5p_hub_is_enabled', FALSE);
+    add_option('h5p_send_usage_statistics', FALSE);
+    add_option('h5p_has_request_user_consent', FALSE);
   }
 
   /**
@@ -418,6 +419,8 @@ class H5P_Plugin {
 
     $pre_120 = ($v->major < 1 || ($v->major === 1 && $v->minor < 2)); // < 1.2.0
     $pre_180 = ($v->major < 1 || ($v->major === 1 && $v->minor < 8)); // < 1.8.0
+    $pre_1102 = ($v->major < 1 || ($v->major === 1 && $v->minor < 10) ||
+                 ($v->major === 1 && $v->minor === 10 && $v->patch < 2)); // < 1.10.2
 
     // Run version specific updates
     if ($pre_120) {
@@ -433,6 +436,10 @@ class H5P_Plugin {
     if ($pre_180) {
       // Force requirements check when hub is introduced.
       update_option('h5p_check_h5p_requirements', TRUE);
+    }
+
+    if ($pre_1102 && $current_version !== '0.0.0') {
+      update_option('h5p_has_request_user_consent', TRUE);
     }
 
     // Keep track of which version of the plugin we have.
@@ -1077,7 +1084,8 @@ class H5P_Plugin {
       'l10n' => array(
         'H5P' => $core->getLocalization(),
       ),
-      'hubIsEnabled' => get_option('h5p_hub_is_enabled', TRUE) == TRUE
+      'hubIsEnabled' => get_option('h5p_hub_is_enabled', TRUE) == TRUE,
+      'reportingIsEnabled' => (get_option('h5p_enable_lrs_content_types', FALSE) === '1') ? TRUE : FALSE,
     );
 
     if ($current_user->ID) {

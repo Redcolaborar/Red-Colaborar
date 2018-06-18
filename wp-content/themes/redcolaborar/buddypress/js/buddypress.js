@@ -539,7 +539,13 @@ jq(document).ready( function() {
 			inner_class, a_inner;
 
 		inner_class = type === 'acomment' ? 'acomment-content' : 'activity-inner';
-		a_inner = jq('#' + type + '-' + a_id + ' .' + inner_class + ':first' );
+
+		if( inner_class === 'activity-inner' ) {
+			a_inner = jq('#' + type + '-' + a_id + ' .' + inner_class + ':first .rc-activity-col-content' );
+		} else {
+			a_inner = jq('#' + type + '-' + a_id + ' .' + inner_class + ':first' );
+		}
+
 		jq(target).addClass('loading');
 
 		jq.post( ajaxurl, {
@@ -548,7 +554,6 @@ jq(document).ready( function() {
 		},
 		function(response) {
 			jq(a_inner).slideUp(300).html(response).slideDown(300);
-			//jq(a_inner).find('.rc-activity-col-content').slideUp(300).html(response).slideDown(300);
 		});
 
 		return false;

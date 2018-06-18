@@ -234,9 +234,9 @@ class AwSocialTabs {
             $post_id    =   $id;
         }
 
-        $post_like      =   $type.'_like';
-        $post_rate      =   $type.'_rate';
-        $post_review    =   $type.'_review';
+        $post_like      =   $type . '_like';
+        $post_rate      =   $type . '_rate';
+        $post_review    =   $type . '_review';
 
         $like           =   false;
         $rate           =   false;
@@ -244,7 +244,7 @@ class AwSocialTabs {
 
         $seletedOptions =   get_option('awSocialTabsPostOptions', true);
 
-        if( in_array($post_like, $seletedOptions )){
+        if( in_array($post_like, $seletedOptions ) ){
 
             $flag       =   true;
             $user_ID    =   get_current_user_id();
@@ -252,13 +252,50 @@ class AwSocialTabs {
             $isLiked    =   AwstComman::isLiked($postmeta, $user_ID);
             $totalLiked =   AwstComman::getLikes($postmeta);
 
+            $usersLikeList = AwstComman::getLikesUserListByObjectId( $post_id, 'activity' );
+            $users_liked = "";
+            foreach( $usersLikeList as $user ) {
+              $users_liked .= "<a href='" . home_url( '/miembros/'. $user->user_nicename ) . "'>@{$user->user_nicename}</a>";
+            }
+
             $fav_count  =   10;
+
+            global $wpdb;
+
+            $result_final = "";
+
+            $sql = "SELECT * FROM  {$wpdb->prefix}usermeta WHERE `meta_key` IN('awst_like', 'bp_favorite_activities')  AND `meta_value` LIKE '%\"" . $post_id . "\"%' ";
+            $result = $wpdb->get_results( $sql, 'OBJECT' );
+
+            $user_ids = array();
+
+            foreach( $result as $item ) {
+              array_push( $user_ids, $item->user_id );
+            }
+
+            // filter duplicates
+            $user_ids = array_unique( $user_ids );
+
+            $result_final .= var_export( $result, 1 ) . "<br>";
+
+            $result_final .= var_export( $user_ids, 1 ) . "<br>";
+
+            $sql      = "SELECT ID, user_nicename  FROM  {$wpdb->prefix}users WHERE `ID` IN('".implode("','",$user_ids)."')";
+            $result = $wpdb->get_results( $sql, 'OBJECT' );
+
+            $result_final .= var_export( $result, 1 );
+
+            $result_final .= var_export( AwstComman::getLikesUserListByObjectId( $post_id, 'activity' ), 1 );
 
             if( $post_id !== 0 ):
                 if( ((!empty( $fav_count ) ) && $isLiked) ):?>
                     <a class="awst_like"><?php printf( _n( 'AWST LIKE', '<span class="awst_like_btn" id="awst_like_btn_%d"><i data-post-like="true" data-post-id="%d" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_%d">%d</label> Me gusta</span>', $post_id,$post_id,$post_id,$totalLiked ), $post_id,$post_id,$post_id,$totalLiked  );?></a>
+                    <div style="display: none" class="awst_like_user_list"><?php echo $users_liked ?></div>
+                    <div style="display: none"><?php echo $result_final ?></div>
                 <?php else:?>
                     <a class="awst_like"><?php printf( _n( 'AWST LIKE', '<span class="awst_like_btn" id="awst_like_btn_%d"><i data-post-like="true" data-post-id="%d" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_%d">%d</label> Me gusta</span>', $post_id,$post_id,$post_id,$totalLiked ), $post_id,$post_id,$post_id,$totalLiked  );?></a>
+                    <div style="display: none" class="awst_like_user_list"><?php echo $users_liked ?></div>
+                    <div style="display: none"><?php echo $result_final ?></div>
                 <?php endif;
             endif;
         }
@@ -602,6 +639,7 @@ class AwSocialTabs {
             }else{
                 $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.get_the_ID().'"><i data-post-like="true" data-post-id="'.get_the_ID().'" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.get_the_ID().'">'.$totalLiked.'</label> Me gusta</span></div>';
             }
+
             print_r($like);
         }
 

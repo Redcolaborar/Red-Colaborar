@@ -1,10 +1,10 @@
 ﻿=== Interactive Content – H5P ===
 Contributors: icc0rz, fnoks, falcon28
 Donate link: http://h5p.org
-Tags: interactive content, content, interactive video, quiz, drag and drop, multiple choice, hot spots, collage, memory game, cloze test, game, free, export, elearning, e-learning, learning, education, xAPI, html5, responsive
+Tags: editor, video, quiz, slider, education
 Requires at least: 3.8.1
 Tested up to: 4.9
-Stable tag: 1.10.1
+Stable tag: 1.10.2
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
@@ -12,7 +12,7 @@ Create and add rich content to your website for free. Some examples of what you 
 
 == Description ==
 
-One of the great benefits with using H5P is that it gives you access to lots of different [interactive content types](https://h5p.org/content-types-and-applications "Examples and Downloads").
+One of the great benefits with using H5P is that it gives you access to lots of different [interactive content types](https://h5p.org/content-types-and-applications "Examples and Downloads"), such as presentation, interactive video, memory game, quiz, multiple choice, timeline, collage, hotspots, drag and drop, cloze test (fill in the blanks), personality quiz, accordion, flash cards, audio recorder.
 
 Another great benefit with H5P is that it allows you to easily share and reuse content. To use content created with H5P, you simply insert a shortcode `[h5p Id="1"]` where you wish for the content to appear. To reuse content, you just download the H5P you would like to edit and make your changes – e.g. translate to a new language or adjust it to a new situation.
 
@@ -26,6 +26,9 @@ H5P is:
 The H5P community is actively contributing to improve H5P. Updates and new features are continuously made available on the community portal [H5P.org](https://h5p.org "H5P").
 
 View our [setup for WordPress](https://h5p.org/documentation/setup/wordpress "Setup H5P for WordPress") to get information on how to get started with H5P.
+
+= GDPR Compliance =
+Information useful to help you achieve GDPR compliance while using this plugin can be found at [H5P.org's GDPR Compliance](https://h5p.org/plugin-gdpr-compliance "GDPR Compliance") page.
 
 == Installation ==
 
@@ -371,3 +374,11 @@ Updated translations.
 = 1.10.1 =
 Fix issue with editor not saving correctly in Safari 11.
 Fix missing translation and some PHP notices.
+
+= 1.10.2 =
+Add support for the new Privacy APIs added in the latest WordPress. (retrieving and deleting user data upon request)
+Add an opt-in option for statistics for first time users of the plugin.
+Update the French translation, big thanks to knowledgeplaces on GitHub!
+Restricted some new content type in case an LRS isn't used.
+Add support for the latest H5P Core version.
+Various minor bug fixes

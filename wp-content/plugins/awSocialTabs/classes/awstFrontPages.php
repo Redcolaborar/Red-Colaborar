@@ -56,12 +56,19 @@ class AwstFrontPages {
             $isLiked     = AwstComman::isLiked($postmeta, $user_ID);
             $totalLiked  = AwstComman::getLikes($postmeta);
 
+            $usersLikeList = AwstComman::getLikesUserListByObjectId( $post_id );
+            $users_liked = "";
+            foreach( $usersLikeList as $user ) {
+              $users_liked .= "<a href='" . home_url( '/miembros/'. $user->user_nicename ) . "'>@{$user->user_nicename}</a>, ";
+            }
+
             if( $isLiked ){
                 $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.$post->ID.'"><i data-post-like="true" data-post-id="'.$post->ID.'" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.$post->ID.'">'.$totalLiked.'</label> Me gusta</span></div>';
             }else{
                 $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.$post->ID.'"><i data-post-like="true" data-post-id="'.$post->ID.'" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.$post->ID.'">'.$totalLiked.'</label> Me gusta</span></div>';
             }
 
+            $like .= "<div style=\"display: none\" class=\"awst_like_user_list\">" . $users_liked . "</div>";
 
         }
 
@@ -297,11 +304,19 @@ class AwstFrontPages {
             $isLiked     = AwstComman::isLiked($postmeta, $user_ID);
             $totalLiked  = AwstComman::getLikes($postmeta);
 
+            $usersLikeList = AwstComman::getLikesUserListByObjectId( $post_id, 'activity' );
+            $users_liked = "";
+            foreach( $usersLikeList as $user ) {
+              $users_liked .= "<a href='" . home_url( '/miembros/'. $user->user_nicename ) . "'>@{$user->user_nicename}</a>, ";
+            }
+
             if( $isLiked ){
                 $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.$post_id.'"><i data-post-like="true" data-post-id="'.$post_id.'" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.$post_id.'">'.$totalLiked.'</label> Me gusta</span></div>';
             }else{
                 $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.$post_id.'"><i data-post-like="true" data-post-id="'.$post_id.'" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.$post_id.'">'.$totalLiked.'</label> Me gusta</span></div>';
             }
+
+            $like .= "<div style=\"display: none\" class=\"awst_like_user_list\">" . $users_liked . "</div>";
 
             print_r($like);
 
@@ -396,11 +411,19 @@ class AwstFrontPages {
             $isLiked     = AwstComman::isLiked($postmeta, $user_ID);
             $totalLiked  = AwstComman::getLikes($postmeta);
 
+            $usersLikeList = AwstComman::getLikesUserListByObjectId( get_the_ID() );
+            $users_liked = "";
+            foreach( $usersLikeList as $user ) {
+              $users_liked .= "<a href='" . home_url( '/miembros/'. $user->user_nicename ) . "'>@{$user->user_nicename}</a>, ";
+            }
+
             if( $isLiked ){
                 $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.get_the_ID().'"><i data-post-like="true" data-post-id="'.get_the_ID().'" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.get_the_ID().'">'.$totalLiked.'</label> Me gusta</span></div>';
             }else{
                 $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.get_the_ID().'"><i data-post-like="true" data-post-id="'.get_the_ID().'" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.get_the_ID().'">'.$totalLiked.'</label> Me gusta</span></div>';
             }
+
+            $like .= "<div style=\"display: none\" class=\"awst_like_user_list\">" . $users_liked . "</div>";
 
             print_r($like);
 

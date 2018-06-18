@@ -161,6 +161,10 @@ function wds_redcolaborar_display_homepage_featured_posts() {
 
 			<style>
 
+			.awst_like_user_list a {
+				padding: 4px 8px;
+			}
+
 			.featured-activity .activity-inner {
 				/* display: none; */
 				max-height: 500px;

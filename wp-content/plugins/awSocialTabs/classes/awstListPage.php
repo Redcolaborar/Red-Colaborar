@@ -115,10 +115,13 @@ class AwstListPage extends WP_List_Table {
             $data1['post_type']         = AwstConfig::postTypeLabel( $item->post_type );
             $data1['post_likes_link']   = $this->getTotalLikes( $item->ID );
             $data1['post_likes']        = $this->getTotalLikesCount( $item->ID );
-            $data1['post_Rating']       = $this->getAverageRatingCount( $item->ID );
+            // $data1['post_Rating']       = $this->getAverageRatingCount( $item->ID );
+						$data1['post_Rating']       = '0';
             $data1['post_Rating_link']  = $this->getAverageRating( $item->ID );
-            $data1['post_reviews']      = $this->getReviewsCount($item->ID);
-            $data1['actions']           = $this->getTotalLikes( $item->ID )."&nbsp; | &nbsp;".$this->getAverageRating( $item->ID ) ."&nbsp; | &nbsp;". $this->getReviews($item->ID);
+            // $data1['post_reviews']      = $this->getReviewsCount($item->ID);
+						$data1['post_reviews']      = '0';
+
+						$data1['actions']           = $this->getTotalLikes( $item->ID )."&nbsp; | &nbsp;".$this->getAverageRating( $item->ID ) ."&nbsp; | &nbsp;". $this->getReviews($item->ID);
 
             $data[] = $data1;
         }
@@ -135,15 +138,17 @@ class AwstListPage extends WP_List_Table {
                 }
             }
 
-            $data1['ID']                = $item->id;
+						$data1['ID']                = $item->id;
             $data1['post_title']        = $title;
             $data1['post_type']         = $item->type;
-            $data1['post_likes_link']   = $this->getTotalLikes( $item->id );
-            $data1['post_likes']        = $this->getTotalLikesCount( $item->id );
-            $data1['post_Rating']       = $this->getAverageRatingCount( $item->id );
-            $data1['post_Rating_link']  = $this->getAverageRating( $item->id );
-            $data1['post_reviews']      = $this->getReviewsCount($item->id);
-            $data1['actions']           = $this->getTotalLikes( $item->id )."&nbsp; | &nbsp;".$this->getAverageRating( $item->id ) ."&nbsp; | &nbsp;". $this->getReviews($item->id);
+            $data1['post_likes_link']   = $this->getTotalLikes( $item->id, 'activity' );
+            $data1['post_likes']        = $this->getTotalLikesCount( $item->id, 'activity' );
+            // $data1['post_Rating']       = $this->getAverageRatingCount( $item->id, 'activity' );
+						$data1['post_Rating']       = '0';
+            $data1['post_Rating_link']  = $this->getAverageRating( $item->id, 'activity' );
+            // $data1['post_reviews']      = $this->getReviewsCount($item->id, 'activity');
+						$data1['post_reviews']      = '0';
+            $data1['actions']           = $data1['post_likes_link'] . "&nbsp; | &nbsp;" . $data1['post_Rating_link'] ."&nbsp; | &nbsp;". $this->getReviews($item->id, 'activity');
 
             $data[] = $data1;
         }
@@ -159,9 +164,11 @@ class AwstListPage extends WP_List_Table {
             $data2['post_type']         = "post Comment";
             $data2['post_likes_link']   = $this->getTotalLikes( $item->comment_ID );
             $data2['post_likes']        = $this->getTotalLikesCount( $item->comment_ID );
-            $data2['post_Rating']       = $this->getAverageRatingCount( $item->comment_ID );
+            // $data2['post_Rating']       = $this->getAverageRatingCount( $item->comment_ID );
+						$data2['post_Rating']       = '0';
             $data2['post_Rating_link']  = $this->getAverageRating( $item->comment_ID );
-            $data2['post_reviews']      = $this->getReviewsCount($item->comment_ID);
+            // $data2['post_reviews']      = $this->getReviewsCount($item->comment_ID);
+						$data2['post_reviews']      = '0';
             $data2['actions']           = $this->getTotalLikes( $item->comment_ID )."&nbsp; | &nbsp;".$this->getAverageRating( $item->comment_ID ) ."&nbsp; | &nbsp;". $this->getReviews($item->comment_ID);
 
             $data[] = $data2;
@@ -208,27 +215,60 @@ class AwstListPage extends WP_List_Table {
         }
     }
 
-    function getTotalLikes( $postID ) {
-    	$postmeta    = get_post_meta($postID, 'awst_like', true);
-        $totalLiked  = AwstComman::getLikes($postmeta);
+    function getTotalLikes( $postID, $objectType = 'post' ) {
 
-        /*get the admin url of the admin page.*/
-        $args['id']  = $postID;
-        $url         = AwstComman::getAdminUrl('awst_likes', $args);
+			$args = array();
 
-        return '<a href="'.$url.'" title="view Likes" class="action_links">Likes</a>';
+			switch( $objectType ) {
+				case "activity":
+					$activity_id = $postID;
+
+					// $activity = new BP_Activity_Activity( $activity_id );
+					//
+					// $fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
+					// $fav_count = !empty( $fav_count ) ? (int) $fav_count + 1 : 1;
+
+					$args['id']  = $activity_id;
+					$args['object_type']  = 'activity';
+
+					break;
+				default:
+					$postmeta    = get_post_meta($postID, 'awst_like', true);
+					$totalLiked  = AwstComman::getLikes($postmeta);
+
+					/*get the admin url of the admin page.*/
+					$args['id']  = $postID;
+
+			}
+
+			$url         = AwstComman::getAdminUrl('awst_likes', $args);
+
+      return '<a href="'.$url.'" title="view Likes" class="action_links">Likes</a>';
     }
 
-    function getTotalLikesCount( $postID ) {
-        $postmeta    = get_post_meta($postID, 'awst_like', true);
-        $totalLiked  = AwstComman::getLikes($postmeta);
+    function getTotalLikesCount( $postID, $objectType = 'post' ) {
+
+			switch( $objectType ) {
+				case "activity":
+
+					$activity_id = $postID;
+					$totalLiked  = AwstComman::getLikesByObjectId( $activity_id, 'activity' );
+
+					break;
+
+				default:
+				
+					$postmeta    = get_post_meta($postID, 'awst_like', true);
+					$totalLiked  = AwstComman::getLikes($postmeta);
+
+			}
 
         return $totalLiked;
     }
 
     function getAverageRating( $postID ) {
     	$postdata = get_post_meta($postID, 'awst_ratings', true);
-        $rating   = AwstComman::getRatings($postdata);
+        // $rating   = AwstComman::getRatings($postdata);
 
         /*get the admin url of the admin page.*/
         $args['id'] = $postID;
@@ -238,9 +278,23 @@ class AwstListPage extends WP_List_Table {
 
     }
 
-    function getAverageRatingCount( $postID ) {
-        $postdata = get_post_meta($postID, 'awst_ratings', true);
-        $rating   = AwstComman::getRatings($postdata);
+    function getAverageRatingCount( $postID, $objectType = "post" ) {
+
+				switch( $objectType ) {
+					case "activity":
+
+						$activity_id = $postId;
+
+						//does not apply
+						$rating  = "-";
+
+						break;
+
+					default:
+						$postdata = get_post_meta($postID, 'awst_ratings', true);
+						$rating   = AwstComman::getRatings($postdata);
+
+				}
 
         return $rating;
 
@@ -249,7 +303,7 @@ class AwstListPage extends WP_List_Table {
     function getReviews( $postID ) {
 
         $postdata = get_post_meta($postID, 'awst_review', true);
-        $review   = AwstComman::getReviews($postID);
+        // $review   = AwstComman::getReviews($postID);
         //print_r($review);
         /*get the admin url of the admin page.*/
         $args['id'] = $postID;
@@ -258,12 +312,28 @@ class AwstListPage extends WP_List_Table {
         return '<a href="'.$url.'" title="view Reviews" class="action_links">Reviews</a>';
     }
 
-    function getReviewsCount( $postID ) {
+    function getReviewsCount( $postID, $objectType = "post" ) {
 
-        $postdata = get_post_meta($postID, 'awst_review', true);
-        $review   = AwstComman::getReviews($postID);
+				switch( $objectType ) {
+					case "activity":
 
-        return count($review);
+						$activity_id = $postId;
+
+						//does not apply
+						$result  = "-";
+
+						break;
+
+					default:
+
+						$postdata = get_post_meta($postID, 'awst_review', true);
+						$review   = AwstComman::getReviews($postID);
+
+						$result = count( $review );
+
+				}
+
+        return $result;
     }
 
     function getPostIDs(){

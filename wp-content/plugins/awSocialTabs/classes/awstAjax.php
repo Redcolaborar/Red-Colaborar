@@ -46,7 +46,15 @@ class AwstAjax {
                 $postLikes[] =  $user_ID;
                 $liked = true;
             }
-            $likes[] = $_POST['post_id'];
+            // $likes[] = $_POST['post_id'];
+
+            // fix for activities
+            if( in_array( $postID, $likes ) ) {
+              //remove like
+              $likes = array_diff( $likes, [ $postID ] );
+            } else {
+              $likes[] = $postID;
+            }
 
             update_user_meta($user_ID, 'awst_like', $likes);
             update_post_meta($postID, 'awst_like', $postLikes);

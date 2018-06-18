@@ -36,8 +36,7 @@ function wds_aw_social_tabs_options() {
 	$options = get_option( 'awSocialTabsPostOptions', array() );
 
 	// The options we need to exist to get liking on comments and activity_updates in wd_s/redcolaborar.
-	$wds_options = array( /*'page_like',*/ 'comment_like' );
-	// $wds_options = array( 'page_like',  'comment_like' );
+	$wds_options = array( 'page_like', 'comment_like' );
 
 	// The options with our options.
 	$new_options = array_merge( $options, $wds_options );

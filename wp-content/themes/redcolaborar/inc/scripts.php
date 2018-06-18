@@ -89,7 +89,24 @@ function wds_redcolaborar_scripts() {
 		wp_enqueue_script( 'sticky-sidebar', get_template_directory_uri() . '/assets/scripts/sticky-sidebar' . $suffix . '.js', array( 'jquery' ), $version, true );
 	}
 
-	wp_enqueue_script( 'redcolaborar-scripts', get_template_directory_uri() . '/assets/scripts/project' . $suffix . '.js', array( 'jquery' ), $version, true );
+	wp_register_script( 'redcolaborar-scripts', get_template_directory_uri() . '/assets/scripts/project' . $suffix . '.js', array( 'jquery' ), $version, true );
+
+	$current_user = wp_get_current_user();
+
+	if( $current_user == 0 ) {
+		$userdata = array(
+			'user_logged_in' => '0',
+		);
+	} else {
+		$userdata = array(
+			'user_logged_in' => '1',
+			'user_username' => $current_user->user_nicename,
+			'user_profile_url' => home_url( '/miembros/'. $current_user->user_nicename )
+		);
+	}
+
+	wp_localize_script( 'redcolaborar-scripts', 'REDCOLAB', $userdata );
+	wp_enqueue_script( 'redcolaborar-scripts' );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );

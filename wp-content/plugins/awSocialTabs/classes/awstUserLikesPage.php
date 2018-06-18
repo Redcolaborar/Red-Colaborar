@@ -73,11 +73,42 @@ class AwstUserLikesPage extends WP_List_Table {
     private function table_data() {
         global $wpdb;
 
-        $postID   = $_GET['id'];
-        $postmeta = get_post_meta($postID, 'awst_like', true);
+				// $sql_bb    = "SELECT * FROM  {$wpdb->prefix}bp_activity WHERE `id` IN('".implode("','",$IDs)."')";
+        // $result_bb = $wpdb->get_results( $sql_bb, 'OBJECT' );
 
-        $sql      = "SELECT *  FROM  {$wpdb->prefix}users WHERE `ID` IN('".implode("','",$postmeta)."')";
-        $result = $wpdb->get_results( $sql, 'OBJECT' );
+				$objectType = !empty( $_GET['object_type'] ) ? $_GET['object_type'] : 'post';
+
+				switch( $objectType ) {
+
+					case 'activity':
+
+						$activity_id = $_GET['id'];
+
+						$sql = "SELECT * FROM  {$wpdb->prefix}usermeta WHERE `meta_key` IN('awst_like', 'bp_favorite_activities')  AND `meta_value` LIKE '%\"" . $activity_id . "\"%' ";
+		        $result = $wpdb->get_results( $sql, 'OBJECT' );
+
+						$user_ids = array();
+
+						foreach( $result as $item ) {
+							array_push( $user_ids, $item->user_id );
+						}
+
+						$sql      = "SELECT *  FROM  {$wpdb->prefix}users WHERE `ID` IN('".implode("','",$user_ids)."')";
+						$result = $wpdb->get_results( $sql, 'OBJECT' );
+
+						break;
+
+					default:
+
+						$postID   = $_GET['id'];
+						$postmeta = get_post_meta($postID, 'awst_like', true);
+
+						$sql      = "SELECT *  FROM  {$wpdb->prefix}users WHERE `ID` IN('".implode("','",$postmeta)."')";
+						$result = $wpdb->get_results( $sql, 'OBJECT' );
+
+				}
+
+
 
         return $result;
     }

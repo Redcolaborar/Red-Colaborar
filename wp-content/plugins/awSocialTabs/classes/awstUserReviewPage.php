@@ -74,9 +74,12 @@ class AwstUserReviewPage extends WP_List_Table {
         global $wpdb;
 
         $postID                 = $_GET['id'];
+
+				$postType = !empty( $_GET['object_type'] ) ? $_GET['id'] : 'post';
+
         $sql = "SELECT `post_content`,`post_author` FROM wp_posts WHERE post_parent = $postID AND post_status = 'publish'";
         $get_post = $wpdb->get_results( $sql, 'OBJECT' );
-        
+
         $data = array();
 
         foreach ( $get_post as $item) {
@@ -84,7 +87,7 @@ class AwstUserReviewPage extends WP_List_Table {
             $result = $wpdb->get_results( $sql, 'OBJECT' );
             $result = $result[0];
             $temp['ID'] = $item->ID;
-            $temp['review'] = $item->post_content; 
+            $temp['review'] = $item->post_content;
             $temp['user_login'] = $result->user_login;;
             $temp['user_email'] = $result->user_email;
             $temp['display_name'] = $result->display_name;
@@ -106,12 +109,12 @@ class AwstUserReviewPage extends WP_List_Table {
     public function column_default( $item, $column_name ) {
         switch( $column_name ) {
 
-            case 'display_name':               
-            case 'user_login':               
+            case 'display_name':
+            case 'user_login':
             case 'user_email':
             case 'review':
                 return $item[$column_name];
-                
+
             default:
                 return print_r( $item, true ) ;
         }
