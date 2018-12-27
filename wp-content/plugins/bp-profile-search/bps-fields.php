@@ -25,7 +25,7 @@ class bps_Fields
 	private static $display = array
 	(
 		'text'			=> array ('contains' => 'textbox', '' => 'textbox', 'like' => 'textbox'),
-		'integer'		=> array ('' => 'number', 'range' => 'range'),
+		'integer'		=> array ('' => 'integer', 'range' => 'integer-range'),
 		'decimal'		=> array ('' => 'textbox', 'range' => 'range'),
 		'date'			=> array ('age_range' => 'range'),
 		'location'		=> array ('distance' => 'distance', 'contains' => 'textbox', '' => 'textbox', 'like' => 'textbox'),
@@ -56,6 +56,24 @@ class bps_Fields
 		return $filters;
 	}
 
+	public static function get_filter_label ($filter)
+	{
+		$labels = array
+		(
+			'contains'		=> __('contains', 'bp-profile-search'),
+			''				=> __('is', 'bp-profile-search'),
+			'like'			=> __('is like', 'bp-profile-search'),
+			'range'			=> __('range', 'bp-profile-search'),
+			'age_range'		=> __('range', 'bp-profile-search'),
+			'distance'		=> __('is within', 'bp-profile-search'),
+			'one_of'		=> __('is one of', 'bp-profile-search'),
+			'match_any'		=> __('match any', 'bp-profile-search'),
+			'match_all'		=> __('match all', 'bp-profile-search'),
+		);
+
+		return $labels[$filter];
+	}
+
 	public static function set_filters ($f)
 	{
 		$format = isset ($f->format)? $f->format: 'none';
@@ -72,7 +90,7 @@ class bps_Fields
 		return in_array ($filter, $f->filters);
 	}
 
-	public static function validate_filter ($f, $filter)
+	public static function valid_filter ($f, $filter)
 	{
 		return in_array ($filter, $f->filters)? $filter: $f->filters[0];
 	}
@@ -85,6 +103,7 @@ class bps_Fields
 		if (!isset (self::$display[$selector][$filter]))  return false;
 
 		$display = self::$display[$selector][$filter];
+
 		if (is_string ($display))
 		{
 			$f->display = $display;
@@ -112,11 +131,11 @@ function bps_parse_request ($request)
 	{
 		if ($value === '')  continue;
 
-		$k = bps_match_key ($key, $parsed);
-		if ($k === false)  continue;
+		$code = bps_match_key ($key, $parsed);
+		if ($code === false)  continue;
 
-		$f = $parsed[$k];
-		$filter = ($key == $f->code)? '': substr ($key, strlen ($f->code) + 1);
+		$f = $parsed[$code];
+		$filter = ($key == $code)? '': substr ($key, strlen ($code) + 1);
 		if (!bps_is_filter ($filter, $f))  continue;
 
 		switch ($filter)
@@ -125,13 +144,42 @@ function bps_parse_request ($request)
 			$f->filter = $filter;
 			$f->value = $value;
 			break;
+		case 'contains':
+		case '':
+		case 'like':
+			$or = explode (' OR ', $value);
+			$and = explode (' AND ', $value);
+			if (count ($or) > 1 && count ($and) > 1)
+				$f->error_message = __('mixed expression not allowed, use only AND or only OR', 'bp-profile-search');
+			else if ($filter == '' && count ($and) > 1)
+				$f->error_message = __('AND expression not allowed here, use only OR', 'bp-profile-search');
+			else
+				$f->filter = $filter;
+			$f->value = $value;
+			break;
 		case 'distance':
 			if (!empty ($value['location']) && !empty ($value['lat']) && !empty ($value['lng']))
 			{
 				if (empty ($value['distance']))  $value['distance'] = 1;
-				$f->filter = $filter;
+					$f->filter = $filter;
 				$f->value = $value;
 			}
+			break;
+		case 'range':
+			if ($value['min'] !== '')
+				$f->value['min'] = $value['min'];
+			if ($value['max'] !== '')
+				$f->value['max'] = $value['max'];
+			if (isset ($f->value))
+				$f->filter = $filter;
+			break;
+		case 'age_range':
+			if (is_numeric ($value['min']))
+				$f->value['min'] = (int)$value['min'];
+			if (is_numeric ($value['max']))
+				$f->value['max'] = (int)$value['max'];
+			if (isset ($f->value))
+				$f->filter = $filter;
 			break;
 		case 'range_min':
 		case 'age_range_min':
@@ -160,8 +208,8 @@ function bps_parse_request ($request)
 
 function bps_match_key ($key, $fields)
 {
-	foreach ($fields as $k => $f)
-		if ($key == $f->code || strpos ($key, $f->code. '_') === 0)  return $k;
+	foreach ($fields as $code => $f)
+		if ($key == $code || strpos ($key, $code. '_') === 0)  return $code;
 
 	return false;
 }
@@ -175,10 +223,10 @@ function bps_is_filter ($filter, $f)
 	return bps_Fields::is_filter ($f, $filter);
 }
 
-function bps_escaped_form_data ($version = '4.7')
+function bps_escaped_form_data ($version = '')
 {
-	if ($version == '4.7')	return bps_escaped_form_data47 ();
-	if ($version == '4.8')	return bps_escaped_form_data48 ();
+	if ($version == '')	return bps_escaped_form_data47 ();
+	if ($version == '4.9')	return bps_escaped_form_data49 ();
 
 	return false;
 }
@@ -191,12 +239,14 @@ function bps_escaped_filters_data ($version = '4.7')
 	return false;
 }
 
-function bps_set_hidden_field ($code, $value)
+function bps_set_hidden_field ($name, $value)
 {
 	$new = new stdClass;
 	$new->display = 'hidden';
-	$new->code = $code;
+	$new->code = $name;		// to be removed
+	$new->html_name = $name;
 	$new->value = $value;
+	$new->unique_id = bps_unique_id ($name);
 
 	return $new;
 }

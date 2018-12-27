@@ -63,7 +63,7 @@ class Swift_Performance_MaxCDN {
 				),
 				'body'		=> $query_str,
 				'timeout'	=> 60,
-				'useragent' => 'PHP MaxCDN API Client'
+				'user-agent' => 'PHP MaxCDN API Client'
 		));
 
 		$result = '';

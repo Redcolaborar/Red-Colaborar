@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 include('classes/config/awstConfig.php');
 include('classes/awstAjax.php');
 include('classes/awstComman.php');
+include('classes/awstHelper.php');
 include('classes/awstAdminPages.php');
 include('classes/awstFrontPages.php');
 include('awstMain.php');
@@ -45,4 +46,3 @@ function wds_aw_social_tabs_options() {
 	update_option( 'awSocialTabsPostOptions', $new_options );
 }
 add_action( 'init', 'wds_aw_social_tabs_options' );
-

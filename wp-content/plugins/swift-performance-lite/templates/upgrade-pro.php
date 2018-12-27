@@ -21,14 +21,7 @@
 	</div>
 
 	<div class="swift-section-right" align="center">
-		<p><a href="https://swteplugins.com/product/swift-performance" class="swift-upgrade-btn">GET YOUR PURCHASE KEY</a></p>
-		<p align="center"><a class="swift-link" href="#upgradeproform">Do you have a purchase key?</a></p>
+		<p><a href="https://swiftperformance.io/why-should-upgrade-pro/" class="swift-upgrade-btn" target="_blank">GET YOUR PURCHASE KEY</a></p>
+		<p align="center"><a class="swift-link" href="https://swiftperformance.io/kb/upgrade-from-lite-to-premium/" target="_blank">Do you have a purchase key?</a></p>
 	</div>
 </div>
-
-<form id="upgradeproform" method="post" class="upgrade-pro-form">
-		<h3>Do you have a purchase key? Upgrade Now!</h3>
-      <input type="text" name="purchase-key">
-      <input type="hidden" name="swift-performance-upgrade" value="1">
-      <button class="swift-btn swift-btn-green"><?php _e('Upgrade', 'swift-performance');?></button>
-</form>

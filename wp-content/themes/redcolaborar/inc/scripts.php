@@ -55,7 +55,7 @@ function wds_redcolaborar_scripts() {
 	/**
 	 * If we are debugging the site, use a unique version every page load so as to ensure no cache issues.
 	 */
-	$version = '1.0.0';
+	$version = '1.1';
 
 	/**
 	 * Should we load minified files?
@@ -91,21 +91,6 @@ function wds_redcolaborar_scripts() {
 
 	wp_register_script( 'redcolaborar-scripts', get_template_directory_uri() . '/assets/scripts/project' . $suffix . '.js', array( 'jquery' ), $version, true );
 
-	$current_user = wp_get_current_user();
-
-	if( $current_user == 0 ) {
-		$userdata = array(
-			'user_logged_in' => '0',
-		);
-	} else {
-		$userdata = array(
-			'user_logged_in' => '1',
-			'user_username' => $current_user->user_nicename,
-			'user_profile_url' => home_url( '/miembros/'. $current_user->user_nicename )
-		);
-	}
-
-	wp_localize_script( 'redcolaborar-scripts', 'REDCOLAB', $userdata );
 	wp_enqueue_script( 'redcolaborar-scripts' );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {

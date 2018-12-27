@@ -86,7 +86,7 @@ class Swift_Performance_GA{
 
                   ob_start();
                   //1x1 Transparent Gif
-                  echo "\x47\x49\x46\x38\x37\x61\x1\x0\x1\x0\x80\x0\x0\xfc\x6a\x6c\x0\x0\x0\x2c\x0\x0\x0\x0\x1\x0\x1\x0\x0\x2\x2\x44\x1\x0\x3b";
+                  echo base64_decode('R0lGODlhAQABAJAAAP8AAAAAACH5BAUQAAAALAAAAAABAAEAAAICBAEAOw==');
                   //Send full content and keep executeing
                   header('Connection: close');
                   header('Content-Length: '.ob_get_length());

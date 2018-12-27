@@ -19,12 +19,11 @@ class bps_widget extends WP_Widget
 		extract ($args);
 		$title = apply_filters ('widget_title', $instance['title']);
 		$form = $instance['form'];
-		$template = isset ($instance['template'])? $instance['template']: '';
 
 		echo $before_widget;
 		if ($title)
 			echo $before_title. $title. $after_title;
-		bps_display_form ($form, $template, 'widget');
+		bps_display_form ($form, 'widget');
 		echo $after_widget;
 	}
 
@@ -33,7 +32,6 @@ class bps_widget extends WP_Widget
 		$instance = $old_instance;
 		$instance['title'] = $new_instance['title'];
 		$instance['form'] = $new_instance['form'];
-		$instance['template'] = $new_instance['template'];
 		return $instance;
 	}
 
@@ -41,7 +39,6 @@ class bps_widget extends WP_Widget
 	{
 		$title = isset ($instance['title'])? $instance['title']: '';
 		$form = isset ($instance['form'])? $instance['form']: '';
-		$template = isset ($instance['template'])? $instance['template']: '';
 ?>
 	<p>
 		<label for="<?php echo $this->get_field_id ('title'); ?>"><?php _e('Title:', 'bp-profile-search'); ?></label>
@@ -69,20 +66,6 @@ class bps_widget extends WP_Widget
 			echo '<br/>';
 			_e('You have not created any form yet.', 'bp-profile-search');
 		}
-?>
-	</p>
-	<p>
-		<label for="<?php echo $this->get_field_id ('template'); ?>"><?php _e('Template:', 'bp-profile-search'); ?></label>
-<?php
-		$templates = bps_templates ();
-		echo "<select class='widefat' id='{$this->get_field_id ('template')}' name='{$this->get_field_name ('template')}'>";
-		foreach ($templates as $option)
-		{
-			echo "<option value='$option'";
-			if ($option == $template)  echo " selected='selected'";
-			echo ">$option &nbsp;</option>\n";
-		}
-		echo "</select>";
 ?>
 	</p>
 <?php

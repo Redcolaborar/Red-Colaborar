@@ -25,17 +25,26 @@ class Swift_Performance_Third_Party {
             // Third party cache was detected
             if ($detected && !defined('SWIFT_PERFORMANCE_DISABLE_CACHE')){
                   // Hide caching options in settings
-                  ReduxSA::hideSection('swift_performance_options', 'cache-tab');
-                  ReduxSA::hideField('swift_performance_options', 'optimize-prebuild-only');
-                  ReduxSA::hideField('swift_performance_options', 'merge-background-only');
+                  add_action('luv_framework_before_render_sections', function($that){
+                        unset($that->args['sections']['caching']);
+
+                        // optimize-prebuild-only
+                        unset($that->args['sections']['optimization']['general']['fields'][2]);
+
+                        // merge-background-only
+                        unset($that->args['sections']['optimization']['general']['fields'][3]);
+                  });
 
                   // Force disable prebuild/background only modes
-                  Swift_Performance_Lite::set_option('optimize-prebuild-only', 0);
-                  Swift_Performance_Lite::set_option('merge-background-only', 0);
+                  Swift_Performance_Lite::update_option('optimize-prebuild-only', 0);
+                  Swift_Performance_Lite::update_option('merge-background-only', 0);
 
                   // Disable caching
                   define('SWIFT_PERFORMANCE_DISABLE_CACHE', true);
             }
+
+            // Sitepress domain mapping
+            add_filter('swift_performance_enabled_hosts', array(__CLASS__, 'sitepress_domain_mapping'));
 
       }
 
@@ -65,6 +74,22 @@ class Swift_Performance_Third_Party {
             if (function_exists('sg_cachepress_purge_cache')) {
                   sg_cachepress_purge_cache();
             }
+      }
+
+      /**
+       * Add filter for enabled hosts
+       * @param array $hosts
+       * @return array
+       */
+      public static function sitepress_domain_mapping($hosts){
+            global $sitepress;
+            if (!empty($sitepress) && is_callable(array($sitepress, 'get_setting'))){
+                  $domains = $sitepress->get_setting( 'language_domains', array() );
+                  if (!empty($domains)){
+                        $hosts = array_merge($hosts, $domains);
+                  }
+            }
+            return $hosts;
       }
 
 }

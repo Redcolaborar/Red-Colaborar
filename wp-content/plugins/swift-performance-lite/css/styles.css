@@ -329,6 +329,10 @@
 	font-size: 14px;
 }
 
+.swift-dashboard-item.offers h3 {
+      margin: -15px -15px 2px -15px;
+}
+
 .swift-box h3 {
 	padding: 15px;
 	margin: 0;
@@ -1370,4 +1374,78 @@ iframe.api-embed {
       display: inline-block;
       width: 46%;
       vertical-align: top;
+}
+
+/* FRAMEWORK CUSTOMIZATIONS */
+
+.luv-pointer pre {
+      font-size: 11px;
+}
+
+.swift-performance-io-preset-container label {
+	display: inline-block;
+	width: 140px;
+	text-align: center;
+}
+
+.swift-performance-io-preset-container input[type="radio"] {
+	display: none;
+}
+
+.swift-performance-io-preset-container input[type="radio"]:checked + label {
+      background: #dbdbdb;
+}
+
+.swift-settings-mode {
+      float: right;
+}
+
+.swift-settings-mode input[type="radio"]{
+      display: none;
+}
+
+.swift-settings-mode input[type="radio"]:checked + label {
+      background: #dbdbdb;
+}
+
+.swift-performance-ajax-preview {
+     display: none;
+}
+.swift-performance-ajax-preview.swift-visible {
+     display: block;
+}
+
+.swift-preset-not-available {
+      opacity: 0.5;
+}
+
+.swift-smiley-container {
+      text-align: center;
+      font-size: 2.3em;
+}
+
+.swift-performance-premium-only-container {
+      position: relative;
+      font-weight: 700;
+      font-size: 1.3em;
+}
+
+.swift-performance-premium-only-container .swift-table-col {
+      display: table-cell;
+      vertical-align: middle;
+}
+
+.swift-performance-premium-only-container .swift-table-col:first-child {
+      width: 50px;
+}
+
+.swift-performance-premium-only-container i {
+      color: #888;
+      font-size: 2.2em;
+}
+
+.swift-performance-premium-only-container a {
+      display: block;
+      text-decoration: none;
+      font-size: 1.05em;
 }

@@ -325,7 +325,17 @@ jQuery( document ).ready( function(){
 			inner_class, a_inner;
 
 		inner_class = type === 'acomment' ? 'mpp-acomment-content' : 'mpp-activity-inner';
-		a_inner = jq('#' + type + '-' + a_id + ' .' + inner_class + ':first' );
+		
+        //a_inner = jq('#' + type + '-' + a_id + ' .' + inner_class + ':first' );
+        
+        if ( $(this).parents('.featured-activity').length ) { 
+			// is featured
+			a_inner = jq('.featured-activity #' + type + '-' + a_id + ' .' + inner_class + ':first' );
+		} else {
+			// isn't featured
+			a_inner = jq('#' + type + '-' + a_id + ' .' + inner_class + ':first' );
+		}
+        
 		jq(target).addClass('loading');
 
 		jq.post( ajaxurl, {

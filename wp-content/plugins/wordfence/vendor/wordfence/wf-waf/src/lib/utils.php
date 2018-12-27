@@ -1,4 +1,5 @@
 <?php
+if (defined('WFWAF_VERSION') && !defined('WFWAF_RUN_COMPLETE')) {
 
 class wfWAFUtils {
 
@@ -843,7 +844,7 @@ class wfWAFUtils {
 		if (empty($HTTP_RAW_POST_DATA)) { //Defined if always_populate_raw_post_data is on, PHP < 7, and the encoding type is not multipart/form-data
 			$avoidPHPInput = false;
 			try {
-				$avoidPHPInput = wfWAF::getSharedStorageEngine()->getConfig('avoid_php_input', false);
+				$avoidPHPInput = wfWAF::getSharedStorageEngine() && wfWAF::getSharedStorageEngine()->getConfig('avoid_php_input', false);
 			}
 			catch (Exception $e) {
 				//Ignore
@@ -876,9 +877,9 @@ class wfWAFUtils {
 	public static function normalizedTime() {
 		$offset = 0;
 		try {
-			$offset = wfWAF::getInstance()->getStorageEngine()->getConfig('timeoffset_ntp', false);
+			$offset = wfWAF::getInstance()->getStorageEngine()->getConfig('timeoffset_ntp', false, 'synced');
 			if ($offset === false) {
-				$offset = wfWAF::getInstance()->getStorageEngine()->getConfig('timeoffset_wf', false);
+				$offset = wfWAF::getInstance()->getStorageEngine()->getConfig('timeoffset_wf', false, 'synced');
 				if ($offset === false) { $offset = 0; }
 			}
 		}
@@ -887,4 +888,5 @@ class wfWAFUtils {
 		}
 		return time() + $offset;
 	}
+}
 }

@@ -25,7 +25,7 @@ if (!isset($collapseable)) {
 					<div class="wf-block-title">
 						<strong><?php _e('Rate Limiting', 'wordfence'); ?></strong>
 					</div>
-					<?php if ($collapseable): ?><div class="wf-block-header-action"><div class="wf-block-header-action-disclosure"></div></div><?php endif; ?>
+					<?php if ($collapseable): ?><div class="wf-block-header-action"><div class="wf-block-header-action-disclosure" role="checkbox" aria-checked="<?php echo (wfPersistenceController::shared()->isActive($stateKey) ? 'true' : 'false'); ?>" tabindex="0"></div></div><?php endif; ?>
 				</div>
 			</div>
 			<div class="wf-block-content">
@@ -174,22 +174,6 @@ if (!isset($collapseable)) {
 							'actionValue' => wfConfig::get('max404Humans_action'),
 							'title' => __('If a human\'s pages not found (404s) exceed', 'wordfence'),
 							'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_WAF_OPTION_RATE_LIMIT_HUMAN_404),
-						))->render();
-						?>
-					</li>
-					<li>
-						<?php
-						echo wfView::create('waf/option-rate-limit', array(
-							'toggleOptionName' => 'maxScanHits_enabled',
-							'toggleValue' => !!wfConfig::get('maxScanHits_enabled') ? 1 : 0,
-							'rateOptionName' => 'maxScanHits',
-							'rateOptions' => $rateOptions,
-							'rateValue' => wfConfig::get('maxScanHits'),
-							'actionOptionName' => 'maxScanHits_action',
-							'actionOptions' => $actionOptions,
-							'actionValue' => wfConfig::get('maxScanHits_action'),
-							'title' => __('If 404s for known vulnerable URLs exceed', 'wordfence'),
-							'helpLink' => wfSupportController::supportURL(wfSupportController::ITEM_FIREWALL_WAF_OPTION_RATE_LIMIT_ANY_404),
 						))->render();
 						?>
 					</li>

@@ -3,7 +3,7 @@
  * Plugin Name: Swift Performance Lite
  * Plugin URI: https://swiftperformance.io
  * Description: Boost your WordPress site
- * Version: 1.7.1
+ * Version: 2.0.1
  * Author: SWTE
  * Author URI: https://swteplugins.com
  * Text Domain: swift-performance
@@ -28,10 +28,17 @@ class Swift_Performance_Lite {
 	public $memcached;
 
 	/**
+	 * HTTP HOST
+	 */
+	public static $http_host;
+
+	/**
 	 * Create instance
 	 */
 	public function __construct() {
 		do_action('swift_performance_before_init');
+
+		Swift_Performance_Lite::$http_host = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : parse_url(home_url(), PHP_URL_HOST));
 
 		// Plugin Loader
 		$this->modules['plugin-organizer'] =  require_once 'modules/plugin-organizer/plugin-organizer.php';
@@ -62,11 +69,11 @@ class Swift_Performance_Lite {
 		}
 
 		if (!defined('SWIFT_PERFORMANCE_VER')){
-			define('SWIFT_PERFORMANCE_VER', '1.7.1');
+			define('SWIFT_PERFORMANCE_VER', '2.0.1');
 		}
 
 		if (!defined('SWIFT_PERFORMANCE_DB_VER')){
-			define('SWIFT_PERFORMANCE_DB_VER', '1.5');
+			define('SWIFT_PERFORMANCE_DB_VER', '1.6');
 		}
 
 		if (!defined('SWIFT_PERFORMANCE_API_URL')){
@@ -78,7 +85,7 @@ class Swift_Performance_Lite {
 			// fallback for symlinks
 			if (!file_exists(trailingslashit(WP_PLUGIN_DIR) . $plugin_basename)){
 				foreach (get_option('active_plugins') as $plugin_file){
-					if (md5_file(trailingslashit(WP_PLUGIN_DIR) . $plugin_file) == md5_file(__FILE__)){
+					if (file_exists(trailingslashit(WP_PLUGIN_DIR) . $plugin_file) && md5_file(trailingslashit(WP_PLUGIN_DIR) . $plugin_file) == md5_file(__FILE__)){
 						$plugin_basename = $plugin_file;
 					}
 				}
@@ -98,26 +105,34 @@ class Swift_Performance_Lite {
 		}
 
 		if (!defined('SWIFT_PERFORMANCE_PREBUILD_TIMEOUT')){
-			define('SWIFT_PERFORMANCE_PREBUILD_TIMEOUT', 600);
+			$timeout = get_option('swift_performance_timeout');
+			define('SWIFT_PERFORMANCE_PREBUILD_TIMEOUT', (empty($timeout) ? 300 : $timeout));
 		}
 
-		// Fix framework URL (symlink issue)
-		add_filter('reduxsa/_url', function(){
-			return SWIFT_PERFORMANCE_URI . 'includes/framework/';
-		});
-
 		// Include framework
-		include_once 'includes/framework/framework.php';
-		include_once 'includes/framework/framework-config.php';
+		if (!defined('LUV_FRAMEWORK_PATH')){
+			define('LUV_FRAMEWORK_PATH', SWIFT_PERFORMANCE_DIR . 'includes/luv-framework/' );
+		}
+
+		if (!defined('LUV_FRAMEWORK_URL')){
+			define('LUV_FRAMEWORK_URL', SWIFT_PERFORMANCE_URI . 'includes/luv-framework/' );
+		}
+		include_once 'includes/luv-framework/framework.php';
+		include_once 'includes/luv-framework/framework-config.php';
+
+		add_filter('luv_framework_render_options', array(__CLASS__, 'panel_template'));
+		add_filter('luv_framework_enqueue_assets', function($result, $hook){
+			return ($hook == 'tools_page_'.SWIFT_PERFORMANCE_SLUG || $hook == 'post-new.php' || $hook == 'post.php');
+		}, 10, 2);
+
+		// Clear cache after import
+		add_action('luv_framework_import', array('Swift_Performance_Cache', 'clear_all_cache'));
 
 		// Include AJAX
 		include_once 'includes/classes/class.ajax.php';
 
 		// Include 3rd party handler
 		include_once 'includes/classes/class.third-party.php';
-
-		// Include Upgrader
-		include_once 'includes/classes/class.upgrader.php';
 
 		// Include Metaboxes
 		include_once 'modules/asset-manager/meta-boxes.php';
@@ -168,6 +183,18 @@ class Swift_Performance_Lite {
 			$wp_meta_boxes['dashboard']['normal']['core'] = $sorted_dashboard;
 		});
 
+		// Christmas edit
+		add_action('admin_notices', function(){
+			if (time() > 1545566400 && time() < 1546171200 && get_transient('swift_dismiss_christmas_promo') === false){
+				echo '<div class="updated swift-christmas-promo-container" style="border:unset;padding:0;"><a href="https://swiftperformance.io/christmas-upgrade" target="_blank" style="text-decoration:none;"><img src="' . SWIFT_PERFORMANCE_URI . 'templates/ads/images/christmas.png" style="display:block;width:970px;max-width:100%;margin:0 auto;"></a><a href="#" class="swift-dismiss-christmas-promo notice-dismiss" style="text-decoration:none;right:10px"><span class="screen-reader-text">Dismiss this notice.</span></button></div>';
+				echo '<script>jQuery(document).on("click", ".swift-dismiss-christmas-promo", function(e){e.preventDefault(); jQuery(this).closest(".swift-christmas-promo-container").fadeOut();jQuery.post(ajaxurl, {"action":"swift_dismiss_christmas_promo"})})</script>';
+			}
+		}, -PHP_INT_MAX);
+
+		add_action('wp_ajax_swift_dismiss_christmas_promo', function(){
+			set_transient('swift_dismiss_christmas_promo', true, 2592000);
+		});
+
 
 		// Init Swift Performance
 		$this->init();
@@ -185,7 +212,7 @@ class Swift_Performance_Lite {
 		add_action( 'swift_performance_prebuild_page_cache', array('Swift_Performance_Lite', 'prebuild_page_cache'));
 
 		// Clear cache, manage rewrite rules, scheduled jobs after options was saved
-		add_action('wp_ajax_swift_performance_options_ajax_save', array('Swift_Performance_Lite', 'options_saved'), 0);
+		add_action('luv_framework_swift_performance_options_saved', array('Swift_Performance_Lite', 'options_saved'));
 
 		// Create cache expiry cron schedule
 		add_filter( 'cron_schedules',	function ($schedules){
@@ -291,7 +318,7 @@ class Swift_Performance_Lite {
 			if (is_404()){
 				global $wpdb;
 				$table_name = SWIFT_PERFORMANCE_TABLE_PREFIX . 'warmup';
-				$id 		= md5(trailingslashit((is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
+				$id 		= Swift_Performance_Lite::get_warmup_id($_SERVER['HTTP_HOST'] . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 				$wpdb->delete($table_name, array('id' => $id));
 				Swift_Performance_Lite::log('404 Error: ' . $_SERVER['REQUEST_URI'], 6);
 			}
@@ -357,7 +384,7 @@ class Swift_Performance_Lite {
 	public function load_assets($hook) {
 		if($hook == 'tools_page_'.SWIFT_PERFORMANCE_SLUG || $hook == 'post-new.php' || $hook == 'post.php') {
 			wp_enqueue_script( SWIFT_PERFORMANCE_SLUG, SWIFT_PERFORMANCE_URI . 'js/scripts.js', array('jquery'), SWIFT_PERFORMANCE_VER );
-			wp_localize_script( SWIFT_PERFORMANCE_SLUG, 'swift_performance', array( 'i18n' => $this->i18n(),'nonce' => wp_create_nonce('swift-performance-ajax-nonce'), 'cron' => (defined('DISABLE_WP_CRON') && DISABLE_WP_CRON ? site_url('wp-cron.php?doing_wp_cron') : '') ));
+			wp_localize_script( SWIFT_PERFORMANCE_SLUG, 'swift_performance', array( 'i18n' => $this->i18n(),'nonce' => wp_create_nonce('swift-performance-ajax-nonce'), 'cron' => apply_filters('swift_performance_cron_url', defined('DISABLE_WP_CRON') && DISABLE_WP_CRON ? site_url('wp-cron.php?doing_wp_cron') : '') ));
 			wp_enqueue_style( SWIFT_PERFORMANCE_SLUG, SWIFT_PERFORMANCE_URI . 'css/styles.css', array(), SWIFT_PERFORMANCE_VER );
 		}
 	}
@@ -367,7 +394,8 @@ class Swift_Performance_Lite {
 			'Do you want to clear all logs?' => esc_html__('Do you want to clear all logs?', 'swift-performance'),
 			'Do you want to reset prebuild links?' => esc_html__('Do you want to reset prebuild links?', 'swift-performance'),
 			'Not set' => esc_html__('Not set', 'swift-performance'),
-			'Settings were changed. Would you like to clear all cache?' => esc_html__('Settings were changed. Would you like to clear all cache?')
+			'Settings were changed. Would you like to clear all cache?' => esc_html__('Settings were changed. Would you like to clear all cache?'),
+			'Dismiss' => esc_html__('Dismiss', 'swift-performance')
 		);
 	}
 
@@ -376,11 +404,11 @@ class Swift_Performance_Lite {
 	 */
 	public function init(){
 		if (!defined('SWIFT_PERFORMANCE_CACHE_DIR')){
-			define('SWIFT_PERFORMANCE_CACHE_DIR', trailingslashit(self::get_option('cache-path')) . SWIFT_PERFORMANCE_CACHE_BASE_DIR . $_SERVER['HTTP_HOST'] . '/');
+			define('SWIFT_PERFORMANCE_CACHE_DIR', trailingslashit(self::get_option('cache-path')) . SWIFT_PERFORMANCE_CACHE_BASE_DIR . Swift_Performance_Lite::$http_host . '/');
 		}
 
 		if (!defined('SWIFT_PERFORMANCE_CACHE_URL')){
-			define('SWIFT_PERFORMANCE_CACHE_URL', str_replace(ABSPATH, parse_url(home_url(), PHP_URL_SCHEME) . '://' . $_SERVER['HTTP_HOST'] . Swift_Performance_Lite::home_dir() . '/', SWIFT_PERFORMANCE_CACHE_DIR));
+			define('SWIFT_PERFORMANCE_CACHE_URL', str_replace(ABSPATH, parse_url(home_url(), PHP_URL_SCHEME) . '://' . Swift_Performance_Lite::$http_host . Swift_Performance_Lite::home_dir() . '/', SWIFT_PERFORMANCE_CACHE_DIR));
 		}
 
 
@@ -408,6 +436,9 @@ class Swift_Performance_Lite {
 		if (self::check_option('bypass-ga', 1)){
 			$this->modules['ga'] =  require_once 'modules/google-analytics/google-analytics.php';
 		}
+
+		// Tweaks
+		$this->modules['tweaks'] =  require_once 'modules/tweaks/tweaks.php';
 	}
 
 	/**
@@ -437,139 +468,156 @@ class Swift_Performance_Lite {
 	 * @param boolean $is_flat
 	 * @return array
 	 */
-	public static function get_prebuild_urls($is_flat = true){
-	 	global $wpdb;
-	 	$table_name = SWIFT_PERFORMANCE_TABLE_PREFIX . 'warmup';
+	public static function get_prebuild_urls($is_flat = true, $uncached = false){
+ 		global $wpdb;
+		$where	= '';
+ 		$table_name = SWIFT_PERFORMANCE_TABLE_PREFIX . 'warmup';
 
-	 	$maybe_urls = $wpdb->get_results("SELECT url, priority FROM {$table_name} ORDER BY priority ASC", ARRAY_A);
-	 	if (!empty($maybe_urls)){
-	 		// If we need only the URLS
-	 		if ($is_flat){
-	 			$flat = array();
-	 			foreach ($maybe_urls as $maybe_url){
-	 				$flat[trailingslashit($maybe_url['url'])] = $maybe_url['url'];
-	 			}
-	 			return apply_filters('swift_performance_warmup_urls_flat', $flat);
-	 		}
-	 		$not_flat = array();
-	 		foreach ($maybe_urls as $maybe_url){
-	 			$not_flat[trailingslashit($maybe_url['url'])] = $maybe_url;
-	 		}
-	 		return apply_filters('swift_performance_warmup_urls', $not_flat);
-	 	}
+		if ($uncached){
+			$where = " WHERE type = ''";
+		}
+ 		$maybe_urls = $wpdb->get_results("SELECT url, priority, timestamp, type FROM {$table_name}{$where} ORDER BY priority ASC", ARRAY_A);
+ 		if (!empty($maybe_urls) || $uncached){
+ 			// If we need only the URLS
+ 			if ($is_flat){
+ 				$flat = array();
+ 				foreach ($maybe_urls as $maybe_url){
+ 					$flat[trailingslashit($maybe_url['url'])] = $maybe_url['url'];
+ 				}
+ 				return apply_filters('swift_performance_warmup_urls_flat', $flat);
+ 			}
+			$not_flat = array();
+			foreach ($maybe_urls as $maybe_url){
+				$not_flat[trailingslashit($maybe_url['url'])] = $maybe_url;
+			}
+ 			return apply_filters('swift_performance_warmup_urls', $not_flat);
+ 		}
 
-	 	// Run only one thread
-	 	if (get_transient('swift_performance_initial_prebuild_links') !== false){
-	 		return array();
-	 	}
+ 		// Run only one thread
+ 		if (get_transient('swift_performance_initial_prebuild_links') !== false){
+ 			return array();
+ 		}
 
-	 	// Extend timeout
-	 	ignore_user_abort(true);
-	 	$timeout = Swift_Performance_Lite::set_time_limit(300, 'build_warmup_table');
-	 	$urls = array();
+		ignore_user_abort(true);
+		// Finish request for FPM on AJAX
+		if (defined('DOING_AJAX') && DOING_AJAX){
+			if (function_exists('fastcgi_finish_request')){
+				fastcgi_finish_request();
+			}
+		}
 
-	 	set_transient('swift_performance_initial_prebuild_links', true, $timeout);
+		// Extend timeout
+ 		$timeout = Swift_Performance_Lite::set_time_limit(300, 'build_warmup_table');
+ 		$urls = array();
 
-	 	// Home
-	 	if (Swift_Performance_Cache::is_object_cacheable(home_url())){
-	 		$urls[trailingslashit(home_url())] = home_url();
-	 	}
+ 		set_transient('swift_performance_initial_prebuild_links', true, $timeout);
 
-	 	// Post types
-	 	$post_types = array();
-	 	foreach (Swift_Performance_Lite::get_post_types() as $post_type){
-	 		$post_types[] = "'{$post_type}'";
-	 		$archive = get_post_type_archive_link( $post_type );
-	 		if ($archive !== false){
-	 			$url = get_post_type_archive_link( $post_type );
-	 			if (Swift_Performance_Cache::is_object_cacheable($url)){
-	 				$urls[trailingslashit($url)] = $url;
-	 			}
-	 		}
-	 	}
+		// Home
+		if (Swift_Performance_Cache::is_object_cacheable(home_url())){
+			$urls[Swift_Performance_Lite::get_warmup_id(home_url())] = trailingslashit(home_url());
+		}
 
-	 	$menu_items = array();
-	 	$menu_item_ids = $wpdb->get_col("SELECT meta_value FROM {$wpdb->postmeta} LEFT JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.meta_value WHERE meta_key = '_menu_item_object_id' AND post_type != 'nav_menu_item'");
-	 	$public_post_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} WHERE post_status = 'publish' AND post_type IN(".implode(',', $post_types).") ORDER BY post_date DESC");
+ 		// Post types
+ 		$post_types = array();
+ 		foreach (Swift_Performance_Lite::get_post_types() as $post_type){
+ 			$post_types[] = "'{$post_type}'";
+ 			$archive = get_post_type_archive_link( $post_type );
+ 			if ($archive !== false){
+ 				$url = $archive;
+ 				if (Swift_Performance_Cache::is_object_cacheable($url)){
+					if (!isset($urls[Swift_Performance_Lite::get_warmup_id($url)])){
+ 						$urls[Swift_Performance_Lite::get_warmup_id($url)] = $url;
+					}
+ 				}
+ 			}
+ 		}
 
-	 	$posts = array_merge((array)$menu_item_ids, (array)$public_post_ids);
+ 		$menu_items = array();
+ 		$menu_item_ids = $wpdb->get_col("SELECT meta_value FROM {$wpdb->postmeta} LEFT JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.meta_value WHERE meta_key = '_menu_item_object_id' AND post_type != 'nav_menu_item'");
+ 		$public_post_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} WHERE post_status = 'publish' AND post_type IN(".implode(',', $post_types).") ORDER BY post_date DESC");
 
-	 	// WPML
-	 	if (function_exists('icl_get_languages') && class_exists('SitePress')){
-	 		global $sitepress;
-	 		$languages = icl_get_languages('skip_missing=0&orderby=KEY&order=DIR&link_empty_to=str');
-	 		foreach ($languages as $language){
-	 			$sitepress->switch_lang($language['code'], true);
-	 			foreach ($posts as $post_id){
-	 				wp_cache_flush();
-	 				$permalink = get_permalink($post_id);
-	 				if (Swift_Performance_Cache::is_object_cacheable($permalink, $post_id)){
-	 					$urls[trailingslashit($permalink)] = $permalink;
-	 					// Is it menu_item
-	 					if (in_array($post_id, $menu_item_ids)){
-	 						$menu_items[] = $permalink;
-	 					}
-	 				}
-	 			}
-	 		}
-	 	}
-	 	else {
-	 		foreach ($posts as $post_id){
-	 			wp_cache_flush();
-	 			$permalink = get_permalink($post_id);
-	 			if (Swift_Performance_Cache::is_object_cacheable($permalink, $post_id)){
-	 				$urls[trailingslashit($permalink)] = $permalink;
-	 				// Is it menu_item
-	 				if (in_array($post_id, $menu_item_ids)){
-	 					$menu_items[] = $permalink;
-	 				}
-	 			}
-	 		}
-	 	}
+ 		$posts = array_merge((array)$menu_item_ids, (array)$public_post_ids);
 
-	 	$urls 	= array_unique($urls);
-	 	$not_flat	= $values = array();
+ 		// WPML
+ 		if ((!defined('SWIFT_PERFORMANCE_WPML_WARMUP') || SWIFT_PERFORMANCE_WPML_WARMUP) && function_exists('icl_get_languages') && class_exists('SitePress')){
+ 			global $sitepress;
+ 			$languages = icl_get_languages('skip_missing=0&orderby=KEY&order=DIR&link_empty_to=str');
+ 			foreach ($languages as $language){
+ 				$sitepress->switch_lang($language['code'], true);
+ 				foreach ($posts as $post_id){
+ 					wp_cache_flush();
+ 					$permalink = get_permalink($post_id);
+ 					if (Swift_Performance_Cache::is_object_cacheable($permalink, $post_id)){
+						if (!isset($urls[Swift_Performance_Lite::get_warmup_id($permalink)])){
+ 							$urls[Swift_Performance_Lite::get_warmup_id($permalink)] = $permalink;
+						}
+ 						// Is it menu_item
+ 						if (in_array($post_id, $menu_item_ids)){
+ 							$menu_items[] = $permalink;
+ 						}
+ 					}
+ 				}
+ 			}
+ 		}
+ 		else {
+ 			foreach ($posts as $post_id){
+ 				wp_cache_flush();
+ 				$permalink = get_permalink($post_id);
+ 				if (Swift_Performance_Cache::is_object_cacheable($permalink, $post_id)){
+					if (!isset($urls[Swift_Performance_Lite::get_warmup_id($permalink)])){
+ 						$urls[Swift_Performance_Lite::get_warmup_id($permalink)] = $permalink;
+					}
+ 					// Is it menu_item
+ 					if (in_array($post_id, $menu_item_ids)){
+ 						$menu_items[] = $permalink;
+ 					}
+ 				}
+ 			}
+ 		}
 
-	 	$priority	= 10;
-	 	$index = 0;
+ 		$urls 	= array_unique($urls);
+ 		$not_flat	= $values = array();
+
+ 		$priority	= 10;
+ 		$index = 0;
 
 		$max_allowed_packet		= $wpdb->get_row("SHOW VARIABLES LIKE 'max_allowed_packet'", ARRAY_A);
 		$max_allowed_packet_size	= (isset($max_allowed_packet['Value']) && !empty($max_allowed_packet['Value']) ? $max_allowed_packet['Value']*0.9 : 1024*970);
 
-	 	foreach ($urls as $url){
-	 		// Build blocks
-	 		$_values = '("'.esc_sql(md5($url)).'", "' . esc_sql($url) . '", ' . (int)$priority .', "'.(int)in_array($url, $menu_items).'"),';
+ 		foreach ($urls as $key => $url){
+ 			// Build blocks
+ 			$_values = '("'.esc_sql($key).'", "' . esc_sql($url) . '", ' . (int)apply_filters('swift_performance_default_warmup_priority', $priority, $key, $url) .', "'.(int)in_array($url, $menu_items).'"),';
 
-	 		if (!isset($values[$index])){
-	 			$values[$index] = '';
-	 		}
+ 			if (!isset($values[$index])){
+ 				$values[$index] = '';
+ 			}
 
-	 		// Next block
-	 		if (strlen($values[$index] . $_values) > max($max_allowed_packet_size, 1024*970)){
-	 			$index++;
-	 		}
+ 			// Next block
+ 			if (strlen($values[$index] . $_values) > max($max_allowed_packet_size, 1024*970)){
+ 				$index++;
+ 			}
 
-	 		$values[$index] .= $_values;
-	 		$not_flat[trailingslashit($url)] = array('url' => $url, 'priority' => $priority);
+ 			$values[$index] .= $_values;
+ 			$not_flat[trailingslashit($url)] = array('url' => $url, 'priority' => $priority);
 
-	 		$priority += 10;
-	 	}
-	 	foreach ($values as $value){
-	 		$value = trim($value, ',') . ';';
-	 		Swift_Performance_Lite::mysql_query("INSERT IGNORE INTO {$table_name} (id, url, priority, menu_item) VALUES " . $value);
-	 	}
+ 			$priority += 10;
+ 		}
+ 		foreach ($values as $value){
+ 			$value = trim($value, ',') . ';';
+ 			Swift_Performance_Lite::mysql_query("INSERT IGNORE INTO {$table_name} (id, url, priority, menu_item) VALUES " . $value);
+ 		}
 
-	 	delete_transient('swift_performance_initial_prebuild_links');
+ 		delete_transient('swift_performance_initial_prebuild_links');
 
-	 	// If we need only the URLS
-	 	if ($is_flat){
-	 		return apply_filters('swift_performance_warmup_urls_flat', $urls);
-	 	}
-	 	// Imitate $wpdb->get_results
-	 	else {
-	 		return apply_filters('swift_performance_warmup_urls', $not_flat);
-	 	}
-	}
+ 		// If we need only the URLS
+ 		if ($is_flat){
+ 			return apply_filters('swift_performance_warmup_urls_flat', $urls);
+ 		}
+ 		// Imitate $wpdb->get_results
+ 		else {
+ 			return apply_filters('swift_performance_warmup_urls', $not_flat);
+ 		}
+ 	}
 
 	/**
 	 * Prebuild cache callback
@@ -577,16 +625,26 @@ class Swift_Performance_Lite {
 	public static function prebuild_cache(){
 		global $wpdb;
 
-		$time_limit = ini_get('max_execution_time');
-		$started_at	= time();
-		$done		= 0;
+		$permalinks = Swift_Performance_Lite::get_prebuild_urls(true, true);
 
 		// Extend timeout
+		$time_limit = ini_get('max_execution_time');
 		if (!Swift_Performance_Lite::is_function_disabled('set_time_limit')){
 			$time_limit = Swift_Performance_Lite::set_time_limit(SWIFT_PERFORMANCE_PREBUILD_TIMEOUT, 'prebuild_cache');
 		}
 
-		$permalinks = Swift_Performance_Lite::get_prebuild_urls();
+
+		// Prebuild done
+		if (count($permalinks) == 0){
+			Swift_Performance_Lite::log('Prebuild cache done', 9);
+			Swift_Performance_Lite::stop_prebuild();
+			return;
+		}
+
+		// Reschedule prebuild
+		Swift_Performance_Lite::log('Reschedule prebuild cache.', 9);
+		Swift_Performance_Lite::clear_hook('swift_performance_prebuild_cache');
+		wp_schedule_single_event(time() + SWIFT_PERFORMANCE_PREBUILD_TIMEOUT, 'swift_performance_prebuild_cache');
 
 		$current_process = mt_rand(0,PHP_INT_MAX);
 		Swift_Performance_Lite::set_transient('swift_performance_prebuild_cache_pid', $current_process, 600);
@@ -600,19 +658,15 @@ class Swift_Performance_Lite {
 			}
 
 			Swift_Performance_Lite::prebuild_cache_hit($permalink);
-			$done++;
+			do_action('swift_performance_prebuild_cache_hit', $permalink);
 
-			// Avarage caching time
-			$avarage	= (time() - $started_at) / $done;
-			$job_left	= count($permalinks) - $done;
-			$time_left	= $started_at + $time_limit - time();
-
-			// It seems we won't finish until timeout
-			if ($job_left * $avarage > $time_left * 0.8){
-				Swift_Performance_Lite::log('Reschedule prebuild cache, it is about timeout.', 9);
-				wp_schedule_single_event(time() + $time_left, 'swift_performance_prebuild_cache');
+			// delay
+			$prebuild_delay = (int)Swift_Performance_Lite::get_option('prebuild-speed');
+			if (!empty($prebuild_delay)){
+				sleep($prebuild_delay);
 			}
 		}
+
 	}
 
 	/**
@@ -637,6 +691,8 @@ class Swift_Performance_Lite {
 	 * @param string $permalink page to hit
 	 */
 	public static function prebuild_cache_hit($permalink){
+		global $wpdb;
+
 		if (!Swift_Performance_Cache::is_object_cacheable($permalink)){
 			return;
 		}
@@ -644,21 +700,17 @@ class Swift_Performance_Lite {
 		$threads = Swift_Performance_Lite::wait_for_thread();
 		if (empty($threads)){
 			Swift_Performance_Lite::log('There is no empty thread, reschedule prebuild cache.', 9);
-			Swift_Performance_Lite::set_transient('swift_performance_prebuild_cache_pid', 'stop', SWIFT_PERFORMANCE_PREBUILD_TIMEOUT);
+			Swift_Performance_Lite::stop_prebuild();
 			wp_schedule_single_event(time() + 60, 'swift_performance_prebuild_cache');
 			return;
 		}
 
 		$cache_path = trailingslashit(SWIFT_PERFORMANCE_CACHE_DIR) . parse_url($permalink, PHP_URL_PATH) . trailingslashit('desktop/unauthenticated/') . 'index.html';
 
-		Swift_Performance_Lite::log('Check cached file is exsists: ' . $cache_path, 9);
-		if (Swift_Performance_Cache::is_cached($permalink)){
-			return;
-		}
-
 		set_transient('swift_performance_prebuild_cache_hit', $permalink, 120);
 		Swift_Performance_Lite::log('Prebuild cache hit page: ' . $permalink, 9);
-		$response = wp_remote_get($permalink, array('headers' => array('X-merge-assets' => 'true', 'X-Prebuild' => 'true'), 'useragent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0) Gecko/20100101 Firefox/52.0', 'timeout' => 120));
+
+		$response = wp_remote_get($permalink, array('headers' => array('X-merge-assets' => 'true', 'X-Prebuild' => 'true'), 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0) Gecko/20100101 Firefox/52.0', 'timeout' => 120));
 
 		// Skip on error
 		if (is_wp_error($response)){
@@ -667,17 +719,22 @@ class Swift_Performance_Lite {
 			return;
 		}
 
+		$response_object = $response['http_response']->get_response_object();
+
 		// Stop prebuild if server resources were exhausted
 		if (in_array($response['response']['code'], array(500, 502, 503, 504, 508))){
 			Swift_Performance_Lite::log('Prebuild cache ('.$cache_path.') failed. Error code: ' . $response['response']['code'], 1);
 			Swift_Performance_Lite::log('Prebuild cache stopped due an error', 6);
-			Swift_Performance_Lite::set_transient('swift_performance_prebuild_cache_pid', 'stop', SWIFT_PERFORMANCE_PREBUILD_TIMEOUT);
-			delete_transient('swift_performance_prebuild_cache_hit');
+			Swift_Performance_Lite::stop_prebuild();
 			return;
+		}
+		else if (isset($response_object->redirects) && !empty($response_object->redirects)){
+			$id = Swift_Performance_Lite::get_warmup_id($permalink);
+			Swift_Performance_Lite::mysql_query($wpdb->prepare("UPDATE " . SWIFT_PERFORMANCE_TABLE_PREFIX . "warmup SET type = 'redirect' WHERE id = %s LIMIT 1", $id));
 		}
 
 		if (Swift_Performance_Lite::check_option('mobile-support', 1)){
-			$response = wp_remote_get($permalink, array('headers' => array('X-merge-assets' => 'true', 'X-Prebuild' => 'true'), 'useragent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25', 'timeout' => 120));
+			$response = wp_remote_get($permalink, array('headers' => array('X-merge-assets' => 'true', 'X-Prebuild' => 'true'), 'user-agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25', 'timeout' => 120));
 
 			// Skip on error
 			if (is_wp_error($response)){
@@ -690,12 +747,20 @@ class Swift_Performance_Lite {
 			if (in_array($response['response']['code'], array(500, 502, 503, 504, 508))){
 				Swift_Performance_Lite::log('Prebuild cache ('.$cache_path.') failed. Error code: ' . $response['response']['code'], 1);
 				Swift_Performance_Lite::log('Prebuild cache stopped due an error', 6);
-				Swift_Performance_Lite::set_transient('swift_performance_prebuild_cache_pid', 'stop', SWIFT_PERFORMANCE_PREBUILD_TIMEOUT);
-				delete_transient('swift_performance_prebuild_cache_hit');
+				Swift_Performance_Lite::stop_prebuild();
 				return;
 			}
 		}
 		set_transient('swift_performance_prebuild_cache_hit', $permalink, 10);
+	}
+
+	/**
+	 * Stop prebuild cache
+	 */
+	public static function stop_prebuild(){
+		Swift_Performance_Lite::set_transient('swift_performance_prebuild_cache_pid', 'stop', SWIFT_PERFORMANCE_PREBUILD_TIMEOUT);
+		Swift_Performance_Lite::clear_hook('swift_performance_prebuild_cache');
+		delete_transient('swift_performance_prebuild_cache_hit');
 	}
 
 	/**
@@ -781,14 +846,20 @@ class Swift_Performance_Lite {
 		global $wpdb;
 		$rules = array();
 
-		wp_clear_scheduled_hook('swift_performance_clear_cache');
-		wp_clear_scheduled_hook('swift_performance_clear_expired');
-		wp_clear_scheduled_hook('swift_performance_clear_assets_proxy_cache');
+		// Clear all cache
+		Swift_Performance_Cache::clear_all_cache();
+
+		// Clear scheduled hooks
+		Swift_Performance_Lite::clear_hook('swift_performance_clear_cache');
+		Swift_Performance_Lite::clear_hook('swift_performance_clear_expired');
+		Swift_Performance_Lite::clear_hook('swift_performance_clear_assets_proxy_cache');
 
 		$settings = get_option('swift-performance-deactivation-settings');
 
 		// Delete settings
 		if (!isset($settings['keep-settings']) || empty($settings['keep-settings'])){
+			add_filter('luv_framework_get_options', '__return_false');
+
 			delete_option('swift_performance_options');
 			delete_option('swift_performance_options-transients');
 			delete_option('swift_performance_plugin_organizer');
@@ -868,6 +939,11 @@ class Swift_Performance_Lite {
 		// Prepare the setup wizard
 		set_transient('swift-performance-setup', 'uid:'.get_current_user_id(), 300);
 
+		// Backup htaccess
+		if (self::server_software() == 'apache' && file_exists(ABSPATH . '.htaccess')){
+			copy(ABSPATH . '.htaccess', (ABSPATH . '.htaccess_backup_' . time()));
+		}
+
 		// Schedule clear cache if cache mode is timebased
 		if (self::check_option('enable-caching', 1) && self::check_option('cache-expiry-mode', 'timebased')){
 			if (!wp_next_scheduled( 'swift_performance_clear_expired')) {
@@ -893,133 +969,113 @@ class Swift_Performance_Lite {
 	/**
 	 * Write rewrite rules, clear scheduled hooks, set schedule (if necessary), clear cache on save
 	 */
-	public static function options_saved(){
-		// Build rewrite rules
-		$rules = self::build_rewrite_rules();
-		self::write_rewrite_rules($rules);
-
-		// Clear previously scheduled hooks
-		wp_clear_scheduled_hook('swift_performance_clear_cache');
-		wp_clear_scheduled_hook('swift_performance_clear_expired');
-		wp_clear_scheduled_hook('swift_performance_clear_assets_proxy_cache');
-
-		// Clear cache
-		add_action('shutdown', function(){
-			if (isset($_REQUEST['data'])){
-				parse_str(urldecode($_REQUEST['data']), $data);
-				if (isset($data['swift_performance_options']['clear_cache']) && $data['swift_performance_options']['clear_cache'] == 1){
-					Swift_Performance_Cache::clear_all_cache();
-				}
-			}
-		},PHP_INT_MAX);
-
-		// Clear prebuild booster transient
-		delete_transient('swift_performance_prebuild_booster');
-
-		// Schedule clear cache if cache mode is timebased
-		if (self::check_option('enable-caching', 1) && self::check_option('cache-expiry-mode', 'timebased')){
-			if (!wp_next_scheduled( 'swift_performance_clear_expired')) {
-    				wp_schedule_event(time() + self::get_option('cache-expiry-time'), 'swift_performance_cache_expiry', 'swift_performance_clear_expired');
-  			}
-		}
-
-		// Schedule clear assets cache if proxy is enabled
-		if (self::check_option('merge-scripts', 1) && self::check_option('proxy-3rd-party-assets', 1)){
-			if (!wp_next_scheduled( 'swift_performance_clear_assets_proxy_cache')) {
-    				wp_schedule_event(time(), 'swift_performance_assets_cache_expiry', 'swift_performance_clear_assets_proxy_cache');
-  			}
-		}
-
-		// Remote Cron
-		if (isset($_REQUEST['data'])){
-			parse_str(urldecode($_REQUEST['data']), $data);
-		}
-		else {
-			$data['swift_performance_options'] = get_option('swift_performance_options', array());
-		}
-
-		self::early_loader();
-	}
-
-	/**
-	 * Build rewrite rules based on settings and server software
-	 */
-	public static function build_rewrite_rules(){
-		$rules = $errors = array();
-		$server_software = self::server_software();
-		try{
-			if (isset($_REQUEST['data'])){
-				parse_str(urldecode($_REQUEST['data']), $data);
-			}
-			else {
-				$data['swift_performance_options'] = get_option('swift_performance_options', array());
-			}
-
-			// Custom htaccess
-			if (isset($data['swift_performance_options']['custom-htaccess']) && !empty($data['swift_performance_options']['custom-htaccess'])){
-				$rules['custom-htaccess'] = $data['swift_performance_options']['custom-htaccess'];
-			}
-
-			// Compression
-			if (isset($data['swift_performance_options']['enable-caching']) && $data['swift_performance_options']['enable-caching'] == 1 && isset($data['swift_performance_options']['enable-gzip']) && $data['swift_performance_options']['enable-gzip'] == 1){
-				switch($server_software){
-					case 'apache':
-						$rules['compression'] = apply_filters('swift_performance_browser_gzip', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/htaccess-deflate.txt'));
-						break;
-					case 'nginx':
-						$rules['compression'] = apply_filters('swift_performance_browser_gzip', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/nginx-deflate.txt'));
-						break;
-					default:
-						throw new Exception(esc_html__('Advanced Cache Control doesn\'t supported on your server', 'swift-performance'));
-				}
-			}
-			// Browser cache
-			if (isset($data['swift_performance_options']['enable-caching']) && $data['swift_performance_options']['enable-caching'] == 1 && isset($data['swift_performance_options']['browser-cache']) && $data['swift_performance_options']['browser-cache'] == 1){
-				switch($server_software){
-					case 'apache':
-						$rules['cache-control'] = apply_filters('swift_performance_browser_cache', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/htaccess-browser-cache.txt'));
-						break;
-					case 'nginx':
-						$rules['cache-control'] = apply_filters('swift_performance_browser_cache', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/nginx-browser-cache.txt'));
-						break;
-					default:
-						throw new Exception(esc_html__('Advanced Cache Control doesn\'t supported on your server', 'swift-performance'));
-				}
-			}
-			if (isset($data['swift_performance_options']['enable-caching']) && $data['swift_performance_options']['enable-caching'] == 1 && isset($data['swift_performance_options']['caching-mode']) && $data['swift_performance_options']['caching-mode'] == 'disk_cache_rewrite'){
-				switch($server_software){
-					case 'apache':
-						$rules['basic'] = apply_filters('swift_performance_cache_rewrites', include_once SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/htaccess.php');
-						break;
-					case 'nginx':
-						$rules['basic'] = apply_filters('swift_performance_cache_rewrites', include_once SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/nginx.php');;
-						break;
-					default:
-						throw new Exception(esc_html__('Rewrite mode isn\'t supported on your server', 'swift-performance'));
-				}
-			}
-			// CORS
-
-			switch($server_software){
-				case 'apache':
-					$rules['cors'] = apply_filters('swift_performance_cors_rules', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cdn/rewrites/htaccess.txt'));
-					break;
-				case 'nginx':
-					$rules['cache-control'] = apply_filters('swift_performance_cors_rules', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cdn/rewrites/nginx.txt'));
-					break;
-				default:
-					throw new Exception(esc_html__('Advanced Cache Control doesn\'t supported on your server', 'swift-performance'));
-			}
+	 public static function options_saved(){
+		// Refresh options
+		global $swift_performance_options;
+ 	 	$swift_performance_options = get_option('swift_performance_options', array());
 
 
-			Swift_Performance_Lite::log('Build rewrite rules', 9);
-			return $rules;
-		}
-		catch(Exception $e){
-			self::add_notice($e->getMessage(), 'error');
-			Swift_Performance_Lite::log('Build rewrite rules error: ' . $e->getMessage, 1);
-		}
-	}
+ 		// Build rewrite rules
+ 		$rules = self::build_rewrite_rules();
+ 		self::write_rewrite_rules($rules);
+
+ 		// Clear previously scheduled hooks
+ 		Swift_Performance_Lite::clear_hook('swift_performance_clear_cache');
+ 		Swift_Performance_Lite::clear_hook('swift_performance_clear_expired');
+ 		Swift_Performance_Lite::clear_hook('swift_performance_clear_assets_proxy_cache');
+
+ 		// Clear prebuild booster transient
+ 		delete_transient('swift_performance_prebuild_booster');
+
+ 		// Schedule clear cache if cache mode is timebased
+ 		if (self::check_option('enable-caching', 1) && self::check_option('cache-expiry-mode', 'timebased')){
+ 			if (!wp_next_scheduled( 'swift_performance_clear_expired')) {
+     				wp_schedule_event(time() + self::get_option('cache-expiry-time'), 'swift_performance_cache_expiry', 'swift_performance_clear_expired');
+   			}
+ 		}
+
+ 		// Schedule clear assets cache if proxy is enabled
+ 		if (self::check_option('merge-scripts', 1) && self::check_option('proxy-3rd-party-assets', 1)){
+ 			if (!wp_next_scheduled( 'swift_performance_clear_assets_proxy_cache')) {
+     				wp_schedule_event(time(), 'swift_performance_assets_cache_expiry', 'swift_performance_clear_assets_proxy_cache');
+   			}
+ 		}
+
+ 		self::early_loader();
+ 		do_action('swift_performance_options_saved');
+ 	}
+
+ 	/**
+ 	 * Build rewrite rules based on settings and server software
+ 	 */
+ 	public static function build_rewrite_rules(){
+ 		$rules = $errors = array();
+ 		$server_software = self::server_software();
+ 		try{
+ 			// Custom htaccess
+ 			if (Swift_Performance_Lite::check_option('custom-htaccess', '', '!=') && $server_software == 'apache'){
+ 				$rules['custom-htaccess'] = Swift_Performance_Lite::get_option('custom-htaccess');
+ 			}
+
+ 			// Compression
+ 			if (Swift_Performance_Lite::check_option('enable-caching', 1) && Swift_Performance_Lite::check_option('enable-gzip', 1)) {
+ 				switch($server_software){
+ 					case 'apache':
+ 						$rules['compression'] = apply_filters('swift_performance_browser_gzip', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/htaccess-deflate.txt'));
+ 						break;
+ 					case 'nginx':
+ 						$rules['compression'] = apply_filters('swift_performance_browser_gzip', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/nginx-deflate.txt'));
+ 						break;
+ 					default:
+ 						throw new Exception(esc_html__('Advanced Cache Control doesn\'t supported on your server', 'swift-performance'));
+ 				}
+ 			}
+ 			// Browser cache
+ 			if (Swift_Performance_Lite::check_option('enable-caching', 1) && Swift_Performance_Lite::check_option('browser-cache', 1)){
+ 				switch($server_software){
+ 					case 'apache':
+ 						$rules['cache-control'] = apply_filters('swift_performance_browser_cache', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/htaccess-browser-cache.txt'));
+ 						break;
+ 					case 'nginx':
+ 						$rules['cache-control'] = apply_filters('swift_performance_browser_cache', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/nginx-browser-cache.txt'));
+ 						break;
+ 					default:
+ 						throw new Exception(esc_html__('Advanced Cache Control doesn\'t supported on your server', 'swift-performance'));
+ 				}
+ 			}
+ 			if (Swift_Performance_Lite::check_option('enable-caching', 1) && Swift_Performance_Lite::check_option('caching-mode', 'disk_cache_rewrite')){
+ 				switch($server_software){
+ 					case 'apache':
+ 						$rules['basic'] = apply_filters('swift_performance_cache_rewrites', include_once SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/htaccess.php');
+ 						break;
+ 					case 'nginx':
+ 						$rules['basic'] = apply_filters('swift_performance_cache_rewrites', include_once SWIFT_PERFORMANCE_DIR . 'modules/cache/rewrites/nginx.php');
+ 						break;
+ 					default:
+ 						throw new Exception(esc_html__('Rewrite mode isn\'t supported on your server', 'swift-performance'));
+ 				}
+ 			}
+ 			// CORS
+ 			switch($server_software){
+ 				case 'apache':
+ 					$rules['cors'] = apply_filters('swift_performance_cors_rules', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cdn/rewrites/htaccess.txt'));
+ 					break;
+ 				case 'nginx':
+ 					$rules['cache-control'] = apply_filters('swift_performance_cors_rules', file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cdn/rewrites/nginx.txt'));
+ 					break;
+ 				default:
+ 					throw new Exception(esc_html__('Advanced Cache Control doesn\'t supported on your server', 'swift-performance'));
+ 			}
+
+
+ 			Swift_Performance_Lite::log('Build rewrite rules', 9);
+ 			return $rules;
+ 		}
+ 		catch(Exception $e){
+ 			self::add_notice($e->getMessage(), 'error');
+ 			Swift_Performance_Lite::log('Build rewrite rules error: ' . $e->getMessage(), 1);
+ 		}
+ 	}
 
 
 	/**
@@ -1159,7 +1215,7 @@ class Swift_Performance_Lite {
 	 */
 	public static function set_thread($is_available){
 		if (!defined('SWIFT_PERFORMANCE_THREAD')){
-			Swift_Performance_Lite::log('Thread for ' . (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . ' is ' . ($is_available ? 'available' : 'not available'), 9);
+			Swift_Performance_Lite::log('Thread for ' . (is_ssl() ? 'https://' : 'http://') . Swift_Performance_Lite::$http_host . $_SERVER['REQUEST_URI'] . ' is ' . ($is_available ? 'available' : 'not available'), 9);
 
 			if (!$is_available && !defined('SWIFT_PERFORMANCE_DISABLE_CACHE')){
 				define('SWIFT_PERFORMANCE_DISABLE_CACHE', true);
@@ -1178,7 +1234,7 @@ class Swift_Performance_Lite {
 			return SWIFT_PERFORMANCE_THREAD;
 		}
 
-		$key = md5($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . (isset($_COOKIE[LOGGED_IN_COOKIE]) ? $_COOKIE[LOGGED_IN_COOKIE] : ''));
+		$key = md5(Swift_Performance_Lite::$http_host . $_SERVER['REQUEST_URI'] . (isset($_COOKIE[LOGGED_IN_COOKIE]) ? $_COOKIE[LOGGED_IN_COOKIE] : ''));
 
 		// Disable optimizing for users
 		if (Swift_Performance_Lite::check_option('optimize-prebuild-only', 1) && !isset($_SERVER['HTTP_X_PREBUILD'])){
@@ -1215,7 +1271,7 @@ class Swift_Performance_Lite {
 	 * @param string $hook action hook to unlock thread
 	 */
 	public static function lock_thread($hook){
-		$key = md5($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . (isset($_COOKIE[LOGGED_IN_COOKIE]) ? $_COOKIE[LOGGED_IN_COOKIE] : ''));
+		$key = md5(Swift_Performance_Lite::$http_host . $_SERVER['REQUEST_URI'] . (isset($_COOKIE[LOGGED_IN_COOKIE]) ? $_COOKIE[LOGGED_IN_COOKIE] : ''));
 
 		$threads = Swift_Performance_Lite::get_thread_array();
 
@@ -1224,14 +1280,14 @@ class Swift_Performance_Lite {
 		if (!empty($hook)){
 			add_action($hook, array('Swift_Performance_Lite', 'unlock_thread'), 9);
 		}
-		Swift_Performance_Lite::log('Lock thread for ' . (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 9);
+		Swift_Performance_Lite::log('Lock thread for ' . (is_ssl() ? 'https://' : 'http://') . Swift_Performance_Lite::$http_host . $_SERVER['REQUEST_URI'], 9);
 	}
 
 	/**
 	 * Unlock worker thread
 	 */
 	public static function unlock_thread(){
-		$key = md5($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . (isset($_COOKIE[LOGGED_IN_COOKIE]) ? $_COOKIE[LOGGED_IN_COOKIE] : ''));
+		$key = md5(Swift_Performance_Lite::$http_host . $_SERVER['REQUEST_URI'] . (isset($_COOKIE[LOGGED_IN_COOKIE]) ? $_COOKIE[LOGGED_IN_COOKIE] : ''));
 
 		$threads = Swift_Performance_Lite::get_thread_array();
 
@@ -1239,7 +1295,7 @@ class Swift_Performance_Lite {
 			unset($threads[$key]);
 			Swift_Performance_Lite::set_transient('swift_performance_threads', $threads, 600);
 		}
-		Swift_Performance_Lite::log('Unlock thread for ' . (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 9);
+		Swift_Performance_Lite::log('Unlock thread for ' . (is_ssl() ? 'https://' : 'http://') . Swift_Performance_Lite::$http_host . $_SERVER['REQUEST_URI'], 9);
 	}
 
 
@@ -1269,9 +1325,41 @@ class Swift_Performance_Lite {
 	/**
 	 * Bypass built in function to be able call it early
 	 */
+	public static function is_author(){
+		global $wp_query;
+		return (isset( $wp_query ) && !empty($wp_query) ? is_author() : false);
+	}
+
+	/**
+	 * Bypass built in function to be able call it early
+	 */
+	public static function is_archive(){
+		global $wp_query;
+		return (isset( $wp_query ) && !empty($wp_query) ? is_archive() : false);
+	}
+
+	/**
+	 * Bypass built in function to be able call it early
+	 */
 	public static function is_feed(){
 		global $wp_query;
 		return (isset( $wp_query ) && !empty($wp_query) ? is_feed() : false);
+	}
+
+	/**
+	 * Check is the current request a REST API request
+	 */
+	public static function is_rest(){
+		global $wp_query;
+		if (empty($wp_query)){
+			return false;
+		}
+		$rest_url = get_rest_url();
+
+		if (preg_match('~'.preg_quote($rest_url).'~', Swift_Performance_Lite::home_url() . $_SERVER['REQUEST_URI'])){
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -1473,26 +1561,27 @@ class Swift_Performance_Lite {
 	 * @return mixed
 	 */
 	public static function get_option($key, $default = ''){
-	      global $swift_performance_options;
-		if (empty($swift_performance_options)){
-		    $swift_performance_options = get_option('swift_performance_options', array());
-		}
-	      if (isset($swift_performance_options[$key])){
-	            return apply_filters('swift_performance_option', $swift_performance_options[$key], $key);
-	      }
-	      else {
-	            return apply_filters('swift_performance_option', false, $key);
-	      }
-	}
+	 	global $swift_performance_options;
+	 	if (empty($swift_performance_options)){
+	 	    $swift_performance_options = get_option('swift_performance_options', array());
+	 	}
+	 	if (isset($swift_performance_options[$key])){
+	 		return apply_filters('swift_performance_option_' . $key, apply_filters('swift_performance_option', $swift_performance_options[$key], $key));
+	 	}
+	 	else {
+	 		return apply_filters('swift_performance_option_' . $key, apply_filters('swift_performance_option', false, $key));
+	 	}
+	 }
 
 	/**
-	 * Set Swift Performance option runtime
-	 * @param string $key
-	 * @param mixed $default
-	 */
+	  * Set Swift Performance option runtime
+	  * @param string $key
+	  * @param mixed $default
+	  */
 	public static function set_option($key, $value){
-		global $swift_performance_options;
-		$swift_performance_options[$key] = $value;
+	 	add_filter('swift_performance_option_' . $key, function() use ($value){
+	 		return $value;
+	 	});
 	}
 
 	/**
@@ -1540,6 +1629,8 @@ class Swift_Performance_Lite {
 			if (file_exists(WPMU_PLUGIN_DIR)){
 				$loader = file_get_contents(SWIFT_PERFORMANCE_DIR . 'modules/cache/loader.php');
 				$loader = str_replace('%PLUGIN_NAME%', apply_filters('swift_performance_early_loader_plguin_name', SWIFT_PERFORMANCE_PLUGIN_NAME . ' early loader'), $loader);
+				$loader = str_replace('%PLUGIN_DIR%', SWIFT_PERFORMANCE_DIR, $loader);
+				$loader = str_replace('%PLUGIN_SLUG%', SWIFT_PERFORMANCE_PLUGIN_BASENAME, $loader);
 				@file_put_contents(trailingslashit(WPMU_PLUGIN_DIR) . 'swift-performance-loader.php', $loader);
 			}
 		}
@@ -1594,7 +1685,7 @@ class Swift_Performance_Lite {
 	 */
 	public static function get_post_types($exclude = array()){
 		global $wpdb;
-		$exclude = array_merge((array)$exclude, array('revision', 'nav_menu_item'));
+		$exclude = array_merge((array)$exclude, array('revision', 'nav_menu_item', 'shop_order', 'shop_coupon'));
 		$post_types = $wpdb->get_col("SELECT DISTINCT post_type FROM {$wpdb->posts} WHERE post_status = 'publish'");
 		return array_diff($post_types, $exclude);
 	}
@@ -1713,66 +1804,80 @@ class Swift_Performance_Lite {
 	 * Return actual cache sizes and cached files
 	 * @return array
 	 */
-	public static function cache_status(){
-		$files = array();
-		$cache_size = Swift_Performance_Lite::cache_dir_size(SWIFT_PERFORMANCE_CACHE_DIR);
-		if (Swift_Performance_Lite::check_option('caching-mode', array('disk_cache_rewrite', 'disk_cache_php'), 'IN') && file_exists(SWIFT_PERFORMANCE_CACHE_DIR)){
-			$Directory = new RecursiveDirectoryIterator(SWIFT_PERFORMANCE_CACHE_DIR);
-			$Iterator = new RecursiveIteratorIterator($Directory);
-			$Regex = new RegexIterator($Iterator, '/((index|404)\.html|index\.xml|index\.json)$/i', RecursiveRegexIterator::GET_MATCH);
-			foreach($Regex as $filename=>$file){
-				if (filesize($filename) > 0){
-					$url			= trailingslashit(parse_url(Swift_Performance_Lite::home_url(), PHP_URL_SCHEME) . '://' . trim(preg_replace('~(desktop|mobile)/(authenticated|unauthenticated)(/[abcdef0-9]*)?/((index|404)\.(html|xml|json))~','',str_replace(SWIFT_PERFORMANCE_CACHE_DIR, trailingslashit(basename(SWIFT_PERFORMANCE_CACHE_DIR)), $filename)),'/'));
-					$files[$url] 	= $url;
-					if (file_exists($filename . '.gz')){
-						$cache_size		+= filesize($filename.'.gz');
-					}
-				}
-			}
-		}
-		else if (Swift_Performance_Lite::check_option('caching-mode', 'memcached_php')){
-			$memcached = Swift_Performance_Cache::get_memcache_instance();
-			$keys = $memcached->getAllKeys();
-			foreach($keys as $item) {
-				if(preg_match('~^swift-performance~', $item)) {
-					$raw_url = preg_replace('~^swift-performance_~', '', $item);
-					$url = trailingslashit(Swift_Performance_Lite::home_url() . trim(preg_replace('~(desktop|mobile)/(authenticated|unauthenticated)(/[abcdef0-9]*)?/((index|404)\.(html|xml|json))~','',str_replace(SWIFT_PERFORMANCE_CACHE_DIR, trailingslashit(basename(SWIFT_PERFORMANCE_CACHE_DIR)), $raw_url)),'/'));
-					if (!preg_match('~\.gz$~', $item)){
-					  	$files[$url] = $url;
-				  	}
-					$cached = Swift_Performance_Cache::memcached_get($raw_url);
-					$cache_size  += strlen($cached['content']);
-			    	}
-			}
-		}
+	 public static function cache_status(){
+ 	     $basedir = trailingslashit(Swift_Performance_Lite::get_option('cache-path')) . SWIFT_PERFORMANCE_CACHE_BASE_DIR;
 
-		global $wpdb;
+ 	     $files = array();
+ 	     $cache_size = Swift_Performance_Lite::cache_dir_size($basedir);
 
-		// All known links
-		$table_name = SWIFT_PERFORMANCE_TABLE_PREFIX . 'warmup';
-		$all		= $wpdb->get_var("SELECT COUNT(DISTINCT TRIM(TRAILING '/' FROM url)) url FROM {$table_name}");
+ 	     if (Swift_Performance_Lite::check_option('caching-mode', array('disk_cache_rewrite', 'disk_cache_php'), 'IN')){
+ 		     foreach (apply_filters('swift_performance_enabled_hosts', array(parse_url(Swift_Performance_Lite::home_url(), PHP_URL_HOST))) as $host){
+ 			     $cache_dir = $basedir . $host;
+ 			     if (file_exists($cache_dir)){
+ 				     $Directory = new RecursiveDirectoryIterator($cache_dir);
+ 				     $Iterator = new RecursiveIteratorIterator($Directory);
+ 				     $Regex = new RegexIterator($Iterator, '/((index|404)\.html|index\.xml|index\.json)$/i', RecursiveRegexIterator::GET_MATCH);
+ 				     foreach($Regex as $filename=>$file){
+ 					     if (filesize($filename) > 0){
+ 						     $url			= parse_url(Swift_Performance_Lite::home_url(), PHP_URL_SCHEME) . '://' . preg_replace('~(desktop|mobile)/(authenticated|unauthenticated)(/[abcdef0-9]*)?/((index|404)\.(html|xml|json))~','',trim(str_replace($cache_dir, basename($cache_dir), $filename),'/'));
+ 						     $files[$url] 	= $url;
+ 						     if (file_exists($filename . '.gz')){
+ 							     $cache_size		+= filesize($filename.'.gz');
+ 						     }
+ 					     }
+ 				     }
+ 			     }
+ 		     }
+ 	     }
+ 	     else if (Swift_Performance_Lite::check_option('caching-mode', 'memcached_php')){
+ 		     $memcached = Swift_Performance_Cache::get_memcache_instance();
+ 		     $keys = $memcached->getAllKeys();
+ 		     foreach($keys as $item) {
+ 			     if(preg_match('~^swift-performance~', $item)) {
+ 				     $raw_url = preg_replace('~^swift-performance_~', '', $item);
+ 				     $url = trailingslashit(Swift_Performance_Lite::home_url() . trim(preg_replace('~(desktop|mobile)/(authenticated|unauthenticated)(/[abcdef0-9]*)?/((index|404)\.(html|xml|json))~i','',str_replace(SWIFT_PERFORMANCE_CACHE_DIR, trailingslashit(basename(SWIFT_PERFORMANCE_CACHE_DIR)), $raw_url)),'/'));
+ 				     if (!preg_match('~\.gz$~', $item)){
+ 					     $files[$url] = $url;
+ 				     }
+ 				     $cached = Swift_Performance_Cache::memcached_get($raw_url);
+ 				     $cache_size  += strlen($cached['content']);
+ 			     }
+ 		     }
+ 	     }
 
-		// Count cached AJAX objects
-		$ajax_objects	= $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE '%_transient_timeout_swift_performance_ajax_%'");
-		$ajax_size		= $wpdb->get_var("SELECT SUM(LENGTH(option_value)) as size FROM {$wpdb->options} WHERE option_name LIKE '%_transient_swift_performance_ajax_%'");
+ 	     global $wpdb;
 
-		// Count cached dynamic pages
-		$dynamic_pages	= $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE '%_transient_timeout_swift_performance_dynamic_%'");
-		$dynamic_size	= $wpdb->get_var("SELECT SUM(LENGTH(option_value)) as size FROM {$wpdb->options} WHERE option_name LIKE '%_transient_swift_performance_dynamic_%'");
+ 	     // All known links
+ 	     $table_name = SWIFT_PERFORMANCE_TABLE_PREFIX . 'warmup';
+ 	     $all		= $wpdb->get_var("SELECT COUNT(DISTINCT TRIM(TRAILING '/' FROM url)) url FROM {$table_name}");
+ 	     $not_cached = $wpdb->get_var("SELECT COUNT(DISTINCT TRIM(TRAILING '/' FROM url)) url FROM {$table_name} WHERE type = ''");
+ 	     $cached_404 = $wpdb->get_var("SELECT COUNT(DISTINCT TRIM(TRAILING '/' FROM url)) url FROM {$table_name} WHERE type = '404'");
+ 	     $error	= $wpdb->get_var("SELECT COUNT(DISTINCT TRIM(TRAILING '/' FROM url)) url FROM {$table_name} WHERE type = 'error'");
+
+ 	     // Count cached AJAX objects
+ 	     $ajax_objects	= $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE '%_transient_timeout_swift_performance_ajax_%'");
+ 	     $ajax_size		= $wpdb->get_var("SELECT SUM(LENGTH(option_value)) as size FROM {$wpdb->options} WHERE option_name LIKE '%_transient_swift_performance_ajax_%'");
+
+ 	     // Count cached dynamic pages
+ 	     $dynamic_pages	= $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE '%_transient_timeout_swift_performance_dynamic_%'");
+ 	     $dynamic_size	= $wpdb->get_var("SELECT SUM(LENGTH(option_value)) as size FROM {$wpdb->options} WHERE option_name LIKE '%_transient_swift_performance_dynamic_%'");
 
 
 
-		return array(
-			'all'	=> (int)$all,
-			'cached' => count($files),
-			'ajax_objects' => $ajax_objects,
-			'ajax_size' => (int)$ajax_size,
-			'dynamic_pages' => $dynamic_pages,
-			'dynamic_size' => (int)$dynamic_size,
-			'cache_size' => $cache_size,
-			'files' => $files
-		);
-	}
+ 	     return array(
+ 		     'all'	=> (int)$all,
+ 		     'cached' => count($files),
+ 		     'not-cached' => $not_cached,
+ 		     'cached-404' => $cached_404,
+ 		     'error' => $error,
+ 		     'ajax_objects' => $ajax_objects,
+ 		     'ajax_size' => (int)$ajax_size,
+ 		     'dynamic_pages' => $dynamic_pages,
+ 		     'dynamic_size' => (int)$dynamic_size,
+ 		     'cache_size' => $cache_size,
+ 		     'files' => $files
+ 	     );
+      }
 
 	/**
 	 * Count folder size recursively
@@ -1903,7 +2008,7 @@ class Swift_Performance_Lite {
 	 */
 	public static function is_function_disabled($function_name) {
 		$disabled = explode(',', ini_get('disable_functions'));
-		$result = in_array($function_name, $disabled);
+		$result = (in_array($function_name, $disabled) || !function_exists($function_name));
 		if ($result){
 			Swift_Performance_Lite::log($function_name . ' is disabled on the server.', 6);
 		}
@@ -1934,10 +2039,12 @@ class Swift_Performance_Lite {
 
 		$table_name = SWIFT_PERFORMANCE_TABLE_PREFIX . 'warmup';
 		$sql = "CREATE TABLE {$table_name} (
-			id varchar(32) NOT NULL,
+			id VARCHAR(32) NOT NULL,
 			url VARCHAR(255) NOT NULL,
 			priority INT(10) NOT NULL,
 			menu_item TINYINT(1) NOT NULL,
+			timestamp INT(11) NOT NULL,
+			type VARCHAR(10) NOT NULL,
 			PRIMARY KEY (id),
 			KEY url (url),
 			KEY priority (priority)
@@ -1978,12 +2085,20 @@ class Swift_Performance_Lite {
 		return hash('crc32', $url_path) . '_' . hash('crc32', serialize($_GET)) .'_'. hash('crc32', serialize($_POST));
 	}
 
+	/**
+	 * Sanitize given URL and return id for warmup table
+	 * @param string $url
+	 * @return string
+	 */
+	public static function get_warmup_id($url){
+		return md5(trailingslashit(preg_replace('~(https?://)?(www\.)?~','', $url)));
+	}
 
 	/**
 	 * Dashboard Widget
 	 */
 	public static function dashboard_widget() {
-		echo '<iframe src="https://swteplugins.com/lite-api/dashboard/?source=widget"  style="width:100%;height:200px;"></iframe>';
+		include SWIFT_PERFORMANCE_DIR . 'templates/ads/index.php';
 	}
 
 	/**
@@ -1993,14 +2108,50 @@ class Swift_Performance_Lite {
 	 * @param string $timeout
 	 */
 	public static function safe_set_transient($transient, $value, $timeout){
-		if (strlen(serialize($value)) < apply_filters('swift_performance_max_transient_size', 5242880)){
+		global $wpdb;
+		$max_allowed_packet		= $wpdb->get_row("SHOW VARIABLES LIKE 'max_allowed_packet'", ARRAY_A);
+		$max_allowed_packet_size	= (isset($max_allowed_packet['Value']) && !empty($max_allowed_packet['Value']) ? $max_allowed_packet['Value']*0.9 : 1024*970);
+
+		if (strlen(serialize($value)) < apply_filters('swift_performance_max_transient_size', min($max_allowed_packet_size, 5242880))){
 			set_transient($transient, $value, $timeout);
 		}
+	}
+
+	/**
+	 * Clear all cron jobs with a particular hook
+	 * @param string $hook
+	 */
+	public static function clear_hook( $hook ) {
+	    $crons = _get_cron_array();
+	    if ( empty( $crons ) ) {
+	        return;
+	    }
+	    foreach( $crons as $timestamp => $cron ) {
+	        if ( ! empty( $cron[$hook] ) )  {
+	            unset( $crons[$timestamp][$hook] );
+	        }
+
+	        if ( empty( $crons[$timestamp] ) ) {
+	            unset( $crons[$timestamp] );
+	        }
+	    }
+	    _set_cron_array( $crons );
 	}
 }
 
 if (!isset($GLOBALS['swift_performance']) || empty($GLOBALS['swift_performance'])){
 	$GLOBALS['swift_performance'] = new Swift_Performance_Lite();
 }
+
+// Deactivate itself if Pro detected
+add_action('init', function(){
+	if (class_exists('Swift_Performance')){
+		if (!function_exists('deactivate_plugins')){
+			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		}
+		Swift_Performance_Lite::write_rewrite_rules();
+		deactivate_plugins(plugin_basename(__FILE__), true);
+	}
+});
 
 ?>

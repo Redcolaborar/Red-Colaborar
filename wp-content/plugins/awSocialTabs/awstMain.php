@@ -41,17 +41,17 @@ class AwSocialTabs {
 
         add_filter('the_content', array('AwstFrontPages', 'content_filter'),20);
 
-        add_filter('bbp_get_reply_content', array('AwstFrontPages', 'content_filter'),20,1);
-        //
-        add_filter('bbp_get_topic_content', array('AwstFrontPages', 'content_filter'),20,1);
-        //
-        add_filter('bbp_get_forum_content', array('AwstFrontPages', 'content_filter'),20,1);
+        // add_filter('bbp_get_reply_content', array('AwstFrontPages', 'activity_content_filter'),20,1);
+        // //
+        // add_filter('bbp_get_topic_content', array('AwstFrontPages', 'activity_content_filter'),20,1);
+        // //
+        // add_filter('bbp_get_forum_content', array('AwstFrontPages', 'activity_content_filter'),20,1);
 
-        add_action( 'bp_get_activity_content' , array('AwstFrontPages', 'content_filter'),20,1);
+        add_action( 'bp_get_activity_content' , array('AwstFrontPages', 'activity_content_filter'),20,1);
 
-        add_action( 'bp_member_activity_filter_options' , array('AwstFrontPages', 'content_filter') );
+        add_action( 'bp_member_activity_filter_options' , array('AwstFrontPages', 'activity_content_filter') );
 
-        add_action( 'bp_group_activity_filter_options' , array('AwstFrontPages', 'content_filter') );
+        add_action( 'bp_group_activity_filter_options' , array('AwstFrontPages', 'activity_content_filter') );
 
         add_action( 'mpp_media_meta' , array( 'AwstFrontPages', 'filtermediapress'));
 
@@ -64,7 +64,6 @@ class AwSocialTabs {
         // add_action('admin_init', array(&$this, 'checkHeaders'));
 
         add_action( 'bp_activity_entry_meta', array( $this, 'display_favorite_count' ) );
-       // add_action( 'bp_activity_entry_meta', array( $this, 'display_thumbs' ) );
 
         //add_action( 'bp_activity_comment_options',  array(&$this,"display_favorite_count"),10 );
         add_action( 'bp_activity_comment_options',  array(&$this,"commentFilter"),10 );
@@ -95,10 +94,6 @@ class AwSocialTabs {
         	$type = '';
         }
 
-// file_put_contents(dirname(__FILE__)."/../../activity_get.log", print_r($activity_get, true),FILE_APPEND);
-// file_put_contents(dirname(__FILE__)."/../../activity_get.log", print_r("\n\n", true),FILE_APPEND);
-
-
         if (((strpos($typeOfBlock, 'comment') !== false) &&  ($type == '')))  {
 
             $type       =   'comment';
@@ -128,39 +123,33 @@ class AwSocialTabs {
 
             $flag       =   true;
             $user_ID    =   get_current_user_id();
-            $postmeta   =   get_post_meta($post_id, 'awst_like', true);
-            $isLiked    =   AwstComman::isLiked($postmeta, $user_ID);
-            $totalLiked =   AwstComman::getLikes($postmeta);
+
+            $activity_id = bp_get_activity_comment_id();
+            $isLiked    =   AwstHelper::has_user_liked_object( $user_ID, $activity_id, 'activity' );
+            $totalLiked =   AwstHelper::count_object_likes( $activity_id, 'activity' );
+
+            $usersLikeList = AwstComman::getLikesUserListByObjectId( $activity_id, 'activity' );
+
+            $users_liked = "";
+            foreach( $usersLikeList as $user ) {
+              $users_liked .= "<a href='" . home_url( '/miembros/'. $user->user_nicename ) . "'>@{$user->user_nicename}</a>";
+            }
 
             $fav_count  =   10;
 
             if( $post_id !== 0 ):
                 if( ((!empty( $fav_count ) ) && $isLiked) ):?>
-                    <a class="awst_like"><?php printf( _n( 'AWST LIKE', '<span class="awst_like_btn" id="awst_like_btn_%d"><i data-post-like="true" data-post-id="%d" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_%d">%d</label> Me gusta</span>', $post_id,$post_id,$post_id,$totalLiked ), $post_id,$post_id,$post_id,$totalLiked  );?></a>
+                    <a class="awst_like"><?php printf( _n( 'AWST LIKE', '<span class="awst_like_btn" id="awst_like_btn_%d"><i data-post-like="true" data-post-id="%d" data-object-type="activity" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_%d">%d</label> Me gusta</span>', $activity_id,$activity_id,$activity_id,$totalLiked ), $activity_id,$activity_id,$activity_id,$totalLiked  );?></a>
+                    <div style="display: none; width: 100%; clear: both; position: relative; top: -15px; margin-left: 75px; max-width: 640px;" class="awst_like_user_list"><?php echo $users_liked ?></div>
                 <?php else:?>
-                    <a class="awst_like"><?php printf( _n( 'AWST LIKE', '<span class="awst_like_btn" id="awst_like_btn_%d"><i data-post-like="true" data-post-id="%d" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_%d">%d</label> Me gusta</span>', $post_id,$post_id,$post_id,$totalLiked ), $post_id,$post_id,$post_id,$totalLiked  );?></a>
+                    <a class="awst_like"><?php printf( _n( 'AWST LIKE', '<span class="awst_like_btn" id="awst_like_btn_%d"><i data-post-like="true" data-post-id="%d" data-object-type="activity" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_%d">%d</label> Me gusta</span>', $activity_id,$activity_id,$activity_id,$totalLiked ), $activity_id,$activity_id,$activity_id,$totalLiked  );?></a>
+                    <div style="display: none; width: 100%; clear: both; position: relative; top: -15px; margin-left: 75px; max-width: 640px;" class="awst_like_user_list"><?php echo $users_liked ?></div>
                 <?php endif;
             endif;
         }
 
 
 
-
-    }
-
-    function display_thumbs() {
-
-        global $activities_template;
-
-        $fav_count  =   !empty( $activities_template->activity->favorite_count ) ? $activities_template->activity->favorite_count : 0;
-        $id         =   bp_get_activity_id();
-        $post_id    =   $id;
-        $totalLiked =   0;
-
-        if((($_REQUEST['action'] === 'post_update' ) && ($post_id !== 0))){?>
-            <a class="awst_like"><?php printf( _n( 'AWST LIKE', '<span class="awst_like_btn" id="awst_like_btn_%d"><i data-post-like="true" data-post-id="%d" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_%d">%d</label> Me gusta</span>', $post_id,$post_id,$post_id,$totalLiked ), $post_id,$post_id,$post_id,$totalLiked  );?></a>
-        <?php
-        }
 
     }
 
@@ -179,20 +168,6 @@ class AwSocialTabs {
         $typeOfBlock            =   $activity_get['activities'][0]->type;
         //bp_activity_comment_id();
 
-        /*file_put_contents(dirname(__FILE__).'/activity_get.log', print_r($activity_get,true),FILE_APPEND);
-        file_put_contents(dirname(__FILE__).'/activity_get.log', print_r("\n",true),FILE_APPEND);
-
-        file_put_contents(dirname(__FILE__).'/type.log', print_r($type,true),FILE_APPEND);
-        file_put_contents(dirname(__FILE__).'/type.log', print_r("\n",true),FILE_APPEND);
-
-
-        file_put_contents(dirname(__FILE__).'/typeOfBlock.log', print_r($typeOfBlock,true),FILE_APPEND);
-        file_put_contents(dirname(__FILE__).'/typeOfBlock.log', print_r("\n",true),FILE_APPEND);
-
-
-        file_put_contents(dirname(__FILE__).'/bp_activity_comment_id.log', print_r(bp_get_activity_comment_id(),true),FILE_APPEND);
-        file_put_contents(dirname(__FILE__).'/bp_activity_comment_id.log', print_r("\n",true),FILE_APPEND);
-*/
 
         if (((strpos($typeOfBlock, 'comment') !== false) &&  ($type == '')))  {
 
@@ -248,108 +223,36 @@ class AwSocialTabs {
 
             $flag       =   true;
             $user_ID    =   get_current_user_id();
-            $postmeta   =   get_post_meta($post_id, 'awst_like', true);
-            $isLiked    =   AwstComman::isLiked($postmeta, $user_ID);
-            $totalLiked =   AwstComman::getLikes($postmeta);
 
-            $usersLikeList = AwstComman::getLikesUserListByObjectId( $post_id, 'activity' );
+            $activity_id = bp_get_activity_id();
+
+            $isLiked    =   AwstHelper::has_user_liked_object( $user_ID, $activity_id, 'activity' );
+            $totalLiked =   AwstHelper::count_object_likes( $activity_id, 'activity' );
+
+            $usersLikeList = AwstComman::getLikesUserListByObjectId( $activity_id, 'activity' );
+
+            // var_dump( $isLiked );
+            // var_dump( $usersLikeList );
+
             $users_liked = "";
             foreach( $usersLikeList as $user ) {
               $users_liked .= "<a href='" . home_url( '/miembros/'. $user->user_nicename ) . "'>@{$user->user_nicename}</a>";
             }
 
-            $fav_count  =   10;
 
-            global $wpdb;
-
-            $result_final = "";
-
-            $sql = "SELECT * FROM  {$wpdb->prefix}usermeta WHERE `meta_key` IN('awst_like', 'bp_favorite_activities')  AND `meta_value` LIKE '%\"" . $post_id . "\"%' ";
-            $result = $wpdb->get_results( $sql, 'OBJECT' );
-
-            $user_ids = array();
-
-            foreach( $result as $item ) {
-              array_push( $user_ids, $item->user_id );
-            }
-
-            // filter duplicates
-            $user_ids = array_unique( $user_ids );
-
-            $result_final .= var_export( $result, 1 ) . "<br>";
-
-            $result_final .= var_export( $user_ids, 1 ) . "<br>";
-
-            $sql      = "SELECT ID, user_nicename  FROM  {$wpdb->prefix}users WHERE `ID` IN('".implode("','",$user_ids)."')";
-            $result = $wpdb->get_results( $sql, 'OBJECT' );
-
-            $result_final .= var_export( $result, 1 );
-
-            $result_final .= var_export( AwstComman::getLikesUserListByObjectId( $post_id, 'activity' ), 1 );
-
-            if( $post_id !== 0 ):
-                if( ((!empty( $fav_count ) ) && $isLiked) ):?>
-                    <a class="awst_like"><?php printf( _n( 'AWST LIKE', '<span class="awst_like_btn" id="awst_like_btn_%d"><i data-post-like="true" data-post-id="%d" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_%d">%d</label> Me gusta</span>', $post_id,$post_id,$post_id,$totalLiked ), $post_id,$post_id,$post_id,$totalLiked  );?></a>
+            if( $activity_id !== 0 ):
+                if( $isLiked ):?>
+                    <a class="awst_like"><?php printf( _n( 'AWST LIKE', '<span class="awst_like_btn" id="awst_like_btn_%d"><i data-post-like="true" data-post-id="%d" data-object-type="activity" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_%d">%d</label> Me gusta</span>', $post_id,$post_id,$post_id,$totalLiked ), $post_id,$post_id,$post_id,$totalLiked  );?></a>
                     <div style="display: none" class="awst_like_user_list"><?php echo $users_liked ?></div>
-                    <div style="display: none"><?php echo $result_final ?></div>
+
                 <?php else:?>
-                    <a class="awst_like"><?php printf( _n( 'AWST LIKE', '<span class="awst_like_btn" id="awst_like_btn_%d"><i data-post-like="true" data-post-id="%d" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_%d">%d</label> Me gusta</span>', $post_id,$post_id,$post_id,$totalLiked ), $post_id,$post_id,$post_id,$totalLiked  );?></a>
+                    <a class="awst_like"><?php printf( _n( 'AWST LIKE', '<span class="awst_like_btn" id="awst_like_btn_%d"><i data-post-like="true" data-post-id="%d" data-object-type="activity" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_%d">%d</label> Me gusta</span>', $post_id,$post_id,$post_id,$totalLiked ), $post_id,$post_id,$post_id,$totalLiked  );?></a>
                     <div style="display: none" class="awst_like_user_list"><?php echo $users_liked ?></div>
-                    <div style="display: none"><?php echo $result_final ?></div>
+
                 <?php endif;
             endif;
         }
 
-        if( in_array($post_rate, $seletedOptions )){
-
-            $flag       =    true;
-
-            $user_ID    =    get_current_user_id();
-
-            $postdata   =    get_post_meta($post_id, 'awst_ratings', true);
-
-            $ratings    =    AwstComman::getRatings($postdata);
-
-            $useRated   =    $postdata[$user_ID];
-
-            $rate     = '<div class="awst_rate">';
-                for ($i = 1; $i <= 5; $i++) {
-                    if( $i <= $useRated ){
-                        $rate .= '<span id="star'.$i.'" class="awst_rate_btn"><i class="fa fa-star" aria-hidden="true" data-post-id="'.$post_id.'" data-rate-id="'.$i.'" ></i></span>';
-                    }else{
-                        $rate .= '<span id="star'.$i.'" class="awst_rate_btn"><i class="fa fa-star-o" aria-hidden="true" data-post-id="'.$post_id.'" data-rate-id="'.$i.'" ></i></span>';
-                    }
-                }
-            $rate .= '&nbsp;<span class="rating-text">Valuación media: &nbsp;</span> <span class="rating-text" id="average_rating">'.$ratings.'</span>';
-            $rate .= '</div>';
-        }
-
-        if( in_array($post_review, $seletedOptions )){
-
-            $flag       =    true;
-
-            $reviews    =    AwstComman::getReviews( $post_id );
-
-            $html       =    '<div id="review-list">';
-            $html    .= '<ul>';
-
-                foreach ($reviews as $key => $value) {
-
-                    $userdetail = get_user_by( 'ID', $value->post_author );
-
-                    $html .= '<li><div class="review-content"><i class="fa fa-comment" aria-hidden="true"></i>'.$value->post_content.'</div><div class="review-detail"><span class="review-author"><i class="fa fa-user" aria-hidden="true"></i>'.$userdetail->data->user_login.'</span><span class="review-date"><i class="fa fa-calendar" aria-hidden="true"></i>'.date("d F Y", strtotime($value->post_date)).'</span></div></li>';
-                }
-
-            $html .=   '</div>';
-            $html .= '</ul>';
-
-            $review = '<div class="awst_review">
-            <h2>'.get_the_title().' Reviews</h2>
-            '.$html.'
-            <textarea id="review_'.$post_id.'" name="review">Leave a Review.....</textarea>
-            <span data-post-id="'.$post_id.'" class="awst_rate_btn_review">Add Review<i class="fa fa-comment" aria-hidden="true"></i></span>
-            </div>';
-        }
 
         $messageBlock = '<div class="err_msg"><div id="awMessageBlock"></div></div>';
         $clearfix = '<div style="clear:both;"></div>';
@@ -360,20 +263,8 @@ class AwSocialTabs {
             return $content;
         }
         ?>
-       <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script type="text/javascript">
-            jQuery(document).ready(function(){
 
-                var str =jQuery(".activity-comments").find("li").eq(0).attr("id");
-                var likeid = str.replace("acomment-",'');
-                var span_likeid = "awst_like_btn_"+likeid;
-                jQuery(".activity-comments").find("li").eq(0).find(".awst_like").find("span").eq(0).attr("id",span_likeid);
-                jQuery(".activity-comments").find("li").eq(0).find(".awst_like").find("span").eq(0).find("i").attr("data-post-id",likeid);
-                var class_likeid = "total_likes_"+likeid;
-                jQuery(".activity-comments").find("li").eq(0).find(".awst_like").find(".total_like").find("label").attr("class",class_likeid);
 
-            });
-        </script> -->
         <?php
     }
 
@@ -381,6 +272,7 @@ class AwSocialTabs {
 
         $post_id        =   get_comment_ID();
         $type           =   'comment';
+
         $post_like      =   $type.'_like';
         $post_rate      =   $type.'_rate';
         $post_review    =   $type.'_review';
@@ -396,9 +288,8 @@ class AwSocialTabs {
             $flag = true;
 
             $user_ID    =   get_current_user_id();
-            $postmeta   =   get_post_meta($post_id, 'awst_like', true);
-            $isLiked    =   AwstComman::isLiked($postmeta, $user_ID);
-            $totalLiked =   AwstComman::getLikes($postmeta);
+            $isLiked    =   AwstHelper::has_user_liked_object( $user_ID, $post_id, 'comment' );
+            $totalLiked =   AwstHelper::count_object_likes( $post_id );
 
             if( $isLiked ){
                 $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.$post_id.'"><i data-post-like="true" data-post-id="'.$post_id.'" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.$post_id.'">'.$totalLiked.'</label> Me gusta</span></div>';
@@ -408,55 +299,55 @@ class AwSocialTabs {
 
         }
 
-        if( in_array($post_rate, $seletedOptions )){
-
-            $flag       =   true;
-
-            $user_ID    =   get_current_user_id();
-
-            $postdata   =   get_post_meta($post_id, 'awst_ratings', true);
-
-            $ratings    =   AwstComman::getRatings($postdata);
-
-            $useRated   =   $postdata[$user_ID];
-
-            $rate     = '<div class="awst_rate">';
-                for ($i = 1; $i <= 5; $i++) {
-                    if( $i <= $useRated ){
-                        $rate .= '<span id="star'.$i.'" class="awst_rate_btn"><i class="fa fa-star" aria-hidden="true" data-post-id="'.$post_id.'" data-rate-id="'.$i.'" ></i></span>';
-                    }else{
-                        $rate .= '<span id="star'.$i.'" class="awst_rate_btn"><i class="fa fa-star-o" aria-hidden="true" data-post-id="'.$post_id.'" data-rate-id="'.$i.'" ></i></span>';
-                    }
-                }
-            $rate .= '&nbsp;<span class="rating-text">Valuación media: &nbsp;</span> <span class="rating-text" id="average_rating">'.$ratings.'</span>';
-            $rate .= '</div>';
-        }
-
-        if( in_array($post_review, $seletedOptions )){
-
-            $flag     =     true;
-            $reviews  =     AwstComman::getReviews( $post_id );
-
-            $html     = '<div id="review-list">';
-            $html    .= '<ul>';
-
-                foreach ($reviews as $key => $value) {
-
-                    $userdetail = get_user_by( 'ID', $value->post_author );
-
-                    $html .= '<li><div class="review-content"><i class="fa fa-comment" aria-hidden="true"></i>'.$value->post_content.'</div><div class="review-detail"><span class="review-author"><i class="fa fa-user" aria-hidden="true"></i>'.$userdetail->data->user_login.'</span><span class="review-date"><i class="fa fa-calendar" aria-hidden="true"></i>'.date("d F Y", strtotime($value->post_date)).'</span></div></li>';
-                }
-
-            $html .=   '</div>';
-            $html .= '</ul>';
-
-            $review = '<div class="awst_review">
-            <h2>'.get_the_title().' Reviews</h2>
-            '.$html.'
-            <textarea id="review_'.$post_id.'" name="review">Leave a Review.....</textarea>
-            <span data-post-id="'.$post_id.'" class="awst_rate_btn_review">Add Review<i class="fa fa-comment" aria-hidden="true"></i></span>
-            </div>';
-        }
+        // if( in_array($post_rate, $seletedOptions )){
+        //
+        //     $flag       =   true;
+        //
+        //     $user_ID    =   get_current_user_id();
+        //
+        //     $postdata   =   get_post_meta($post_id, 'awst_ratings', true);
+        //
+        //     $ratings    =   AwstComman::getRatings($postdata);
+        //
+        //     $useRated   =   $postdata[$user_ID];
+        //
+        //     $rate     = '<div class="awst_rate">';
+        //         for ($i = 1; $i <= 5; $i++) {
+        //             if( $i <= $useRated ){
+        //                 $rate .= '<span id="star'.$i.'" class="awst_rate_btn"><i class="fa fa-star" aria-hidden="true" data-post-id="'.$post_id.'" data-rate-id="'.$i.'" ></i></span>';
+        //             }else{
+        //                 $rate .= '<span id="star'.$i.'" class="awst_rate_btn"><i class="fa fa-star-o" aria-hidden="true" data-post-id="'.$post_id.'" data-rate-id="'.$i.'" ></i></span>';
+        //             }
+        //         }
+        //     $rate .= '&nbsp;<span class="rating-text">Valuación media: &nbsp;</span> <span class="rating-text" id="average_rating">'.$ratings.'</span>';
+        //     $rate .= '</div>';
+        // }
+        //
+        // if( in_array($post_review, $seletedOptions )){
+        //
+        //     $flag     =     true;
+        //     $reviews  =     AwstComman::getReviews( $post_id );
+        //
+        //     $html     = '<div id="review-list">';
+        //     $html    .= '<ul>';
+        //
+        //         foreach ($reviews as $key => $value) {
+        //
+        //             $userdetail = get_user_by( 'ID', $value->post_author );
+        //
+        //             $html .= '<li><div class="review-content"><i class="fa fa-comment" aria-hidden="true"></i>'.$value->post_content.'</div><div class="review-detail"><span class="review-author"><i class="fa fa-user" aria-hidden="true"></i>'.$userdetail->data->user_login.'</span><span class="review-date"><i class="fa fa-calendar" aria-hidden="true"></i>'.date("d F Y", strtotime($value->post_date)).'</span></div></li>';
+        //         }
+        //
+        //     $html .=   '</div>';
+        //     $html .= '</ul>';
+        //
+        //     $review = '<div class="awst_review">
+        //     <h2>'.get_the_title().' Reviews</h2>
+        //     '.$html.'
+        //     <textarea id="review_'.$post_id.'" name="review">Leave a Review.....</textarea>
+        //     <span data-post-id="'.$post_id.'" class="awst_rate_btn_review">Add Review<i class="fa fa-comment" aria-hidden="true"></i></span>
+        //     </div>';
+        // }
 
         $messageBlock = '<div class="err_msg"><div id="awMessageBlock"></div></div>';
         $clearfix = '<div style="clear:both;"></div>';
@@ -477,7 +368,24 @@ class AwSocialTabs {
         wp_enqueue_style('AwSocialTabs-font-awesome','https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css');
 
         /*load frontend script. */
-        wp_enqueue_script( 'awst_custom_script', plugin_dir_url( __FILE__ ) . '/js/awst_custom_script.js', array('jquery'), '1.0.0' );
+        wp_enqueue_script( 'awst_custom_script', plugin_dir_url( __FILE__ ) . '/js/awst_custom_script.js', array('jquery'), '1.1' );
+
+        $current_user = wp_get_current_user();
+
+      	if( $current_user == 0 ) {
+      		$userdata = array(
+      			'user_logged_in' => '0',
+      		);
+      	} else {
+      		$userdata = array(
+      			'user_logged_in' => '1',
+      			'user_username' => $current_user->user_nicename,
+      			'user_profile_url' => home_url( '/miembros/'. $current_user->user_nicename )
+      		);
+      	}
+
+      	wp_localize_script( 'awst_custom_script', 'REDCOLAB', $userdata );
+
     }
 
     function loadAdminAssects( $hook ){
@@ -533,70 +441,69 @@ class AwSocialTabs {
 
             $flag       =   true;
             $user_ID    =   get_current_user_id();
-            $postmeta   =   get_post_meta($post_id, 'awst_like', true);
-            $isLiked    =   AwstComman::isLiked($postmeta, $user_ID);
-            $totalLiked =   AwstComman::getLikes($postmeta);
+            $isLiked    =   has_user_liked_object( $user_ID, $post_id, 'activity' );
+            $totalLiked =   AwstHelper::count_object_likes( $post_id, "activity" );
 
             if( $isLiked ){
-                $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.$post_id.'"><i data-post-like="true" data-post-id="'.$post_id.'" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.$post_id.'">'.$totalLiked.'</label> Me gusta</span></div>';
+                $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.$post_id.'"><i data-post-like="true" data-post-id="'.$post_id.'" data-object-type="activity" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.$post_id.'">'.$totalLiked.'</label> Me gusta</span></div>';
             }else{
-                $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.$post_id.'"><i data-post-like="true" data-post-id="'.$post_id.'" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.$post_id.'">'.$totalLiked.'</label> Me gusta</span></div>';
+                $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.$post_id.'"><i data-post-like="true" data-post-id="'.$post_id.'" data-object-type="activity" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.$post_id.'">'.$totalLiked.'</label> Me gusta</span></div>';
             }
             print_r($like);
         }
 
-        if( in_array($post_rate, $seletedOptions )){
-
-            $flag       =    true;
-
-            $user_ID    =    get_current_user_id();
-
-            $postdata   =    get_post_meta($post_id, 'awst_ratings', true);
-
-            $ratings    =    AwstComman::getRatings($postdata);
-
-            $useRated   =    $postdata[$user_ID];
-
-            $rate     = '<div class="awst_rate">';
-                for ($i = 1; $i <= 5; $i++) {
-                    if( $i <= $useRated ){
-                        $rate .= '<span id="star'.$i.'" class="awst_rate_btn"><i class="fa fa-star" aria-hidden="true" data-post-id="'.$post_id.'" data-rate-id="'.$i.'" ></i></span>';
-                    }else{
-                        $rate .= '<span id="star'.$i.'" class="awst_rate_btn"><i class="fa fa-star-o" aria-hidden="true" data-post-id="'.$post_id.'" data-rate-id="'.$i.'" ></i></span>';
-                    }
-                }
-            $rate .= '&nbsp;<span class="rating-text">Valuación media: &nbsp;</span> <span class="rating-text" id="average_rating">'.$ratings.'</span>';
-            $rate .= '</div>';
-            print_r($rate);
-        }
-
-        if( in_array($post_review, $seletedOptions )){
-
-            $flag       =   true;
-
-            $reviews    =   AwstComman::getReviews( $post_id );
-
-            $html     = '<div id="review-list">';
-            $html    .= '<ul>';
-
-                foreach ($reviews as $key => $value) {
-
-                    $userdetail = get_user_by( 'ID', $value->post_author );
-
-                    $html .= '<li><div class="review-content"><i class="fa fa-comment" aria-hidden="true"></i>'.$value->post_content.'</div><div class="review-detail"><span class="review-author"><i class="fa fa-user" aria-hidden="true"></i>'.$userdetail->data->user_login.'</span><span class="review-date"><i class="fa fa-calendar" aria-hidden="true"></i>'.date("d F Y", strtotime($value->post_date)).'</span></div></li>';
-                }
-
-            $html .=   '</div>';
-            $html .= '</ul>';
-
-            $review = '<div class="awst_review">
-            <h2>'.get_the_title().' Reviews</h2>
-            '.$html.'
-            <textarea id="review_'.$post_id.'" name="review">Leave a Review.....</textarea>
-            <span data-post-id="'.$post_id.'" class="awst_rate_btn_review">Add Review<i class="fa fa-comment" aria-hidden="true"></i></span>
-            </div>';
-            print_r($review);
-        }
+        // if( in_array($post_rate, $seletedOptions )){
+        //
+        //     $flag       =    true;
+        //
+        //     $user_ID    =    get_current_user_id();
+        //
+        //     $postdata   =    get_post_meta($post_id, 'awst_ratings', true);
+        //
+        //     $ratings    =    AwstComman::getRatings($postdata);
+        //
+        //     $useRated   =    $postdata[$user_ID];
+        //
+        //     $rate     = '<div class="awst_rate">';
+        //         for ($i = 1; $i <= 5; $i++) {
+        //             if( $i <= $useRated ){
+        //                 $rate .= '<span id="star'.$i.'" class="awst_rate_btn"><i class="fa fa-star" aria-hidden="true" data-post-id="'.$post_id.'" data-rate-id="'.$i.'" ></i></span>';
+        //             }else{
+        //                 $rate .= '<span id="star'.$i.'" class="awst_rate_btn"><i class="fa fa-star-o" aria-hidden="true" data-post-id="'.$post_id.'" data-rate-id="'.$i.'" ></i></span>';
+        //             }
+        //         }
+        //     $rate .= '&nbsp;<span class="rating-text">Valuación media: &nbsp;</span> <span class="rating-text" id="average_rating">'.$ratings.'</span>';
+        //     $rate .= '</div>';
+        //     print_r($rate);
+        // }
+        //
+        // if( in_array($post_review, $seletedOptions )){
+        //
+        //     $flag       =   true;
+        //
+        //     $reviews    =   AwstComman::getReviews( $post_id );
+        //
+        //     $html     = '<div id="review-list">';
+        //     $html    .= '<ul>';
+        //
+        //         foreach ($reviews as $key => $value) {
+        //
+        //             $userdetail = get_user_by( 'ID', $value->post_author );
+        //
+        //             $html .= '<li><div class="review-content"><i class="fa fa-comment" aria-hidden="true"></i>'.$value->post_content.'</div><div class="review-detail"><span class="review-author"><i class="fa fa-user" aria-hidden="true"></i>'.$userdetail->data->user_login.'</span><span class="review-date"><i class="fa fa-calendar" aria-hidden="true"></i>'.date("d F Y", strtotime($value->post_date)).'</span></div></li>';
+        //         }
+        //
+        //     $html .=   '</div>';
+        //     $html .= '</ul>';
+        //
+        //     $review = '<div class="awst_review">
+        //     <h2>'.get_the_title().' Reviews</h2>
+        //     '.$html.'
+        //     <textarea id="review_'.$post_id.'" name="review">Leave a Review.....</textarea>
+        //     <span data-post-id="'.$post_id.'" class="awst_rate_btn_review">Add Review<i class="fa fa-comment" aria-hidden="true"></i></span>
+        //     </div>';
+        //     print_r($review);
+        // }
 
         $messageBlock = '<div class="err_msg"><div id="awMessageBlock"></div></div>';
         $clearfix = '<div style="clear:both;"></div>';
@@ -628,16 +535,16 @@ class AwSocialTabs {
         if( in_array($post_like, $seletedOptions ) ){
 
             $flag       =   true;
+            $post_id = get_the_ID();
 
             $user_ID    =   get_current_user_id();
-            $postmeta   =   get_post_meta(get_the_ID(), 'awst_like', true);
-            $isLiked    =   AwstComman::isLiked($postmeta, $user_ID);
-            $totalLiked =   AwstComman::getLikes($postmeta);
+            $isLiked    =   has_user_liked_object( $user_ID, $post_id, 'post' );
+            $totalLiked =   AwstHelper::count_object_likes( $post_id, "post" );
 
             if( $isLiked ){
-                $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.get_the_ID().'"><i data-post-like="true" data-post-id="'.get_the_ID().'" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.get_the_ID().'">'.$totalLiked.'</label> Me gusta</span></div>';
+                $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.get_the_ID().'"><i data-post-like="true" data-post-id="'.get_the_ID().'" data-object-type="post" class="fa fa-thumbs-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.get_the_ID().'">'.$totalLiked.'</label> Me gusta</span></div>';
             }else{
-                $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.get_the_ID().'"><i data-post-like="true" data-post-id="'.get_the_ID().'" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.get_the_ID().'">'.$totalLiked.'</label> Me gusta</span></div>';
+                $like = '<div class="awst_like"><span class="awst_like_btn" id="awst_like_btn_'.get_the_ID().'"><i data-post-like="true" data-post-id="'.get_the_ID().'" data-object-type="post" class="fa fa-thumbs-o-up" aria-hidden="true"></i></span><span class="total_like"><label id="total_likes" class="total_likes_'.get_the_ID().'">'.$totalLiked.'</label> Me gusta</span></div>';
             }
 
             print_r($like);

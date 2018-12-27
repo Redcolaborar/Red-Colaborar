@@ -22,15 +22,15 @@
 				<li class="swift-tile wide">
 					<ul id="swift-images-stat-container">
 						<li>
-							<label><?php esc_html_e('Queued Images', 'swift-perforamce');?></label>
+							<label><?php esc_html_e('Queued Images', 'swift-performance');?></label>
 							<div class="swift-enqueued-image-count swift-image-count"><?php echo esc_html($image_table->stat['queued']);?></div>
 						</li>
 						<li>
-							<label><?php esc_html_e('Optimized Images', 'swift-perforamce');?></label>
+							<label><?php esc_html_e('Optimized Images', 'swift-performance');?></label>
 							<div class="swift-optimized-image-count swift-image-count"><?php echo esc_html($image_table->stat['optimized']);?></div>
 						</li>
 						<li>
-							<label><?php esc_html_e('Saved', 'swift-perforamce');?></label>
+							<label><?php esc_html_e('Saved', 'swift-performance');?></label>
 							<div class="saved-space-count swift-image-count"><?php echo esc_html(Swift_Performance_Image_Optimizer::formatted_size(max(0, $image_table->stat['original_size'] - $image_table->stat['current_size'])));?></div>
 						</li>
 					</ul>
@@ -39,7 +39,7 @@
 						<div class="swift-bar-chart gray original-size">
 							<div class="swift-bar-chart-bar-description">
 								<label>
-									<?php esc_html_e('Original size', 'swift-perforamce')?>
+									<?php esc_html_e('Original size', 'swift-performance')?>
 									<span><?php echo esc_html(Swift_Performance_Image_Optimizer::formatted_size($image_table->stat['original_size']));?></span>
 								</label>
 							</div>
@@ -52,7 +52,7 @@
 						<div class="swift-bar-chart green optimized-size">
 							<div class="swift-bar-chart-bar-description">
 								<label>
-									<?php esc_html_e('Current size', 'swift-perforamce')?>
+									<?php esc_html_e('Current size', 'swift-performance')?>
 									<span><?php echo esc_html(Swift_Performance_Image_Optimizer::formatted_size($image_table->stat['current_size']));?></span>
 								</label>
 							</div>
@@ -99,7 +99,7 @@
 		<h3><?php esc_html_e('Optimizer Settings', 'swift-performance');?></h3>
 		<div class="swift-range-slider">
 		 	<div class="swift-custom-settings-cell">
-				<label><?php esc_html_e('JPEG quality', 'swift-perforamce');?></label>
+				<label><?php esc_html_e('JPEG quality', 'swift-performance');?></label>
 	  		</div>
 			<div class="swift-custom-settings-cell">
 				<input class="swift-range-slider__range" type="range" name="jpeg-quality" type="range" value="<?php echo esc_attr(Swift_Performance_Lite::get_option('jpeg-quality'));?>" data-global="<?php echo esc_attr(Swift_Performance_Lite::get_option('jpeg-quality'));?>" min="0" max="100">
@@ -108,7 +108,7 @@
 		</div>
 		<div class="swift-range-slider">
 		 	<div class="swift-custom-settings-cell">
-				<label><?php esc_html_e('PNG quality', 'swift-perforamce');?></label>
+				<label><?php esc_html_e('PNG quality', 'swift-performance');?></label>
 	  		</div>
 			<div class="swift-custom-settings-cell">
 				<input class="swift-range-slider__range" type="range" name="png-quality" type="range" value="<?php echo esc_attr(Swift_Performance_Lite::get_option('png-quality'));?>" data-global="<?php echo esc_attr(Swift_Performance_Lite::get_option('png-quality'));?>" min="0" max="100">
@@ -117,7 +117,7 @@
 		</div>
 		<div class="swift-custom-settings-row">
 			<div class="swift-custom-settings-cell">
-				<label><?php esc_html_e('Resize Large Images', 'swift-perforamce');?></label>
+				<label><?php esc_html_e('Resize Large Images', 'swift-performance');?></label>
 			</div>
 			<div class="swift-custom-settings-cell">
 				<input type="checkbox" name="resize-large-images" value="enabled" <?php checked(Swift_Performance_Lite::get_option('resize-large-images'),1);?> data-global="<?php echo esc_attr(Swift_Performance_Lite::get_option('resize-large-images'));?>">
@@ -126,13 +126,13 @@
 		</div>
 		<div class="swift-custom-settings-row">
 			<div class="swift-custom-settings-cell">
-				<label><?php esc_html_e('Keep Original Images', 'swift-perforamce');?> </label>
+				<label><?php esc_html_e('Keep Original Images', 'swift-performance');?> </label>
 			</div>
 			<div class="swift-custom-settings-cell">
 				<input type="checkbox" name="keep-original-images" value="enabled" <?php checked(Swift_Performance_Lite::get_option('keep-original-images'),1);?> data-global="<?php echo esc_attr(Swift_Performance_Lite::get_option('keep-original-images'));?>">
 			</div>
 		</div>
 		<br>
-		<button id="swift-close-custom-settings" class="swift-btn swift-btn-green"><?php esc_html_e('Close', 'swift-perforamce');?></button> <button id="swift-reset-custom-settings" class="swift-btn swift-btn-gray"><?php esc_html_e('Use Global Settings', 'swift-perforamce');?></button>
+		<button id="swift-close-custom-settings" class="swift-btn swift-btn-green"><?php esc_html_e('Close', 'swift-performance');?></button> <button id="swift-reset-custom-settings" class="swift-btn swift-btn-gray"><?php esc_html_e('Use Global Settings', 'swift-performance');?></button>
 	</div>
 </div>

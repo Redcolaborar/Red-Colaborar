@@ -162,6 +162,20 @@ function wsl_add_plugin_action_links( $links, $file )
 
 add_filter( 'plugin_action_links', 'wsl_add_plugin_action_links', 10, 2 );
 
+// add filter to make it work after FB updates see https://wordpress.org/support/topic/error-when-logging-with-fb/
+
+function wsl_change_default_permissons( $provider_scope, $provider )
+{
+	if( 'facebook' == strtolower( $provider ) )
+	{
+		$provider_scope = 'email, public_profile';
+	}
+
+	return $provider_scope;
+}
+
+add_filter( 'wsl_hook_alter_provider_scope', 'wsl_change_default_permissons', 10, 2 );
+
 // --------------------------------------------------------------------
 
 /**

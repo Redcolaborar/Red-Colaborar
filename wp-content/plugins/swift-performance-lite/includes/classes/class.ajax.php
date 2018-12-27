@@ -11,6 +11,7 @@ class Swift_Performance_Ajax {
             add_action('wp_ajax_swift_performance_clear_assets_cache', array($this, 'ajax_clear_assets_cache'));
             add_action('wp_ajax_swift_performance_update_prebuild_priority', array($this, 'ajax_update_prebuild_priority'));
             add_action('wp_ajax_swift_performance_prebuild_cache', array($this, 'ajax_prebuild_cache'));
+            add_action('wp_ajax_swift_performance_stop_prebuild_cache', array($this, 'ajax_stop_prebuild_cache'));
             add_action('wp_ajax_swift_performance_single_prebuild', array($this, 'ajax_single_prebuild'));
             add_action('wp_ajax_swift_performance_single_clear_cache', array($this, 'ajax_single_clear_cache'));
             add_action('wp_ajax_swift_performance_remove_warmup_url', array($this, 'ajax_remove_warmup_url'));
@@ -22,6 +23,8 @@ class Swift_Performance_Ajax {
             add_action('wp_ajax_swift_performance_show_log', array($this, 'ajax_show_log'));
             add_action('wp_ajax_swift_performance_clear_logs', array($this, 'ajax_clear_logs'));
             add_action('wp_ajax_swift_performance_bypass_cron', array($this, 'ajax_bypass_cron'));
+            add_action('wp_ajax_swift_performance_dismiss_pointer', array($this, 'ajax_dismiss_pointer'));
+            add_action('wp_ajax_swift_performance_dismiss_notice', array($this, 'ajax_dismiss_notice'));
       }
 
 
@@ -211,7 +214,7 @@ class Swift_Performance_Ajax {
 		}
 
 		$table_name = SWIFT_PERFORMANCE_TABLE_PREFIX . 'warmup';
-		$wpdb->query($wpdb->prepare("INSERT IGNORE INTO {$table_name} (id, url, priority, menu_item) VALUES (%s, %s, %d, 0)", md5($url), $url, $priority ));
+		$wpdb->query($wpdb->prepare("INSERT IGNORE INTO {$table_name} (id, url, priority, menu_item) VALUES (%s, %s, %d, 0)", Swift_Performance_Lite::get_warmup_id($url), $url, $priority ));
 
             Swift_Performance_Lite::log('Add warmup URL: ' . esc_html($url), 9);
 
@@ -233,7 +236,10 @@ class Swift_Performance_Ajax {
             // Drop and re-create warmup table
             $wpdb->query('DROP TABLE IF EXISTS ' . SWIFT_PERFORMANCE_TABLE_PREFIX . 'warmup');
             delete_option(SWIFT_PERFORMANCE_TABLE_PREFIX . 'db_version');
+            delete_transient('swift_performance_initial_prebuild_links');
             Swift_Performance_Lite::db_install();
+            Swift_Performance_Cache::clear_all_cache();
+            Swift_Performance_Lite::get_prebuild_urls();
 
             Swift_Performance_Lite::log('Reset warmup table', 9);
 
@@ -244,7 +250,7 @@ class Swift_Performance_Ajax {
 		);
 	}
 
-	/**
+      /**
 	 * Prebuild cache ajax callback
 	 */
 	public function ajax_prebuild_cache(){
@@ -253,11 +259,29 @@ class Swift_Performance_Ajax {
 
 		Swift_Performance_Lite::log('Ajax action: (prebuild cache)', 9);
 
+            Swift_Performance_Lite::stop_prebuild();
 		wp_schedule_single_event(time(), 'swift_performance_prebuild_cache');
 		wp_send_json(
 			array(
 				'type' => 'info',
 				'text' => __('Prebuilding cache is in progress', 'swift-performance')
+			)
+		);
+	}
+
+      /**
+	 * Stop prebuild cache ajax callback
+	 */
+	public function ajax_stop_prebuild_cache(){
+		// Check user and nonce
+		$this->ajax_auth();
+
+		Swift_Performance_Lite::log('Ajax action: (stop prebuild cache)', 9);
+		Swift_Performance_Lite::stop_prebuild();
+		wp_send_json(
+			array(
+				'type' => 'info',
+				'text' => __('Prebuilding cache stopped by user', 'swift-performance')
 			)
 		);
 	}
@@ -300,7 +324,7 @@ class Swift_Performance_Ajax {
 	}
 
 	/**
-	 * Show the cache status
+	 * Show the active threads
 	 */
 	public function ajax_change_thread_limit(){
 		// Check user and nonce
@@ -424,7 +448,7 @@ class Swift_Performance_Ajax {
 
             ob_start();
             //1x1 Transparent Gif
-            echo "\x47\x49\x46\x38\x37\x61\x1\x0\x1\x0\x80\x0\x0\xfc\x6a\x6c\x0\x0\x0\x2c\x0\x0\x0\x0\x1\x0\x1\x0\x0\x2\x2\x44\x1\x0\x3b";
+            echo base64_decode('R0lGODlhAQABAJAAAP8AAAAAACH5BAUQAAAALAAAAAABAAEAAAICBAEAOw==');
             //Send full content and keep executeing
             header('Connection: close');
             header('Content-Length: '.ob_get_length());
@@ -447,6 +471,30 @@ class Swift_Performance_Ajax {
                         }
                   }
             }
+
+      }
+
+      /**
+       * Dismiss tooltip
+       */
+      public function ajax_dismiss_pointer(){
+            $this->ajax_auth();
+
+            $pointers   = get_user_meta(get_current_user_id(), 'swift_pointers', true);
+            $pointers[$_POST['id']] = $_POST['id'];
+            update_user_meta(get_current_user_id(), 'swift_pointers', $pointers);
+
+      }
+
+      /**
+       * Dismiss notice
+       */
+      public function ajax_dismiss_notice(){
+            $this->ajax_auth();
+
+            $messages = apply_filters('swift_performance_admin_notices', get_option('swift_performance_messages', array()));
+		unset($messages[$_POST['id']]);
+		update_option('swift_performance_messages', $messages);
 
       }
 

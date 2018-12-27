@@ -9,8 +9,9 @@ class Swift_Performance_Loader {
 	public static function load(){
 		wp_cookie_constants();
 		$plugins = get_option('active_plugins');
-		if (in_array('swift-performance/performance.php', $plugins)){
-			include_once trailingslashit(str_replace('mu-plugins', 'plugins', __DIR__)) . 'swift-performance/performance.php';
+		$plugin_file = '%PLUGIN_DIR%performance.php';
+		if (in_array('%PLUGIN_SLUG%', $plugins) && file_exists($plugin_file)){
+			include_once $plugin_file;
 		}
 	}
 }

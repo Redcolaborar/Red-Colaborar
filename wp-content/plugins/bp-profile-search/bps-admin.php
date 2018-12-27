@@ -4,8 +4,8 @@ add_action ('add_meta_boxes', 'bps_add_meta_boxes');
 function bps_add_meta_boxes ()
 {
 	add_meta_box ('bps_fields_box', __('Form Fields', 'bp-profile-search'), 'bps_fields_box', 'bps_form', 'normal');
-	add_meta_box ('bps_attributes', __('Form Attributes', 'bp-profile-search'), 'bps_attributes', 'bps_form', 'side');
-	add_meta_box ('bps_directory', __('Add to Directory', 'bp-profile-search'), 'bps_directory', 'bps_form', 'side');
+	add_meta_box ('bps_attributes', __('Form Settings', 'bp-profile-search'), 'bps_attributes', 'bps_form', 'side');
+	add_meta_box ('bps_template', __('Form Template', 'bp-profile-search'), 'bps_template', 'bps_form', 'side');
 	add_meta_box ('bps_persistent', __('Persistent Search', 'bp-profile-search'), 'bps_persistent', 'bps_form', 'side');
 }
 
@@ -101,7 +101,7 @@ function bps_attributes ($post)
 		<option value='GET' <?php selected ($options['method'], 'GET'); ?>><?php _e('GET', 'bp-profile-search'); ?></option>
 	</select>
 
-	<p><strong><?php _e('Form Action (Results Directory)', 'bp-profile-search'); ?></strong></p>
+	<p><strong><?php _e('Directory (Results Page)', 'bp-profile-search'); ?></strong></p>
 	<select name="options[action]" id="action">
 <?php
 	$dirs = bps_directories ();
@@ -114,45 +114,85 @@ function bps_attributes ($post)
 ?>
 	</select>
 
-	<p><?php _e('Need help? Use the Help tab in the upper right of your screen.'); ?></p>
-<?php
-}
-
-function bps_directory ($post)
-{
-	$options = bps_meta ($post->ID);
-?>
 	<p><strong><?php _e('Add to Directory', 'bp-profile-search'); ?></strong></p>
 	<select name="options[directory]" id="directory">
 		<option value='Yes' <?php selected ($options['directory'], 'Yes'); ?>><?php _e('Yes', 'bp-profile-search'); ?></option>
 		<option value='No' <?php selected ($options['directory'], 'No'); ?>><?php _e('No', 'bp-profile-search'); ?></option>
 	</select>
 
-	<p><strong><?php _e('Form Template', 'bp-profile-search'); ?></strong></p>
-	<select name="options[template]" id="template">
+	<p><?php _e('Need help? Use the Help tab above the screen title.'); ?></p>
 <?php
-	$templates =  bps_templates ();
-	foreach ($templates as $template)
-	{
+}
+
+function bps_template ($post)
+{
+	$form = $post->ID;
+	$meta = bps_meta ($form);
+	$current_template = bps_valid_template ($meta['template']);
 ?>
-		<option value='<?php echo $template; ?>' <?php selected ($options['template'], $template); ?>><?php echo $template; ?></option>
+	<p><strong><?php _e('Form Template', 'bp-profile-search'); ?></strong></p>
+	<select id="template" name="options[template]">
+	<?php foreach (bps_templates() as $template) { ?>
+		<option value='<?php echo $template; ?>' <?php selected ($current_template, $template); ?>><?php echo $template; ?></option>
+	<?php } ?>
+	</select>
+	<span class="spinner"></span>
+
+	<div id="template_options">
+		<?php bps_template_options ($form, $current_template); ?>
+	</div>
+	<input type="hidden" id="form_id" value="<?php echo $form; ?>">
+<?php
+}
+
+add_action ('wp_ajax_template_options', 'bps_ajax_template_options');
+function bps_ajax_template_options ()
+{
+	bps_template_options ($_POST['form'], $_POST['template']);
+	exit;
+}
+
+function bps_template_options ($form, $template)
+{
+	echo bps_locate_template ($template);
+
+	$located = bp_locate_template ($template. '.php');
+	if ($located === false)  return false;
+
+	$meta = bps_meta ($form);
+	$options = isset ($meta['template_options'][$template])? $meta['template_options'][$template]: array ();
+
+	ob_start ();
+	$response = include $located;
+	$output = ob_get_clean ();
+
+	if (strpos ($response, 'end_of_options') === 0)
+	{
+		echo $output;
+		$located = str_replace (WP_CONTENT_DIR, '', $located);
+		echo "<!-- by $located -->";
+	}
+	else
+	{
+		if (!isset ($options['header']))  $options['header'] = __('<h4>Advanced Search</h4>', 'bp-profile-search');
+		if (!isset ($options['toggle']))  $options['toggle'] = 'Enabled';
+		if (!isset ($options['button']))  $options['button'] = __('Hide/Show Form', 'bp-profile-search');
+?>
+		<p><strong><?php _e('Form Header', 'bp-profile-search'); ?></strong></p>
+		<textarea name="options[header]" id="header" class="large-text code" rows="4"><?php echo $options['header']; ?></textarea>
+
+		<p><strong><?php _e('Toggle Form', 'bp-profile-search'); ?></strong></p>
+		<select name="options[toggle]" id="toggle">
+			<option value='Enabled' <?php selected ($options['toggle'], 'Enabled'); ?>><?php _e('Enabled', 'bp-profile-search'); ?></option>
+			<option value='Disabled' <?php selected ($options['toggle'], 'Disabled'); ?>><?php _e('Disabled', 'bp-profile-search'); ?></option>
+		</select>
+
+		<p><strong><?php _e('Toggle Form Button', 'bp-profile-search'); ?></strong></p>
+		<input type="text" name="options[button]" id="button" value="<?php echo esc_attr ($options['button']); ?>" />
 <?php
 	}
-?>
-	</select>
 
-	<p><strong><?php _e('Form Header', 'bp-profile-search'); ?></strong></p>
-	<textarea name="options[header]" id="header" class="large-text code" rows="4"><?php echo $options['header']; ?></textarea>
-
-	<p><strong><?php _e('Toggle Form', 'bp-profile-search'); ?></strong></p>
-	<select name="options[toggle]" id="toggle">
-		<option value='Enabled' <?php selected ($options['toggle'], 'Enabled'); ?>><?php _e('Enabled', 'bp-profile-search'); ?></option>
-		<option value='Disabled' <?php selected ($options['toggle'], 'Disabled'); ?>><?php _e('Disabled', 'bp-profile-search'); ?></option>
-	</select>
-
-	<p><strong><?php _e('Toggle Form Button', 'bp-profile-search'); ?></strong></p>
-	<input type="text" name="options[button]" id="button" value="<?php echo esc_attr ($options['button']); ?>" />
-<?php
+	return true;
 }
 
 function bps_persistent ($post)
@@ -171,6 +211,8 @@ function bps_update_meta ($form, $post)
 {
 	if ($post->post_type != 'bps_form' || $post->post_status != 'publish')  return false;
 	if (empty ($_POST['options']) && empty ($_POST['bps_options']))  return false;
+
+	$old_meta = bps_meta ($form);
 
 	$meta = array ();
 	$meta['field_code'] = array ();
@@ -191,20 +233,34 @@ function bps_update_meta ($form, $post)
 		$meta['field_code'][] = $code;
 		$meta['field_label'][] = isset ($posted['field_label'][$k])? stripslashes ($posted['field_label'][$k]): '';
 		$meta['field_desc'][] = isset ($posted['field_desc'][$k])? stripslashes ($posted['field_desc'][$k]): '';
-		$meta['field_mode'][] = bps_Fields::validate_filter ($fields[$code], isset ($posted['field_mode'][$k])? $posted['field_mode'][$k]: 'none');
+		$meta['field_mode'][] = bps_Fields::valid_filter ($fields[$code], isset ($posted['field_mode'][$k])? $posted['field_mode'][$k]: 'none');
 
 		bps_set_wpml ($form, $code, 'label', end ($meta['field_label']));
 		bps_set_wpml ($form, $code, 'comment', end ($meta['field_desc']));
 	}
 
 	bps_set_option ('persistent', $_POST['options']['persistent']);
-	foreach (array ('directory', 'template', 'header', 'toggle', 'button', 'method', 'action') as $key)
+	unset ($_POST['options']['persistent']);
+
+	foreach (array ('method', 'action', 'directory', 'template') as $key)
+	{
 		$meta[$key] = stripslashes ($_POST['options'][$key]);
+		unset ($_POST['options'][$key]);
+	}
 
-	bps_set_wpml ($form, '-', 'header', $meta['header']);
-	bps_set_wpml ($form, '-', 'toggle form', $meta['button']);
+	if (bps_is_template ($meta['template']))
+	{
+		$template_options = stripslashes_deep ($_POST['options']);
+		$meta['template_options'] = $old_meta['template_options'];
+		$meta['template_options'][$meta['template']] = $template_options;
 
+		if (isset ($template_options['header']))  bps_set_wpml ($form, '-', 'header', $template_options['header']);
+		if (isset ($template_options['button']))  bps_set_wpml ($form, '-', 'toggle form', $template_options['button']);
+	}
+
+	bps_set_wpml ($form, '-', 'title', $post->post_title);
 	update_post_meta ($form, 'bps_options', $meta);
+
 	return true;
 }
 

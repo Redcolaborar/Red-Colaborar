@@ -2,187 +2,226 @@
 
 class Swift_Performance_Setup {
 
-	/**
-	 * Array of steps
-	 * @var array
-	 */
-	public $steps = array();
-
-	/**
-	 * Current step
-	 * @var array
-	 */
-	public $current_step = array();
-
-	/**
-	 * Show steps in footer
-	 * @var boolean
-	 */
-	public $show_steps = true;
-
-	/**
-	 * Localization array for JS
-	 * @var array
-	 */
-	public $localize = array();
-
-	/**
-	 * Analyze array
-	 */
-	public $analyze = array();
-
-	public $disable_continue = false;
-
-	/**
-	 * Catch pseudo function calls and do nothing (we use init for early catch the page);
-	 * @param string $function
-	 * @param array $params
-	 */
-	public function __call($function, $params){
-		// Do nothing
-	}
-
-	/**
-	 * Create instance
-	 */
-	public function __construct() {
-		// Ajax handlers
-		add_action('wp_ajax_swift_performance_setup', array($this, 'ajax_handler'));
-
-		// Return if page is not the Swift Performance Setup Wizard page
-		if (!isset($_GET['subpage']) || !in_array($_GET['subpage'], array('setup', 'deactivate')) || !isset($_GET['page']) || $_GET['page'] != 'swift-performance' ){
-			return false;
-		}
+	public function __construct(){
 
 		ini_set('display_errors', 0);
 
-		// Set installer directory path
-		if (!defined('SWIFT_PERFORMANCE_SETUP_DIR')){
-			define ('SWIFT_PERFORMANCE_SETUP_DIR', SWIFT_PERFORMANCE_DIR . 'includes/setup/');
+     		// Set installer directory path
+     		if (!defined('SWIFT_PERFORMANCE_SETUP_DIR')){
+     			define ('SWIFT_PERFORMANCE_SETUP_DIR', SWIFT_PERFORMANCE_DIR . 'includes/setup/');
+     		}
+
+     		// Set installer directory URI
+     		if (!defined('SWIFT_PERFORMANCE_SETUP_URI')){
+     			define('SWIFT_PERFORMANCE_SETUP_URI', SWIFT_PERFORMANCE_URI . 'includes/setup/');
+     		}
+
+     		// Ajax handlers
+     		add_action('wp_ajax_swift_performance_setup', array($this, 'ajax_handler'));
+
+		// Include Wizard
+		if (isset($_GET['subpage']) && in_array($_GET['subpage'], array('setup', 'deactivate')) && isset($_GET['page']) && $_GET['page'] == SWIFT_PERFORMANCE_SLUG ){
+			add_action('admin_init', array($this, 'init'));
 		}
 
-		// Set installer directory URI
-		if (!defined('SWIFT_PERFORMANCE_SETUP_URI')){
-			define('SWIFT_PERFORMANCE_SETUP_URI', SWIFT_PERFORMANCE_URI . 'includes/setup/');
-		}
-
-		// Init steps
-		if ($_GET['subpage'] == 'setup'){
-			$this->steps = array(
-					array(
-						'title'		=> (isset($_REQUEST['swift-nonce']) ? esc_html__('Analyze your site', 'swift-performance') : esc_html__('Welcome', 'swift-performance')),
-						'id'			=> 'analyze',
-						'disable-skip'	=> true
-					),
-					array(
-						'title'	=> esc_html__('Caching mode', 'swift-performance'),
-						'id'		=> 'caching',
-					),
-					array(
-						'title'	=> esc_html__('Optimization', 'swift-performance'),
-						'id'		=> 'manage-assets',
-					),
-					array(
-						'title'	=> esc_html__('Media', 'swift-performance'),
-						'id'		=> 'media',
-					),
-					array(
-						'title'	=> esc_html__('Finish', 'swift-performance'),
-						'id'		=> 'finish',
-					)
-			);
-		}
-		else if ($_GET['subpage'] == 'deactivate'){
-			$this->steps = array(
-					array(
-						'title'	=> esc_html__('Deactivation Settings', 'swift-performance'),
-						'id'		=> 'deactivate-settings',
-						'disable-skip'	=> true
-					),
-					array(
-						'title'	=> esc_html__('Deactivate', 'swift-performance'),
-						'id'		=> 'deactivate',
-					)
-			);
-		}
-
-		// Init
-		add_action('admin_init', array($this, 'init'));
-
-		// Change wp title
-		add_action('wp_title', array($this, 'wp_title'));
 	}
 
-	/**
-	 * Init setup wizard
-	 */
 	public function init(){
-		if (!current_user_can('manage_options')){
-			return;
-		}
-
 		// Localization
 		$this->localize = array(
 				'i18n' => array(
-						'Upload' => esc_html__('Upload', 'swift-performance'),
-						'Modify' => esc_html__('Modify', 'swift-performance'),
-						'Please wait...' => esc_html__('Please wait...', 'swift-performance')
+					'Upload' => esc_html__('Upload', 'swift-performance'),
+					'Modify' => esc_html__('Modify', 'swift-performance'),
+					'Please wait...' => esc_html__('Please wait...', 'swift-performance'),
+					'Test timed out' => esc_html__('Test timed out', 'swift-performance')
 				),
-				'ajax_url'		=> add_query_arg('page', 'swift_performance_setup', admin_url('admin-ajax.php')),
+				'ajax_url'		=> admin_url('admin-ajax.php'),
 				'nonce'		=> wp_create_nonce('swift-performance-setup'),
+				'luv_nonce'		=> wp_create_nonce('luv-framework-fields-ajax'),
+				'home_url'		=> home_url()
 		);
 
 		// Enqueue Setup Wizard CSS
+		wp_enqueue_style('swift-performance', SWIFT_PERFORMANCE_URI. 'css/styles.css', array(), SWIFT_PERFORMANCE_VER);
 		wp_enqueue_style('swift-performance-setup', SWIFT_PERFORMANCE_SETUP_URI . 'css/setup.css', array(), SWIFT_PERFORMANCE_VER);
+		wp_enqueue_style('luv-framework', LUV_FRAMEWORK_URL . 'assets/css/fields.css');
+		wp_enqueue_style('luv-framework-modal', LUV_FRAMEWORK_URL . 'assets/css/modal.css');
+		wp_enqueue_style('font-awesome-5', LUV_FRAMEWORK_URL . 'assets/icons/fa5/css/all.min.css');
+		wp_enqueue_style('animate-css', SWIFT_PERFORMANCE_SETUP_URI . 'css/animate.css');
 
 		// Enqueue Setup Wizard JS
 		wp_enqueue_script('swift-performance-setup', SWIFT_PERFORMANCE_SETUP_URI . 'js/setup.js', array(), SWIFT_PERFORMANCE_VER);
 		wp_localize_script('swift-performance-setup', 'swift_performance', $this->localize);
+		wp_enqueue_script('luv-framework-modal', LUV_FRAMEWORK_URL . 'assets/js/modal.js', array(), false, true);
 
 		//WP admin styles
 		wp_enqueue_style( 'wp-admin' );
 
-		// Set current step
-		$step = isset($_REQUEST['step']) ? (int)$_REQUEST['step'] : 0;
+		// Plugin checkings
+		$active_plugins = get_option('active_plugins');
+		$is_woocommerce_active = apply_filters('swift_performance_is_woocommerce_active', in_array('woocommerce/woocommerce.php', $active_plugins));
 
+		// Setup already ran
+		update_option('swift-perforomance-initial-setup-wizard',1);
 
-		$this->current_step 		= $this->steps[$step];
-		$this->current_step['index']	= $step;
-
-		// Do current step actions
-		$this->do_step();
-
-		// Render step
-		$this->render();
+		// Deactivation
+		if (isset($_GET['subpage']) && $_GET['subpage'] == 'deactivate'){
+			include_once SWIFT_PERFORMANCE_SETUP_DIR . 'templates/deactivate.tpl.php';
+		}
+		// Setup
+		else {
+			include_once SWIFT_PERFORMANCE_SETUP_DIR . 'templates/wizard.tpl.php';
+		}
+		die;
 	}
 
 	/**
-	 * Do current step actions
+	 * Ajax Handler
 	 */
-	public function do_step(){
-		if (isset($_REQUEST['swift-nonce']) && wp_verify_nonce($_REQUEST['swift-nonce'], 'swift-performance-setup') && current_user_can('manage_options')){
-			switch ($this->current_step['id']){
-				// Analyze
-				case 'analyze':
-					// Reset Redux
-					global $swift_performance_options;
-					$reduxsa = ReduxSAFrameworkInstances::get_instance('swift_performance_options');
-					$swift_performance_options = $reduxsa->_default_values();
-					update_option('swift_performance_options', $reduxsa->_default_values());
+	public function ajax_handler(){
+		global $wpdb;
+		if (!isset($_REQUEST['nonce']) || !wp_verify_nonce($_REQUEST['nonce'], 'swift-performance-setup') && current_user_can('manage_options')){
+			wp_send_json(array(
+				'result' => 'error',
+				'message' => esc_html__('Your session has been expired. Please refresh the page and try again.','swift-performance')
+			));
+		}
 
-					// Empty cache
-					Swift_Performance_Cache::clear_all_cache();
+		$next_slide = '';
+		$result	= 'success';
+		$message	= '';
 
-					$this->analyze();
+		if (isset($_POST['setup-action'])){
+			switch ($_POST['setup-action']){
+				case 'set-purchase-key':
+				$response = swift_performance_purchase_key_validate_callback(true, $_POST['key']);
+
+				if ($response === true){
+					Swift_Performance_Lite::update_option('purchase-key', $_POST['key']);
+					$message = esc_html__('Purchase key has been saved.','swift-performance');
+				}
+				else if (isset($result['warning'])){
+					$result	= 'error';
+					$message	= $result['warning'];
+				}
+				else if (isset($result['error'])){
+					$result	= 'error';
+					$message	= $result['error'];
+				}
 				break;
-				case 'caching':
-					// Empty cache
-					Swift_Performance_Cache::clear_all_cache();
+				case 'set-cloudflare-api':
+					Swift_Performance_Lite::update_option('cloudflare-auto-purge', $_POST['auto-purge']);
+					Swift_Performance_Lite::update_option('cloudflare-email', $_POST['cloudflare-email']);
+					Swift_Performance_Lite::update_option('cloudflare-api-key', $_POST['cloudflare-api-key']);
+					$message = __('Cloudflare API has been set.', 'swift-performance');
+				break;
+				case 'reset-defaults':
+					$options    = Luv_Framework_Fields::$instances['options']['swift_performance_options']->get_defaults();
+					$options['purchase-key'] = Swift_Performance_Lite::get_option('purchase-key');
+					update_option('swift_performance_options', $options);
+					Swift_Performance_Lite::update_option('merge-styles', 1);
+					Swift_Performance_Lite::update_option('merge-scripts', 1);
+				break;
+				case 'set-uninstall-options':
+					update_option('swift-performance-deactivation-settings', array(
+						'keep-settings' => (isset($_POST['keep-settings']) ? $_POST['keep-settings'] : 0),
+						'keep-custom-htaccess' => (isset($_POST['keep-custom-htaccess']) ? $_POST['keep-custom-htaccess'] : 0),
+						'keep-warmup-table' => (isset($_POST['keep-warmup-table']) ? $_POST['keep-warmup-table'] : 0),
+						'keep-image-optimizer-table' => (isset($_POST['keep-image-optimizer-table']) ? $_POST['keep-image-optimizer-table'] : 0),
+						'keep-logs' => (isset($_POST['keep-logs']) ? $_POST['keep-logs'] : 0)
+					), false);
+				break;
+				case 'timeout';
+					delete_transient('swift_performance_analyze_multithread');
+					$current_process = mt_rand(0,PHP_INT_MAX);
+					Swift_Performance_Lite::set_transient('swift_performance_timeout_test_pid', $current_process, 600);
 
-					// Analyze
-					$this->analyze();
-					// Set caching mode to rewrites if it is available
-					if (Swift_Performance_Lite::server_software() == 'apache' && $this->analyze['htaccess'] && !isset($this->analyze['missing_apache_modules']['mod_rewrite'])){
+					// Try 600 seconds by default
+					Swift_Performance_Lite::set_time_limit(601, 'timeout_test');
+
+					wp_send_json(array(
+						'result'		=> 'success',
+						'next_slide'	=> $next_slide,
+						'message'		=> $message
+					));
+
+					// Flush connection
+					Swift_Performance_Tweaks::flush_connection();
+					for ($i=0;$i<600;$i+=10){
+						$timeout_test_process	= $wpdb->get_var("SELECT option_value FROM {$wpdb->options} WHERE option_name = '_transient_swift_performance_timeout_test_pid'");
+						$multithread		= $wpdb->get_var("SELECT option_value FROM {$wpdb->options} WHERE option_name = '_transient_swift_performance_analyze_multithread'");
+						if (($timeout_test_process !== false && $timeout_test_process != $current_process) || ($i >= 50 && empty($multithread)) ){
+							break;
+						}
+						update_option('swift_performance_timeout', $i);
+						sleep(10);
+					}
+					delete_transient('swift_performance_analyze_multithread');
+				break;
+				case 'max-connections':
+					Swift_Performance_Lite::set_transient('swift_performance_analyze_multithread', 1, 600);
+				break;
+				case 'webserver':
+					$missing_apache_modules = array();
+					$server_software = Swift_Performance_Lite::server_software();
+					$rewrites = false;
+					if ($server_software == 'apache'){
+						$rewrites = true;
+						// Check modules if server isn't litespeed
+						if (preg_match('~apache~i', $_SERVER['SERVER_SOFTWARE']) && function_exists('apache_get_modules')){
+							$missing_apache_modules = array_diff(array(
+								'mod_expires',
+								'mod_deflate',
+								'mod_setenvif',
+								'mod_headers',
+								'mod_filter',
+								'mod_rewrite',
+							), apache_get_modules());
+						}
+
+						if (preg_match('~apache~i', $_SERVER['SERVER_SOFTWARE']) && function_exists('apache_get_modules')){
+							if (!in_array('mod_rewrite', apache_get_modules())){
+								$rewrites = false;
+							}
+						}
+
+						// Check htaccess
+						$htaccess = ABSPATH . '.htaccess';
+
+						if (!file_exists($htaccess)){
+							@touch($htaccess);
+							if (!file_exists($htaccess)){
+								$rewrites = false;
+							}
+						}
+						else if (!is_writable($htaccess)){
+							$rewrites = false;
+						}
+
+						$message = sprintf(__('%s detected. ', 'swift-performance'), ucfirst($server_software));
+
+						if ($server_software == 'apache'){
+							$message .=  ($rewrites ? __('Rewrites are working. ', 'swift-performance') : __('Rewrites are not working. ', 'swift-performance'));
+							if (!empty($missing_apache_modules)){
+								$result = 'warning';
+								$missing_modules = (count($missing_apache_modules) > 1 ? implode(', ', $missing_apache_modules) : $missing_apache_modules[0]);
+								$message .=  sprintf(
+										_n(
+										'Please enable %s Apache module for better optimization.',
+										'Please enable the following Apache modules for better optimization: %s.',
+										count($missing_apache_modules),
+										'swift-performance')
+									, $missing_modules);
+							}
+						}
+						else if ($server_software === 'unkonwn'){
+							$message = __('Server software was not detected.', 'swift-performance');
+						}
+
+					}
+
+					// Set caching mode
+					if ($rewrites){
 						Swift_Performance_Lite::update_option('caching-mode', 'disk_cache_rewrite');
 						try {
 							// Generate and write htaccess rules
@@ -190,298 +229,257 @@ class Swift_Performance_Setup {
 							Swift_Performance_Lite::write_rewrite_rules($rules);
 						}
 						catch (Exception $e){
-							self::print_notice(array('type' => 'error', 'message' => $e->get_error_message()));
+							$result	= 'error';
+							$message	= $e->get_error_message();
 						}
-
 					}
-
 				break;
-				case 'manage-assets':
-					// Empty cache
-					Swift_Performance_Cache::clear_all_cache();
-
-					// Set cache expiry mode
-					$expiry_mode = ($_POST['cache-expiry-mode'] == 'timebased' ? 'timebased' : ($_POST['cache-expiry-mode'] == 'actionbased' ? 'actionbased' : 'intelligent'));
-					Swift_Performance_Lite::update_option('cache-expiry-mode', $expiry_mode);
-					// Automated prebuild cache
-					Swift_Performance_Lite::update_option('automated_prebuild_cache', (isset($_POST['automated-prebuild-cache']) && $_POST['automated-prebuild-cache'] == 'enabled' ? 1 : 0));
-					// Browser cache
-					Swift_Performance_Lite::update_option('browser-cache', (isset($_POST['browser-cache']) && $_POST['browser-cache'] == 'enabled' ? 1 : 0));
-					// Gzip
-					Swift_Performance_Lite::update_option('enable-gzip', (isset($_POST['enable-gzip']) && $_POST['enable-gzip'] == 'enabled' ? 1 : 0));
-
-					// Cloudflare
-					if (isset($_POST['cloudflare-auto-purge']) && $_POST['cloudflare-auto-purge'] == 'enabled'){
-						Swift_Performance_Lite::update_option('cloudflare-auto-purge', 1);
-						Swift_Performance_Lite::update_option('cloudflare-email', (isset($_POST['cloudflare-email']) ? $_POST['cloudflare-email'] : ''));
-						Swift_Performance_Lite::update_option('cloudflare-api-key', (isset($_POST['cloudflare-api-key']) ? $_POST['cloudflare-api-key'] : ''));
-					}
-					else {
-						Swift_Performance_Lite::update_option('cloudflare-auto-purge', 0);
-					}
-
-					// Varnish
-					if (isset($_POST['varnish-auto-purge']) && $_POST['varnish-auto-purge'] == 'enabled'){
-						Swift_Performance_Lite::update_option('varnish-auto-purge', 1);
-						Swift_Performance_Lite::update_option('custom-varnish-host', (isset($_POST['custom-varnish-host']) ? $_POST['custom-varnish-host'] : ''));
-					}
-					else {
-						Swift_Performance_Lite::update_option('varnish-auto-purge', 0);
-					}
-
-				break;
-				case 'media':
-					// Empty cache
-					Swift_Performance_Cache::clear_all_cache();
-
-					$mode = isset($_POST['optimize-assets']) ? $_POST['optimize-assets'] : '';
-					if ($mode == 'cache-only'){
-						Swift_Performance_Lite::update_option('merge-scripts', 0);
-						Swift_Performance_Lite::update_option('merge-styles', 0);
+				case 'loopback':
+					// Automated prebuild
+					if (self::check_loopback()){
+						Swift_Performance_Lite::update_option('automated_prebuild_cache', 1);
+						Swift_Performance_Lite::update_option('optimize-prebuild-only', 1);
 						Swift_Performance_Lite::update_option('merge-background-only', 0);
-						Swift_Performance_Lite::update_option('optimize-prebuild-only', 0);
+						$message = __('Loopback is working', 'swift-perforance');
 					}
-					else if ($mode == 'merge-only'){
-						Swift_Performance_Lite::update_option('merge-scripts', 1);
-						Swift_Performance_Lite::update_option('merge-styles', 1);
+					else {
+						Swift_Performance_Lite::update_option('merge-background-only', 1);
+						$result = 'warning';
+						$message = __('Loopback is disabled.', 'swift-performance');
+					}
+				break;
+				case 'varnish-proxy':
+					$cloudflare = false;
+					$varnish = false;
+
+					if (self::check_loopback()){
+						$response = wp_remote_get(home_url(), array('timeout' => 60, 'sslverify' => false));
+
+						// Extend the max buffer size for large pages
+						$max_buffer_size = max(Swift_Performance_Lite::get_option('dom-parser-max-buffer'), strlen($response['body']));
+						Swift_Performance_Lite::update_option('dom-parser-max-buffer', $max_buffer_size);
+
+						$cf		= wp_remote_retrieve_header( $response, 'cf-cache-status' );
+						$xv		= wp_remote_retrieve_header( $response, 'x-varnish' );
+						$xc		= wp_remote_retrieve_header( $response, 'x-cache' );
+
+						if (!empty($cf)){
+							Swift_Performance_Lite::update_option('cloudflare-auto-purge',1);
+							$message .= __('Cloudflare was detected. Please set your API credentials on next screen.', 'swift-performance');
+							$next_slide = 'cloudflare';
+							$result = 'warning';
+						}
+
+						if (!empty($xv)){
+							Swift_Performance_Lite::update_option('varnish-auto-purge',1);
+							$message .= __('Varnish was detected', 'swift-performance');
+						}
+
+						if (!empty($xc)){
+							$result = 'error';
+							$message .= __('Server side cache was detected. Please disable it to avoid cache conflicts.', 'swift-performance');
+						}
+
+						if (empty($message)){
+							$message = __('No Varnish or Cloudflare was detected', 'swift-performance');
+						}
+					}
+					else{
+						$result	= 'warning';
+						$message	= __('Loopback is disabled, Swift can\'t check Varnish and reverse proxy. If you are using Cloudflare cache please set your API credentials on next screen.', 'swift-performance');
+					}
+				break;
+				case 'php-settings':
+					// Safe Mode
+					$safe_mode = ini_get('safe_mode');
+
+					// time limit
+					$set_time_limit = Swift_Performance_Lite::is_function_disabled('set_time_limit');
+
+					// memory
+					$memory = 0;
+					$memory_limit = ini_get('memory_limit');
+					if (preg_match('/^(\d+)(.)$/', $memory_limit, $matches)) {
+					    	if (strtoupper($matches[2]) == 'G') {
+  					    		$memory = $matches[1] * 1024 * 1024 * 1024; // nnnM -> nnn MB
+  					    	}
+					    	else if (strtoupper($matches[2]) == 'M') {
+					      	$memory = $matches[1] * 1024 * 1024; // nnnM -> nnn MB
+					    	}
+						else if (strtoupper($matches[2]) == 'K') {
+					        	$memory = $matches[1] * 1024; // nnnK -> nnn KB
+					    	}
+						else{
+					        	$memory = $matches[1]; // nnnK -> nnn KB
+					    	}
+					}
+
+					// Probably we are on limited shared hosting
+					if ($safe_mode || $set_time_limit){
 						Swift_Performance_Lite::update_option('critical-css', 0);
-						Swift_Performance_Lite::update_option('merge-background-only', (isset($_POST['merge-background-only']) && $_POST['merge-background-only'] == 'enabled' ? 1 : 0));
-						Swift_Performance_Lite::update_option('optimize-prebuild-only', (isset($_POST['optimize-prebuild-only']) && $_POST['optimize-prebuild-only'] == 'enabled' ? 1 : 0));
-					}
-					else if ($mode == 'full'){
-						Swift_Performance_Lite::update_option('use-compute-api', 1);
-						Swift_Performance_Lite::update_option('merge-scripts', 1);
-						Swift_Performance_Lite::update_option('merge-styles', 1);
-						Swift_Performance_Lite::update_option('merge-background-only', (isset($_POST['merge-background-only']) && $_POST['merge-background-only'] == 'enabled' ? 1 : 0));
-						Swift_Performance_Lite::update_option('optimize-prebuild-only', (isset($_POST['optimize-prebuild-only']) && $_POST['optimize-prebuild-only'] == 'enabled' ? 1 : 0));
-					}
+						Swift_Performance_Lite::update_option('merge-styles-exclude-3rd-party', 1);
+						Swift_Performance_Lite::update_option('merge-scripts-exlude-3rd-party', 1);
+						if ($safe_mode){
+							$message .= __("Safe mode is enabled. ", 'swift-performance');
+							$result = 'warning';
+						}
 
-					// Disable emojis
-					if (isset($_POST['disable-emojis']) && $_POST['disable-emojis'] == 'enabled'){
-						Swift_Performance_Lite::update_option('disable-emojis', 1);
-					}
-
-					// Limit threads & bypass css import
-					if (in_array($mode, array('merge-only', 'full'))){
-						Swift_Performance_Lite::update_option('bypass-css-import', (isset($_POST['bypass-css-import']) && $_POST['bypass-css-import'] == 'enabled' ? 1 : 0));
-						Swift_Performance_Lite::update_option('minify-html', (isset($_POST['minify-html']) && $_POST['minify-html'] == 'enabled' ? 1 : 0));
-
-						if (isset($_POST['limit-threads']) && $_POST['limit-threads'] == 'enabled'){
-							Swift_Performance_Lite::update_option('limit-threads', 1);
-							Swift_Performance_Lite::update_option('max-threads', max(0, (int)$_POST['max-threads']));
+						if ($set_time_limit){
+							$message .= __("set_time_limit is disabled. ", 'swift-performance');
+							$result = 'warning';
 						}
 					}
 
+					$message .= sprintf(__("Memory: %s. ", 'swift-performance'), $memory_limit);
+					// We don't have too much memory, probably the hosting is limited
+					if ($memory < 83886080){
+						Swift_Performance_Lite::update_option('critical-css', 0);
+						$message .= __("Low memory environment detected. ", 'swift-performance');
+						$result = 'warning';
+					}
+				break;
+				case 'plugins':
+					$plugin_conflicts = self::get_plugin_conflicts();
+					// Deactivate plugins
+					if (!empty($plugin_conflicts['hard'])){
+						$network_wide = is_plugin_active_for_network(SWIFT_PERFORMANCE_PLUGIN_BASENAME);
+						deactivate_plugins(array_keys($plugin_conflicts['hard']), false, $network_wide);
+						$message = sprintf(_n(
+							            '%s was deactivated. ',
+							            'The following plugins were deactivated: %s. ',
+							            count($plugin_conflicts['hard']),
+							            'swift-performance'
+							        ), implode(', ', $plugin_conflicts['hard']));
+					}
+					else {
+						$message = __('No hard plugin conflict found. ', 'swift-performance');
+					}
+
+					// Soft conflicts
+					// WP Touch
+					if (isset($plugin_conflicts['soft']['wp-touch'])){
+						Swift_Performance_Lite::update_option('mobile-support', 1);
+						$excluded_useragents = (array)Swift_Performance_Lite::get_option('exclude-useragents');
+						$excluded_useragents[] = '#(Mobile|Android|Silk/|Kindle|BlackBerry|Opera Mini|Opera Mobi)#';
+						Swift_Performance_Lite::update_option('exclude-useragents', $excluded_useragents);
+
+						$message .= __('WP Touch detected, caching for mobile is disabled. ', 'swift-performance');
+					}
+
+					// Autoptimize
+					if (isset($plugin_conflicts['soft']['autoptimize'])){
+						Swift_Performance_Lite::update_option('merge-styles', 0);
+						Swift_Performance_Lite::update_option('merge-scripts', 0);
+						Swift_Performance_Lite::update_option('minify-html', 0);
+
+						$message .= __('Autoptimize detected, merge styles/scripts and minify HTML were disabled. ', 'swift-performance');
+					}
 
 				break;
-				case 'finish':
-					// Empty cache
-					Swift_Performance_Cache::clear_all_cache();
+				case 'configure-cache':
+					$public	= get_post_types(array('publicly_queryable'=>true));
+					$excluded	= array_diff(Swift_Performance_Lite::get_post_types(), array_merge(array('page'),(array)$public));
 
-					$lazyload_images 	= (isset($_POST['lazyload-images']) && $_POST['lazyload-images'] == 'enabled' ? 1 : 0);
-					$lazyload_iframe 	= (isset($_POST['lazyload-iframes']) && $_POST['lazyload-iframes'] == 'enabled' ? 1 : 0);
-					$optimize 		= (isset($_POST['optimize-images']) && $_POST['optimize-images'] == 'enabled' ? 1 : 0);
-					$keep_original    = ($optimize && isset($_POST['keep-original-images']) && $_POST['keep-original-images'] == 'enabled' ? 1 : 0);
+					if (!empty($excluded)){
+						Swift_Performance_Lite::update_option('exclude-post-types', (array)$excluded);
+					}
 
-					Swift_Performance_Lite::update_option('lazy-load-images', $lazyload_images);
-					Swift_Performance_Lite::update_option('lazyload-iframes', $lazyload_iframe);
-					Swift_Performance_Lite::update_option('optimize-uploaded-images', $optimize);
-					Swift_Performance_Lite::update_option('keep-original-images', $keep_original);
-				break;
-				case 'deactivate':
-					update_option('swift-performance-deactivation-settings', array(
-						'keep-settings' => (isset($_POST['keep-settings']) && $_POST['keep-settings'] == 'enabled' ? 1 : 0),
-						'keep-custom-htaccess' => (isset($_POST['keep-custom-htaccess']) && $_POST['keep-custom-htaccess'] == 'enabled' ? 1 : 0),
-						'keep-warmup-table' => (isset($_POST['keep-warmup-table']) && $_POST['keep-warmup-table'] == 'enabled' ? 1 : 0),
-						'keep-image-optimizer-table' => (isset($_POST['keep-image-optimizer-table']) && $_POST['keep-image-optimizer-table'] == 'enabled' ? 1 : 0),
-						'keep-logs' => (isset($_POST['keep-logs']) && $_POST['keep-logs'] == 'enabled' ? 1 : 0)
-					), false);
+					// Send early success message on FPM
+					if (function_exists('fastcgi_finish_request')){
+						header('Content-Type: application/json');
+						echo json_encode(array(
+							'result'		=> $result,
+							'next_slide'	=> $next_slide,
+							'message'		=> __('Running in background', 'swift-performance')
+						));
+					}
+
+					// Prepare warmup table
+					Swift_Performance_Lite::mysql_query("TRUNCATE " . SWIFT_PERFORMANCE_TABLE_PREFIX . 'warmup');
+					Swift_Performance_Lite::get_prebuild_urls();
+
+					$message = __('Done.', 'swift-performance');
 				break;
 			}
+
+			wp_send_json(array(
+				'result'		=> $result,
+				'next_slide'	=> $next_slide,
+				'message'		=> $message
+			));
 		}
+
 	}
 
 	/**
-	 * Analyze environment and fill up analyze array
+	 * Get known plugin conflicts
+	 * @return array
 	 */
-	public function analyze(){
-		// Check other cache/minify plugins to avoid conflicts and double cacheing
-		// W3TC
-		if (class_exists('\\W3TC\\Root_Loader')){
-			$this->disable_continue = true;
-			$this->analyze['plugin_conflicts']['W3TC'] = 'W3 Total Cache';
-		}
-		// WP Super Cache
-		if (function_exists('wp_cache_set_home')){
-			$this->disable_continue = true;
-			$this->analyze['plugin_conflicts']['WPSupercache'] = 'WP Supercache';
-		}
-		// WP Rocket
-		if (defined('WP_ROCKET_VERSION')){
-			$this->disable_continue = true;
-			$this->analyze['plugin_conflicts']['WPRocket'] = 'WP Rocket';
-		}
-		// WP Fastest cache
-		if (class_exists('WpFastestCache')){
-			$this->disable_continue = true;
-			$this->analyze['plugin_conflicts']['WPFastestCache'] = 'WP Fastest Cache';
-		}
-		// Autoptimize
-		if (defined('AUTOPTIMIZE_PLUGIN_DIR')){
-			$this->disable_continue = true;
-			$this->analyze['plugin_conflicts']['Autoptimize'] = 'Autoptimize';
-		}
-		// BWP Minify
-		if (class_exists('BWP_MINIFY')){
-			$this->disable_continue = true;
-			$this->analyze['plugin_conflicts']['BWPMinify'] = 'Better WordPress Minify';
-		}
-
-
-		// If apache
-		if (Swift_Performance_Lite::server_software() == 'apache' && function_exists('apache_get_modules')){
-			// Check modules
-			$this->analyze['missing_apache_modules'] = array_diff(array(
-				'mod_expires',
-				'mod_deflate',
-				'mod_setenvif',
-				'mod_headers',
-				'mod_filter',
-				'mod_rewrite',
-			), apache_get_modules());
-		}
-
-		// Check htaccess
-		$htaccess = ABSPATH . '.htaccess';
-
-		if (!file_exists($htaccess)){
-			@touch($htaccess);
-			if (!file_exists($htaccess)){
-				$this->analyze['htaccess'] = false;
+	public static function get_plugin_conflicts(){
+		$plugin_conflicts = array();
+		$active_plugins = get_option('active_plugins');
+		foreach ($active_plugins as $plugin_file) {
+			$source = file_get_contents(WP_PLUGIN_DIR . '/' . $plugin_file);
+			// W3TC
+			if (preg_match('~Plugin Name: W3 Total Cache~', $source)){
+				$plugin_conflicts['hard'][$plugin_file] = 'W3 Total Cache';
 			}
+
+			// WP Supercache
+			if (preg_match('~Plugin Name: WP Super Cache~', $source)){
+				$plugin_conflicts['hard'][$plugin_file] = 'WP Super Cache';
+			}
+
+			// WPR
+			if (preg_match('~Plugin Name: WP Rocket~', $source)){
+				$plugin_conflicts['hard'][$plugin_file] = 'WP Rocket';
+			}
+
+			// WP Fastest Cache
+			if (preg_match('~Plugin Name: WP Fastest Cache~', $source)){
+				$plugin_conflicts['hard'][$plugin_file] = 'WP Fastest Cache';
+			}
+
+			// Autoptimize
+			if (preg_match('~Plugin Name: Autoptimize~', $source)){
+				$plugin_conflicts['soft']['autoptimize'] = true;
+			}
+
+			// Autoptimize
+			if (preg_match('~Plugin Name: Better WordPress Minify~', $source)){
+				$plugin_conflicts['hard'][$plugin_file] = 'Better WordPress Minify';
+			}
+
+			// WPtouch
+			if (preg_match('~Plugin Name: WPtouch Mobile Plugin~', $source)){
+				$plugin_conflicts['soft']['wp-touch'] = true;
+			}
+
 		}
-		else if (!is_writable($htaccess)){
-			$this->analyze['htaccess'] = false;
-		}
-		else {
-			$this->analyze['htaccess'] = true;
-		}
+		return $plugin_conflicts;
 	}
 
 	/**
-	 * Render current step
+	 * Check is loopback enabled
+	 * @return boolean
 	 */
-	public function render(){
-		// Run only the first time
-		update_option('swift-perforomance-initial-setup-wizard', 1);
+	public static function check_loopback(){
+		$response = wp_remote_get(home_url(), array('timeout' => 60, 'sslverify' => false));
 
-		$template = 'start-wizard';
-
-		if (defined('DOING_AJAX')){
-			$GLOBALS['hook_suffix'] = 'swift-performance';
-			return;
-		}
-
-		// Verify nonce
-		if (isset($_REQUEST['swift-nonce']) && wp_verify_nonce($_REQUEST['swift-nonce'], 'swift-performance-setup') && current_user_can('manage_options')){
-			// Set template
-			$template = $this->current_step['id'];
-		}
-
-		// Get header part
-		$this->_get_template_part('admin-header');
-
-		// Get Body
-		if (!isset($_REQUEST['swift-nonce']) || !wp_verify_nonce($_REQUEST['swift-nonce'], 'swift-performance-setup') && current_user_can('manage_options')){
-			$this->_get_template_part($template);
-			$this->show_steps = false;
+		//Handle HTTP errors
+		if (is_wp_error($response)) {
+			$loopback = false;
 		}
 		else{
-			$this->_get_template_part($template);
+			if ($response['response']['code'] == 200){
+				$loopback = true;
+			}
+			else {
+				$loopback = false;
+			}
 		}
 
-		// Get Footer
-		$this->_get_template_part('admin-footer');
-
-		// Exit
-		die;
-	}
-
-	/**
-	 * Print prev/next step links
-	 */
-	public function step_links() {
-		$current 	= $this->current_step['index'];
-		$prev		= isset($this->steps[$current-1]) ? '<a class="swift-btn swift-btn-gray swift-btn-lg" href="'. esc_url(wp_nonce_url(add_query_arg('step', ($current-1), add_query_arg('subpage', $_GET['subpage'], menu_page_url('swift-performance', false))), 'swift-performance-setup', 'swift-nonce')) . '">'.esc_html__('Previous step', 'swift-performance').'</a>' : '';
-		if (isset($this->steps[$current+1])){
-			$skip = '<a class="swift-btn swift-btn-gray swift-btn-lg swift-skip-step" href="'. esc_url(wp_nonce_url(add_query_arg('step', ($current+1), add_query_arg('subpage', $_GET['subpage'], menu_page_url('swift-performance', false))), 'swift-performance-setup', 'swift-nonce')) . '">'.esc_html__('Skip this step', 'swift-performance').'</a>';
-			$next = wp_nonce_field('swift-performance-setup', 'swift-nonce').
-					'<input type="hidden" name="step" value="'.($current + 1).'">'.
-					'<input type="hidden" name="swift-performance-setup-action" value="'.esc_attr($this->current_step['id']).'">'.
-					'<button class="swift-btn swift-btn-green swift-setup-next" ' . ($this->disable_continue == true ? 'disabled' : '') . '>'.esc_html__('Continue', 'swift-performance').'</button>';
-		}
-		echo '<div class="swift-setup-btn-wrapper">';
-		echo $prev;
-		if (!isset($this->current_step['disable-skip']) || !$this->current_step['disable-skip']){
-			echo $skip;
-		}
-		if (!isset($this->current_step['disable-continue']) || !$this->current_step['disable-continue']){
-			echo $next;
-		}
-		else {
-			echo '<input type="hidden" id="nextpage" value="'.esc_url(wp_nonce_url(add_query_arg('step', ($current+1), add_query_arg('subpage', $_GET['subpage'], menu_page_url('swift-performance', false))), 'swift-performance-setup', 'swift-nonce')).'">';
-		}
-		echo '</div>';
-	}
-
-	/**
-	 * Handle ajax requests
-	 */
-	public function ajax_handler(){
-		if (!isset($_REQUEST['swift-nonce']) || !wp_verify_nonce($_REQUEST['swift-nonce'], 'swift-performance-setup') && current_user_can('manage_options')){
-			wp_die(0);
-		}
-
-
-		wp_die();
-	}
-
-	/**
-	 * Go back to the previous step
-	 */
-	private function _revert_step(){
-		$index 				= $this->current_step['index']-1;
-		$this->current_step 		= $this->steps[$index];
-		$this->current_step['index']	= $index;
-	}
-
-	/**
-	 * Includes the given template
-	 * @param string $template
-	 */
-	private function _get_template_part($template) {
-		if (strpos($template, '.') !== false){
-			return false;
-		}
-		if (file_exists(SWIFT_PERFORMANCE_SETUP_DIR . 'templates/' . $template . '.php')){
-			include SWIFT_PERFORMANCE_SETUP_DIR . 'templates/' . $template . '.php';
-		}
-	}
-
-	/**
-	 * Function to overwrite <title> tag
-	 */
-	public function wp_title(){
-		return sprintf(esc_html__( '%s Setup Wizard - ', 'swift-performance' ), SWIFT_PERFORMANCE_PLUGIN_NAME);
-	}
-
-	/**
-	 * Print admin notice
-	 * @param array $message
-	 */
-	public static function print_notice($message){
-		$class = ($message['type'] == 'success' ? 'updated' : ($message['type'] == 'warning' ? 'update-nag' : ($message['type'] == 'error' ? 'error' : 'notice')));
-		echo '<div class="swift-performance-notice '.$class.'" style="padding:25px 10px 10px 10px;position: relative;display: block;"><span style="color:#888;position:absolute;top:5px;left:5px;">'.SWIFT_PERFORMANCE_PLUGIN_NAME.'</span>'.$message['message'].'</div>';
+		return $loopback;
 	}
 
 }

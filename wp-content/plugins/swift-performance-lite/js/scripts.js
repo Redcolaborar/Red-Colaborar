@@ -12,6 +12,12 @@ jQuery(function(){
             }
 	});
 
+      // Disable Full option for CSS minify
+      jQuery('[name="_luv_minify-css"] [value="2"]').prop('disabled', true);
+
+      // Show pointers if any
+      jQuery(window).on('load', pointers);
+
       // Fire cron if WP cron is disabled
       if (swift_performance.cron.length > 0){
             jQuery.get(swift_performance.cron);
@@ -67,7 +73,7 @@ jQuery(function(){
             clearInterval(cache_status_interval);
             jQuery('body').addClass('swift-loading');
             var limit = (jQuery(this).hasClass('thread-plus') ? 1 : -1);
-            jQuery.post(ajaxurl, {action: 'swift_performance_change_thread_limit', '_wpnonce' : swift_performance.nonce, 'limit' : limit}, function(response){
+            jQuery.post(ajaxurl, {action: 'swift_performance_change_thread_limit', '_wpnonce' : swift_performance.nonce, 'limit' : limit}, function(){
                   cache_status(function(){
                         jQuery('body').removeClass('swift-loading');
                   });
@@ -116,7 +122,7 @@ jQuery(function(){
             e.preventDefault();
             if (confirm(__('Do you want to reset prebuild links?'))){
                   jQuery('body').addClass('swift-loading');
-                  jQuery.post(ajaxurl, {action: 'swift_performance_reset_warmup', '_wpnonce' : swift_performance.nonce}, function(response){
+                  jQuery.post(ajaxurl, {action: 'swift_performance_reset_warmup', '_wpnonce' : swift_performance.nonce}, function(){
                         jQuery('#swift-performance-refresh-list-table').trigger('click');
                   });
             }
@@ -127,8 +133,11 @@ jQuery(function(){
             jQuery('body').addClass('swift-loading');
             var type = jQuery(this).attr('data-type');
             jQuery.post(ajaxurl, {action: 'swift_performance_clear_cache', '_wpnonce' : swift_performance.nonce, 'type': type}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
                   jQuery('body').removeClass('swift-loading');
                   show_message(response);
+                  jQuery('#swift-performance-refresh-list-table').trigger('click');
             });
             e.preventDefault();
       });
@@ -137,6 +146,8 @@ jQuery(function(){
       jQuery(document).on('click', '#swift-performance-clear-assets-cache', function(e){
             jQuery('body').addClass('swift-loading');
             jQuery.post(ajaxurl, {action: 'swift_performance_clear_assets_cache', '_wpnonce' : swift_performance.nonce}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
                   jQuery('body').removeClass('swift-loading');
                   show_message(response);
             });
@@ -145,8 +156,26 @@ jQuery(function(){
 
       // Start prebuild cache
       jQuery(document).on('click', '#swift-performance-prebuild-cache', function(e){
+            jQuery('#swift-performance-prebuild-cache').addClass('swift-hidden');
+            jQuery('#swift-performance-stop-prebuild-cache').removeClass('swift-hidden');
             jQuery('body').addClass('swift-loading');
             jQuery.post(ajaxurl, {action: 'swift_performance_prebuild_cache', '_wpnonce' : swift_performance.nonce}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
+                  jQuery('body').removeClass('swift-loading');
+                  show_message(response);
+            });
+            e.preventDefault();
+      });
+
+      // Stop prebuild cache
+      jQuery(document).on('click', '#swift-performance-stop-prebuild-cache', function(e){
+            jQuery('#swift-performance-stop-prebuild-cache').addClass('swift-hidden');
+            jQuery('#swift-performance-prebuild-cache').removeClass('swift-hidden');
+            jQuery('body').addClass('swift-loading');
+            jQuery.post(ajaxurl, {action: 'swift_performance_stop_prebuild_cache', '_wpnonce' : swift_performance.nonce}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
                   jQuery('body').removeClass('swift-loading');
                   show_message(response);
             });
@@ -160,6 +189,8 @@ jQuery(function(){
             var data = jQuery(form).serialize();
             jQuery(form).closest('td').addClass('swift-loading');
             jQuery.post(ajaxurl, {action: 'swift_performance_update_prebuild_priority', '_wpnonce' : swift_performance.nonce, 'data' : data}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
                   jQuery(form).closest('td').removeClass('swift-loading');
                   show_message(response);
             });
@@ -172,6 +203,8 @@ jQuery(function(){
             var row = jQuery(button).closest('tr');
             jQuery(button).closest('td').addClass('swift-loading');
             jQuery.post(ajaxurl, {action: 'swift_performance_single_prebuild', '_wpnonce' : swift_performance.nonce, 'url' : jQuery(button).attr('data-url')}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
                   jQuery(button).closest('td').removeClass('swift-loading');
                   show_message(response);
                   update_warmup_row(row, response);
@@ -185,6 +218,8 @@ jQuery(function(){
             var row = jQuery(button).closest('tr');
             jQuery(button).closest('td').addClass('swift-loading');
             jQuery.post(ajaxurl, {action: 'swift_performance_single_clear_cache', '_wpnonce' : swift_performance.nonce, 'url' : jQuery(button).attr('data-url')}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
                   jQuery(button).closest('td').removeClass('swift-loading');
                   show_message(response);
 
@@ -205,6 +240,8 @@ jQuery(function(){
             var row = jQuery(button).closest('tr');
             jQuery(button).closest('td').addClass('swift-loading');
             jQuery.post(ajaxurl, {action: 'swift_performance_remove_warmup_url', '_wpnonce' : swift_performance.nonce, 'url' : jQuery(button).attr('data-url')}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
                   jQuery(button).closest('td').removeClass('swift-loading');
                   show_message(response);
 
@@ -233,6 +270,7 @@ jQuery(function(){
             e.preventDefault();
             var form = jQuery(this).closest('.field-container');
             jQuery.post(ajaxurl, {action: 'swift_performance_add_warmup_url', '_wpnonce' : swift_performance.nonce, 'url' : jQuery(form).find('[name="url"]').val(), 'priority' : jQuery(form).find('[name="priority"]').val()}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
                   show_message(response)
 
                   // Link was successfully added
@@ -249,6 +287,7 @@ jQuery(function(){
 
             jQuery('body').addClass('swift-loading');
             jQuery.post(ajaxurl, {action: 'swift_performance_show_rewrites', '_wpnonce' : swift_performance.nonce}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
                   show_message(response);
 
                   jQuery('.swift-preformatted-box').removeClass('swift-hidden');
@@ -265,6 +304,7 @@ jQuery(function(){
 
             jQuery('body').addClass('swift-loading');
             jQuery.post(ajaxurl, {action: 'swift_performance_show_log', '_wpnonce' : swift_performance.nonce}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
                   show_message(response);
 
                   jQuery('.swift-preformatted-box').removeClass('swift-hidden');
@@ -275,6 +315,8 @@ jQuery(function(){
             _interval = setInterval(function(){
                   var scroll_top = jQuery('.swift-preformatted-box .response-container').scrollTop();
                   jQuery.post(ajaxurl, {action: 'swift_performance_show_log', '_wpnonce' : swift_performance.nonce}, function(response){
+                        response = (typeof response === 'string' ? JSON.parse(response) : response);
+
                         jQuery('.swift-preformatted-box pre.response-container').text(response.status);
                         jQuery('.swift-preformatted-box .response-container').scrollTop(scroll_top);
                   });
@@ -286,15 +328,23 @@ jQuery(function(){
       jQuery(document).on('click', '#swift-performance-clear-logs', function(e){
             if (confirm(__('Do you want to clear all logs'))){
                   jQuery('body').addClass('swift-loading');
-                  jQuery.post(ajaxurl, {action: 'swift_performance_clear_logs', '_wpnonce' : swift_performance.nonce}, function(response){
+                  jQuery.post(ajaxurl, {action: 'swift_performance_clear_logs', '_wpnonce' : swift_performance.nonce}, function(){
                         jQuery('#swift-performance-log').trigger('click');
                   });
             }
       });
 
-      // Redux toggle all checkboxes
-      jQuery(document).on('click', '.reduxsa-toggle-all', function(){
-            jQuery(this).closest('ul').find('input[type="checkbox"]').trigger('click');
+      // Developer Mode
+      jQuery(document).on('click', '#swift-performance-toggle-developer-mode', function(e){
+            e.preventDefault();
+            jQuery('body').addClass('swift-loading');
+            jQuery.post(ajaxurl, {action: 'swift_performance_toggle_dev_mode', '_wpnonce' : swift_performance.nonce}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
+                  jQuery('body').removeClass('swift-loading');
+                  jQuery('#swift-performance-toggle-developer-mode > span').toggleClass('swift-hidden');
+                  show_message(response);
+            });
       });
 
       /*
@@ -398,6 +448,8 @@ jQuery(function(){
                   }
             });
             jQuery.post(ajaxurl, {'action': 'swift_performance_enqueue_critical_font', 'font': font, 'css': css, 'content': content, 'active': active, '_wpnonce' : swift_performance.nonce}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
                   jQuery(container).find('.status').text(response.status_message)
                   jQuery(container).find('.swift-dequeue-critical-font').removeClass('swift-hidden');
 
@@ -413,6 +465,8 @@ jQuery(function(){
             var container     = jQuery(this).closest('.swift-critical-font-container');
             var font          = jQuery(container).attr('data-font');
             jQuery.post(ajaxurl, {'action': 'swift_performance_dequeue_critical_font', 'font': font, '_wpnonce' : swift_performance.nonce}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
                   jQuery(container).find('.status').text(response.status_message)
                   jQuery(container).find('.swift-dequeue-critical-font').addClass('swift-hidden');
                   jQuery(container).find(response.selector).addClass('active');
@@ -428,8 +482,8 @@ jQuery(function(){
             var container     = jQuery(this).closest('.swift-critical-font-container');
             var font          = jQuery(container).attr('data-font');
             jQuery.post(ajaxurl, {'action': 'swift_performance_scan_used_icons', 'font': font, '_wpnonce' : swift_performance.nonce}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
 
-                  console.log(response.selectors.length)
                   if (typeof response.selectors !== 'undefined'){
                         for (var i in response.selectors){
                               console.log('[data-selector*="'+response.selectors[i]+'"]');
@@ -533,7 +587,7 @@ jQuery(function(){
        */
        function save_plugin_organizer_rule(){
             jQuery('body').addClass('swift-loading');
-            jQuery.post(document.location.href, jQuery('#plugin-organizer').serialize(), function(response){
+            jQuery.post(document.location.href, jQuery('#plugin-organizer').serialize(), function(){
                   jQuery('body').removeClass('swift-loading');
             });
        }
@@ -543,18 +597,32 @@ jQuery(function(){
        */
       function cache_status(callback){
             jQuery.post(ajaxurl, {action: 'swift_performance_cache_status', '_wpnonce' : swift_performance.nonce}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
                   if (typeof response.text !== 'undefined' && response.text.length > 0){
                         jQuery('.swift-message').removeClass('swift-hidden');
                         jQuery('.swift-message').addClass(response.type).text(response.text);
                   }
 
                   jQuery('#swift-cache-status-box .prebuild-status').text(response.prebuild);
+                  if (response.prebuild == ''){
+                        jQuery('#swift-performance-stop-prebuild-cache').addClass('swift-hidden');
+                        jQuery('#swift-performance-prebuild-cache').removeClass('swift-hidden');
+                  }
+                  else {
+                        jQuery('#swift-performance-prebuild-cache').addClass('swift-hidden');
+                        jQuery('#swift-performance-stop-prebuild-cache').removeClass('swift-hidden');
+                  }
+
                   jQuery('#swift-cache-status-box .warmup-pages-count').text(response.all_pages);
                   jQuery('#swift-cache-status-box .cached-pages-count').text(response.cached_pages);
+
                   jQuery('#swift-cache-status-box .cache-size-count').text(response.size);
                   jQuery('#swift-cache-status-box .thread-count').html(response.threads);
+
                   jQuery('#swift-cache-status-box .ajax-object-count').text(response.ajax_objects);
                   jQuery('#swift-cache-status-box .ajax-size-count').text(response.ajax_size);
+
                   jQuery('#swift-cache-status-box .cached-dynamic-pages-count').html(response.dynamic_pages);
                   jQuery('#swift-cache-status-box .cached-dynamic-size-count').html(response.dynamic_size);
                   if (typeof callback === 'function'){
@@ -577,11 +645,13 @@ jQuery(function(){
             if (typeof response.status !== 'undefined'){
                   jQuery(row).find('.column-status .dashicons').addClass('swift-hidden');
                   if (response.status == 'html'){
+                        jQuery(row).find('.view-cached').removeClass('swift-hidden');
                         jQuery(row).find('.column-status .dashicons-yes').removeClass('swift-hidden');
                         jQuery(row).find('.do-cache').addClass('swift-hidden');
                         jQuery(row).find('.clear-cache').removeClass('swift-hidden');
                   }
                   else {
+                        jQuery(row).find('.view-cached').addClass('swift-hidden');
                         jQuery(row).find('.column-status .dashicons-no').removeClass('swift-hidden');
                         jQuery(row).find('.do-cache').removeClass('swift-hidden');
                         jQuery(row).find('.clear-cache').addClass('swift-hidden');
@@ -635,6 +705,142 @@ jQuery(function(){
       });
 
       /**
+       * Show tooltips
+       */
+      function pointers(){
+            var item = jQuery('[data-swift-pointer]:first');
+            jQuery(item).pointer({
+                  content: jQuery(item).attr('data-swift-pointer-content'),
+                  position: jQuery(item).attr('data-swift-pointer-position'),
+                  buttons: function( event, t ) {
+				var close  = swift_performance.i18n['Dismiss'],
+					button = jQuery('<a class="close" href="#">' + close + '</a>');
+
+				return button.bind( 'click.pointer', function(e) {
+					e.preventDefault();
+					t.element.pointer('close');
+				});
+			},
+                  hide: function( event, t ) {
+				t.pointer.hide();
+				t.closed();
+                        jQuery.post(ajaxurl, {'action': 'swift_performance_dismiss_pointer', 'id': jQuery(item).attr('data-swift-pointer'), '_wpnonce': swift_performance.nonce})
+			},
+            }).pointer('open');
+      }
+
+      /* FRAMEWORK CUSTOMIZATIONS */
+
+      // Hide info popups on tab chane
+      jQuery('.luv-framework-tab').on('luv-tab-changed', function(){
+            jQuery('.wp-pointer').css('display', 'none');
+      });
+
+      // Settings mode switch
+      jQuery(document).on('change', '.swift-settings-mode input', function(){
+            jQuery('[name="_luv_settings-mode"]').val(jQuery('.swift-settings-mode input:checked').val()).trigger('change');
+      });
+
+      //Image Optimizer Preset buttons
+      jQuery(document).on('change', '.swift-performance-io-preset', function(){
+            jQuery('[name="_luv_jpeg-quality"]').val(jQuery(this).attr('data-jpeg')).trigger('change');
+            jQuery('[name="_luv_png-quality"]').val(jQuery(this).attr('data-png')).trigger('change');
+            if (jQuery(this).attr('data-jpeg') * 1 < 100){
+                  jQuery('[name="_luv_resize-large-images"]').attr('checked', true).trigger('change');
+                  jQuery('[name="_luv_maximum-image-width"]').val('1920').trigger('change');
+            }
+            else {
+                  jQuery('[name="_luv_resize-large-images"]').removeAttr('checked').trigger('change');
+            }
+      });
+
+      // Clear cache after change settings
+      jQuery(document).on('change', '.should-clear-cache input, .should-clear-cache select, .should-clear-cache textarea', function(){
+            jQuery('.luv-framework-container.swift-performance-settings').attr('data-clear-cache', 'true');
+            jQuery('.swift-performance-ajax-preview').addClass('swift-visible');
+      });
+
+      jQuery(document).on('luv-saved', '.luv-framework-container.swift-performance-settings', function(){
+            if (jQuery(this).attr('data-clear-cache')){
+                  jQuery('.luv-modal').empty().append(jQuery('.swift-confirm-clear-cache').clone().removeClass('luv-hidden')).removeClass('luv-modal-hide').show();
+            }
+            jQuery('.swift-performance-ajax-preview').removeClass('swift-visible');
+            jQuery(this).removeAttr('data-clear-cache');
+      });
+
+      // Reset Image Optimizer Presets
+      jQuery(document).on('luv-reset', '.luv-framework-tab', function(){
+            if (jQuery(this).find('#io-preset-lossless').length > 0){
+                  jQuery(this).find('#io-preset-lossless').trigger('click');
+            }
+      });
+
+      // Preview
+      jQuery(document).on('click', '.swift-performance-ajax-preview', function(e){
+            e.preventDefault();
+            jQuery('.luv-modal').empty().append(jQuery('.swift-preview-pro-only').clone().removeClass('luv-hidden')).removeClass('luv-modal-hide').show();
+      });
+
+      // Clear cache
+      jQuery(document).on('click', '[data-swift-clear-cache]', function(e){
+		e.preventDefault();
+            if (jQuery(this).closest('.luv-modal').length > 0){
+                  jQuery(this).closest('.luv-modal').addClass('luv-modal-hide');
+            }
+            else if (jQuery(this).closest('[data-message-id]').length > 0){
+                  jQuery.post(ajaxurl, {action: 'swift_performance_dismiss_notice', '_wpnonce' : swift_performance.nonce, 'id': jQuery(this).closest('[data-message-id]').attr('data-message-id')});
+                  jQuery(this).closest('[data-message-id]').fadeOut();
+            }
+
+            jQuery.post(ajaxurl, {action: 'swift_performance_clear_cache', '_wpnonce' : swift_performance.nonce, 'type': 'all'}, function(response){
+                  response = (typeof response === 'string' ? JSON.parse(response) : response);
+
+                  var result = (response.type == 'success' ? 'luv-success' : 'luv-error');
+      		var notice = jQuery('<div>', {
+                        'class': 'luv-framework-notice ' + result,
+                  }).append(jQuery('<span>', {
+                        'class': 'luv-framework-notice-inner',
+                        'text': response.text
+                  }));
+
+                  jQuery('body').append(notice);
+                  setTimeout(function(){
+                        jQuery(notice).find('.luv-framework-notice-inner').css('max-width', '100%');
+                  }, 100);
+                  setTimeout(function(){
+                        jQuery(notice).remove();
+                  }, 5000);
+            });
+	});
+
+      // Should clear cache after change
+      jQuery(document).on('change', '.should-clear-cache input, .should-clear-cache select, .should-clear-cache textarea', function(){
+		jQuery('.luv-framework-container.swift-performance-settings').attr('data-clear-cache', 'true');
+            jQuery('.swift-performance-ajax-preview').addClass('swift-visible');
+	});
+
+	jQuery(document).on('luv-saved', '.luv-framework-container.swift-performance-settings', function(){
+		if (jQuery(this).attr('data-clear-cache')){
+			jQuery('.luv-modal').empty().append(jQuery('.swift-confirm-clear-cache').clone().removeClass('luv-hidden')).removeClass('luv-modal-hide').show();
+		}
+            jQuery('.swift-performance-ajax-preview').removeClass('swift-visible');
+		jQuery(this).removeAttr('data-clear-cache');
+	});
+
+      // Reset Image Optimizer
+      jQuery(document).on('luv-reset', '.luv-framework-tab', function(){
+            if (jQuery(this).find('#io-preset-lossless').length > 0){
+                  jQuery(this).find('#io-preset-lossless').trigger('click');
+            }
+      });
+
+      // Dismiss notice
+      jQuery(document).on('click', '[data-swift-dismiss-notice]', function(){
+            jQuery.post(ajaxurl, {action: 'swift_performance_dismiss_notice', '_wpnonce' : swift_performance.nonce, 'id': jQuery(this).closest('[data-message-id]').attr('data-message-id')});
+            jQuery(this).closest('[data-message-id]').fadeOut();
+      });
+
+      /**
        * Localize strings
        * @param string text
        * @return string
@@ -646,26 +852,6 @@ jQuery(function(){
             else {
                   return text;
             }
-      }
-
-      // Extend redux save
-      try{
-            jQuery.reduxsa._ajax_save = jQuery.reduxsa.ajax_save;
-            jQuery.reduxsa.ajax_save = function(x){
-                  if (jQuery('[name="swift_performance_options[clear_cache]"]').prop('checked') && confirm (__('Settings were changed. Would you like to clear all cache?'))){
-                        jQuery('[name="swift_performance_options[clear_cache]"]').prop('checked', true);
-                  }
-                  else {
-                        jQuery('[name="swift_performance_options[clear_cache]"]').removeAttr('checked');
-                  }
-                  jQuery('.reduxsa-field-error').removeClass('reduxsa-field-error');
-                  jQuery('.reduxsa-th-error, .reduxsa-menu-error').remove();
-                  jQuery('.reduxsa-field-errors').css('display','none');
-                  jQuery.reduxsa._ajax_save(x);
-            };
-      }
-      catch(e){
-            //silent fail
       }
 });
 

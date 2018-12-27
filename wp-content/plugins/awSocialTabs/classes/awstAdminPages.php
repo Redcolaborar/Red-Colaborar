@@ -128,7 +128,7 @@ class AwstAdminPages {
         }
 
 
-        $totalLiked  = AwstComman::getLikesByObjectId( $postID, $objectType );
+        $totalLiked  = AwstHelper::count_object_likes( $postID, $objectType );
 
         $backUrl = AwstComman::getAdminUrl('awsocialtabs');
 

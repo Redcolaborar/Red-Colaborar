@@ -64,7 +64,7 @@ define('SWIFT_DEFAULT_TARGET_CHARSET', 'UTF-8');
 define('SWIFT_DEFAULT_BR_TEXT', "\r\n");
 define('SWIFT_DEFAULT_SPAN_TEXT', " ");
 if (!defined('SWIFT_MAX_FILE_SIZE')){
-	define('SWIFT_MAX_FILE_SIZE', 600000);
+	define('SWIFT_MAX_FILE_SIZE', Swift_Performance_Lite::get_option('dom-parser-max-buffer'));
 }
 // helper functions
 // -----------------------------------------------------------------------------
@@ -688,7 +688,7 @@ class swift_performance_swift_performance_simple_html_dom_node
 // This implies that an html attribute specifier may start with an @ sign that is NOT captured by the expression.
 // farther study is required to determine of this should be documented or removed.
 //		$pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
-		$pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
+		$pattern = "/([\w\-:\*]*)(?:\#([\w\-]+)|\.([\w\-]+))?(?:\[@?(!?[\w\-:]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
 		preg_match_all($pattern, trim($selector_string).' ', $matches, PREG_SET_ORDER);
 		if (is_object($debug_object)) {$debug_object->debug_log(2, "Matches Array: ", $matches);}
 
@@ -1384,7 +1384,7 @@ class swift_performance_simple_html_dom
 			return true;
 		}
 
-		if (!preg_match("/^[\w-:]+$/", $tag)) {
+		if (!preg_match("/^[\w\-:]+$/", $tag)) {
 			$node->_[SWIFT_HDOM_INFO_TEXT] = '<' . $tag . $this->copy_until('<>');
 			if ($this->char==='<') {
 				$this->link_nodes($node, false);

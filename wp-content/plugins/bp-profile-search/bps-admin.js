@@ -61,6 +61,27 @@ function enableSortableFieldOptions () {
 	});
 }
 
-jQuery (document).ready (function () {
+jQuery(function () {
 	enableSortableFieldOptions ();
+});
+
+jQuery(function ($) {
+	$('#template').change(function () {
+		var template_spinner = $('#bps_template .spinner');
+		var save_button = $('input[type=submit]');
+		var data = {
+			'action': 'template_options',
+			'form': $('#form_id').val(),
+			'template': $('#template option:selected').val()
+		};
+
+		save_button.attr('disabled', 'disabled');
+		template_spinner.addClass('is-active');
+
+		$.post (ajaxurl, data, function (new_options) {
+			$('#template_options').html(new_options);
+			template_spinner.removeClass('is-active');
+			save_button.removeAttr('disabled');
+		});
+	});
 });

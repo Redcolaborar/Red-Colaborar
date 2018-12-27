@@ -10,13 +10,13 @@ class Swift_Performance_Image_Optimizer_Table extends WP_List_Table {
       function get_columns(){
             $columns = array(
                   'cb'              => '<input type="checkbox" />',
-                  'status'          => __('Status', 'swift-perforamce'),
-                  'preview'         => __('Preview', 'swift-perforamce'),
-                  'url'             => __('URL', 'swift-perforamce'),
-                  'link'            => __('URL', 'swift-perforamce'),
-                  'size'            => __('Size', 'swift-perforamce'),
-                  'size_show'       => __('Size', 'swift-perforamce'),
-                  'dimensions'      => __('Dimensions', 'swift-perforamce'),
+                  'status'          => __('Status', 'swift-performance'),
+                  'preview'         => __('Preview', 'swift-performance'),
+                  'url'             => __('URL', 'swift-performance'),
+                  'link'            => __('URL', 'swift-performance'),
+                  'size'            => __('Size', 'swift-performance'),
+                  'size_show'       => __('Size', 'swift-performance'),
+                  'dimensions'      => __('Dimensions', 'swift-performance'),
             );
             return $columns;
       }

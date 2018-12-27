@@ -242,27 +242,7 @@ class Swift_Performance_Image_Optimizer {
 	 * @param array $args
 	 */
 	public function api($args = array()){
-		$response = wp_remote_post (
-			$this->api_url, array(
-					'timeout' => 300,
-					'sslverify' => false,
-					'user-agent' => 'SwiftPerformance',
-					'headers' => array (
-							'X-ENVATO-PURCHASE-KEY' => trim ($this->api_key)
-					),
-					'body' => array (
-							'site' => Swift_Performance_Lite::home_url(),
-							'args' => $args
-					)
-			)
-		);
-
-		if (is_wp_error($response)){
-			Swift_Performance_Lite::log('API connection error: ' . $response->get_error_message(), 1);
-		}
-		else{
-			return json_decode($response['body'], true);
-		}
+		Swift_Performance_Lite::log('API connection error: ' . $response->get_error_message(), 1);
 	}
 
 	/**

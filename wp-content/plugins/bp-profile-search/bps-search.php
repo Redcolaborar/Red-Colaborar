@@ -29,8 +29,7 @@ function bps_set_request ()
 	}
 
 	$persistent = bps_get_option ('persistent', '1');
-	$new_search = function_exists ('bp_core_get_component_search_query_arg')?
-		isset ($_REQUEST[bp_core_get_component_search_query_arg ('members')]): false;
+	$new_search = isset ($_REQUEST[bp_core_get_component_search_query_arg ('members')]);
 
 	if ($new_search || !$persistent)
 		if (!isset ($_REQUEST[BPS_FORM]))  $_REQUEST[BPS_FORM] = 'clear';
@@ -42,6 +41,7 @@ function bps_set_request ()
 		{
 			$_REQUEST['bps_directory'] = bps_current_page ();
 			setcookie ($cookie, http_build_query ($_REQUEST), 0, COOKIEPATH);
+			bps_redirect_on_error ($_REQUEST);
 		}
 		else
 		{
@@ -121,10 +121,16 @@ function bps_save_hidden_filters ($attr, $content)
 			if (!empty ($values))  $bps_hidden_filters[$key] = $values;
 			break;
 
+		case '/e':
+			$flipped = array_flip ($f->options);
+			$value = trim ($value);
+			if (isset ($flipped[$value]))
+				$bps_hidden_filters[$key] = addslashes ($flipped[$value]);
+			break;
+
+		case 'one_of/e':
 		case 'match_any/e':
 		case 'match_all/e':
-		case '/e':
-		case 'one_of/e':
 			$flipped = array_flip ($f->options);
 			$values = explode ($split, $value);
 			$keys = array ();
@@ -158,10 +164,38 @@ function bps_current_page ()
 	return $current;
 }
 
+function bps_redirect_on_error ($request)
+{
+	$parsed = bps_parse_request ($request);
+	foreach ($parsed as $f)  if (!empty ($f->error_message))
+	{
+		$redirect = parse_url ($_SERVER['HTTP_REFERER'], PHP_URL_PATH);
+		wp_safe_redirect ($redirect);
+		exit;
+	}
+}
+
 function bps_debug ()
 {
 	$cookie = apply_filters ('bps_cookie_name', 'bps_debug');
 	return isset ($_REQUEST['bps_debug'])? true: isset ($_COOKIE[$cookie])? true: false;
+}
+
+add_filter ('bps_field_sql', 'bps_field_sql', 99, 2);
+function bps_field_sql ($sql, $f)
+{
+	global $wpdb;
+
+	if (bps_debug ())
+	{
+		$where = 'WHERE '. implode (' AND ', $sql['where']);
+		$where = $wpdb->remove_placeholder_escape ($where);
+		echo "<!--\n";
+		echo "where $where\n";
+		echo "-->\n";
+	}
+	
+	return $sql;
 }
 
 add_action ('bp_before_directory_members_content', 'bps_display_filters');

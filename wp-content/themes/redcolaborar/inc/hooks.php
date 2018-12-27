@@ -183,6 +183,7 @@ add_filter( 'bp_directory_members_search_form', 'wds_redcolaborar_bp_remove_memb
  * @author jomurgel
  */
 function wds_redcolaborar_add_shortcodes_to_activity_stream() {
+	add_filter( 'bp_get_activity_content_body', 'stripslashes', 1 );
 	add_filter( 'bp_get_activity_content_body', 'do_shortcode', 1 );
 }
 add_action( 'bp_init', 'wds_redcolaborar_add_shortcodes_to_activity_stream' );

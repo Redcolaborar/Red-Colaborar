@@ -150,9 +150,9 @@ if (!class_exists('Bxcft_Plugin'))
                     // BuddyPress loaded.
                     $version_bp = get_file_data( WP_PLUGIN_DIR . '/buddypress/bp-loader.php', array( 'Version' ) );
                 }
-                if ( ! $this->compare_versions( array_pop( $version_bp ), '2.5' ) ) {
+                if ( ! $this->compare_versions( array_pop( $version_bp ), '3.1.0', '>=') ) {
                     $notices = get_option('bxcft_notices');
-                    $notices[] = __('BuddyPress Xprofile Custom Fields Type plugin needs <b>BuddyPress 2.5</b>, please install or upgrade BuddyPress.', 'bxcft');
+                    $notices[] = __('BuddyPress Xprofile Custom Fields Type plugin needs <b>BuddyPress 3.1.0 or higher</b>, please install or upgrade BuddyPress.', 'bxcft');
                     update_option('bxcft_notices', $notices);
                     delete_option('bxcft_activated');
                 }

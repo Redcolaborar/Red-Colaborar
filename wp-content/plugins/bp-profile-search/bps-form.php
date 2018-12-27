@@ -41,82 +41,58 @@ function bps_add_form ()
 	foreach ($posts as $post)
 	{
 		$meta = bps_meta ($post->ID);
-		$template = $meta['template'];
-		bps_display_form ($post->ID, $template, 'directory');
+		bps_display_form ($post->ID, 'directory');
 	}
 }
 
-add_action ('bps_display_form', 'bps_display_form', 10, 3);
-function bps_display_form ($form, $template='', $location='')
+add_action ('bps_display_form', 'bps_display_form', 10, 2);
+function bps_display_form ($form, $location='')
 {
-	if (!function_exists ('bp_has_profile'))
-	{
-		printf ('<p class="bps_error">'. __('%s: The BuddyPress Extended Profiles component is not active.', 'bp-profile-search'). '</p>',
-			'<strong>BP Profile Search '. BPS_VERSION. '</strong>');
-		return false;
-	}
-
 	$meta = bps_meta ($form);
+
 	if (empty ($meta['field_code']))
-	{
-		printf ('<p class="bps_error">'. __('%s: Form %d was not found, or has no fields.', 'bp-profile-search'). '</p>',
-			'<strong>BP Profile Search '. BPS_VERSION. '</strong>', $form);
-		return false;
-	}
+		return bps_error ('form_empty_or_nonexistent', $form);
 
-	if (empty ($template))
-		$template = bps_default_template ();
-
-	bps_call_template ($template, array ($form, $location));
-	return true;
+	bps_call_form_template ($meta['template'], array ($form, $location));
 }
 
-add_shortcode ('bps_display', 'bps_show_form');
+add_shortcode ('bps_form', 'bps_show_form');
 function bps_show_form ($attr, $content)
 {
 	ob_start ();
 
-	if (isset ($attr['form']))
-	{
-		$template = isset ($attr['template'])? $attr['template']: '';
-		bps_display_form ($attr['form'], $template, 'shortcode');
-	}	
+	if (isset ($attr['id']))
+		bps_display_form ($attr['id'], 'shortcode');
 
 	return ob_get_clean ();
 }
 
-function bps_template_args ()
+add_shortcode ('bps_display', 'bps_show_form0');
+function bps_show_form0 ($attr, $content)
 {
-	return end ($GLOBALS['bps_template_args']);
+	ob_start ();
+
+	if (isset ($attr['form']))
+		bps_display_form ($attr['form'], 'shortcode');
+
+	return ob_get_clean ();
 }
 
-function bps_call_template ($template, $args = array ())
+function bps_error ($code, $data = array ())
 {
-	$version = BPS_VERSION;
-	echo "\n<!-- BP Profile Search $version $template -->\n";
+	$formats = array
+	(
+		'template_not_found'			=> __('%1$s error: Template "%2$s" not found.', 'bp-profile-search'),
+		'form_empty_or_nonexistent'		=> __('%1$s error: Form ID "%2$d" is empty or nonexistent.', 'bp-profile-search'),
+	);
 
-	$GLOBALS['bps_template_args'][] = $args;
-	$found = bp_get_template_part ($template);
-	array_pop ($GLOBALS['bps_template_args']);
-
-	if ($found)
-	{
-		if (bps_debug ())
-		{
-			$found = str_replace (WP_CONTENT_DIR, '', $found);
-			echo "<!--\n";
-			echo "$found\n";
-			print_r ($args);
-			echo "-->\n";
-		}
-	}
-	else
-	{
-		printf ('<p class="bps_error">'. __('%s: Template "%s" not found.', 'bp-profile-search'). '</p>',
-		"<strong>BP Profile Search $version</strong>", $template);
-	}
-
-	echo "\n<!-- BP Profile Search end $template -->\n";
+	$data = (array)$data;
+	$plugin = '<strong>BP Profile Search '. BPS_VERSION. '</strong>';
+	array_unshift ($data, $plugin);
+?>
+	<p class="bps-error"><?php vprintf ($formats[$code], $data); ?></p>
+<?php
+	return false;
 }
 
 function bps_set_wpml ($form, $code, $key, $value)
@@ -150,6 +126,8 @@ function bps_wpml ($form, $code, $key, $value)
 			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} - header");
 		case 'toggle form':
 			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} - toggle form");
+		case 'title':
+			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} - title");
 		}
 	}
 	else if (class_exists ('WPGlobus_Core'))

@@ -3,8 +3,8 @@ Contributors: icc0rz, fnoks, falcon28
 Donate link: http://h5p.org
 Tags: editor, video, quiz, slider, education
 Requires at least: 3.8.1
-Tested up to: 4.9
-Stable tag: 1.10.2
+Tested up to: 5.0
+Stable tag: 1.11.3
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
@@ -382,3 +382,35 @@ Update the French translation, big thanks to knowledgeplaces on GitHub!
 Restricted some new content type in case an LRS isn't used.
 Add support for the latest H5P Core version.
 Various minor bug fixes
+
+= 1.10.3 =
+Fix compatibility with PHP <5.4
+
+= 1.11.0 =
+Added the new metadata system to H5P
+Added support for Copy and Paste inside H5PEditor (No cross-site support)
+Added support for addons (e.g. Mathdisplay)
+Added Russian translation. Big thanks to Александр Шульгин
+Added Arabic translation. Big thanks to omniasaid
+Updated Turkish translation. Big thanks to hakangur
+Upgraded CKEditor inside H5PEditor
+Added Bosnian translation to H5PEditor. Big thanks to Sabahuddin
+Updated German translation in H5PEditor. Big thanks to Sebastian Rettig
+Updated French translations in H5PEditor. Big thanks to knowledgeplaces
+Updated Arabic translations in H5PEditor. Big thanks to smartwayme
+Updated Polish translations in H5PEditor. Big thanks to Andrzej Pieńkowski
+Added brazilian portuguese translation in H5PEditor. Big thanks to Juliano Navroski Junior
+Updated Turkish translations in H5PEditor. Big thanks to Adem Özgür
+Fix appropriate separator for AJAX URLs in H5PEditor. Big thanks to Miika Langille
+Minor bug fixes and improvements to H5PEditor and Core
+
+= 1.11.1 =
+Fixed serious bug when loading editor translations for some languages.
+
+= 1.11.2 =
+Fix compatibility with PHP <5.4
+
+= 1.11.3 =
+Fix "common fields" issue when switching between content types.
+Fix resizing bug for iframe embeds.
+Fix issue with temporary files.

@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		$media = mpp_get_media( $ids );
 		$args = array(
 			'src'		=> mpp_get_media_src( '', $media ),
-			'poster'	=> mpp_get_media_src( 'thumbnail', $media ),
+			//'poster'	=> mpp_get_media_src( 'thumbnail', $media ),
 
 		);
 	//show single video with poster	

@@ -158,12 +158,15 @@ class Swift_Performance_Asset_Manager {
 	public function asset_manager_callback($buffer){
              // Don't play with assets if the current page is not cacheable
              if (!Swift_Performance_Asset_Manager::should_optimize()){
-                   Swift_Performance_Lite::log('Skip asset merging, current page is not cacheable. URL:' . $_SERVER['REQUEST_URI'] . ', Request:' . serialize($_REQUEST), 6);
-                   return $buffer;
+			$path	= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+			$id	= Swift_Performance_Lite::get_warmup_id(Swift_Performance_Lite::home_url() . trim($path, '/'));
+ 			Swift_Performance_Lite::mysql_query('UPDATE ' . SWIFT_PERFORMANCE_TABLE_PREFIX . 'warmup SET type = "error" WHERE id="' . $id . '" LIMIT 1');
+                  Swift_Performance_Lite::log('Skip asset merging, current page is not cacheable. URL:' . $_SERVER['REQUEST_URI'] . ', Request:' . serialize($_REQUEST), 6);
+                  return $buffer;
              }
              $critical_css     = $js = $early_js = $late_js = '';
              $css              = $late_import = $lazyload_scripts_buffer = array();
- 		$html             = swift_performance_str_get_html(Swift_Performance_Asset_Manager::html_auto_fix($buffer));
+ 		 $html             = swift_performance_str_get_html(Swift_Performance_Asset_Manager::html_auto_fix($buffer));
              $schema           = (is_ssl() ? 'https://' : 'http://');
 
              // Stop here if something really bad happened
@@ -172,8 +175,14 @@ class Swift_Performance_Asset_Manager {
                    if (strlen($buffer) > SWIFT_MAX_FILE_SIZE){
        			$info .= 'Max buffer size (' . SWIFT_MAX_FILE_SIZE . ' bytes) was exceeded: '. strlen($buffer) . ' bytes';
        		}
-                   Swift_Performance_Lite::log('DOM parser failed' . $info, 1);
-                   return $buffer;
+			$path	= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+ 			$id	= Swift_Performance_Lite::get_warmup_id(Swift_Performance_Lite::home_url() . trim($path, '/'));
+			Swift_Performance_Lite::mysql_query('UPDATE ' . SWIFT_PERFORMANCE_TABLE_PREFIX . 'warmup SET type = "error" WHERE id="' . $id . '" LIMIT 1');
+			Swift_Performance_Lite::log('DOM parser failed' . $info, 1);
+			if (!defined('SWIFT_PERFORMANCE_DISABLE_CACHE')){
+				define('SWIFT_PERFORMANCE_DISABLE_CACHE', true);
+			}
+                  return $buffer;
              }
 
              // Don't merge styles and scripts for AMP pages
@@ -297,7 +306,7 @@ class Swift_Performance_Asset_Manager {
  						// Minify CSS
  	                              if (Swift_Performance_Lite::check_option('minify-css', 1)){
  	            				$_css = preg_replace('~/\*.*?\*/~s', '', $_css);
- 	            				$_css = preg_replace('~\r?\n~', '', $_css);
+ 	            				$_css = preg_replace('~\r?\n~', ' ', $_css);
  	            				$_css = preg_replace('~(\s{2}|\t)~', ' ', $_css);
  	                              }
 
@@ -342,7 +351,7 @@ class Swift_Performance_Asset_Manager {
  						// Minify CSS
  						if (Swift_Performance_Lite::check_option('minify-css', 1)){
  							$_css = preg_replace('~/\*.*?\*/~s', '', $_css);
- 							$_css = preg_replace('~\r?\n~', '', $_css);
+ 							$_css = preg_replace('~\r?\n~', ' ', $_css);
  							$_css = preg_replace('~(\s{2}|\t)~', ' ', $_css);
  						}
 
@@ -396,7 +405,7 @@ class Swift_Performance_Asset_Manager {
  	                                    $js_filepath = str_replace(apply_filters('script_loader_src', home_url(), 'dummy-handle'), ABSPATH, $src);
  	                                    if (strpos($src, apply_filters('script_loader_src', home_url(), 'dummy-handle')) !== false){
  	                                          if (strpos($src, '.php') !== false || !preg_match('~\.js$~', parse_url($src, PHP_URL_PATH)) || !file_exists($js_filepath)){
- 	                                                $response = wp_remote_get(preg_replace('~^//~', $schema, $node->src), array('sslverify' => false, 'timeout' => 15));
+ 	                                                $response = wp_remote_get(preg_replace('~^//~', $schema, $node->src), array('sslverify' => false, 'timeout' => 15, 'headers' => array('Referer' => home_url())));
  	                                                if (!is_wp_error($response)){
  	                                                      if (in_array($response['response']['code'], array(200, 304))){
  										$_js = "\ntry{\n" . Swift_Performance_Asset_Manager::minify_js($response['body']) . "\n}catch(e){/*silent fail*/}\n".self::script_boundary()."\n";
@@ -415,7 +424,7 @@ class Swift_Performance_Asset_Manager {
  	                                          $remove_tag = true;
  	                                    }
  	                                    else if (Swift_Performance_Lite::check_option('merge-scripts-exclude-3rd-party', 1, '!=')){
- 	                                          $response = wp_remote_get(preg_replace('~^//~', $schema, $node->src), array('sslverify' => false, 'timeout' => 15));
+ 	                                          $response = wp_remote_get(preg_replace('~^//~', $schema, $node->src), array('sslverify' => false, 'timeout' => 15, 'headers' => array('Referer' => home_url())));
  	                                          if (!is_wp_error($response)){
  	                                                if (in_array($response['response']['code'], array(200, 304))){
  										$_js = "\ntry{" . Swift_Performance_Asset_Manager::minify_js($response['body']) . "}catch(e){/*silent fail*/}\n".self::script_boundary()."\n";
@@ -504,8 +513,15 @@ class Swift_Performance_Asset_Manager {
                                $attribute  = (isset($node->{'data-src'}) ? 'data-src' : 'src');
                                $img_path   = str_replace(apply_filters('swift_performance_media_host', home_url()), ABSPATH, $node->$attribute);
                                if (file_exists($img_path) && filesize($img_path) <= Swift_Performance_Lite::get_option('base64-small-images-size')){
-                                     $mime             = preg_match('~\.jpe?g$~', $img_path) ? 'jpeg' : 'png';
-                                     $node->$attribute = 'data:image/'.$mime.';base64,' . base64_encode(file_get_contents($img_path));
+                                     $mime = preg_match('~\.jpe?g$~', $img_path) ? 'jpeg' : 'png';
+						 if (isset($prebuild_booster[md5($img_path)])){
+							 $node->$attribute = $prebuild_booster[md5($img_path)];
+						 }
+						 else {
+							 $node->$attribute = 'data:image/'.$mime.';base64,' . base64_encode(file_get_contents($img_path));
+							 $prebuild_booster[md5($img_path)] = $node->$attribute;
+							 Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+						 }
 
                                      // Get rid srcset for inlined images
                                      if (isset($node->srcset)){
@@ -687,7 +703,7 @@ class Swift_Performance_Asset_Manager {
  					// Minify CSS
  	                        if (Swift_Performance_Lite::check_option('minify-css', 1)){
  	                              $_css = preg_replace('~/\*.*?\*/~s', '', $_css);
- 	                              $_css = preg_replace('~\r?\n~', '', $_css);
+ 	                              $_css = preg_replace('~\r?\n~', ' ', $_css);
  	                              $_css = preg_replace('~(\s{2}|\t)~', ' ', $_css);
  	                        }
 
@@ -1044,9 +1060,13 @@ class Swift_Performance_Asset_Manager {
                    if (Swift_Performance_Lite::check_option('dns-prefetch-js',1)){
                          preg_match_all('~("|\')(https?:)?(\\\\)?/(\\\\)?/(([a-z0-9\._-]*)\.([a-z0-9\._-]*))~i', $_js, $js_domains);
                    }
-                   preg_match_all('~(src|url)\s?(=|\()("|\'|)?(https?:)?//([^"\'\)]*)("|\'|\))?~', $_html . $css['all'], $other_domains);
 
-                   $domains = array_merge((array)$stylesheet_domains[3], (array)$js_domains[5], (array)$other_domains[5]);
+			// CSS
+ 			if (isset($css['all'])){
+                   	preg_match_all('~(src|url)\s?(=|\()("|\'|)?(https?:)?//([^"\'\)]*)("|\'|\))?~', $_html . $css['all'], $other_domains);
+ 			}
+
+                   @$domains = array_merge((array)$stylesheet_domains[3], (array)$js_domains[5], (array)$other_domains[5]);
 
                    $exclude_dns_prefetch = array();
                    foreach ((array)Swift_Performance_Lite::get_option('exclude-dns-prefetch') as $exclude_domain){
@@ -1225,7 +1245,7 @@ class Swift_Performance_Asset_Manager {
 			$response['body'] = preg_replace_callback('~url\((\'|")?([^\("\']*)(\'|")?\)~', array($this, 'css_realpath_url'), $response['body']);
                   if (Swift_Performance_Lite::check_option('minify-css', 1)){
       			$response['body'] = preg_replace('~/\*.*?\*/~s', '', $response['body']);
-      			$response['body'] = preg_replace('~\r?\n~', '', $response['body']);
+      			$response['body'] = preg_replace('~\r?\n~', ' ', $response['body']);
       			$response['body'] = preg_replace('~(\s{2,}|\t)~', ' ', $response['body']);
                   }
                   $GLOBALS['swift_css_realpath_basepath'] = $swift_css_realpath_basepath;
@@ -1280,6 +1300,10 @@ class Swift_Performance_Asset_Manager {
        * @return array
        */
       public function lazyload_images($args, $id){
+		if ($id <= 0){
+			return false;
+		}
+
             $upload_dir = wp_upload_dir();
             // Is lazy load image exists already?
             $intermediate = image_get_intermediate_size($id, 'swift_performance_lazyload');
@@ -1321,9 +1345,18 @@ class Swift_Performance_Asset_Manager {
                   }
             }
 
-            if (Swift_Performance_Lite::check_option('base64-lazy-load-images',1) || Swift_Performance_Lite::check_option('base64-small-images',1)){
-                  $mime              = preg_match('~\.jpg$~', $lazy_load_src[0]) ? 'jpeg' : 'png';
-                  $lazy_load_src[0] = 'data:image/'.$mime.';base64,' . base64_encode(file_get_contents(str_replace(apply_filters('swift_performance_media_host',$upload_dir['baseurl']), $upload_dir['basedir'], $lazy_load_src[0])));
+		if (strpos($lazy_load_src[0], 'data:image') === false && Swift_Performance_Lite::check_option('base64-lazy-load-images',1) || Swift_Performance_Lite::check_option('base64-small-images',1)){
+                  $mime		= preg_match('~\.jpg$~', $lazy_load_src[0]) ? 'jpeg' : 'png';
+			$img_path	= str_replace(apply_filters('swift_performance_media_host',$upload_dir['baseurl']), $upload_dir['basedir'], $lazy_load_src[0]);
+
+			if (isset($prebuild_booster[md5($img_path)])){
+				$lazy_load_src[0] = $prebuild_booster[md5($img_path)];
+			}
+			else {
+				$lazy_load_src[0] = 'data:image/'.$mime.';base64,' . base64_encode(file_get_contents($img_path));
+				$prebuild_booster[md5($img_path)] = $lazy_load_src[0];
+				Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+			}
             }
 
             // Override arguments
