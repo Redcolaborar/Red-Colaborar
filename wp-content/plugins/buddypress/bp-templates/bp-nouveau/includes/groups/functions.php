@@ -224,7 +224,7 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 		if ( bp_is_item_admin() ) {
 			$response['can_edit'] = true;
 		} else {
-			$response['can_edit'] = in_array( bp_loggedin_user_id(), $inviter_ids );
+			$response['can_edit'] = in_array( bp_loggedin_user_id(), $inviter_ids, true );
 		}
 	}
 
@@ -255,6 +255,12 @@ function bp_nouveau_get_group_potential_invites( $args = array() ) {
 	) );
 
 	if ( empty( $r['group_id'] ) ) {
+		return false;
+	}
+
+	// Check the current user's access to the group.
+	$group = groups_get_group( $r['group_id'] );
+	if ( ! $group->user_has_access && ! bp_current_user_can( 'bp_moderate' ) ) {
 		return false;
 	}
 

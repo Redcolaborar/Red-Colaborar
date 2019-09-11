@@ -18,6 +18,14 @@ if (!class_exists('Luv_Framework')){
       include_once apply_filters('luv_framework_classes_dir', LUV_FRAMEWORK_PATH . 'classes/') . 'class.framework.php';
 }
 
+if (function_exists('determine_locale')){
+	$locale = apply_filters( 'plugin_locale', determine_locale(), 'luv-framework' );
+}
+else {
+	global $locale;
+}
+load_textdomain( 'luv-framework', LUV_FRAMEWORK_PATH . '/language/luv-framework-' . $locale . '.mo' );
+
 // Helpers
 if (!function_exists('luv_framework_kses')){
       function luv_framework_kses($string){

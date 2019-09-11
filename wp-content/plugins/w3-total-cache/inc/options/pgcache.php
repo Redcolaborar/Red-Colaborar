@@ -261,7 +261,7 @@ Util_Ui::postbox_header( __( 'Purge Policy: ', 'w3-total-cache' ) . implode( ', 
 							'label' => "Cache",
 							'disabled' => !Util_Environment::is_w3tc_pro( $this->_config ),
 							'postfix' => ( Util_Environment::is_w3tc_pro( $this->_config ) ? '' :
-								'&nbsp;&nbsp;&nbsp;(<a href="#" class="button-buy-plugin">Upgrade</a> now to enable)')
+								'&nbsp;&nbsp;&nbsp;(<a href="#" class="button-buy-plugin" data-src="pagecache_rest">Upgrade</a> now to enable)')
 						),
 						'disable' => 'Disable <acronym title="REpresentational State Transfer">REST</acronym> <acronym title="Application Programming Interface">API</acronym>',
 					),
@@ -293,7 +293,8 @@ Util_Ui::postbox_header( __( 'Purge Policy: ', 'w3-total-cache' ) . implode( ', 
 				</td>
 			</tr>
 			<?php
-if ( $this->_config->get_string( 'pgcache.engine' ) == 'memcached' ) {
+if ( $this->_config->get_string( 'pgcache.engine' ) == 'memcached' ||
+	$this->_config->get_string( 'pgcache.engine' ) == 'nginx_memcached' ) {
 	$module = 'pgcache';
 	include W3TC_INC_DIR . '/options/parts/memcached.php';
 } elseif ( $this->_config->get_string( 'pgcache.engine' ) == 'redis' ) {
@@ -393,54 +394,56 @@ if ( $this->_config->get_string( 'pgcache.engine' ) == 'memcached' ) {
 					<span class="description">
 						<?php
 echo sprintf(
-	__( 'Always ignore the specified pages / directories. Supports regular expressions (See <a href="%s">FAQ</a>)', 'w3-total-cache' ),           network_admin_url( 'admin.php?page=w3tc_faq#q82' )
+	__( 'Always ignore the specified pages / directories. Supports regular expressions (See <a href="%s"><acronym title="Frequently Asked Questions">FAQ</acronym></a>)',
+	'w3-total-cache' ),
+	'https://github.com/W3EDGE/w3-total-cache/wiki/FAQ:-Usage#which-textareas-for-file-entries-support-regular-expressions'
 ); ?>
 					</span>
 				</td>
 			</tr>
-            <tr>
-                <th><label for="pgcache_reject_categories"><?php Util_Ui::e_config_label( 'pgcache.reject.categories' ) ?></label></th>
-                <td>
-                    <textarea id="pgcache_reject_categories" name="pgcache__reject__categories"
-                        <?php Util_Ui::sealing_disabled( 'pgcache' ) ?>
-                        cols="40" rows="5"><?php echo esc_textarea( implode( "\r\n", $this->_config->get_array('pgcache.reject.categories' ) ) ); ?></textarea><br />
-                    <span class="description"><?php _e( 'Always ignore all pages filed under the specified category slugs.', 'w3-total-cache' ); ?></span>
-                </td>
-            </tr>
-            <tr>
-                <th><label for="pgcache_reject_tags"><?php Util_Ui::e_config_label( 'pgcache.reject.tags' ) ?></label></th>
-                <td>
-                    <textarea id="pgcache_reject_tags" name="pgcache__reject__tags"
-                        <?php Util_Ui::sealing_disabled( 'pgcache' ) ?>
-                        cols="40" rows="5"><?php echo esc_textarea( implode( "\r\n", $this->_config->get_array( 'pgcache.reject.tags' ) ) ); ?></textarea><br />
-                    <span class="description"><?php _e( 'Always ignore all pages filed under the specified tag slugs.', 'w3-total-cache' ); ?></span>
-                </td>
-            </tr>
-            <tr>
-                <th><label for="pgcache_reject_authors"><?php Util_Ui::e_config_label( 'pgcache.reject.authors' ) ?></label></th>
-                <td>
-                    <textarea id="pgcache_reject_authors" name="pgcache__reject__authors"
-                        <?php Util_Ui::sealing_disabled( 'pgcache' ) ?>
-                        cols="40" rows="5"><?php echo esc_textarea( implode( "\r\n", $this->_config->get_array( 'pgcache.reject.authors' ) ) ); ?></textarea><br />
-                    <span class="description"><?php _e( 'Always ignore all pages filed under the specified author usernames.', 'w3-total-cache' ); ?></span>
-                </td>
-            </tr>
-            <tr>
-                <th><label for="pgcache_reject_custom"><?php Util_Ui::e_config_label( 'pgcache.reject.custom' ) ?></label></th>
-                <td>
-                    <textarea id="pgcache_reject_custom" name="pgcache__reject__custom"
-                        <?php Util_Ui::sealing_disabled( 'pgcache' ) ?>
-                        cols="40" rows="5"><?php echo esc_textarea( implode( "\r\n", $this->_config->get_array('pgcache.reject.custom' ) ) ); ?></textarea><br />
-                    <span class="description"><?php _e( 'Always ignore all pages filed under the specified custom fields. Separate name-value pairs with an equals sign (i.e., name=value).', 'w3-total-cache' ); ?></span>
-                </td>
-            </tr>
+			<tr>
+				<th><label for="pgcache_reject_categories"><?php Util_Ui::e_config_label( 'pgcache.reject.categories' ) ?></label></th>
+				<td>
+					<textarea id="pgcache_reject_categories" name="pgcache__reject__categories"
+						<?php Util_Ui::sealing_disabled( 'pgcache' ) ?>
+						cols="40" rows="5"><?php echo esc_textarea( implode( "\r\n", $this->_config->get_array('pgcache.reject.categories' ) ) ); ?></textarea><br />
+					<span class="description"><?php _e( 'Always ignore all pages filed under the specified category slugs.', 'w3-total-cache' ); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="pgcache_reject_tags"><?php Util_Ui::e_config_label( 'pgcache.reject.tags' ) ?></label></th>
+				<td>
+					<textarea id="pgcache_reject_tags" name="pgcache__reject__tags"
+						<?php Util_Ui::sealing_disabled( 'pgcache' ) ?>
+						cols="40" rows="5"><?php echo esc_textarea( implode( "\r\n", $this->_config->get_array( 'pgcache.reject.tags' ) ) ); ?></textarea><br />
+					<span class="description"><?php _e( 'Always ignore all pages filed under the specified tag slugs.', 'w3-total-cache' ); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="pgcache_reject_authors"><?php Util_Ui::e_config_label( 'pgcache.reject.authors' ) ?></label></th>
+				<td>
+					<textarea id="pgcache_reject_authors" name="pgcache__reject__authors"
+						<?php Util_Ui::sealing_disabled( 'pgcache' ) ?>
+						cols="40" rows="5"><?php echo esc_textarea( implode( "\r\n", $this->_config->get_array( 'pgcache.reject.authors' ) ) ); ?></textarea><br />
+					<span class="description"><?php _e( 'Always ignore all pages filed under the specified author usernames.', 'w3-total-cache' ); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="pgcache_reject_custom"><?php Util_Ui::e_config_label( 'pgcache.reject.custom' ) ?></label></th>
+				<td>
+					<textarea id="pgcache_reject_custom" name="pgcache__reject__custom"
+						<?php Util_Ui::sealing_disabled( 'pgcache' ) ?>
+						cols="40" rows="5"><?php echo esc_textarea( implode( "\r\n", $this->_config->get_array('pgcache.reject.custom' ) ) ); ?></textarea><br />
+					<span class="description"><?php _e( 'Always ignore all pages filed under the specified custom fields. Separate name-value pairs with an equals sign (i.e., name=value).', 'w3-total-cache' ); ?></span>
+				</td>
+			</tr>
 			<tr>
 				<th><label for="pgcache_accept_files"><?php Util_Ui::e_config_label( 'pgcache.accept.files' ) ?></label></th>
 				<td>
 					<textarea id="pgcache_accept_files" name="pgcache__accept__files"
 						<?php Util_Ui::sealing_disabled( 'pgcache.' ) ?>
 						cols="40" rows="5"><?php echo esc_textarea( implode( "\r\n", $this->_config->get_array( 'pgcache.accept.files' ) ) ); ?></textarea><br />
-					<span class="description"><?php echo sprintf( __( 'Cache the specified pages / directories even if listed in the "never cache the following pages" field. Supports regular expression (See <a href="%s">FAQ</a>)', 'w3-total-cache' ), network_admin_url( 'admin.php?page=w3tc_faq#q82' ) ); ?></span>
+					<span class="description"><?php echo sprintf( __( 'Cache the specified pages / directories even if listed in the "never cache the following pages" field. Supports regular expression (See <a href="%s"><acronym title="Frequently Asked Questions">FAQ</acronym></a>)', 'w3-total-cache' ), network_admin_url( 'admin.php?page=w3tc_faq' ) ); ?></span>
 				</td>
 			</tr>
 			<?php if ( substr( $permalink_structure, -1 ) == '/' ): ?>
@@ -468,7 +471,7 @@ echo sprintf(
 				<th><label><?php Util_Ui::e_config_label( 'pgcache.cache.nginx_handle_xml' ) ?></label></th>
 				<td>
 					<?php $this->checkbox( 'pgcache.cache.nginx_handle_xml' ) ?> <?php Util_Ui::e_config_label( 'pgcache.cache.nginx_handle_xml' ) ?></label><br />
-					<span class="description"><?php _e( 'Return correct Content-Type header for XML files (e.g., feeds and sitemaps). Slows down cache engine.', 'w3-total-cache' ); ?></span>
+					<span class="description"><?php _e( 'Return correct Content-Type header for <acronym title="Extensible Markup Language">XML</acronym> files (e.g., feeds and sitemaps). Slows down cache engine.', 'w3-total-cache' ); ?></span>
 				</td>
 			</tr>
 			<?php endif; ?>

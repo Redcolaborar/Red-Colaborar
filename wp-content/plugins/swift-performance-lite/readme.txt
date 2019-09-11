@@ -2,7 +2,7 @@
 Contributors: swte, doit686868, hostmyblogco, fredawd
 Tags: cache, caching, seo, performance, optimizer, cdn, compression, speed
 Requires at least: 4.0
-Tested up to: 5.0
+Tested up to: 5.2.2
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -101,6 +101,10 @@ If CPU usage is constantly higher you may need check the configuration. It is re
 = Key Features =
 Quick Setup, Page Cache, Cache Preloading, Gzip Compression, Browser Caching, Remove Query Strings, Lazyload, Minify CSS, Minify JS, Combine JS/CSS, Async Execute Combined JS, Defer JS, CDN Support, Cloudflare Support, Varnish Support, Mobile Detection, Multisite Compatibility, Woocommerce Friendly, WPML Support, Cache For Logged In Users, Database Optimizer, Import/Export, DNS Prefetch, Critical CSS On The Fly, Plugin Organizer, Appcache, AJAX Cache, Proxy 3rd Party JS, Inline Small Images, Google Analytics Bypass, Heartbeat Control
 
+= Reviews =
+[Swift Performance Review](https://www.wpmediamastery.com/swift-performance-review-and-settings/) by WPMediaMastery
+[Swift Performance Comparison](https://www.alentejowebdesign.nl/wp-rocket-vs-swift-performance/) by Alentejo Webdesign
+
 == Installation ==
 
 1. Upload the plugin files to the /wp-content/plugins/ directory, or install the plugin through the WordPress plugins screen directly.
@@ -117,6 +121,51 @@ Quick Setup, Page Cache, Cache Preloading, Gzip Compression, Browser Caching, Re
 6. Plugin Organizer
 
 == Changelog ==
+
+
+= 2.1 - 2019.08.17 =
+[FIX] Minor bugfixes
+[FIX] Prevent to create unnecessary Image Optimizer tables
+[IMPROVE] Improve UI
+[IMPROVE] Safe send headers
+[NEW] Ability to disable prebuild booster
+[NEW] Hungarian translation added
+
+= 2.0.10 - 2019.03.18 =
+[FIX] Prebuild cache issues
+
+= 2.0.9 - 2019.03.17 =
+[FIX] Fatal error on New Post
+
+= 2.0.8 - 2019.03.17 =
+[FIX] Minor fixes
+[FIX] Permanent admin notices
+[FIX] Measure max timeout on Setup
+[FIX] Google Analytics Bypass issues with latest analytics.js
+
+= 2.0.7 - 2019.03.02 =
+[FIX] Minor fixes
+[IMPROVE] WooCommerce scheduled sales compatibility
+
+= 2.0.6 - 2019.02.10 =
+[FIX] WP Staging conflict
+
+= 2.0.5 - 2019.02.03 =
+[FIX] Non-latin characters in URL issues
+[FIX] Minor Layout fixes
+
+= 2.0.4 - 2019.01.26 =
+[FIX] Minor Fixes
+[FIX] Elementor editor conflict fix
+[IMPROVE] Override Cloudflare Host (useful for subdomains)
+[IMPROVE] Archive & Category Prebuild
+
+= 2.0.2 - 2019.01.20 =
+[FIX] Minor Fixes
+[FIX] WP CLI issues
+[FIX] XML-RPC issue
+[IMPROVE] Critical CSS
+[IMPROVE] POT file updated
 
 = 2.0.1 - 2018.12.12 =
 [FIX] PHP 7.3 compatibility issues

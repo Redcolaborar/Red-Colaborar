@@ -592,4 +592,8 @@
             }
       });
 
+      jQuery(document).on('click', '.luv-framework-notice', function(){
+            jQuery(this).remove();
+      });
+
 })();

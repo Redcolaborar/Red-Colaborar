@@ -29,7 +29,7 @@ class Swift_Performance_Asset_Manager {
             // Remove version query string from static resources
             if (Swift_Performance_Lite::check_option('normalize-static-resources', 1) && !Swift_Performance_Lite::is_admin()){
 			// Prevent elementor conflict
-			if (isset($_GET['action']) && $_GET['action'] == 'elementor'){
+			if ((isset($_GET['action']) && $_GET['action'] == 'elementor') || isset($_GET['elementor-preview'])){
 				return;
 			}
 
@@ -74,7 +74,7 @@ class Swift_Performance_Asset_Manager {
             // Merge assets in background
             if (Swift_Performance_Lite::check_option('merge-background-only', 1) && Swift_Performance_Lite::check_option('enable-caching',1) && (Swift_Performance_Cache::is_cacheable() || Swift_Performance_Cache::is_cacheable_dynamic()) ){
                   add_action('wp_footer', function(){
-                        echo "<script>var xhr = new XMLHttpRequest();xhr.open('GET', document.location.href);xhr.setRequestHeader('X-merge-assets', 'true');xhr.send(null);</script>";
+                        echo "<script data-dont-merge>var xhr = new XMLHttpRequest();xhr.open('GET', document.location.href);xhr.setRequestHeader('X-merge-assets', 'true');xhr.send(null);</script>";
                   }, PHP_INT_MAX);
             }
 
@@ -199,7 +199,7 @@ class Swift_Performance_Asset_Manager {
              $lazyload_scripts_regex = '/('.implode('|', $lazyload_scripts).')/';
 
  		// Prebuild booster
- 		$prebuild_booster = (array)get_transient('swift_performance_prebuild_booster');
+		$prebuild_booster = (Swift_Performance_Lite::check_option('prebuild-booster', 1) ? (array)get_transient('swift_performance_prebuild_booster') : array());
 
  		foreach ($html->find('link[rel="stylesheet"], style, script, img, iframe') as $node){
                    // Exclude data-dont-merge
@@ -312,8 +312,10 @@ class Swift_Performance_Asset_Manager {
 
  						if (!empty($_css)){
  		      				$css[$media] .= $_css;
- 							$prebuild_booster[md5($node->href)] = $_css;
- 							Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+							if (Swift_Performance_Lite::check_option('prebuild-booster', 1)){
+ 								$prebuild_booster[md5($node->href)] = $_css;
+ 								Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+							}
 
  						}
  					}
@@ -358,8 +360,10 @@ class Swift_Performance_Asset_Manager {
  	      				$css[$media] .= $_css;
  	                              $remove_tag = true;
 
- 						$prebuild_booster[md5($node->innertext)] = $_css;
- 						Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+						if (Swift_Performance_Lite::check_option('prebuild-booster', 1)){
+ 							$prebuild_booster[md5($node->innertext)] = $_css;
+ 							Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+						}
  					}
        			}
                    }
@@ -445,8 +449,10 @@ class Swift_Performance_Asset_Manager {
 
  							if (!empty($_js)){
  								$js .= $_js;
- 								$prebuild_booster[md5($node->src)] = $_js;
- 								Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+								if (Swift_Performance_Lite::check_option('prebuild-booster', 1)){
+ 									$prebuild_booster[md5($node->src)] = $_js;
+ 									Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+								}
 
  							}
  						}
@@ -459,7 +465,7 @@ class Swift_Performance_Asset_Manager {
  						}
  						else {
  	                                    // Get rid GA if bypass enabled
- 	                                    if (Swift_Performance_Lite::check_option('bypass-ga', 1) && strpos($node->innertext, "GoogleAnalyticsObject") !== false){
+ 	                                    if (Swift_Performance_Lite::check_option('bypass-ga', 1) && (strpos($node->innertext, "function gtag(){dataLayer.push(arguments);}") !== false || strpos($node->innertext, "GoogleAnalyticsObject") !== false)){
  	                                          $node->outertext = '';
  	                                          continue;
  	                                    }
@@ -475,7 +481,7 @@ class Swift_Performance_Asset_Manager {
  	                                    $remove_tag = true;
 
  							$js .= $_js;
-							if (!Swift_Performance_Lite::is_user_logged_in()){
+							if (Swift_Performance_Lite::check_option('prebuild-booster', 1) && !Swift_Performance_Lite::is_user_logged_in()){
 	 							$prebuild_booster[md5($node->innertext)] = $_js;
 	 							Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
 							}
@@ -519,8 +525,10 @@ class Swift_Performance_Asset_Manager {
 						 }
 						 else {
 							 $node->$attribute = 'data:image/'.$mime.';base64,' . base64_encode(file_get_contents($img_path));
-							 $prebuild_booster[md5($img_path)] = $node->$attribute;
-							 Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+							 if (Swift_Performance_Lite::check_option('prebuild-booster', 1)){
+								 $prebuild_booster[md5($img_path)] = $node->$attribute;
+								 Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+							 }
 						 }
 
                                      // Get rid srcset for inlined images
@@ -762,9 +770,9 @@ class Swift_Performance_Asset_Manager {
                          $critical_css = $css['all'];
 
                          // Encode content attribute for pseudo elements before parsing
-             		$critical_css = preg_replace_callback('~content\s?:\s?(\'|")([^\'"]*)(\'|")~', function($matches){
-             			return 'content: ' . $matches[1] . base64_encode($matches[2]) . $matches[1];
-             		}, $critical_css);
+				 $critical_css = preg_replace_callback('~content\s?:\s?(\'|")\s?(\(")?([^\'"]*)("\))?(\'|")~', function($matches){
+				 	return 'content: ' . $matches[1] . base64_encode($matches[2].$matches[3].$matches[4]) . $matches[1];
+				 }, $critical_css);
 
                          // Encode URLS
              		$critical_css = preg_replace_callback('~url\s?\(("|\')?([^"\'\)]*)("|\')?\)~i', function($matches){
@@ -858,7 +866,6 @@ class Swift_Performance_Asset_Manager {
                          // Remove keyframes
                          if (Swift_Performance_Lite::check_option('remove-keyframes',1)){
                                $critical_css = preg_replace('~@([^\{]*)keyframes([^\{]*){((?!\}\}).)*\}\}~','',$critical_css);
-                               $critical_css = preg_replace('~(-webkit-|-moz-|-o|-ms-)?animation:([^;]*);~','',$critical_css);
                          }
 
                          // Remove leading semicolon in ruleset
@@ -1354,10 +1361,21 @@ class Swift_Performance_Asset_Manager {
 			}
 			else {
 				$lazy_load_src[0] = 'data:image/'.$mime.';base64,' . base64_encode(file_get_contents($img_path));
-				$prebuild_booster[md5($img_path)] = $lazy_load_src[0];
-				Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+				if (Swift_Performance_Lite::check_option('prebuild-booster', 1)){
+					$prebuild_booster[md5($img_path)] = $lazy_load_src[0];
+					Swift_Performance_Lite::safe_set_transient('swift_performance_prebuild_booster', $prebuild_booster, 600);
+				}
 			}
             }
+
+		// Sizing styles
+		$sizing_styles = '';
+		if (!empty($width)){
+			$sizing_styles = 'width:' . $width.';';
+		}
+		if (!empty($height)){
+			$sizing_styles = 'height:' . $height;
+		}
 
             // Override arguments
             $args['data-src'] = $args['src'];
@@ -1366,7 +1384,7 @@ class Swift_Performance_Asset_Manager {
             $args['src'] = $lazy_load_src[0];
             $args['data-swift-image-lazyload'] = 'true';
             $args['data-style'] = isset($args['style']) ? $args['style'] : '';
-            $args['style'] = (isset($args['style']) ? trim($args['style'], ';') . ';' : '') . ' ' . 'width:' . $width.';height:' . $height;
+            $args['style'] = (isset($args['style']) ? trim($args['style'], ';') . ';' : '') . $sizing_styles;
             unset($args['srcset']);
             unset($args['sizes']);
             return $args;

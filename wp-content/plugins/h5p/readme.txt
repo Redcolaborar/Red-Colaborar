@@ -3,8 +3,8 @@ Contributors: icc0rz, fnoks, falcon28
 Donate link: http://h5p.org
 Tags: editor, video, quiz, slider, education
 Requires at least: 3.8.1
-Tested up to: 5.0
-Stable tag: 1.11.3
+Tested up to: 5.1
+Stable tag: 1.14.1
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
@@ -414,3 +414,33 @@ Fix compatibility with PHP <5.4
 Fix "common fields" issue when switching between content types.
 Fix resizing bug for iframe embeds.
 Fix issue with temporary files.
+
+= 1.12.0 =
+Improved API for better support with PressBooks.
+Added Copy/Paste support for single libraries in Editor.
+Added support for semi-fullscreen in Editor. (used in Branching Scenario)
+Added support for Audio Recorder in default audio widget. (used in Memory Game)
+Improved group summaries in Editor.
+Fix reset of all subContentIds when using Copy/Paste.
+Removed caching of pasted content to ensure objects are cloned.
+Removed support for base64 "uploads" in Core. (All uploads should be blobs or files)
+Other minor Editor & Core improvements.
+Updated translations, a big thanks to all contributors.
+
+= 1.13.0 =
+Added automated upgrade of content on save.
+Improved error handling for content upgrade.
+Added support for language switching in editor.
+Added a new reuse dialog for download or copy of content in view.
+
+= 1.13.1 =
+Fix correct default language not always loading.
+
+= 1.14.0 =
+Added fullscreen editing mode
+Added offline support for storing and resubmitting answers
+Allow setting bitrate for video files
+Improved cross origin handling for media files
+
+= 1.14.1 =
+Fix invalid finnish language issue in core

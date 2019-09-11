@@ -351,7 +351,7 @@ class Swift_Performance_Ajax {
 		$prebuild_status = '';
 		$prebuild_hit = get_transient('swift_performance_prebuild_cache_hit');
 		if (!empty($prebuild_hit)){
-			$prebuild_status = sprintf(esc_html__('Prebuild cache in progress: %s'), $prebuild_hit) . "\n";
+			$prebuild_status = sprintf(esc_html__('Prebuild cache in progress: %s'), urldecode($prebuild_hit)) . "\n";
 		}
 
             // Threads
@@ -480,7 +480,7 @@ class Swift_Performance_Ajax {
       public function ajax_dismiss_pointer(){
             $this->ajax_auth();
 
-            $pointers   = get_user_meta(get_current_user_id(), 'swift_pointers', true);
+            $pointers   = (array)get_user_meta(get_current_user_id(), 'swift_pointers', true);
             $pointers[$_POST['id']] = $_POST['id'];
             update_user_meta(get_current_user_id(), 'swift_pointers', $pointers);
 
@@ -492,7 +492,7 @@ class Swift_Performance_Ajax {
       public function ajax_dismiss_notice(){
             $this->ajax_auth();
 
-            $messages = apply_filters('swift_performance_admin_notices', get_option('swift_performance_messages', array()));
+            $messages = (array)apply_filters('swift_performance_admin_notices', get_option('swift_performance_messages', array()));
 		unset($messages[$_POST['id']]);
 		update_option('swift_performance_messages', $messages);
 

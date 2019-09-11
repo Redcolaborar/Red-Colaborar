@@ -10,10 +10,10 @@
 	Contributors: specialk, aldolat, WpBlogHost, jameswilkes, juliobox, lernerconsult
 	Donate link: https://monzillamedia.com/donate.html
 	Requires at least: 4.1
-	Tested up to: 5.0
-	Stable tag: 20181117
-	Version: 20181117
-	Requires PHP: 5.2
+	Tested up to: 5.2
+	Stable tag: 20190902
+	Version: 20190902
+	Requires PHP: 5.6.20
 	Text Domain: block-bad-queries
 	Domain Path: /languages
 	License: GPLv2 or later
@@ -33,12 +33,12 @@
 	You should have received a copy of the GNU General Public License
 	with this program. If not, visit: https://www.gnu.org/licenses/
 	
-	Copyright 2018 Monzilla Media. All rights reserved.
+	Copyright 2019 Monzilla Media. All rights reserved.
 */
 
 if (!defined('ABSPATH')) die();
 
-if (!defined('BBQ_VERSION')) define('BBQ_VERSION', '20181117');
+if (!defined('BBQ_VERSION')) define('BBQ_VERSION', '20190902');
 if (!defined('BBQ_FILE'))    define('BBQ_FILE', plugin_basename(__FILE__));
 if (!defined('BBQ_DIR'))     define('BBQ_DIR',  plugin_dir_path(__FILE__));
 if (!defined('BBQ_URL'))     define('BBQ_URL',  plugin_dir_url(__FILE__));

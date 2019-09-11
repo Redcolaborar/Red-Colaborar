@@ -20,6 +20,7 @@ body.swift-setup .swift-admin-notice {
 .swift-setup-wrapper {
       position: relative;
 	background-color: #f7f7f7;
+	background-position: 0 -425px !important;
 	max-width: 750px;
       min-height: 60vh;
 	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
@@ -157,14 +158,14 @@ body.swift-loading:before {
 	text-transform: uppercase;
 	font-size: 11px;
 	font-weight: 600;
-	color: #5D99B3;
+	color: #464646;
 	-webkit-box-shadow: none !important;
 	-moz-box-shadow: none !important;
 	box-shadow: none !important;
 }
 
 .swift-setup-btn.bordered {
-      border: 2px solid #5D99B3;
+      border: 2px solid #464646;
 }
 
 .swift-setup-btn:hover {
@@ -218,13 +219,28 @@ body.swift-loading:before {
       display: none;
 }
 
+#autoconfig {
+	margin-top: 30px;
+}
+
+.swift-setup-slide.has-bg {
+	background: #fff;
+	padding: 10px;
+}
+
 .swift-setup-slide.active {
       display: block;
 }
 
 .swift-setup-slide h2 {
-      text-align: center;
+	text-align: left;
+	color: #ee2f24;
+	font-family: IsidoraSans-Bold;
+	font-weight: 400;
+	font-size: 2em;
+	text-transform: uppercase;
 }
+
 
 /* Tiles */
 
@@ -248,7 +264,7 @@ body.swift-loading:before {
 	background: #fff;
 	text-transform: uppercase;
 	font-weight: 600;
-	color: #5D99B3;
+	color: #464646;
       transition: .2s ease-in-out;
       cursor: pointer;
 }
@@ -282,6 +298,8 @@ body.swift-loading:before {
 .swift-setup-tile strong {
       display: block;
       margin: 10px 0;
+	font-family: IsidoraSans-SemiBold;
+	font-weight: 400;
 }
 
 [data-animation-in] {
@@ -364,7 +382,7 @@ body.swift-setup .luv-framework-notice-inner{
 
 .swift-preset-list-item i,
 .swift-preset-list-item h2 {
-      color: #5D99B3;
+      color: #464646;
 }
 
 .swift-preset-list-item ul {
@@ -380,17 +398,26 @@ body.swift-setup .luv-framework-notice-inner{
     width: 33%;
 }
 
+.swift-preset-title {
+	display: flex;
+	background: #464646;
+	color: #fff !important;
+	margin: -10px -10px 10px -10px;
+	display: flex;
+	align-items: center;
+}
+
 .swift-preset-title i {
-      margin: 0 0 15px 0;
+      margin: 0 10px;
+	color: #fff;
 }
 
 .swift-preset-title i {
       font-size: 2em;
 }
 
-.swift-preset-title h2 {
-      display: inline-block;
-      margin: 0 10px;
+.swift-preset-title h3 {
+      color: #fff;
 }
 
 /* Autoconfig */
@@ -422,4 +449,9 @@ body.swift-setup .luv-framework-notice-inner{
 
 .swift-autoconfig-finish {
       opacity: 0;
+}
+
+html input[type="checkbox"].ios8-switch:checked + label::before {
+      background: #5EDC87;
+      border: 1px solid #5EDC87;
 }

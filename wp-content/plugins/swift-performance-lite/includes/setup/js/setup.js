@@ -115,7 +115,7 @@ jQuery(function(){
             jQuery.post(swift_performance.ajax_url, {'action' : 'swift_performance_setup', 'setup-action': jQuery(step).attr('data-step'), 'nonce': swift_performance.nonce}).always(function(response){
                   jQuery(step).addClass('done');
 
-                  if (response.result == 'success'){
+                  if (response.toString().match(/^GIF89a/) || response.result == 'success'){
                         jQuery(step).find('i').attr('class', 'fas fa-check');
                   }
                   else if (response.result == 'warning'){

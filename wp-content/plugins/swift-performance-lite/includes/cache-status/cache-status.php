@@ -76,26 +76,26 @@ class Swift_Performance_Cache_Status_Table extends WP_List_Table
 
         // Prepare URLs
         foreach (Swift_Performance_Lite::get_prebuild_urls(false) as $warmup) {
-            $urls[trailingslashit($warmup['url'])] = $warmup;
+            $urls[Swift_Performance_Lite::get_warmup_id($warmup['url'])] = $warmup;
         }
 
         // Get pages which are missing from warmup
         $cache_info = Swift_Performance_Lite::cache_status();
         foreach ($cache_info['files'] as $url) {
-            if (!isset($urls[trailingslashit($url)])) {
-                $urls[trailingslashit($url)] = array(
+            if (!isset($urls[Swift_Performance_Lite::get_warmup_id($url)])) {
+                $urls[Swift_Performance_Lite::get_warmup_id($url)] = array(
                               'priority' => PHP_INT_MAX,
                               'url' => $url
                         );
             }
         }
         foreach ($urls as $url) {
-            if (isset($cache_info['files'][rtrim($url['url'], '/')]) || isset($cache_info['files'][trailingslashit($url['url'])])) {
+            if (isset($cache_info['files'][rtrim($url['url'], '/')]) || isset($cache_info['files'][Swift_Performance_Lite::get_warmup_id($url['url'])])) {
                 $cache_type       = (isset($url['type']) ? $url['type'] : Swift_Performance_Cache::get_cache_type($url['url']));
                 $time             = (isset($url['timestamp']) ? $url['timestamp'] : Swift_Performance_Cache::get_cache_time($url['url']));
             } else {
                 $cache_type       = (isset($url['type']) && !empty($url['type']) ? $url['type'] : false);
-                $time             = 0;
+                $time             = (isset($url['timestamp']) ? $url['timestamp'] : 0);
             }
 
             if (empty($cache_type)) {
@@ -180,7 +180,7 @@ class Swift_Performance_Cache_Status_Table extends WP_List_Table
             $subcache = '';
         }
 
-        return sprintf('%1$s %2$s', $item['url'] . $subcache, $this->row_actions($actions));
+        return sprintf('%1$s %2$s', urldecode($item['url']) . $subcache, $this->row_actions($actions));
     }
 
     public function usort_reorder($a, $b)

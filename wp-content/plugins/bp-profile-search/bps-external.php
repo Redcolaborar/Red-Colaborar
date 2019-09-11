@@ -71,6 +71,15 @@ function bps_users_search ($f)
 		if (isset ($value['max']))  $sql['where']['max'] = $wpdb->prepare ("{$f->code} <= %d", $value['max']);
 		break;
 
+	case 'date_is':
+		$sql['where'][$filter] = bps_sql_expression ("DATE({$f->code}) = %s", $value);
+		break;
+
+	case 'date_range':
+		if (isset ($value['min']))  $sql['where']['min'] = $wpdb->prepare ("DATE({$f->code}) >= %s", $value['min']);
+		if (isset ($value['max']))  $sql['where']['max'] = $wpdb->prepare ("DATE({$f->code}) <= %s", $value['max']);
+		break;
+
 	case 'date_age_range':
 		$day = date ('j');
 		$month = date ('n');
@@ -172,6 +181,15 @@ function bps_usermeta_search ($f)
 	case 'integer_range':
 		if (isset ($value['min']))  $sql['where']['min'] = $wpdb->prepare ("meta_value >= %d", $value['min']);
 		if (isset ($value['max']))  $sql['where']['max'] = $wpdb->prepare ("meta_value <= %d", $value['max']);
+		break;
+
+	case 'date_is':
+		$sql['where'][$filter] = bps_sql_expression ("DATE(meta_value) = %s", $value);
+		break;
+
+	case 'date_range':
+		if (isset ($value['min']))  $sql['where']['min'] = $wpdb->prepare ("DATE(meta_value) >= %s", $value['min']);
+		if (isset ($value['max']))  $sql['where']['max'] = $wpdb->prepare ("DATE(meta_value) <= %s", $value['max']);
 		break;
 
 	case 'date_age_range':

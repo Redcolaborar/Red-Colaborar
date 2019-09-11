@@ -25,7 +25,7 @@ function bps_escaped_form_data47 ()
 	$dirs = bps_directories ();
 	$F->action = $location == 'directory'?
 		parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH):
-		$dirs[bps_wpml_id ($meta['action'])]->link;
+		$dirs[bps_wpml_id ($meta['action'])]->path;
 
 	if (defined ('DOING_AJAX'))
 		$F->action = parse_url ($_SERVER['HTTP_REFERER'], PHP_URL_PATH);
@@ -218,6 +218,10 @@ function bps_print_filter ($f)
 		return sprintf (esc_html__('is within: %1$s miles of %2$s', 'bp-profile-search'), $f->value['distance'], $f->value['location']);
 
 	default:
+		$output = apply_filters ('bps_filters_template_field', 'none', $f);
+		if ($output != 'none')
+			return $output;
+		else
 		return "BP Profile Search: undefined filter <em>$f->filter</em>";
 	}
 }

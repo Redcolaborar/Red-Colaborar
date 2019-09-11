@@ -5614,7 +5614,7 @@ function bp_group_has_invites( $args = '' ) {
 	if ( empty( $r['group_id'] ) ) {
 		if ( groups_get_current_group() ) {
 			$r['group_id'] = bp_get_current_group_id();
-		} elseif ( ! empty( buddypress()->groups->new_group_id ) ) {
+		} elseif ( isset( buddypress()->groups->new_group_id ) && buddypress()->groups->new_group_id ) {
 			$r['group_id'] = buddypress()->groups->new_group_id;
 		}
 	}
@@ -5865,7 +5865,7 @@ function bp_groups_activity_feed() {
 		return;
 	} ?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ) ?> | <?php bp_current_group_name() ?> | <?php _e( 'Group Activity RSS Feed', 'buddypress' ) ?>" href="<?php bp_group_activity_feed_link() ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ) ?> | <?php echo esc_attr( bp_get_current_group_name() ); ?> | <?php _e( 'Group Activity RSS Feed', 'buddypress' ) ?>" href="<?php bp_group_activity_feed_link() ?>" />
 
 <?php
 }

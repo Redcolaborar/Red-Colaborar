@@ -30,7 +30,7 @@ function bps_valid_template ($template)
 	return bps_is_template ($template)? $template: bps_default_template ();
 }
 
-function bps_locate_template ($template)
+function bps_template_info ($template)
 {
 	$retired = array ('members/bps-form-nouveau', 'members/bps-form-legacy', 'members/bps-form-sample-1', 'members/bps-form-sample-2');
 
@@ -38,20 +38,39 @@ function bps_locate_template ($template)
 	if ($located === false)
 	{
 		if (in_array ($template, $retired))
-			return '<strong style="color:red;">'. $template. '</strong><br>'. __('this template has been retired, please switch to bps-form-default', 'bp-profile-search');
-		return '<strong style="color:red;">'. $template. '</strong><br>'. __('template not found', 'bp-profile-search');
+			echo '<strong style="color:red;">'. $template. '</strong><br>'. __('this template has been retired, please switch to bps-form-default', 'bp-profile-search');
+		else
+			echo '<strong style="color:red;">'. $template. '</strong><br>'. __('template not found', 'bp-profile-search');
+		return false;
 	}
+
+	if (dirname ($located) == dirname (__FILE__). '/templates/members')
+	{
+		if (in_array ($template, $retired))
+		{
+			echo '<strong style="color:red;">'. $template. '</strong><br>'. __('outdated template, please consider switching to bps-form-default', 'bp-profile-search');
+			echo '<br><a href="https://dontdream.it/new-form-template-structure/">'. __('more information...', 'bp-profile-search'). '</a>';
+		}
+		else
+			echo '<strong style="color:green;">'. $template. '</strong><br>'. __('built-in template', 'bp-profile-search');
+		return $located;
+	}
+
+	ob_start ();
+	$response = include $located;
+	ob_get_clean ();
 
 	$path = str_replace (WP_CONTENT_DIR. '/', '', $located);
 	$path = str_replace ($template. '.php', '', $path);
-	if ($path == 'plugins/bp-profile-search/templates/')
-	{
-		if (in_array ($template, $retired))
-			return '<strong style="color:red;">'. $template. '</strong><br>'. __('this template is about to be retired, please consider switching to bps-form-default', 'bp-profile-search');
-		return '<strong style="color:green;">'. $template. '</strong><br>'. __('built-in template', 'bp-profile-search');
-	}
 
-	return '<strong style="color:blue;">'. $template. '</strong><br>'. sprintf (__('located in: %1$s', 'bp-profile-search'), $path);
+	if ($response == 'end_of_options 4.9')
+		echo '<strong style="color:blue;">'. $template. '</strong><br>'. sprintf (__('custom template located in: %1$s', 'bp-profile-search'), $path);
+	else
+	{
+		echo '<strong style="color:red;">'. $template. '</strong><br>'. sprintf (__('outdated custom template located in: %1$s', 'bp-profile-search'), $path);
+		echo '<br><a href="https://dontdream.it/new-form-template-structure/">'. __('more information...', 'bp-profile-search'). '</a>';
+	}
+	return $located;
 }
 
 function bps_call_template ($template, $args = array ())
@@ -147,4 +166,37 @@ function bps_jquery_ui_themes ()
 	);	
 
 	return apply_filters ('bps_jquery_ui_themes', $themes);
+}
+
+function bps_escaped_form_data ($version = '')
+{
+	if ($version == '')	return bps_escaped_form_data47 ();
+	if ($version == '4.9')	return bps_escaped_form_data49 ();
+
+	return false;
+}
+
+function bps_escaped_filters_data ($version = '')
+{
+	if ($version == '')	return bps_escaped_filters_data47 ();
+	if ($version == '4.9')	return bps_escaped_filters_data49 ();
+
+	return false;
+}
+
+function bps_set_hidden_field ($name, $value)
+{
+	$new = new stdClass;
+	$new->display = 'hidden';
+	$new->code = $name;		// to be removed
+	$new->html_name = $name;
+	$new->value = $value;
+	$new->unique_id = bps_unique_id ($name);
+
+	return $new;
+}
+
+function bps_sort_fields ($a, $b)
+{
+	return ($a->order <= $b->order)? -1: 1;
 }

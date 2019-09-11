@@ -9,10 +9,10 @@
             </li>
             <?php endif;?>
             <li>
-                  <a href="#" class="luv-framework-button luv-framework-reset-section"><?php esc_html_e('Reset Section');?></a>
+                  <a href="#" class="luv-framework-button luv-framework-reset-section"><?php esc_html_e('Reset Section', 'luv-framework');?></a>
             </li>
             <li>
-                  <a href="#" class="luv-framework-button luv-framework-reset-all"><?php esc_html_e('Reset All');?></a>
+                  <a href="#" class="luv-framework-button luv-framework-reset-all"><?php esc_html_e('Reset All', 'luv-framework');?></a>
             </li>
             <?php do_action('luv_framework_after_header_buttons', $this);?>
       </ul>

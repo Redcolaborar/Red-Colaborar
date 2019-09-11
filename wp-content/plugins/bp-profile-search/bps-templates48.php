@@ -18,7 +18,7 @@ function bps_escaped_form_data49 ()
 	$dirs = bps_directories ();
 	$F->action = $location == 'directory'?
 		parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH):
-		$dirs[bps_wpml_id ($meta['action'])]->link;
+		$dirs[bps_wpml_id ($meta['action'])]->path;
 
 	$F->method = $meta['method'];
 	$F->fields = array ();
@@ -49,12 +49,6 @@ function bps_escaped_form_data49 ()
 			$F->errors += 1;
 		else
 			$f->error_message = '';
-
-		if ($f->display == 'range' && count ($f->options))
-		{
-			$f->display = 'range-select';
-			$f->options = array ('' => '') + $f->options;
-		}
 
 		switch ($f->display)
 		{
@@ -90,6 +84,7 @@ function bps_escaped_form_data49 ()
 			break;
 
 		case 'multiselectbox':
+			$f->multiselect_size = 4;
 		case 'checkbox':
 			if (!isset ($f->value))  $f->value = array ();
 			break;
@@ -126,7 +121,7 @@ function bps_escaped_form_data49 ()
 	return $F;
 }
 
-function bps_escaped_filters_data48 ()
+function bps_escaped_filters_data49 ()
 {
 	list ($request, $full) = bps_template_args ();
 

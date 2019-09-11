@@ -104,7 +104,7 @@ foreach ($F->fields as $f)
 ?>
 		<div id="<?php echo $id; ?>_wrap" class="bps-<?php echo $display; ?>">
 			<label for="<?php echo $id; ?>" class="bps-label">
-				<strong><?php echo $f->label; ?></strong> <span><?php echo $f->mode; ?>:</span>
+				<strong><?php echo $f->label; ?></strong><span> <?php echo $f->mode; ?></span>
 			</label><br>
 <?php
 	if (!empty ($f->error_message))
@@ -173,7 +173,6 @@ foreach ($F->fields as $f)
 		$km = __('km', 'bp-profile-search');
 		$miles = __('miles', 'bp-profile-search');
 		$placeholder = __('Start typing, then select a location', 'bp-profile-search');
-		$icon_url = plugins_url ('bp-profile-search/templates/members/locator.png');
 		$icon_title = __('get current location', 'bp-profile-search');
 ?>
 			<input type="number" min="1" name="<?php echo $name.'[distance]'; ?>" value="<?php echo $value['distance']; ?>">
@@ -184,7 +183,9 @@ foreach ($F->fields as $f)
 			<span><?php echo $of; ?></span>
 			<input type="search" style="width: 90%;" id="<?php echo $id; ?>" name="<?php echo $name.'[location]'; ?>"
 				value="<?php echo $value['location']; ?>" placeholder="<?php echo $placeholder; ?>">
-			<img id="<?php echo $id; ?>_icon" style="cursor: pointer;" src="<?php echo $icon_url; ?>" title="<?php echo $icon_title; ?>"><br>
+			<button type="button" id="<?php echo $id; ?>_icon" title="<?php echo $icon_title; ?>">
+				<span class="dashicons dashicons-location"></span>
+			</button><br>
 			<input type="hidden" id="<?php echo $id; ?>_lat" name="<?php echo $name.'[lat]'; ?>" value="<?php echo $value['lat']; ?>">
 			<input type="hidden" id="<?php echo $id; ?>_lng" name="<?php echo $name.'[lng]'; ?>" value="<?php echo $value['lng']; ?>">
 
@@ -209,7 +210,7 @@ foreach ($F->fields as $f)
 	break;
 	case 'multiselectbox':
 ?>
-			<select id="<?php echo $id; ?>" name="<?php echo $name.'[]'; ?>" multiple="multiple">
+			<select id="<?php echo $id; ?>" name="<?php echo $name.'[]'; ?>" multiple="multiple" size="<?php echo $f->multiselect_size; ?>">
 			<?php foreach ($f->options as $key => $label) { ?>
 				<option <?php if (in_array ($key, $value)) echo 'selected="selected"'; ?> value="<?php echo $key; ?>"><?php echo $label; ?></option>
 			<?php } ?>
@@ -234,9 +235,17 @@ foreach ($F->fields as $f)
 <?php
 	break;
 	default:
+
+		$field_template = 'members/bps-'. $display. '-form-field.php';
+		$located = bp_locate_template ($field_template);
+		if ($located)
+			include $located;
+		else
+		{
 ?>
 			<p class="bps-error"><?php echo "BP Profile Search: unknown display <em>$display</em> for field <em>$f->name</em>."; ?></p>
 <?php
+		}
 	break;
 	}
 ?>
@@ -246,7 +255,7 @@ foreach ($F->fields as $f)
 }
 ?>
 		<div>
-			<input type="submit" value="<?php echo __('Search', 'buddypress'); ?>">
+			<button type="submit"><?php echo __('Search', 'buddypress'); ?></button>
 		</div>
 	</form>
 

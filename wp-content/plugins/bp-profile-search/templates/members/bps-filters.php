@@ -17,7 +17,7 @@
 	foreach ($F->fields as $f)
 	{
 		$filter = bps_print_filter ($f);
-		$filter = apply_filters ('bps_print_filter', $filter, $f);
+		$filter = apply_filters ('bps_print_filter', $filter, $f);	// deprecated filter -- to be removed
 
 ?>
 		<strong><?php echo $f->label; ?></strong> <span><?php echo $filter; ?></span><br>

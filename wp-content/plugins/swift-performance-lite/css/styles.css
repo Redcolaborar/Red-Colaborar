@@ -1,3 +1,36 @@
+@font-face {
+  font-family: 'IsidoraSans';
+  src: url('../fonts/IsidoraSans-Regular.eot');
+  src: url('../fonts/IsidoraSans-Regular.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/IsidoraSans-Regular.ttf') format('truetype'),
+       url('../fonts/IsidoraSans-Regular.woff') format('woff'),
+       url('../fonts/IsidoraSans-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'IsidoraSans-Bold';
+  src: url('../fonts/IsidoraSans-Bold.eot');
+  src: url('../fonts/IsidoraSans-Bold.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/IsidoraSans-Bold.ttf') format('truetype'),
+       url('../fonts/IsidoraSans-Bold.woff') format('woff'),
+       url('../fonts/IsidoraSans-Bold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'IsidoraSans-SemiBold';
+  src: url('../fonts/IsidoraSans-SemiBold.eot');
+  src: url('../fonts/IsidoraSans-SemiBold.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/IsidoraSans-SemiBold.ttf') format('truetype'),
+       url('../fonts/IsidoraSans-SemiBold.woff') format('woff'),
+       url('../fonts/IsidoraSans-SemiBold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .swift-hidden {
       display: none !important;
 }
@@ -149,49 +182,63 @@
 
 .swift-menu {
 	list-style: none;
-	margin: 0 0 30px 0;
+      margin: 0 0 40px 0px;
 	padding: 0;
 	width: 100%;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	border-bottom: 1px solid #e1e1e1;
 }
 
 .swift-menu li {
 	text-align: center;
-	display: inline-block;
-	padding: 5px;
-	padding-bottom: 0;
-	margin-bottom: -1px;
+	padding: 0px;
+      margin: 0;
 	position: relative;
 }
 
+.swift-menu .swift-menu-upgrade-pro:not(.active) {
+      border-color: #5EDC87;
+}
+
+.swift-menu .swift-menu-upgrade-pro:not(.active) a {
+      background: #5EDC87;
+      color: #fff;
+      border-color: #5EDC87;
+}
+
+@media (min-width: 768px){
+      .swift-menu {
+            margin: 0 -50px 40px -50px;
+            width: calc(100% + 100px);
+            display: flex;
+      }
+
+      .swift-menu li {
+            width: 16.66%;
+      }
+}
+
 .swift-menu li a {
-	border: 1px solid #e1e1e1;
+	border: 1px solid #ccc;
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	box-shadow: none;
 }
 
 .swift-menu li.active a {
-	background: #f1f1f1;
+	background: #fff;
 	pointer-events: none;
-}
-
-.swift-menu li:first-child {
-	padding-left: 0;
-}
-
-.swift-menu li:last-child {
-	padding-right: 0;
+      border-left: unset;
+      border-bottom: unset;
 }
 
 .swift-menu a {
-	border: 1px solid #F7F7F7;
-	background: #fff;
+      font-family: IsidoraSans-Bold;
+	border: 1px solid #f7f7f7;
+	background: #ebebeb;
 	display: block;
-	color: #2156C1;
+	color: #000;
 	text-decoration: none;
 	padding: 8px 12px;
 	-webkit-transition: all 0.3s ease;
@@ -199,10 +246,14 @@
 	transition: all 0.3s ease;
 }
 
+.swift-menu a i {
+      margin-right: 5px;
+}
+
 .swift-menu a:hover {
 	color: #fff;
-	background: #2156C1;
-	border-color: #2156C1;
+	background: #f17811;
+	border-color: #f17811;
 }
 
 .swift-dashboard-item {
@@ -336,10 +387,12 @@
 .swift-box h3 {
 	padding: 15px;
 	margin: 0;
-	background: #f7f7f7;
-	border-bottom: 1px solid #e1e1e1;
+	background: #464646;
 	text-transform: uppercase;
 	font-size: 14px;
+      font-weight: 400;
+      color: #fff;
+      font-family: IsidoraSans-SemiBold;
 }
 
 .swift-header-title {
@@ -355,9 +408,11 @@
 	padding-right: 20px;
 }
 
-.swift-btn {
+.swift-btn,
+.luv-framework-button {
     background-color: transparent;
     border: 0 none;
+    border-radius: 50px;
     box-sizing: border-box;
     color: #1b1d1f;
     display: inline-block;
@@ -377,7 +432,7 @@
 }
 
 .swift-btn.swift-btn-thin {
-      padding: 9px 18px;
+      padding: 9px 12px;
 }
 
 .swift-btn-gray,
@@ -389,6 +444,35 @@
 .swift-btn-gray:hover {
 	background-color: #dbdbdb;
 	color: #878787;
+}
+
+.swift-btn-black,
+.swift-btn-black:focus,
+.luv-framework-button,
+.luv-framework-button:focus {
+      padding: 8px 22px;
+      border: 1px solid #464646;
+	background-color: #464646;
+	color: #fcfcfc;
+}
+
+.swift-btn-black:hover,
+.luv-framework-button:hover {
+	background-color: #000;
+	color: #fff;
+}
+
+.swift-btn-blacknwhite,
+.swift-btn-blacknwhite:focus {
+      padding: 8px 22px;
+      border: 1px solid #fcfcfc;
+	background-color: #464646;
+	color: #fcfcfc;
+}
+
+.swift-btn-blacknwhite:hover {
+	background-color: #000;
+	color: #fff;
 }
 
 .swift-btn-green,
@@ -405,12 +489,12 @@
 
 .swift-btn-brand,
 .swift-btn-brand:focus {
-	background-color: #d4675f;
+	background-color: #ee2f24;
 	color: #fff;
 }
 
 .swift-btn-brand:hover {
-	background-color: #a04842;
+	background-color: #ed1c24;
 	color: #fff;
 }
 
@@ -618,24 +702,41 @@ body.swift-loading #wpcontent:before {
       pointer-events: none;
 }
 
+.swift-backup-warning,
+.swift-purchase-key-warning {
+      background: rgb(238,87,28);
+      background: linear-gradient(45deg, rgba(238,87,28,1) 0%, rgba(237,38,33,1) 100%);
+      color: #fff;
+      text-transform: uppercase;
+      font-size: 1.35em;
+}
+
+@media (min-width: 768px){
+      .swift-backup-warning,
+      .swift-purchase-key-warning {
+            display: flex;
+            align-items: center;
+      }
+}
+
 .swift-backup-warning .swift-message-text,
 .swift-purchase-key-warning .swift-message-text {
       vertical-align: middle;
       margin-left: 20px;
-      font-size: 16px;
+      width: calc(100% - 210px);
 }
 
-.swift-backup-warning .dashicons-warning,
-.swift-purchase-key-warning .dashicons-warning {
-      font-size: 32px;
-	color: #d4675f;
+.swift-backup-warning i,
+.swift-purchase-key-warning i {
+      font-size: 2em;
 }
 
-.swift-spin{
+.swift-spin {
       -webkit-animation:swift-spin 4s linear infinite;
       -moz-animation:swift-spin 4s linear infinite;
       animation:swift-spin 4s linear infinite;
 }
+
 @-moz-keyframes swift-spin {
       100% {
             -moz-transform: rotate(360deg);
@@ -664,6 +765,11 @@ body.swift-loading #wpcontent:before {
 }
 
 /* Critical Font */
+
+.swift-critical-font-container {
+      padding: 20px 0;
+}
+
 .swift-font-selector-container {
       width: 80%;
 }
@@ -757,11 +863,32 @@ body.swift-loading #wpcontent:before {
 }
 
 .swift-performance-list-table .dashicons-yes {
-      color: #16b358;
+      background: #16b358;
+      color: #fff;
+      border-radius: 25em;
+}
+
+.swift-performance-list-table .dashicons-no {
+      background: #464646;
+      color: #fff;
+      border-radius: 25em;
+}
+
+.swift-performance-list-table .dashicons {
+      font-size: 1.2em;
+      position: relative;
+}
+
+.swift-performance-list-table .dashicons::before {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
 }
 
 .swift-performance-list-table .dashicons-warning {
       color: #ffba00;
+      font-size: 1.85em;
 }
 
 .swift-priority-update .priority-holder{
@@ -1264,66 +1391,14 @@ iframe.api-embed {
       width:50%;
 }
 
-.swift-section-bg {
-	width: 60%;
-	background: #fff;
-	margin-bottom: 30px;
-	-webkit-border-top-right-radius: 70px;
-	-webkit-border-bottom-right-radius: 50px;
-	-moz-border-radius-topright: 70px;
-	-moz-border-radius-bottomright: 50px;
-	border-top-right-radius: 70px;
-	border-bottom-right-radius: 50px;
-	padding: 55px 35px 55px 45px;
-	-webkit-transform: rotate(4deg);
-	-moz-transform: rotate(4deg);
-	transform: rotate(4deg);
+.swte-upgrade-row {
+      font-size: 26px;
+      margin: 40px 0;
 }
 
-.swift-section-bg > .swift-section-bg-inner {
-	-webkit-transform: rotate(-4deg);
-	-moz-transform: rotate(-4deg);
-	transform: rotate(-4deg);
-}
-
-.swift-section-bg-inner h3 {
-	font-size: 30px;
-	color: #f04f1a;
-	margin: 0;
-	margin-bottom: 35px;
-	line-height: 1.1em;
-}
-
-.swift-section-bg-inner ul {
-	font-size: 18px;
-	padding-left: 15px;
-	margin-top: 20px;
-	counter-reset: swift-section;
-}
-
-.swift-section-bg-inner ul li {
-	line-height: 1.6em;
-	color: #a5a5a5;
-}
-
-.swift-section-bg-inner ul li:before {
-	width: 20px;
-	height: 20px;
-	counter-increment: swift-section;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
-	background-color: #f04f1a;
-	display: inline-block;
-	margin-right: 10px;
-	vertical-align: middle;
-	line-height: 20px;
-	font-weight: bold;
-	margin-top: -3px;
-	content: counter(swift-section);
-	color: #fff;
-	text-align: center;
-	font-size: 12px;
+.swte-upgrade-row .swift-btn {
+      font-size: 21px;
+      font-weight: 400;
 }
 
 .swift-upgrade-btn {
@@ -1337,20 +1412,89 @@ iframe.api-embed {
 	text-decoration: none;
 }
 
+.swte-money-back-guarantee {
+      background: #51e381;
+      position: relative;
+      height: 125px;
+      width: 100%;
+      color: #fff;
+}
+
+.swte-money-back-col {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      font-family: IsidoraSans-Bold;
+      font-weight: 400;
+      font-size: 2.5em;
+      line-height: 1em;
+      text-align: center;
+}
+
+.swte-money-back-col small {
+      display: block;
+      font-family: IsidoraSans-SemiBold;
+      font-weight: 400;
+      font-size: 0.75em;
+}
+
+.swte-money-back-guarantee img {
+      position: absolute;
+      transform: translateY(-4px);
+      left: 20px;
+}
+
 .swift-upgrade-btn:hover {
 	background-color: #181818;
 	color: #fff;
 }
 
-.swift-section-container.swift-table {
-	display: table;
-	margin-left: -40px;
-	width: 100%;
+.swift-upgrade-container {
+      position: relative;
+      padding-bottom: 50px;
 }
 
-.swift-section-container.swift-table > * {
-	display: table-cell;
-	vertical-align: middle;
+.swift-upgrade-container .swte-upgrade-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+}
+
+.swift-upgrade-container h3 {
+      font-family: IsidoraSans-Bold;
+      font-weight: 400;
+      font-size: 1.8em;
+      color: #ee3f1c;
+}
+
+.swift-upgrade-table li {
+      display: inline-block;
+      width: calc(50% - 45px);
+      margin: 20px;
+}
+
+.swift-upgrade-table img {
+      width: 40%;
+      transition: all 0.45s ease;
+      box-shadow: 0px 0px 0px rgba(0,0,0,0.8)
+}
+
+.swift-upgrade-table li:hover img {
+      transform: scale(1.05);
+      box-shadow: -2px 2px 15px rgba(0,0,0,0.8)
+}
+
+.swift-upgrade-table span {
+      display: inline-block;
+      vertical-align: top;
+      width: 55%;
+      padding: 0 0 0 14px;
+}
+
+.swift-upgrade-table h4 {
+      margin: 0 0 15px 0;
+      font-size: 1.24em;
 }
 
 .swift-section-right {
@@ -1370,13 +1514,159 @@ iframe.api-embed {
 	margin-top: 50px;
 }
 
-.swift-upgrade-table ul {
-      display: inline-block;
-      width: 46%;
-      vertical-align: top;
+/* FRAMEWORK CUSTOMIZATIONS */
+
+.luv-framework-button {
+      border: unset;
 }
 
-/* FRAMEWORK CUSTOMIZATIONS */
+.luv-framework-field-container .fa-times-circle {
+    color: #464646;
+}
+
+input[type="checkbox"].ios8-switch:checked + label::before {
+      background: #5EDC87;
+      border: 1px solid #5EDC87;
+}
+
+.luv-framework-range-slider__range::-webkit-slider-thumb {
+  background: #878787;
+}
+
+.luv-framework-range-slider__range::-moz-range-thumb {
+  background: #878787;
+}
+
+.luv-framework-field-container[data-type="slider"] .luv-framework-field-inner .luv-framework-range-slider .luv-framework-range-slider__value {
+      border: 1px solid #dbdbdb;
+      margin: 0 auto;
+      color: #878787;
+      background: transparent;
+      font-family: IsidoraSans-SemiBold;
+}
+
+.luv-framework-field-container[data-type="slider"] .luv-framework-field-inner .luv-framework-range-slider .luv-framework-range-slider__value:after {
+      border-right: 7px solid #878787;
+}
+
+.luv-framework-import-file-container {
+      border: 2px dashed #ccc;
+}
+
+.luv-framework-import-file-container label {
+      color: #999;
+}
+
+.luv-framework-outer {
+      border: 1px solid #ccc;
+}
+
+.swift-performance-settings-header {
+      text-align: center;
+}
+
+@media (min-width: 768px){
+      .swift-performance-settings-header {
+            display: flex;
+            align-items: center;
+            background: #464646;
+            padding: 0 10px;
+            text-align: left;
+      }
+
+      .swift-performance-settings-header h2 {
+            width: calc(100% - 275px);
+            color: #fff;
+      }
+}
+
+.luv-framework-header {
+      background: #fff;
+      padding: 30px 10px;
+}
+
+.left .luv-framework-section-header {
+      background: #fff;
+      margin-right: 0;
+      border-right: 1px solid #ccc;
+}
+
+.luv-framework-section-header li {
+      border-bottom: 1px solid #ccc;
+}
+
+.luv-framework-section-header li a {
+      display: flex;
+      align-items: center;
+}
+
+body .luv-framework-section-icon {
+      font-size: 2em;
+      vertical-align: middle;
+      width: 35px;
+      text-align: center;
+}
+
+body .luv-framework-section-header li a {
+      font-family: IsidoraSans-SemiBold;
+      font-weight: 400 !important;
+}
+
+body .luv-framework-section-header li.has-child > a {
+      font-family: IsidoraSans-Bold;
+      font-weight: 400;
+      text-transform: uppercase;
+}
+
+body .luv-framework-section-header li.subsection > a {
+      padding-left: 40px;
+}
+
+body .luv-framework-section-header li.active.has-child > a {
+      background: #464646;
+      color: #fff;
+}
+
+body .luv-framework-search {
+      width: 215px !important;
+      border: 1px solid #d8d8d8 !important;
+}
+
+.luv-framework-section-body {
+      background: #f3f3f3;
+}
+
+.luv-framework-container.swift-performance-settings {
+      border: unset;
+      margin-bottom: 0;
+}
+
+.luv-framework-field-container:last-child {
+    border-bottom: unset;
+}
+
+.luv-license-placeholder {
+      font-size: 0.8em;
+}
+
+.luv-clear-license-field,
+.luv-clear-license-field:hover {
+      background: #464646;
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      color: #f3f3f3;
+      border-radius: 2em;
+      position: relative;
+      transform: translateY(6px);
+}
+
+.luv-clear-license-field i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+}
 
 .luv-pointer pre {
       font-size: 11px;
@@ -1384,7 +1674,7 @@ iframe.api-embed {
 
 .swift-performance-io-preset-container label {
 	display: inline-block;
-	width: 140px;
+	min-width: 125px;
 	text-align: center;
 }
 
@@ -1396,16 +1686,14 @@ iframe.api-embed {
       background: #dbdbdb;
 }
 
-.swift-settings-mode {
-      float: right;
-}
-
 .swift-settings-mode input[type="radio"]{
       display: none;
 }
 
 .swift-settings-mode input[type="radio"]:checked + label {
-      background: #dbdbdb;
+      background-color: #5EDC87;
+      border: 1px solid #5EDC87;
+      color: #fff;
 }
 
 .swift-performance-ajax-preview {
@@ -1415,37 +1703,149 @@ iframe.api-embed {
      display: block;
 }
 
-.swift-preset-not-available {
-      opacity: 0.5;
+.swift-performance-notice {
+      background-image: url(../images/background.png);
+      background-size: cover;
+      background-position: top;
 }
 
-.swift-smiley-container {
-      text-align: center;
-      font-size: 2.3em;
+.swift-performance-notice img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100px;
+}
+
+.swift-notice-buttonset a {
+      margin-right: 10px;
+}
+
+.swift-clear-cache-notice {
+      margin: 50px 0 30px 0;
+}
+
+/* 2.1 */
+
+#swift-performance-wrapper select:not([multiple]) {
+    padding: 5px 30px 5px 5px;
+    line-height: 1em;
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    -moz-box-shadow:none;
+    -webkit-box-shadow:none;
+    box-shadow:none;
+    -moz-border-radius:0;
+    -webkit-border-radius:0;
+    border-radius:0;
+    background-color:#fff;
+    border:1px solid #bfbfbf;
+    background-image:url('../images/select.png');
+    background-position:100% center;
+    background-repeat:no-repeat;
+    background-size: contain;
+}
+
+#swift-performance-wrapper select:focus{
+    border-color:#737373;
+    -moz-box-shadow:none;
+    -webkit-box-shadow:none;
+    box-shadow:none
+}
+
+
+#swift-performance-wrapper {
+      background-color: #fafafa;
+      background-image: url('../images/background.png');
+      background-position: 0px -165px;
+      background-repeat: no-repeat;
+      margin-top: 50px;
+}
+
+.swift-performance-header {
+      display: flex;
+      align-items: center;
+}
+
+.swift-performance-slogan {
+      display: none;
+      font-family: IsidoraSans-Bold;
+      font-size: 6em;
+      color: #ebebeb;
+      line-height: 0.7em;
+      padding: 30px 0 0 40px
+}
+
+@media (min-width: 768px){
+      .swift-performance-slogan {
+            display: block;
+      }
+}
+
+.swift-performance-slogan small {
+      font-family: IsidoraSans-SemiBold;
+      color: #efefef;
+      font-size: 0.4em;
+      display: block;
+      margin-left: 5px;
+}
+
+.swift-performance-logo {
+      width: 240px;
+}
+
+#swift-performance-wrapper-inner {
+      min-height: 200px;
+      background: #fff;
+      margin-right: 15px;
+}
+
+@media (min-width: 768px) {
+      #swift-performance-wrapper-inner {
+            padding: 0 50px;
+      }
+}
+
+.swift-actions-container {
+      padding: 15px;
+}
+
+#swift-cache-status-box label,
+#swift-images-stat-container label {
+      font-family: IsidoraSans-Bold;
+      color: #f16537;
+      text-transform: uppercase;
+}
+
+#swift-cache-status-box i,
+#swift-images-stat-container i {
+      color: #777;
+      font-size: 4em;
+      display: block;
+      margin-bottom: 0.15em;
+}
+
+#swift-cache-status-box .secondary {
+      font-size: 0.7em;
+}
+
+.cache-status-count {
+      font-family: IsidoraSans-SemiBold;
+}
+
+.swift-images-table-container {
+      background: #fff;
+}
+
+.swift-images-table-container .swift-button-container {
+      padding: 30px 0;
 }
 
 .swift-performance-premium-only-container {
-      position: relative;
-      font-weight: 700;
-      font-size: 1.3em;
+      display: flex;
+      align-items: center;
 }
 
-.swift-performance-premium-only-container .swift-table-col {
-      display: table-cell;
-      vertical-align: middle;
-}
-
-.swift-performance-premium-only-container .swift-table-col:first-child {
-      width: 50px;
-}
-
-.swift-performance-premium-only-container i {
-      color: #888;
-      font-size: 2.2em;
-}
-
-.swift-performance-premium-only-container a {
-      display: block;
-      text-decoration: none;
-      font-size: 1.05em;
+.swift-performance-premium-only-container .fas {
+      font-size: 2em;
+      margin-right: 1em;
 }

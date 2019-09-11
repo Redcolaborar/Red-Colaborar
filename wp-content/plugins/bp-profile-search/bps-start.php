@@ -1,6 +1,6 @@
 <?php
 
-define ('BPS_FORM', 'bp_profile_search');
+define ('BPS_FORM', 'bps_form');
 
 include 'bps-admin.php';
 include 'bps-directory.php';
@@ -66,12 +66,10 @@ function bps_upgrade ()
 	}
 }
 
-add_filter ('plugin_action_links_'. 'bp-profile-search/bps-main.php', 'bps_action_links');
+add_filter ('plugin_action_links_'. BPS_PLUGIN_BASENAME, 'bps_action_links');
 function bps_action_links ($links)
 {
-	$settings_link = '<a href="'. admin_url ('edit.php?post_type=bps_form'). '">'. __('Settings'). '</a>';
-	array_unshift ($links, $settings_link);
-
+	$links[] = '<a href="'. admin_url ('edit.php?post_type=bps_form'). '">'. __('Settings'). '</a>';
 	return $links;
 }
 
@@ -87,7 +85,7 @@ function bps_meta ($form)
 	$default['field_mode'] = array ();
 	$default['method'] = 'POST';
 	$default['action'] = 0;
-	$default['directory'] = 'No';
+	$default['directory'] = 'Yes';
 	$default['template'] = bps_default_template ();
 	$default['template_options'][$default['template']] = array ();
 
@@ -172,11 +170,11 @@ function bps_columns ($column, $post_id)
 
 	$options = bps_meta ($post_id);
 	if ($column == 'fields')  echo count ($options['field_code']);
-	else if ($column == 'template')  echo bps_locate_template ($options['template']);
+	else if ($column == 'template')  bps_template_info ($options['template']);
 	else if ($column == 'action')
 	{
 		$dirs = bps_directories ();
-		echo isset ($dirs[$options['action']])? $dirs[$options['action']]->label:
+		echo isset ($dirs[$options['action']])? $dirs[$options['action']]->title:
 			'<strong style="color:red;">'. __('undefined', 'bp-profile-search'). '</strong>';
 	}
 	else if ($column == 'directory')  _e($options['directory'], 'bp-profile-search');
@@ -253,7 +251,7 @@ function bps_updated_messages ($messages)
 		 7 => 'message 7',
 		 8 => 'message 8',
 		 9 => 'message 9',
-		10 => 'message 10',
+		10 => __('Form draft updated.', 'bp-profile-search'),
 	);
 	return $messages;
 }
@@ -318,5 +316,6 @@ function _bps_admin_js ()
 		'remove' => __('Remove', 'bp-profile-search'),
 	);
 	wp_enqueue_script ('bps-admin', plugins_url ('bps-admin.js', __FILE__), array ('jquery-ui-sortable'), BPS_VERSION);
+//	wp_enqueue_script ('bps-admin', plugins_url ('bps-admin.js', __FILE__), array ('jquery-ui-sortable', 'react', 'react-dom'), BPS_VERSION);
 	wp_localize_script ('bps-admin', 'bps_strings', $translations);
 }

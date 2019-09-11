@@ -3,30 +3,17 @@
 add_action ('wp', 'bps_set_request');
 function bps_set_request ()
 {
-	global $post;
-	global $shortcode_tags;
-
-	if (isset ($post->post_type) && $post->post_type == 'page')
-	{
-		$saved_shortcodes = $shortcode_tags;
-		$shortcode_tags = array ();
-		add_shortcode ('bps_directory', 'bps_save_hidden_filters');
-		do_shortcode ($post->post_content);
-		$shortcode_tags = $saved_shortcodes;
-	}
-
-	$filters = bps_hidden_filters ();
-	if (!empty ($filters))
-	{
-		$cookie = apply_filters ('bps_cookie_name', 'bps_filters');
-		setcookie ($cookie, http_build_query ($filters), 0, COOKIEPATH);
-	}
+	bps_set_directory ();
 
 	if (isset ($_REQUEST['bps_debug']))
 	{
 		$cookie = apply_filters ('bps_cookie_name', 'bps_debug');
 		setcookie ($cookie, 1, 0, COOKIEPATH);
 	}
+
+	if (isset ($_REQUEST['bp_profile_search']) && !isset ($_REQUEST[BPS_FORM]))
+		$_REQUEST[BPS_FORM] = $_REQUEST['bp_profile_search'];
+	unset ($_REQUEST['bp_profile_search']);
 
 	$persistent = bps_get_option ('persistent', '1');
 	$new_search = isset ($_REQUEST[bp_core_get_component_search_query_arg ('members')]);
@@ -39,6 +26,7 @@ function bps_set_request ()
 		$cookie = apply_filters ('bps_cookie_name', 'bps_request');
 		if ($_REQUEST[BPS_FORM] != 'clear')
 		{
+			bps_clean_request ();
 			$_REQUEST['bps_directory'] = bps_current_page ();
 			setcookie ($cookie, http_build_query ($_REQUEST), 0, COOKIEPATH);
 			bps_redirect_on_error ($_REQUEST);
@@ -50,19 +38,44 @@ function bps_set_request ()
 	}
 }
 
-function bps_get_request ($type, $form=0)
+function bps_clean_request ()
+{
+	$form = $_REQUEST[BPS_FORM];
+	$keys = bps_allowed_keys ($form);
+
+	foreach ($_REQUEST as $key => $value)
+		if (!in_array ($key, $keys))  unset ($_REQUEST[$key]);
+}
+
+function bps_allowed_keys ($form)
+{
+	$keys = array (BPS_FORM);
+
+	$meta = bps_meta ($form);
+	foreach ($meta['field_code'] as $k => $code)
+	{
+		$mode = $meta['field_mode'][$k];
+		$keys[] = ($mode == '')? $code: $code. '_'. $mode;
+		if ($mode == 'range' || $mode == 'age_range')
+		{
+			$keys[] = $code. '_'. $mode. '_min';
+			$keys[] = $code. '_'. $mode. '_max';
+		}
+		$keys[] = $code. '_label';
+	}
+
+	return $keys;
+}
+
+function bps_get_request ($type, $form=0)		// published interface, 20190324
 {
 	$current = bps_current_page ();
+	$hidden_filters = bps_get_hidden_filters ();
 
 	$cookie = apply_filters ('bps_cookie_name', 'bps_request');
 	$request = isset ($_REQUEST[BPS_FORM])? $_REQUEST: array ();
 	if (empty ($request) && isset ($_COOKIE[$cookie]))
 		parse_str (stripslashes ($_COOKIE[$cookie]), $request);
-
-	$cookie = apply_filters ('bps_cookie_name', 'bps_filters');
-	$filters = bps_hidden_filters ();
-	if (empty ($filters) && isset ($_COOKIE[$cookie]))
-		parse_str (stripslashes ($_COOKIE[$cookie]), $filters);
 
 	switch ($type)
 	{
@@ -72,87 +85,16 @@ function bps_get_request ($type, $form=0)
 
 	case 'filters':
 		if (isset ($request['bps_directory']) && $request['bps_directory'] != $current)  $request = array ();
+		foreach ($hidden_filters as $key => $value)  unset ($request[$key]);
 		break;
 
 	case 'search':
 		if (isset ($request['bps_directory']) && $request['bps_directory'] != $current)  $request = array ();
-		if (isset ($filters['bps_directory']) && $filters['bps_directory'] != $current)  $filters = array ();
-		foreach ($filters as $key => $value)  $request[$key] = $value;
+		foreach ($hidden_filters as $key => $value)  $request[$key] = $value;
 		break;
 	}
 
 	return apply_filters ('bps_request', $request, $type, $form);
-}
-
-function bps_save_hidden_filters ($attr, $content)
-{
-	global $bps_hidden_filters;
-
-	$bps_hidden_filters = array ('bps_directory' => bps_current_page ());
-
-	list (, $fields) = bps_get_fields ();
-	$split = isset ($attr['split'])? $attr['split']: ',';
-
-	if (is_array ($attr))  foreach ($attr as $key => $value)
-	{
-		$k = bps_match_key ($key, $fields);
-		if ($k === false)  continue;
-
-		$f = $fields[$k];
-		$filter = ($key == $f->code)? '': substr ($key, strlen ($f->code) + 1);
-		if (!bps_Fields::is_filter ($f, $filter))  continue;
-
-		$selector = $filter. (count ($f->options)? '/e': '');
-		switch ($selector)
-		{
-		case 'contains':
-		case '':
-		case 'like':
-			$value = trim (addslashes ($value));
-			if ($value !== '')  $bps_hidden_filters[$key] = $value;
-			break;
-
-		case 'range':
-		case 'age_range':
-			list ($min, $max) = explode ($split, $value);
-			$values = array ();
-			if (($min = trim ($min)) !== '')  $values['min'] = $min;
-			if (($max = trim ($max)) !== '')  $values['max'] = $max;
-			if (!empty ($values))  $bps_hidden_filters[$key] = $values;
-			break;
-
-		case '/e':
-			$flipped = array_flip ($f->options);
-			$value = trim ($value);
-			if (isset ($flipped[$value]))
-				$bps_hidden_filters[$key] = addslashes ($flipped[$value]);
-			break;
-
-		case 'one_of/e':
-		case 'match_any/e':
-		case 'match_all/e':
-			$flipped = array_flip ($f->options);
-			$values = explode ($split, $value);
-			$keys = array ();
-			foreach ($values as $value)
-			{
-				$value = trim ($value);
-				if (isset ($flipped[$value]))  $keys[] = addslashes ($flipped[$value]);
-			}
-			if (!empty ($keys))  $bps_hidden_filters[$key] = $keys;
-			break;
-		}
-	}
-
-	add_filter ('body_class', function ($classes) {return array_merge (array ('directory', 'members', 'buddypress'), $classes);});
-}
-
-function bps_hidden_filters ()
-{
-	global $bps_hidden_filters;
-
-	$filters = isset ($bps_hidden_filters)? $bps_hidden_filters: array ();
-	return apply_filters ('bps_hidden_filters', $filters);
 }
 
 function bps_current_page ()
@@ -161,7 +103,7 @@ function bps_current_page ()
 		parse_url ($_SERVER['HTTP_REFERER'], PHP_URL_PATH):
 		parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-	return $current;
+	return apply_filters ('bps_current_page', $current);		// published interface, 20190324
 }
 
 function bps_redirect_on_error ($request)
@@ -173,37 +115,6 @@ function bps_redirect_on_error ($request)
 		wp_safe_redirect ($redirect);
 		exit;
 	}
-}
-
-function bps_debug ()
-{
-	$cookie = apply_filters ('bps_cookie_name', 'bps_debug');
-	return isset ($_REQUEST['bps_debug'])? true: isset ($_COOKIE[$cookie])? true: false;
-}
-
-add_filter ('bps_field_sql', 'bps_field_sql', 99, 2);
-function bps_field_sql ($sql, $f)
-{
-	global $wpdb;
-
-	if (bps_debug ())
-	{
-		$where = 'WHERE '. implode (' AND ', $sql['where']);
-		$where = $wpdb->remove_placeholder_escape ($where);
-		echo "<!--\n";
-		echo "where $where\n";
-		echo "-->\n";
-	}
-	
-	return $sql;
-}
-
-add_action ('bp_before_directory_members_content', 'bps_display_filters');
-function bps_display_filters ()
-{
-	$request = bps_get_request ('filters');
-	if (!empty ($request))
-		bps_call_template ('members/bps-filters', array ($request, true));
 }
 
 add_filter ('bp_ajax_querystring', 'bps_filter_members', 99, 2);
@@ -235,7 +146,7 @@ function bps_filter_members ($qs, $object)
 	return $qs;
 }
 
-function bps_search ($request, $users=null)
+function bps_search ($request, $users=null)		// published interface, 20190324
 {
 	$results = array ('users' => array (0), 'validated' => true);
 
@@ -262,11 +173,101 @@ function bps_search ($request, $users=null)
 	}
 
 	if (isset ($users))
+	{
+		if (count ($users) == 0)  return $results;
 		$results['users'] = $users;
+	}
 	else
+	{
 		$results['validated'] = false;
+	}
 
 	return $results;
+}
+
+function bps_debug ()
+{
+	$cookie = apply_filters ('bps_cookie_name', 'bps_debug');
+	return isset ($_REQUEST['bps_debug'])? true: isset ($_COOKIE[$cookie]);
+}
+
+add_action ('bps_field_before_query', 'bps_field_before_query', 99, 1);
+function bps_field_before_query ($f)
+{
+	if (bps_debug ())
+	{
+		echo "<!--\n";
+		echo "query ";
+		print_r ($f);
+		echo "-->\n";
+	}
+}
+
+add_filter ('bps_field_sql', 'bps_field_sql', 99, 2);
+function bps_field_sql ($sql, $f)
+{
+	global $wpdb;
+
+	if (bps_debug ())
+	{
+		$where = implode (' AND ', $sql['where']);
+		$where = $wpdb->remove_placeholder_escape ($where);
+		echo "<!--\n";
+		echo "where $where\n";
+		echo "-->\n";
+	}
+	
+	return $sql;
+}
+
+add_filter ('bps_field_search_results', 'bps_field_search_results', 99, 2);
+function bps_field_search_results ($found, $f)
+{
+	if (bps_debug ())
+	{
+		$ids = implode (',', $found);
+		echo "<!--\n";
+		echo "found $ids\n";
+		echo "-->\n";
+	}
+	
+	return $found;
+}
+
+if (!defined ('BPS_AND'))  define ('BPS_AND', ' AND ');
+if (!defined ('BPS_OR'))  define ('BPS_OR', ' OR ');
+
+function bps_is_expression ($value)
+{
+	$and = explode (BPS_AND, $value);
+	$or = explode (BPS_OR, $value);
+
+	if (count ($and) > 1 && count ($or) > 1)  return 'mixed';
+	if (count ($and) > 1)  return 'and';
+	if (count ($or) > 1)  return 'or';
+
+	return false;
+}
+
+function bps_sql_expression ($format, $value, $escape=false)
+{
+	global $wpdb;
+
+	foreach (array (BPS_AND, BPS_OR) as $split)
+	{
+		$values = explode ($split, $value);
+		if (count ($values) > 1)  break;
+	}
+
+	$parts = array ();
+	foreach ($values as $value)
+	{
+		if ($escape)  $value = '%'. bps_esc_like ($value). '%';
+		$parts[] = $wpdb->prepare ($format, $value);
+	}
+
+	$join = ($split == BPS_AND)? ' AND ': ' OR ';
+	return '('. implode ($join, $parts). ')';
 }
 
 function bps_esc_like ($text)

@@ -105,10 +105,10 @@ function bps_attributes ($post)
 	<select name="options[action]" id="action">
 <?php
 	$dirs = bps_directories ();
-	foreach ($dirs as $id => $dir)
+	foreach ($dirs as $dir)
 	{
 ?>
-		<option value='<?php echo $id; ?>' <?php selected ($options['action'], $id); ?>><?php echo esc_attr ($dir->label); ?></option>
+		<option value='<?php echo esc_attr($dir->id); ?>' <?php selected ($options['action'], $dir->id); ?>><?php echo esc_html($dir->title); ?></option>
 <?php
 	}
 ?>
@@ -154,9 +154,7 @@ function bps_ajax_template_options ()
 
 function bps_template_options ($form, $template)
 {
-	echo bps_locate_template ($template);
-
-	$located = bp_locate_template ($template. '.php');
+	$located = bps_template_info ($template);
 	if ($located === false)  return false;
 
 	$meta = bps_meta ($form);

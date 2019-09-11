@@ -66,6 +66,7 @@ class Swift_Performance_Cache {
             add_action('save_post', array('Swift_Performance_Cache', 'clear_post_cache'));
             add_action('delete_post', array('Swift_Performance_Cache', 'clear_post_cache'));
             add_action('wp_trash_post', array('Swift_Performance_Cache', 'clear_post_cache'));
+            add_action('pre_post_update', array('Swift_Performance_Cache', 'clear_post_cache'));
             add_action('delete_attachment', array('Swift_Performance_Cache', 'clear_post_cache'));
             add_action('woocommerce_product_object_updated_props', array('Swift_Performance_Cache', 'clear_post_cache'));
             add_action('woocommerce_product_set_stock', array('Swift_Performance_Cache', 'clear_post_cache'));
@@ -73,37 +74,70 @@ class Swift_Performance_Cache {
             add_action('fl_builder_after_save_layout', array('Swift_Performance_Cache', 'clear_post_cache'));
 
             // Clear pagecache after publish/update post
-            add_action('save_post', array('Swift_Performance_Cache', 'clear_page_cache_after_post'));
-            add_action('delete_post', array('Swift_Performance_Cache', 'clear_page_cache_after_post'));
-            add_action('wp_trash_post', array('Swift_Performance_Cache', 'clear_page_cache_after_post'));
-            add_action('delete_attachment', array('Swift_Performance_Cache', 'clear_page_cache_after_post'));
-            add_action('woocommerce_product_object_updated_props', array('Swift_Performance_Cache', 'clear_page_cache_after_post'));
-            add_action('woocommerce_product_set_stock', array('Swift_Performance_Cache', 'clear_page_cache_after_post'));
-            add_action('woocommerce_variation_set_stock', array('Swift_Performance_Cache', 'clear_page_cache_after_post'));
-            add_action('fl_builder_after_save_layout', array('Swift_Performance_Cache', 'clear_page_cache_after_post'));
+            add_action('save_post', array('Swift_Performance_Cache', 'clear_cache_after_post'));
+            add_action('delete_post', array('Swift_Performance_Cache', 'clear_cache_after_post'));
+            add_action('wp_trash_post', array('Swift_Performance_Cache', 'clear_cache_after_post'));
+            add_action('delete_attachment', array('Swift_Performance_Cache', 'clear_cache_after_post'));
+            add_action('woocommerce_product_object_updated_props', array('Swift_Performance_Cache', 'clear_cache_after_post'));
+            add_action('woocommerce_product_set_stock', array('Swift_Performance_Cache', 'clear_cache_after_post'));
+            add_action('woocommerce_variation_set_stock', array('Swift_Performance_Cache', 'clear_cache_after_post'));
+            add_action('fl_builder_after_save_layout', array('Swift_Performance_Cache', 'clear_cache_after_post'));
 
-            // Clear cache on plugin actions
-            add_action('activated_plugin', array('Swift_Performance_Cache', 'clear_all_cache'));
-            add_action('deactivated_plugin', array('Swift_Performance_Cache', 'clear_all_cache'));
+            // Elementor AJAX update
+            add_action('elementor/ajax/register_actions', function(){
+                  Swift_Performance_Cache::clear_post_cache($_REQUEST['editor_post_id']);
+            });
 
-            // Clear cache after switch theme
-            add_action('after_switch_theme', array('Swift_Performance_Cache', 'clear_all_cache'));
+            // Scheduled posts
+            add_action('transition_post_status', function($new, $old = '', $post = NULL){
+                  if (!empty($post)){
+                        Swift_Performance_Cache::clear_post_cache($post->ID);
+                        Swift_Performance_Cache::clear_cache_after_post();
+                  }
+            });
 
-		// Clear all cache after edit nav menu
-		add_action('wp_update_nav_menu', array('Swift_Performance_Cache', 'clear_all_cache'));
+            // Scheduled sales
+            add_action('wc_after_products_starting_sales', array('Swift_Performance_Cache', 'clear_post_cache_array'));
+            add_action('wc_after_products_ending_sales', array('Swift_Performance_Cache', 'clear_post_cache_array'));
 
-		// Clear all cache after customizer save
-		add_action('customize_save_after', array('Swift_Performance_Cache', 'clear_all_cache'));
+            // Clear all cache actions
+            foreach (array('after_switch_theme','customize_save_after','update_option_permalink_structure','update_option_tag_base','update_option_category_base','wp_update_nav_menu', 'update_option_sidebars_widgets') as $action){
+                  add_action($action, array('Swift_Performance_Cache', 'clear_all_cache'));
+            }
+
+            // Clear cache on plugin/update actions
+            add_action('activated_plugin', function($plugin){
+                  if ($plugin !== basename(SWIFT_PERFORMANCE_DIR) . '/performance.php'){
+                        $action     = esc_html__('A plugin has been activated. Page cache should be cleared.', 'swift-performance');
+                        ob_start();
+                        include SWIFT_PERFORMANCE_DIR . 'templates/clear-cache-notice.php';
+                        Swift_Performance_Lite::add_notice(ob_get_clean(), 'warning', 'plugin/update-action');
+                  }
+            });
+            add_action('deactivated_plugin', function($plugin){
+                  if ($plugin !== basename(SWIFT_PERFORMANCE_DIR) . '/performance.php'){
+                        $action     = esc_html__('A plugin has been activated. Page cache should be cleared.', 'swift-performance');
+                        ob_start();
+                        include SWIFT_PERFORMANCE_DIR . 'templates/clear-cache-notice.php';
+                        Swift_Performance_Lite::add_notice(ob_get_clean(), 'warning', 'plugin/update-action');
+                  }
+            });
+            add_action('upgrader_process_complete', function(){
+                  $action     = esc_html__('Updater process has been finished. Page cache probably should be cleared.', 'swift-performance');
+                  ob_start();
+                  include SWIFT_PERFORMANCE_DIR . 'templates/clear-cache-notice.php';
+                  Swift_Performance_Lite::add_notice(ob_get_clean(), 'warning', 'plugin/update-action');
+            });
 
             // Clear cache after comment approved
             add_action('wp_set_comment_status', function($comment_id, $status){
-                  if (in_array($status, array('approve', 'unapprove'))){
+                  if (in_array($status, array('approve', 'hold'))){
                        $comment = get_comment( $comment_id );
                        Swift_Performance_Cache::clear_post_cache($comment->comment_post_ID);
                   }
             }, 10, 2);
 
-            // Clear intelligent cache based on request
+            // Clear intelligent cache based on request (Legacy)
             if (Swift_Performance_Lite::check_option('cache-expiry-mode', 'intelligent') && Swift_Performance_Lite::check_option('resource-saving-mode', 1)){
                   add_action('shutdown', array($this, 'clear_intelligent_cache'));
             }
@@ -121,6 +155,12 @@ class Swift_Performance_Cache {
                   Swift_Performance_Lite::set_option('optimize-prebuild-only', 0);
                   Swift_Performance_Lite::set_option('merge-background-only', 0);
                   add_filter('swift_performance_is_cacheable_dynamic', '__return_true');
+
+                  $timestamp = gmdate("D, d M Y H:i:s") . " GMT";
+                  Swift_Performance_Lite::header("Expires: $timestamp");
+                  Swift_Performance_Lite::header("Last-Modified: $timestamp");
+                  Swift_Performance_Lite::header("Pragma: no-cache");
+                  Swift_Performance_Lite::header("Cache-Control: no-cache, must-revalidate");
             }
 
             // Clear post cache on user action
@@ -180,6 +220,11 @@ class Swift_Performance_Cache {
       public function set_cache(){
             global $wpdb;
 
+            // Return on CLI
+            if (defined('WP_CLI') && WP_CLI){
+                  return;
+            }
+
             // Don't write cache if there isn't free thread for optimizing assets
             if ($this->disabled_cache || (defined('SWIFT_PERFORMANCE_DISABLE_CACHE') && SWIFT_PERFORMANCE_DISABLE_CACHE)){
                   return;
@@ -197,7 +242,7 @@ class Swift_Performance_Cache {
 
             // Remove background loading from cache
             if (Swift_Performance_Lite::check_option('merge-background-only', 1) && Swift_Performance_Lite::check_option('cache-expiry-mode', array('timebased', 'actionbased'), 'IN') ){
-                  $this->buffer = str_replace("<script>var xhr = new XMLHttpRequest();xhr.open('GET', document.location.href);xhr.setRequestHeader('X-merge-assets', 'true');xhr.send(null);</script>", '', $this->buffer);
+                  $this->buffer = str_replace("<script data-dont-merge>var xhr = new XMLHttpRequest();xhr.open('GET', document.location.href);xhr.setRequestHeader('X-merge-assets', 'true');xhr.send(null);</script>", '', $this->buffer);
             }
 
             $this->buffer = self::avoid_mixed_content($this->buffer);
@@ -268,8 +313,12 @@ class Swift_Performance_Cache {
 
                         // Update warmup table
                         $id = Swift_Performance_Lite::get_warmup_id($_SERVER['HTTP_HOST'] . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+                        $priority = Swift_Performance_Lite::get_default_warmup_priority();
+                        $url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                         $timestamp = time();
-                        Swift_Performance_Lite::mysql_query($wpdb->prepare("UPDATE " . SWIFT_PERFORMANCE_TABLE_PREFIX . "warmup SET timestamp = %s, type = %s WHERE id = %s LIMIT 1", $timestamp, $type, $id));
+
+                        Swift_Performance_Lite::mysql_query("INSERT IGNORE INTO " . SWIFT_PERFORMANCE_TABLE_PREFIX . "warmup (id, url, timestamp, type, priority) VALUES ('".Swift_Performance_Lite::get_warmup_id($url)."', '".esc_url($url)."', '".$timestamp."', '".$type."', ".(int)$priority.") ON DUPLICATE KEY UPDATE timestamp = '{$timestamp}', type = '{$type}'");
+
 
                         Swift_Performance_Lite::log('General cache (file) ' . $this->path . $basename, 9);
                   }
@@ -308,8 +357,12 @@ class Swift_Performance_Cache {
 
                         // Update warmup table
                         $id = Swift_Performance_Lite::get_warmup_id($_SERVER['HTTP_HOST'] . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+                        $priority = Swift_Performance_Lite::get_default_warmup_priority();
+                        $url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                         $timestamp = time();
-                        Swift_Performance_Lite::mysql_query($wpdb->prepare("UPDATE " . SWIFT_PERFORMANCE_TABLE_PREFIX . "warmup SET timestamp = %s, type = %s WHERE id = %s LIMIT 1", $timestamp, $type, $id));
+
+                        Swift_Performance_Lite::mysql_query("INSERT IGNORE INTO " . SWIFT_PERFORMANCE_TABLE_PREFIX . "warmup (id, url, timestamp, type, priority) VALUES ('".Swift_Performance_Lite::get_warmup_id($url)."', '".esc_url($url)."', '".$timestamp."', '".$type."', ".(int)$priority.") ON DUPLICATE KEY UPDATE timestamp = '{$timestamp}', type = '{$type}'");
+
 
 
                         Swift_Performance_Lite::log('General cache (memcached) ' . $this->path . $basename, 9);
@@ -344,12 +397,17 @@ class Swift_Performance_Cache {
        * Load cached file and stop if file exists
        */
       public function load_cache(){
+            // Return on CLI
+            if (defined('WP_CLI') && WP_CLI){
+                  return;
+            }
+
             // Set default content type
             $content_type  = 'text/html';
 
             // Add Swift Performance header
             if (!Swift_Performance_Lite::is_admin()){
-                  header(SWIFT_PERFORMANCE_SLUG . ': MISS');
+                  Swift_Performance_Lite::header(SWIFT_PERFORMANCE_SLUG . ': MISS');
             }
 
             // Serve cached AJAX requests
@@ -367,7 +425,7 @@ class Swift_Performance_Cache {
                   }
 
                   if ($cached_request !== false){
-                        header(SWIFT_PERFORMANCE_SLUG . ': HIT');
+                        Swift_Performance_Lite::header(SWIFT_PERFORMANCE_SLUG . ': HIT');
 
                         if (isset($cached_request['basename'])){
                               switch ($cached_request['basename']) {
@@ -386,12 +444,12 @@ class Swift_Performance_Cache {
 
                         // Send headers
                         if (Swift_Performance_Lite::check_option('304-header', 1) && (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || @trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)){
-                              header("HTTP/1.1 304 Not Modified");
+                              Swift_Performance_Lite::header("HTTP/1.1 304 Not Modified");
                         }
 
-                        header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT");
-                        header("Etag: $etag");
-                        header("Content-type: $content_type");
+                        Swift_Performance_Lite::header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT");
+                        Swift_Performance_Lite::header("Etag: $etag");
+                        Swift_Performance_Lite::header("Content-type: $content_type");
                         echo $content;
 
                         die;
@@ -427,7 +485,7 @@ class Swift_Performance_Cache {
                   $is_404     = true;
             }
             if ($is_disk_cache && $is_cached && filesize($path) > 0){
-                  header(SWIFT_PERFORMANCE_SLUG . ': HIT');
+                  Swift_Performance_Lite::header(SWIFT_PERFORMANCE_SLUG . ': HIT');
 
                   $last_modified_time = filemtime($path);
                   $etag = md5_file($path);
@@ -439,12 +497,12 @@ class Swift_Performance_Cache {
                         status_header(404);
                   }
 
-                  header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT");
-                  header("Etag: $etag");
-                  header("Content-type: $content_type");
+                  Swift_Performance_Lite::header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT");
+                  Swift_Performance_Lite::header("Etag: $etag");
+                  Swift_Performance_Lite::header("Content-type: $content_type");
 
                   if ( file_exists($path . '.gz') && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) !== false ) {
-                        header('Content-Encoding: gzip');
+                        Swift_Performance_Lite::header('Content-Encoding: gzip');
                         readfile($path . '.gz');
                   }
                   else{
@@ -484,7 +542,7 @@ class Swift_Performance_Cache {
                   }
 
                   if ($cached_request !== false){
-                        header(SWIFT_PERFORMANCE_SLUG . ': HIT');
+                        Swift_Performance_Lite::header(SWIFT_PERFORMANCE_SLUG . ': HIT');
 
                         $content = $cached_request['content'];
                         if (!empty($content)) {
@@ -493,17 +551,17 @@ class Swift_Performance_Cache {
 
                               // Send headers
                               if (Swift_Performance_Lite::check_option('304-header', 1) && (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || @trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag)){
-                                    header("HTTP/1.1 304 Not Modified");
+                                    Swift_Performance_Lite::header("HTTP/1.1 304 Not Modified");
                               }
 
-                              header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT");
-                              header("Etag: $etag");
-                              header("Content-type: $content_type");
-                              header("Content-Encoding: none");
-                              header('Connection: close');
+                              Swift_Performance_Lite::header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT");
+                              Swift_Performance_Lite::header("Etag: $etag");
+                              Swift_Performance_Lite::header("Content-type: $content_type");
+                              Swift_Performance_Lite::header("Content-Encoding: none");
+                              Swift_Performance_Lite::header('Connection: close');
 
                               if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) !== false ) {
-                                    header('Content-Encoding: gzip');
+                                    Swift_Performance_Lite::header('Content-Encoding: gzip');
                               }
 
                               echo $content;
@@ -521,7 +579,7 @@ class Swift_Performance_Cache {
       public function check_integrity($buffer){
             // Cache is identical
             if (self::is_identical()){
-                  header('X-Cache-Status: identical');
+                  Swift_Performance_Lite::header('X-Cache-Status: identical');
                   die;
             }
 
@@ -532,7 +590,7 @@ class Swift_Performance_Cache {
             if(strpos(Swift_Performance_Lite::get_option('caching-mode'), 'disk_cache') !== false){
                   if (self::is_cacheable()){
                         if (!file_exists(SWIFT_PERFORMANCE_CACHE_DIR . $this->path . 'index.html')){
-                              header('X-Cache-Status: miss');
+                              Swift_Performance_Lite::header('X-Cache-Status: miss');
                               return;
                         }
 
@@ -549,9 +607,9 @@ class Swift_Performance_Cache {
                   }
 
                   if ($checksum){
-                        header("Last-Modified: ".gmdate("D, d M Y H:i:s", time())." GMT");
-                        header("Etag: " . md5($buffer));
-                        header('X-Cache-Status: changed');
+                        Swift_Performance_Lite::header("Last-Modified: ".gmdate("D, d M Y H:i:s", time())." GMT");
+                        Swift_Performance_Lite::header("Etag: " . md5($buffer));
+                        Swift_Performance_Lite::header('X-Cache-Status: changed');
                         return;
                   }
             }
@@ -560,7 +618,7 @@ class Swift_Performance_Cache {
                   if (self::is_cacheable()){
                         $cached_request = Swift_Performance_Cache::memcached_get($this->path . 'index.html');
                         if (empty($cached_request)){
-                              header('X-Cache-Status: miss');
+                              Swift_Performance_Lite::header('X-Cache-Status: miss');
                               return;
                         }
 
@@ -577,14 +635,14 @@ class Swift_Performance_Cache {
                   }
 
                   if ($checksum){
-                        header("Last-Modified: ".gmdate("D, d M Y H:i:s", time())." GMT");
-                        header("Etag: " . md5($buffer));
-                        header('X-Cache-Status: changed');
+                        Swift_Performance_Lite::header("Last-Modified: ".gmdate("D, d M Y H:i:s", time())." GMT");
+                        Swift_Performance_Lite::header("Etag: " . md5($buffer));
+                        Swift_Performance_Lite::header('X-Cache-Status: changed');
                         return;
                   }
             }
 
-            header('X-Cache-Status: not-modified');
+            Swift_Performance_Lite::header('X-Cache-Status: not-modified');
 
       }
 
@@ -878,6 +936,16 @@ class Swift_Performance_Cache {
       }
 
       /**
+      * Delete cache multiple posts
+      * @param array $post_ids
+      */
+      public static function clear_post_cache_array($post_ids){
+            foreach ((array)$post_ids as $post_id) {
+                  clear_post_cache($post_id);
+            }
+      }
+
+      /**
        * Delete cached post on save
        * @param int $post_id
        */
@@ -978,13 +1046,22 @@ class Swift_Performance_Cache {
       }
 
       /**
-       * Clear pagecache after publish/update post
+       * Clear page cache after publish/update post
        */
-      public static function clear_page_cache_after_post(){
-            $pages = Swift_Performance_Lite::get_option('clear-page-cache-after-post');
+      public static function clear_cache_after_post(){
+            //By post id
+            $pages = array_filter((array)Swift_Performance_Lite::get_option('clear-page-cache-after-post'));
             if (!empty($pages)){
-                  foreach ((array)$pages as $page){
+                  foreach ($pages as $page){
                         self::clear_post_cache($page);
+                  }
+            }
+
+            // By permalink
+            $permalinks = array_filter((array)Swift_Performance_Lite::get_option('clear-permalink-cache-after-post'));
+            if (!empty($permalinks)){
+                  foreach ($permalinks as $permalink){
+                        self::clear_permalink_cache($permalink);
                   }
             }
       }
@@ -1136,6 +1213,7 @@ class Swift_Performance_Cache {
        */
       public static function is_cacheable(){
             $ajax_cache       = !defined('DOING_AJAX');
+            $xmlrpc           = !defined('XMLRPC_REQUEST');
             $logged_in        = (!Swift_Performance_Lite::is_user_logged_in() || Swift_Performance_Lite::check_option('enable-caching-logged-in-users', 1));
             $is_404           = (Swift_Performance_Lite::check_option('cache-404',1) || !Swift_Performance_Lite::is_404());
             $query_string     = (isset($_SERVER['HTTP_X_PREBUILD']) || Swift_Performance_Lite::check_option('ignore-query-string', 1) || empty($_GET));
@@ -1144,7 +1222,8 @@ class Swift_Performance_Cache {
             $author           = (Swift_Performance_Lite::check_option('exclude-author',1) && Swift_Performance_Lite::is_author() ? false : true);
             $rest             = (Swift_Performance_Lite::check_option('exclude-rest',1) && Swift_Performance_Lite::is_rest() ? false : true);
             $feed             = (Swift_Performance_Lite::check_option('exclude-feed',1) && Swift_Performance_Lite::is_feed() ? false : true);
-            return apply_filters('swift_performance_is_cacheable', !self::is_exluded() && $archive && $author && $rest && $feed && $is_404 && !Swift_Performance_Lite::is_admin() && $post && $query_string && $logged_in && $ajax_cache && !self::is_crawler() && !Swift_Performance_Lite::is_password_protected());
+            $maintenance      = !self::is_maintenance();
+            return apply_filters('swift_performance_is_cacheable', !self::is_exluded() && $archive && $author && $rest && $feed && $is_404 && !Swift_Performance_Lite::is_admin() && $post && $query_string && $logged_in && $ajax_cache && $xmlrpc && $maintenance && !self::is_crawler() && !Swift_Performance_Lite::is_password_protected());
       }
 
       /**
@@ -1165,9 +1244,15 @@ class Swift_Performance_Cache {
                               break;
                         }
                   }
+                  $xmlrpc     = !defined('XMLRPC_REQUEST');
                   $logged_in  = (!Swift_Performance_Lite::is_user_logged_in() || Swift_Performance_Lite::check_option('enable-caching-logged-in-users', 1));
                   $is_404     = (Swift_Performance_Lite::check_option('cache-404',1) || !Swift_Performance_Lite::is_404());
-                  return apply_filters('swift_performance_is_cacheable_dynamic', !self::is_exluded() && $is_404 && $cacheable && $logged_in && !Swift_Performance_Lite::is_admin() && !self::is_crawler() && !Swift_Performance_Lite::is_password_protected());
+                  $archive          = (Swift_Performance_Lite::check_option('exclude-archive',1) && Swift_Performance_Lite::is_archive() ? false : true);
+                  $author           = (Swift_Performance_Lite::check_option('exclude-author',1) && Swift_Performance_Lite::is_author() ? false : true);
+                  $rest             = (Swift_Performance_Lite::check_option('exclude-rest',1) && Swift_Performance_Lite::is_rest() ? false : true);
+                  $feed             = (Swift_Performance_Lite::check_option('exclude-feed',1) && Swift_Performance_Lite::is_feed() ? false : true);
+                  $maintenance      = !self::is_maintenance();
+                  return apply_filters('swift_performance_is_cacheable_dynamic', !self::is_exluded() && $is_404 && $cacheable && $logged_in && $archive && $author && $rest && $feed && $maintenance && !Swift_Performance_Lite::is_admin() && !self::is_crawler() && !Swift_Performance_Lite::is_password_protected());
             }
             return apply_filters('swift_performance_is_cacheable_dynamic', false);
       }
@@ -1379,6 +1464,25 @@ class Swift_Performance_Cache {
       }
 
       /**
+       * Check is maintenance mode active
+       * @return boolean
+       */
+      public static function is_maintenance(){
+            if (!file_exists( ABSPATH . '.maintenance' )){
+                  return false;
+            }
+
+            global $upgrading;
+
+            include( ABSPATH . '.maintenance' );
+            // If the $upgrading timestamp is older than 10 minutes, don't die.
+            if ( ( time() - $upgrading ) >= 600 ){
+                  return false;
+            }
+                  return true;
+      }
+
+      /**
        * Locate cache file and return the first match if exists
        * @return string|boolean
        */
@@ -1567,7 +1671,7 @@ class Swift_Performance_Cache {
                    }
 
              	$files = array_diff(scandir($cache_dir . $dir), array('.','..'));
-             	foreach ($files as $file) {
+             	foreach ((array)$files as $file) {
                          if (!$check_filetime || (time() - filectime($cache_dir . $dir . '/'. $file) >= Swift_Performance_Lite::get_option('cache-expiry-time') && !in_array($dir, array('/css','/js'))) ){
              		      is_dir($cache_dir . $dir . '/'. $file) ? self::recursive_rmdir($dir . '/'. $file, $check_filetime) : @unlink($cache_dir . $dir . '/'. $file);
                          }
@@ -1587,6 +1691,9 @@ class Swift_Performance_Cache {
             if (empty($varnish_host)){
                   $varnish_host = 'http://' . parse_url(Swift_Performance_Lite::home_url(), PHP_URL_HOST);
             }
+            else if (preg_match('~^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$~', $varnish_host)){
+                  $varnish_host = 'http://' . $varnish_host;
+            }
 
             $parsed_url = parse_url($url);
             $purge_url  = $varnish_host . (isset($parsed_url['path']) ? $parsed_url['path'] : '') . ($wildcard ? '.*' : '');
@@ -1604,9 +1711,10 @@ class Swift_Performance_Cache {
                   return false;
             }
 
-            $host       = parse_url(Swift_Performance_Lite::home_url(), PHP_URL_HOST);
+            $host       = Swift_Performance_Lite::get_option('cloudflare-host');
+            $host       = (empty($host) ? parse_url(Swift_Performance_Lite::home_url(), PHP_URL_HOST) : $host);
             $zones      = get_transient('swift_performance_'.$host.'_cf_zones');
-            if ($zones === false){
+            if (empty($zones)){
                   $response = wp_remote_get('https://api.cloudflare.com/client/v4/zones?name='.$host.'&status=active&page=1&per_page=20&order=status&direction=desc&match=all',
                         array(
                               'headers' => array(

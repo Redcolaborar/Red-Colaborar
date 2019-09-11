@@ -13,15 +13,8 @@
 	<div class="item-meta">
 		<span class="activity">
 <?php
-			if (!is_array ($value))
-				/* translators: %1$s field name, %2$s value */
-				printf (esc_html__('%1$s: %2$s', 'bp-profile-search'), $name, $value);
-			else if ($value['units'] == 'km')
-				/* translators: %1$s field name, %2$s location, %3$d distance */
-				printf (esc_html__('%1$s: %2$s (%3$d km away)', 'bp-profile-search'), $name, $value['location'], $value['distance']);
-			else if ($value['units'] == 'miles')
-				/* translators: %1$s field name, %2$s location, %3$d distance */
-				printf (esc_html__('%1$s: %2$s (%3$d miles away)', 'bp-profile-search'), $name, $value['location'], $value['distance']);
+			/* translators: %1$s field name, %2$s value */
+			printf (__('%1$s: %2$s', 'bp-profile-search'), esc_html($name), $value);
 ?>
 		</span>
 	</div>

@@ -1,96 +1,182 @@
 <?php
 
-function bps_directories ()
+function bps_set_directory ()
+{
+	global $post;
+	global $shortcode_tags;
+
+	if (isset ($post->post_type) && $post->post_type == 'page')
+	{
+		$saved_shortcodes = $shortcode_tags;
+		$shortcode_tags = array ('bps_directory' => 'bps_set_directory_data');
+		do_shortcode ($post->post_content);
+		$shortcode_tags = $saved_shortcodes;
+
+		wp_enqueue_script ('bps-directory', plugins_url ('bps-directory.js', __FILE__), array ('bp-jquery-cookie'), BPS_VERSION);
+		$_COOKIE['bp-members-scope'] = 'all';
+		unset ($_COOKIE['bp-members-filter']);
+	}
+}
+
+function bps_directories ()		// published interface, 20190324
 {
 	static $dirs = array ();
 
 	if (count ($dirs))  return $dirs;
 
-	$bp_pages = bp_core_get_directory_page_ids ();
+	$bp_pages = bp_get_option ('bp-pages', array ());
 	if (isset ($bp_pages['members']))
 	{
 		$members = $bp_pages['members'];
 		$members = bps_wpml_id ($members);
 		$dirs[$members] = new stdClass;
-		$dirs[$members]->label = get_the_title ($members);
-		$dirs[$members]->link = parse_url (get_page_link ($members), PHP_URL_PATH);
-
-		$member_types = bp_get_member_types (array (), 'objects');
-		foreach ($member_types as $type)  if ($type->has_directory == 1)
-		{
-			$dirs[$type->name] = new stdClass;
-			$dirs[$type->name]->label = $dirs[$members]->label. ' - '. $type->labels['name'];
-			$dirs[$type->name]->link = parse_url (bp_get_member_type_directory_permalink ($type->name), PHP_URL_PATH);
-		}
+		$dirs[$members]->id = $members;
+		$dirs[$members]->title = get_the_title ($members);
+		$dirs[$members]->path = parse_url (get_page_link ($members), PHP_URL_PATH);
 	}
-
-	if (!shortcode_exists ('bps_directory'))  return $dirs;
 
 	$pages = get_pages ();
 	foreach ($pages as $page)  if (has_shortcode ($page->post_content, 'bps_directory'))
 	{
 		$dirs[$page->ID] = new stdClass;
-		$dirs[$page->ID]->label = $page->post_title;
-		$dirs[$page->ID]->link = parse_url (get_page_link ($page->ID), PHP_URL_PATH);
+		$dirs[$page->ID]->id = $page->ID;
+		$dirs[$page->ID]->title = $page->post_title;
+		$dirs[$page->ID]->path = parse_url (get_page_link ($page->ID), PHP_URL_PATH);
+		$dirs[$page->ID]->replace = true;
 	}
 
+	$dirs = apply_filters ('bps_add_directory', $dirs);		// published interface, 20190324
 	return $dirs;
 }
 
-add_action ('wp_enqueue_scripts', 'bps_clear_directory', 1);
-function bps_clear_directory ()
+add_shortcode ('bps_directory', 'bps_set_directory_data');
+function bps_set_directory_data ($attr, $content)
 {
-	global $bp;
+	global $bps_directory_data;
 
-	$dirs = bps_directories ();
-	$current = parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+	$bps_directory_data = array ();
+	$bps_directory_data['page'] = bps_current_page ();
 
-	foreach ($dirs as $dir) {
-		if ($dir->link == $current) {
-			add_filter ('bp_directory_members_search_form', function ($text) {return $text;});
+	if (isset ($attr['template']))
+	{
+		$templates = explode (',', $attr['template']);
+		$bps_directory_data['template'] = isset ($templates[0])? trim ($templates[0]): '';
+		$bps_directory_data['ajax_template'] = isset ($templates[1])? trim ($templates[1]): '';
+	}
 
-			wp_enqueue_script ('bps-directory', plugins_url ('bps-directory.js', __FILE__), array ('bp-jquery-cookie'), BPS_VERSION);
-			$_COOKIE['bp-members-scope'] = 'all';
-			unset ($_COOKIE['bp-members-filter']);
+	if (isset ($attr['show']))
+		$bps_directory_data['show'] = $attr['show'];
+
+	if (isset ($attr['order_by']))
+		$bps_directory_data['order_by'] = $attr['order_by'];
+
+	list (, $fields) = bps_get_fields ();
+	$split = isset ($attr['split'])? $attr['split']: ',';
+
+	if (is_array ($attr))  foreach ($attr as $key => $value)
+	{
+		if (in_array ($key, array ('template', 'show', 'order_by')))  continue;
+
+		$k = bps_match_key ($key, $fields);
+		if ($k === false)  continue;
+
+		$f = $fields[$k];
+		$filter = ($key == $f->code)? '': substr ($key, strlen ($f->code) + 1);
+		if (!bps_Fields::is_filter ($f, $filter))  continue;
+
+		$selector = $filter. (count ($f->options)? '/e': '');
+		switch ($selector)
+		{
+		case 'contains':
+		case '':
+		case 'like':
+			$value = str_replace ('&amp;', '&', trim (addslashes ($value)));
+			if ($value !== '')  $bps_directory_data[$key] = $value;
+			break;
+
+		case 'range':
+		case 'age_range':
+			list ($min, $max) = explode ($split, $value);
+			$values = array ();
+			if (($min = trim ($min)) !== '')  $values['min'] = $min;
+			if (($max = trim ($max)) !== '')  $values['max'] = $max;
+			if (!empty ($values))  $bps_directory_data[$key] = $values;
+			break;
+
+		case '/e':
+			$flip = array_flip ($f->options);
+			$value = str_replace ('&amp;', '&', trim ($value));
+			$bps_directory_data[$key] = isset ($flip[$value])? addslashes ($flip[$value]): "_wrong_{$value}_";
+			break;
+
+		case 'one_of/e':
+		case 'match_any/e':
+		case 'match_all/e':
+			$flip = array_flip ($f->options);
+			$values = explode ($split, $value);
+			$keys = array ();
+			foreach ($values as $value)
+			{
+				$value = str_replace ('&amp;', '&', trim ($value));
+				$keys[] = isset ($flip[$value])? addslashes ($flip[$value]): "_wrong_{$value}_";
+			}
+			if (!empty ($keys))  $bps_directory_data[$key] = $keys;
 			break;
 		}
 	}
+
+	$cookie = apply_filters ('bps_cookie_name', 'bps_directory');
+	setcookie ($cookie, http_build_query ($bps_directory_data), 0, COOKIEPATH);
 }
 
-add_shortcode ('bps_directory', 'bps_show_directory');
-function bps_show_directory ($attr, $content)
+function bps_get_directory_data ()
 {
-	ob_start ();
+	global $bps_directory_data;
 
-	if (bps_debug ())
+	$data = array ();
+	$cookie = apply_filters ('bps_cookie_name', 'bps_directory');
+
+	if (!defined ('DOING_AJAX'))
+		$data = isset ($bps_directory_data)? $bps_directory_data: array ();
+	else if (isset ($_COOKIE[$cookie]))
 	{
-		echo "<!--\n";
-		print_r ($attr);
-		print_r (bps_hidden_filters ());
-		echo "-->\n";
+		$current = bps_current_page ();
+		parse_str (stripslashes ($_COOKIE[$cookie]), $data);
+		if ($data['page'] != $current)  $data = array ();
 	}
 
-	if (isset ($attr['order_by']))
-		bps_set_sort_options ($attr['order_by']);
+	return apply_filters ('bps_directory_data', $data);
+}
 
-	$template = isset ($attr['template'])? $attr['template']: 'members/index';
-	bps_call_template ($template);
+function bps_get_hidden_filters ()
+{
+	$data = bps_get_directory_data ();
+	unset ($data['page'], $data['template'], $data['ajax_template'], $data['show'], $data['order_by']);
 
-	if (bp_get_theme_package_id () == 'nouveau')
+	return apply_filters ('bps_hidden_filters', $data);
+}
+
+add_action ('bp_before_directory_members_content', 'bps_before_directory');
+function bps_before_directory ()
+{
+	$fields = bps_parsed_fields ();
+	foreach ($fields as $f)
 	{
-		printf ('<p class="bps-error">'. __('%s: The shortcode [bps_directory] is not working with the BuddyPress Nouveau template pack.', 'bp-profile-search'). '</p>',
-			'<strong>BP Profile Search '. BPS_VERSION. '</strong>');
+		if (bps_Fields::same_value ($f))  continue;
+		if (empty ($f->id) || $f->id != 1)  bps_set_sort_options ($f->code);
 	}
 
-	return ob_get_clean ();
+	$data = bps_get_directory_data ();
+	if (isset ($data['order_by']))  bps_set_sort_options ($data['order_by']);
+
+	$request = bps_get_request ('filters');
+	if (!empty ($request))
+		bps_call_template ('members/bps-filters', array ($request, true));
 }
 
 function bps_set_sort_options ($options)
 {
 	global $bps_sort_options;
-
-	if (!isset ($bps_sort_options))  $bps_sort_options = array ();
-	list (, $fields) = bps_get_fields ();
 
 	$options = explode (',', $options);
 	foreach ($options as $option)
@@ -99,24 +185,27 @@ function bps_set_sort_options ($options)
 		$option = explode (' ', $option);
 
 		$code = $option[0];
-		$order = isset ($option[1])? $option[1]: 'asc';
+		$f = bps_parsed_field ($code);
+		if (!isset ($f->sort_directory) || !is_callable ($f->sort_directory))  continue;
 
-		if (!isset ($fields[$code]->sort_directory) ||
-			!is_callable ($fields[$code]->sort_directory) ||
-			!in_array ($order, array ('asc', 'desc', 'both')))  continue;
+		$order = ($f->format == 'date')? 'desc': 'asc';
+		$order = isset ($option[1])? $option[1]: $order;
+		if (!in_array ($order, array ('asc', 'desc', 'both')))  continue;
+
+		$label = (isset ($f->filter) && isset ($f->label))? $f->label: $f->name;
 
 		if ($order == 'asc')
 		{
-			$bps_sort_options[$code] = $fields[$code]->name;
+			$bps_sort_options[$code] = $label;
 		}
 		else if ($order == 'desc')
 		{
-			$bps_sort_options['-'. $code] = $fields[$code]->name;
+			$bps_sort_options['-'. $code] = $label;
 		}
 		else if ($order == 'both')
 		{
-			$bps_sort_options[$code] = $fields[$code]->name. " &#x21E1;";
-			$bps_sort_options['-'. $code] = $fields[$code]->name. " &#x21E3;";
+			$bps_sort_options[$code] = $label. " &#x21E1;";
+			$bps_sort_options['-'. $code] = $label. " &#x21E3;";
 		}
 	}
 
@@ -131,10 +220,10 @@ function bps_display_sort_options ()
 	echo "\n<!-- BP Profile Search $version -->\n";
 
 	$sort_options = apply_filters ('bps_sort_options', $bps_sort_options);
-	foreach ($sort_options as $code => $name)
+	foreach ($sort_options as $code => $label)
 	{
 ?>
-		<option value='<?php echo esc_attr($code); ?>'><?php echo esc_html($name); ?></option>
+		<option value="<?php echo esc_attr($code); ?>"><?php echo esc_html($label); ?></option>
 <?php
 	}
 
@@ -152,30 +241,100 @@ function bps_uid_clauses ($sql, $object)
 		$order = 'DESC';
 	}
 
-	list (, $fields) = bps_get_fields ();
-	if (isset ($fields[$code]->sort_directory) && is_callable ($fields[$code]->sort_directory))
+	$f = bps_parsed_field ($code);
+	if (isset ($f->sort_directory) && is_callable ($f->sort_directory))
 	{
-		$f = $fields[$code];
 		$sql = call_user_func ($f->sort_directory, $sql, $object, $f, $order);
-		add_action ('bp_directory_members_item', 'bps_directory_members_item');
+		if (empty ($f->id) || $f->id != 1)  bps_set_details ($code);
 	}
 
 	return $sql;
 }
 
-function bps_directory_members_item ()
+add_action ('bp_before_members_loop', 'bps_before_loop');
+function bps_before_loop ()
 {
-	global $members_template;
-
-	$code = $members_template->type;
-	if ($code[0] == '-')  $code = substr ($code, 1);
-
-	list (, $fields) = bps_get_fields ();
-	if (isset ($fields[$code]->get_value) && is_callable ($fields[$code]->get_value))
+	$fields = bps_parsed_fields ();
+	foreach ($fields as $f)
 	{
-		$f = $fields[$code];
-		$name = $f->name;
-		$value = call_user_func ($f->get_value, $f);
-		bps_call_template ('members/bps-field-value', array ($name, $value));
+		if (bps_Fields::same_value ($f))  continue;
+		if (empty ($f->id) || $f->id != 1)  bps_set_details ($f->code);
 	}
+
+	$data = bps_get_directory_data ();
+	if (isset ($data['show']))  bps_set_details ($data['show']);
+}
+
+function bps_set_details ($codes)
+{
+	global $bps_details;
+
+	$codes = explode (',', $codes);
+	foreach ($codes as $code)
+	{
+		$code = trim ($code);
+		$bps_details[$code] = $code;
+	}
+}
+
+add_action ('bp_directory_members_item', 'bps_display_details');
+function bps_display_details ()
+{
+	global $bps_details;
+
+	$details = isset ($bps_details)? $bps_details: array ();
+	$details = apply_filters ('bps_details', $details);
+	foreach ($details as $code)
+	{
+		$f = bps_parsed_field ($code);
+		if (!isset ($f->get_value) || !is_callable ($f->get_value))  continue;
+
+		$label = (isset ($f->filter) && isset ($f->label))? $f->label: $f->name;
+		$value = call_user_func ($f->get_value, $f);
+		bps_call_template ('members/bps-field-value', array ($label, $value));
+	}
+}
+
+function bps_is_directory ()
+{
+	$dirs = bps_directories ();
+	$current = bps_current_page ();
+
+	foreach ($dirs as $dir)
+		if ($dir->path == $current)  return $dir;
+
+	return false;
+}
+
+add_filter ('bp_core_get_directory_page_ids', 'bps_custom_directory');
+function bps_custom_directory ($page_ids)
+{
+	global $bps_directory_name;
+
+	if ($dir = bps_is_directory ())  if (!empty ($dir->replace))
+	{
+		$bps_directory_name = get_post_field ('post_name', $page_ids['members']);
+		add_filter ('bp_get_members_root_slug', function($slug) {return $GLOBALS['bps_directory_name'];});
+		$page_ids['members'] = $dir->id;
+	}
+	return $page_ids;
+}
+
+add_filter ('bp_get_template_part', 'bps_directory_index', 10, 2);
+function bps_directory_index ($templates, $slug)
+{
+	$data = bps_get_directory_data ();
+
+	if (!empty ($data['template']) && $slug == 'members/index')  return array ($data['template']. '.php');
+	return $templates;
+}
+
+add_filter ('bp_legacy_object_template_path', 'bps_directory_ajax');
+add_filter ('bp_nouveau_object_template_path', 'bps_directory_ajax');
+function bps_directory_ajax ($template_path)
+{
+	$data = bps_get_directory_data ();
+
+	if (!empty ($data['ajax_template']))  return bp_locate_template ($data['ajax_template']. '.php');
+	return $template_path;
 }

@@ -66,11 +66,22 @@ class Swift_Performance_Setup {
 
 		// Deactivation
 		if (isset($_GET['subpage']) && $_GET['subpage'] == 'deactivate'){
-			include_once SWIFT_PERFORMANCE_SETUP_DIR . 'templates/deactivate.tpl.php';
+			if (defined('SWIFT_PERFORMANCE_WHITELABEL') && SWIFT_PERFORMANCE_WHITELABEL){
+				include_once SWIFT_PERFORMANCE_SETUP_DIR . 'templates/deactivate-whitelabel.tpl.php';
+			}
+			else {
+				include_once SWIFT_PERFORMANCE_SETUP_DIR . 'templates/deactivate.tpl.php';
+			}
+
 		}
 		// Setup
 		else {
-			include_once SWIFT_PERFORMANCE_SETUP_DIR . 'templates/wizard.tpl.php';
+			if (defined('SWIFT_PERFORMANCE_WHITELABEL') && SWIFT_PERFORMANCE_WHITELABEL){
+				include_once SWIFT_PERFORMANCE_SETUP_DIR . 'templates/wizard-whitelabel.tpl.php';
+			}
+			else {
+				include_once SWIFT_PERFORMANCE_SETUP_DIR . 'templates/wizard.tpl.php';
+			}
 		}
 		die;
 	}
@@ -110,7 +121,7 @@ class Swift_Performance_Setup {
 				}
 				break;
 				case 'set-cloudflare-api':
-					Swift_Performance_Lite::update_option('cloudflare-auto-purge', $_POST['auto-purge']);
+					Swift_Performance_Lite::update_option('cloudflare-auto-purge', 1);
 					Swift_Performance_Lite::update_option('cloudflare-email', $_POST['cloudflare-email']);
 					Swift_Performance_Lite::update_option('cloudflare-api-key', $_POST['cloudflare-api-key']);
 					$message = __('Cloudflare API has been set.', 'swift-performance');
@@ -139,12 +150,6 @@ class Swift_Performance_Setup {
 					// Try 600 seconds by default
 					Swift_Performance_Lite::set_time_limit(601, 'timeout_test');
 
-					wp_send_json(array(
-						'result'		=> 'success',
-						'next_slide'	=> $next_slide,
-						'message'		=> $message
-					));
-
 					// Flush connection
 					Swift_Performance_Tweaks::flush_connection();
 					for ($i=0;$i<600;$i+=10){
@@ -161,11 +166,29 @@ class Swift_Performance_Setup {
 				case 'max-connections':
 					Swift_Performance_Lite::set_transient('swift_performance_analyze_multithread', 1, 600);
 				break;
+				case 'api':
+					if (Swift_Performance_Lite::check_option('purchase-key', '', '!=')){
+						$response = swift_performance_purchase_key_validate_callback(true, Swift_Performance_Lite::get_option('purchase-key'));
+
+					 	if (isset($result['warning'])){
+							$result	= 'error';
+							$message	= $result['warning'];
+						}
+						else if (isset($result['error'])){
+							$result	= 'error';
+							$message	= $result['error'];
+						}
+					}
+					else {
+						$result	= 'warning';
+						$message	= __('Purchase key is empty', 'swift-performance');
+					}
+				break;
 				case 'webserver':
 					$missing_apache_modules = array();
 					$server_software = Swift_Performance_Lite::server_software();
 					$rewrites = false;
-					if ($server_software == 'apache'){
+					if ($server_software == 'apache' && function_exists('apache_get_modules')){
 						$rewrites = true;
 						// Check modules if server isn't litespeed
 						if (preg_match('~apache~i', $_SERVER['SERVER_SOFTWARE']) && function_exists('apache_get_modules')){
@@ -262,31 +285,56 @@ class Swift_Performance_Setup {
 						$cf		= wp_remote_retrieve_header( $response, 'cf-cache-status' );
 						$xv		= wp_remote_retrieve_header( $response, 'x-varnish' );
 						$xc		= wp_remote_retrieve_header( $response, 'x-cache' );
+						$iscw		= (isset($_SERVER['HTTP_X_APP_USER']) && isset($_SERVER['HTTP_X_APPLICATION']));
 
 						if (!empty($cf)){
 							Swift_Performance_Lite::update_option('cloudflare-auto-purge',1);
-							$message .= __('Cloudflare was detected. Please set your API credentials on next screen.', 'swift-performance');
+							$message .= __('Cloudflare cache was detected. Please set your API credentials on next screen.', 'swift-performance');
 							$next_slide = 'cloudflare';
 							$result = 'warning';
 						}
 
-						if (!empty($xv)){
+						if (!empty($xv) || (!empty($xc) && $iscw)){
 							Swift_Performance_Lite::update_option('varnish-auto-purge',1);
+							Swift_Performance_Lite::update_option('optimize-prebuild-only',0);
+							Swift_Performance_Lite::update_option('merge-background-only',0);
 							$message .= __('Varnish was detected', 'swift-performance');
 						}
 
-						if (!empty($xc)){
-							$result = 'error';
-							$message .= __('Server side cache was detected. Please disable it to avoid cache conflicts.', 'swift-performance');
-						}
-
 						if (empty($message)){
-							$message = __('No Varnish or Cloudflare was detected', 'swift-performance');
+							$message = __('No Varnish or Cloudflare cache was detected.', 'swift-performance');
 						}
 					}
 					else{
 						$result	= 'warning';
 						$message	= __('Loopback is disabled, Swift can\'t check Varnish and reverse proxy. If you are using Cloudflare cache please set your API credentials on next screen.', 'swift-performance');
+					}
+				break;
+				case 'server-level-cache':
+					if (self::check_loopback()){
+						$response = wp_remote_get(home_url(), array('timeout' => 60, 'sslverify' => false));
+
+						$xc		= wp_remote_retrieve_header( $response, 'x-cache' );
+						$iscw		= (isset($_SERVER['HTTP_X_APP_USER']) && isset($_SERVER['HTTP_X_APPLICATION']));
+						$iswpe	= class_exists("WpeCommon");
+
+						if (!empty($xc) && !$iscw && !$iswpe){
+							$result = 'error';
+							Swift_Performance_Lite::update_option('optimize-prebuild-only',0);
+							Swift_Performance_Lite::update_option('merge-background-only',0);
+							$message .= __('Server level cache was detected. Please disable it to avoid cache conflicts.', 'swift-performance');
+						}
+						else if($iswpe){
+							$message .= __('WPEngine Cache was detected.', 'swift-performance');
+						}
+
+						if (empty($message)){
+							$message = __('No Server level cache was detected.', 'swift-performance');
+						}
+					}
+					else{
+						$result	= 'warning';
+						$message	= __('Loopback is disabled, Swift can\'t check Server level caching.', 'swift-performance');
 					}
 				break;
 				case 'php-settings':

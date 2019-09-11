@@ -20,6 +20,27 @@ function bps_get_fields ()
 	return array ($groups, $fields);
 }
 
+function bps_parsed_fields ()
+{
+	static $fields;
+
+	if (isset ($fields))  return $fields;
+
+	$k = 1000;
+	$fields = bps_parse_request (bps_get_request ('filters'));
+	foreach ($fields as $f)  if (!isset ($f->order))  $f->order = $k++;
+	uasort ($fields, function($a, $b) {return ($a->order <= $b->order)? -1: 1;});
+
+	return $fields;
+}
+
+function bps_parsed_field ($code)
+{
+	$fields = bps_parsed_fields ();
+
+	return isset ($fields[$code])? $fields[$code]: false;
+}
+
 class bps_Fields
 {
 	private static $display = array
@@ -27,7 +48,7 @@ class bps_Fields
 		'text'			=> array ('contains' => 'textbox', '' => 'textbox', 'like' => 'textbox'),
 		'integer'		=> array ('' => 'integer', 'range' => 'integer-range'),
 		'decimal'		=> array ('' => 'textbox', 'range' => 'range'),
-		'date'			=> array ('age_range' => 'range'),
+		'date'			=> array ('' => 'date', 'range' => 'date-range', 'age_range' => 'range'),
 		'location'		=> array ('distance' => 'distance', 'contains' => 'textbox', '' => 'textbox', 'like' => 'textbox'),
 
 		'text/e'		=> array ('' => array ('selectbox', 'radio'), 'one_of' => array ('checkbox', 'multiselectbox')),
@@ -35,6 +56,7 @@ class bps_Fields
 		'set/e'			=> array ('match_any' => array ('checkbox', 'multiselectbox'), 'match_all'	=> array ('checkbox', 'multiselectbox')),
 	);
 
+	// to generate the Search Mode selector in the admin page
 	public static function get_filters ($f)
 	{
 		$labels = array
@@ -50,28 +72,53 @@ class bps_Fields
 			'match_all'		=> __('match all', 'bp-profile-search'),
 		);
 		
+		$labels = apply_filters ('bps_filter_selector', $labels);
 		$filters = array ();
 		foreach ($f->filters as $filter)
 			$filters[$filter] = $labels[$filter];
 		return $filters;
 	}
 
+	// to append the search mode to the field label in the form template
 	public static function get_filter_label ($filter)
 	{
 		$labels = array
 		(
 			'contains'		=> __('contains', 'bp-profile-search'),
-			''				=> __('is', 'bp-profile-search'),
+			''				=> '',
 			'like'			=> __('is like', 'bp-profile-search'),
-			'range'			=> __('range', 'bp-profile-search'),
-			'age_range'		=> __('range', 'bp-profile-search'),
+			'range'			=> '',
+			'age_range'		=> '',
 			'distance'		=> __('is within', 'bp-profile-search'),
-			'one_of'		=> __('is one of', 'bp-profile-search'),
+			'one_of'		=>  '',
 			'match_any'		=> __('match any', 'bp-profile-search'),
 			'match_all'		=> __('match all', 'bp-profile-search'),
 		);
 
+		$labels = apply_filters ('bps_filter_labels', $labels);
 		return $labels[$filter];
+	}
+
+	// whether the value of this field is the same for all the search results
+	public static function same_value ($f)
+	{
+		if (!isset ($f->filter))  return true;
+
+		switch ($f->filter)
+		{
+		case '':
+			return !bps_is_expression ($f->value);
+
+		case 'range':
+		case 'age_range':
+			return (!empty ($f->value['min']) && !empty ($f->value['max']) && $f->value['min'] == $f->value['max']);
+
+		case 'one_of':
+			return (count ($f->value) == 1);
+
+		default:
+			return false;
+		}
 	}
 
 	public static function set_filters ($f)
@@ -79,9 +126,10 @@ class bps_Fields
 		$format = isset ($f->format)? $f->format: 'none';
 		$enum = (isset ($f->options) && is_array ($f->options))? count ($f->options): 0;
 		$selector = $format. ($enum? '/e': '');
-		if (!isset (self::$display[$selector]))  return false;
+		$display = apply_filters ('bps_field_config', self::$display, $f);
+		if (!isset ($display[$selector]))  return false;
 
-		$f->filters = array_keys (self::$display[$selector]);
+		$f->filters = array_keys ($display[$selector]);
 		return true;
 	}
 
@@ -100,9 +148,10 @@ class bps_Fields
 		$format = isset ($f->format)? $f->format: 'none';
 		$enum = (isset ($f->options) && is_array ($f->options))? count ($f->options): 0;
 		$selector = $format. ($enum? '/e': '');
-		if (!isset (self::$display[$selector][$filter]))  return false;
+		$display = apply_filters ('bps_field_config', self::$display, $f);
+		if (!isset ($display[$selector][$filter]))  return false;
 
-		$display = self::$display[$selector][$filter];
+		$display = $display[$selector][$filter];
 
 		if (is_string ($display))
 		{
@@ -111,7 +160,7 @@ class bps_Fields
 		else
 		{
 			$default = (isset ($f->type) && in_array ($f->type, $display))? $f->type: $display[0];
-			$choice = apply_filters ('bps_field_display', $default, $f);
+			$choice = apply_filters ('bps_field_display', $default, $f);	// deprecated filter -- to be removed -- use 'bps_field_before_search_form' instead	
 			$f->display = in_array ($choice, $display)? $choice: $default;
 		}
 		return true;
@@ -147,11 +196,10 @@ function bps_parse_request ($request)
 		case 'contains':
 		case '':
 		case 'like':
-			$or = explode (' OR ', $value);
-			$and = explode (' AND ', $value);
-			if (count ($or) > 1 && count ($and) > 1)
+			$exp = bps_is_expression ($value);
+			if ($exp == 'mixed')
 				$f->error_message = __('mixed expression not allowed, use only AND or only OR', 'bp-profile-search');
-			else if ($filter == '' && count ($and) > 1)
+			else if ($filter == '' && $exp == 'and')
 				$f->error_message = __('AND expression not allowed here, use only OR', 'bp-profile-search');
 			else
 				$f->filter = $filter;
@@ -161,7 +209,7 @@ function bps_parse_request ($request)
 			if (!empty ($value['location']) && !empty ($value['lat']) && !empty ($value['lng']))
 			{
 				if (empty ($value['distance']))  $value['distance'] = 1;
-					$f->filter = $filter;
+				$f->filter = $filter;
 				$f->value = $value;
 			}
 			break;
@@ -221,37 +269,4 @@ function bps_is_filter ($filter, $f)
 	if ($filter == 'label')  return true;
 
 	return bps_Fields::is_filter ($f, $filter);
-}
-
-function bps_escaped_form_data ($version = '')
-{
-	if ($version == '')	return bps_escaped_form_data47 ();
-	if ($version == '4.9')	return bps_escaped_form_data49 ();
-
-	return false;
-}
-
-function bps_escaped_filters_data ($version = '4.7')
-{
-	if ($version == '4.7')	return bps_escaped_filters_data47 ();
-	if ($version == '4.8')	return bps_escaped_filters_data48 ();
-
-	return false;
-}
-
-function bps_set_hidden_field ($name, $value)
-{
-	$new = new stdClass;
-	$new->display = 'hidden';
-	$new->code = $name;		// to be removed
-	$new->html_name = $name;
-	$new->value = $value;
-	$new->unique_id = bps_unique_id ($name);
-
-	return $new;
-}
-
-function bps_sort_fields ($a, $b)
-{
-	return ($a->order <= $b->order)? -1: 1;
 }

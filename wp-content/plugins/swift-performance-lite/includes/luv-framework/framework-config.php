@@ -39,6 +39,21 @@ if (class_exists('Memcached')) {
     $cache_modes['memcached_php'] = esc_html__('Memcached with PHP', 'swift-performance');
 }
 
+// WebP options
+if (Swift_Performance_Lite::server_software() == 'apache'){
+      $swift_webp = array(
+            'none'      => esc_html__('Don\'t use WebP', 'swift-performace'),
+            'picture'   => __('Use <picture> elements', 'swift-performace'),
+            'rewrite'   => esc_html__('Use rewrites', 'swift-performace'),
+      );
+}
+else {
+      $swift_webp = array(
+            'none'      => esc_html__('Don\'t use WebP', 'swift-performace'),
+            'picture'   => __('Use <picture> elements', 'swift-performace'),
+      );
+}
+
 // Plugin based options
 $active_plugins = get_option('active_plugins');
 $is_woocommerce_active = apply_filters('swift_performance_is_woocommerce_active', in_array('woocommerce/woocommerce.php', $active_plugins));
@@ -52,6 +67,48 @@ if ($is_woocommerce_active) {
 $roles = array();
 foreach ((array)get_option($wpdb->prefix . 'user_roles') as $role_slug => $role) {
     $roles[$role_slug] = $role['name'];
+}
+
+/**
+ * Validate Purchase Key
+ * @param boolean|array $result
+ * @param string $value
+ */
+function swift_performance_purchase_key_validate_callback($result, $value){
+	if (empty($value)){
+		return array(
+			'warning' => esc_html__('Purchase Key is empty', 'swift-performance')
+		);
+	}
+
+	$validate = wp_remote_get(SWIFT_PERFORMANCE_API_URL . 'validate?purchase_key=' . $value . '&site=' . urlencode(home_url()), array('timeout' => 60));
+
+	if (!is_wp_error($validate)) {
+		if ($validate['response']['code'] == 200) {
+			return true;
+		}
+		else if ($validate['response']['code'] == 403) {
+			return array(
+				'warning' => __('Your server\'s IP has been banned due abusing our API server (too many invalid requests).', 'swift-performance')
+			);
+		}
+		else if ($validate['response']['code'] == 401) {
+			return array(
+				'warning' => __('Purchase Key is invalid', 'swift-performance')
+			);
+		}
+		else {
+			return array(
+				'error' => sprintf(__('Error: %d', 'swift-performance'), $validate['response']['code'])
+			);
+		}
+	}
+	else {
+	    Swift_Performance_Lite::log($validate->get_error_message(), 1);
+	    return array(
+		    'error' => $validate->get_error_message()
+	    );
+	}
 }
 
 /**
@@ -130,6 +187,9 @@ function swift_performance_muplugins_validate_callback($result, $value){
  * @param string $value
  */
 function swift_performance_cache_path_validate_callback($result, $value){
+      if (empty($value)){
+            return array('error' => esc_html__('Cache directory is empty', 'swift-performance'));
+      }
       if (!file_exists($value)) {
             @mkdir($value, 0777, true);
             if (!file_exists($value)) {
@@ -154,15 +214,40 @@ add_action('luv_framework_before_fields_init', function($that){
       // Plugin based options
       $active_plugins = get_option('active_plugins');
       $is_woocommerce_active = apply_filters('swift_performance_is_woocommerce_active', in_array('woocommerce/woocommerce.php', $active_plugins));
+      $is_cf7_active = apply_filters('swift_performance_is_wpcf7_active', in_array('contact-form-7/wp-contact-form-7.php', $active_plugins));
 
       if (!$is_woocommerce_active) {
-          unset($that->args['sections']['woocommerce']);
+          unset($that->args['sections']['plugins']['subsections']['woocommerce']);
+      }
+      if (!$is_cf7_active) {
+          unset($that->args['sections']['plugins']['subsections']['wpcf7']);
+      }
+
+      if (!isset($that->args['sections']['plugins']['subsections']) || empty($that->args['sections']['plugins']['subsections'])){
+            unset($that->args['sections']['plugins']);
       }
 });
 
 // Add header
 add_action('luv_framework_before_framework_header', function(){
-      echo '<h2>'.esc_html__('Settings', 'swift-performance').'</h2>';
+      if (defined('SWIFT_PERFORMANCE_WHITELABEL') && SWIFT_PERFORMANCE_WHITELABEL){
+            // Whitelabel backward compatibility
+            echo '<h2>' . esc_html__('Settings', 'swift-performance') . '</h2>';
+      }
+      else {
+            $pointers = (array)get_user_meta(get_current_user_id(), 'swift_pointers', true);
+            ?>
+            <div class="swift-performance-settings-header">
+                  <h2><?php esc_html_e('Settings', 'swift-performance');?></h2>
+                  <div class="swift-settings-mode"<?php echo (!isset($pointers['settings-mode']) ? ' data-swift-pointer="settings-mode" data-swift-pointer-position="right" data-swift-pointer-content="' . esc_attr__('By default some options are hidden. You can switch to Advanced View to see all options', 'swift-performance') . '"' : '')?>>
+                  <input type="radio" name="mode-switch" id="simple-switch" value="simple"<?php echo(Swift_Performance_Lite::check_option('settings-mode', 'simple') ? ' checked="checked"' : '');?>>
+                  <label class="swift-btn swift-btn-blacknwhite" for="simple-switch"><?php esc_html_e('Simple View', 'swift-performance');?></label>
+                  <input type="radio" name="mode-switch" id="advanced-switch" value="advanced"<?php echo(Swift_Performance_Lite::check_option('settings-mode', 'advanced') ? ' checked="checked"' : '');?>>
+                  <label class="swift-btn swift-btn-blacknwhite" for="advanced-switch"><?php esc_html_e('Advanced View', 'swift-performance');?></label>
+                  </div>
+            </div>
+            <?php
+      }
 });
 
 // Preview button
@@ -172,28 +257,30 @@ add_action('luv_framework_before_header_buttons', function($fieldset){
       echo '<li><a href="#" class="luv-framework-button swift-performance-ajax-preview" data-fieldset="#fieldset-' . $fieldset->unique_id . '">' . esc_html__('Preview', 'swift-performance') . '</a></li>';
 });
 
-// Advanced Switcher
+// Advanced Switcher for whitelabel backward compatibility
 add_action('luv_framework_before_framework_outer', function($fieldset){
-      $pointers = (array)get_user_meta(get_current_user_id(), 'swift_pointers', true);
-      ?>
-      <div class="swift-settings-mode" <?php echo (!isset($pointers['settings-mode']) ? 'data-swift-pointer="settings-mode" data-swift-pointer-position="right" data-swift-pointer-content="' . esc_attr__('By default some options are hidden. You can switch to Advanced View to see all options', 'swift-performance') . '"' : '')?>">
-            <a href="https://swiftperformance.io/why-should-upgrade-pro/" class="swift-btn swift-btn-brand" target="_blank">Upgrade to Pro</a>
+      if (defined('SWIFT_PERFORMANCE_WHITELABEL') && SWIFT_PERFORMANCE_WHITELABEL){
+            $pointers = (array)get_user_meta(get_current_user_id(), 'swift_pointers', true);
+            ?>
+            <div class="swift-settings-mode" <?php echo (!isset($pointers['settings-mode']) ? 'data-swift-pointer="settings-mode" data-swift-pointer-position="right" data-swift-pointer-content="' . esc_attr__('By default some options are hidden. You can switch to Advanced View to see all options', 'swift-performance') . '"' : '')?>">
             <input type="radio" name="mode-switch" id="simple-switch" value="simple"<?php echo(Swift_Performance_Lite::check_option('settings-mode', 'simple') ? ' checked="checked"' : '');?>>
             <label class="swift-btn swift-btn-gray" for="simple-switch">Simple View</label>
             <input type="radio" name="mode-switch" id="advanced-switch" value="advanced"<?php echo(Swift_Performance_Lite::check_option('settings-mode', 'advanced') ? ' checked="checked"' : '');?>>
             <label class="swift-btn swift-btn-gray" for="advanced-switch">Advanced View</label>
-      </div>
-      <?php
+            </div>
+            <?php
+      }
 });
 
 // Remove localized fields from export
 add_filter('luv_framework_export_array', function($options){
+      unset($options['purchase-key']);
       unset($options['cache-path']);
       unset($options['log-path']);
       return $options;
 });
 
-// Image Optimizer preset
+// Premium only field
 add_action('luv_framework_custom_field_premium-only', function(){
       ?>
       <div class="swift-performance-premium-only-container">
@@ -221,7 +308,7 @@ add_action('luv_framework_after_render_sections', function(){
             <h6 class="luv-modal__title"><?php esc_html_e('Oh snap!', 'swift-performance');?></h6>
             <p class="swift-smiley-container"><i class="far fa-sad-cry"></i></p>
             <p class="luv-modal__text"><?php esc_html_e('Preview changes is available in Pro only.', 'swift-performance');?></p>
-            <a href="https://swiftperformance.io/why-should-upgrade-pro/" target="_blank" class="swift-btn swift-btn-green"><?php esc_html_e('Upgrade to Pro!', 'swift-performance');?></a>
+            <a href="<?php echo Swift_Performance_Lite::upgrade_link();?>" target="_blank" class="swift-btn swift-btn-green"><?php esc_html_e('Upgrade to Pro!', 'swift-performance');?></a>
             <a href="#" class="swift-btn swift-btn-brand" data-luv-close-modal><?php esc_html_e('Dismiss', 'swift-performance');?></a>
       </div>
       <?php
@@ -275,15 +362,28 @@ $luvoptions = Luv_Framework::fields('option', array(
                                          'info'		=> __('Compute API can speed up CPU extensive processes like generating Critical CSS, or minification.', 'swift-performance'),
 		                             'default'	=> 0,
 		                        ),
-		                        array(
-		                             'id'         => 'remote-cron',
+                                    array(
+		                             'id'		=> 'prebuild-booster',
+		                             'type'		=> 'switch',
+		                             'title'	=> esc_html__('Prebuild Booster', 'swift-performance'),
+		                             'desc'       => sprintf(esc_html__('If you enable this option %s will use less resources during prebuild.', 'swift-performance'), SWIFT_PERFORMANCE_PLUGIN_NAME),
+                                         'info'		=> __('If you enable this option it will reduce CPU usage and speed up prebuild process, however it can increase MySQL binlogs if it is enabled.', 'swift-performance'),
+		                             'default'	=> 1,
+		                             'required'	=> array(
+                                               array('settings-mode', '=', 'advanced')
+                                         )
+		                        ),
+                                    array(
+		                             'id'		=> 'disable-admin-notices',
                                          'type'       => 'custom',
                                          'action'     => 'premium-only',
-		                             'title'      => esc_html__('Enable Remote Cron', 'swift-performance'),
-						     'desc'       => esc_html__('Set up a real cronjob with our API.', 'swift-performance'),
-						     'info'		=> esc_html__('If all of your pages are cached - or if you disabled the default WP Cron - WordPress cronjobs won\'t run properly. With Remote Cron service you can run cronjobs daily, twicedaily or hourly.', 'swift-performance'),
-		                             'default'    => 0,
-		                             'required'   => array('settings-mode', '=', 'advanced')
+		                             'title'	=> esc_html__('Disable Admin Notices', 'swift-performance'),
+		                             'desc'       => sprintf(esc_html__('You can disable %s admin notices.', 'swift-performance'), SWIFT_PERFORMANCE_PLUGIN_NAME),
+                                         'info'		=> sprintf(__('After update/activate/deactivate plugin, switch/update theme, or update WordPress core %s will show notices to clear cache. With this option you can disable these notices (but in some cases you still should clear cache).', 'swift-performance'), SWIFT_PERFORMANCE_PLUGIN_NAME),
+		                             'default'	=> 0,
+		                             'required'	=> array(
+                                               array('settings-mode', '=', 'advanced')
+                                         )
 		                        ),
 						array(
 		                             'id'		=> 'enable-logging',
@@ -361,7 +461,7 @@ $luvoptions = Luv_Framework::fields('option', array(
 		                             'type'       => 'switch',
 		                             'title'      => esc_html__('Gravatar Cache', 'swift-performance'),
 		                             'desc'       => esc_html__('Cache avatars.', 'swift-performance'),
-                                         'info'       => __('WordPress is using Grvatar for avatars by default. Unfortunately sometimes these requests are slower than your server. In that case you should cache these pictures to speed up load time.', 'swift-performance'),
+                                         'info'       => __('WordPress is using Gravatar for avatars by default. Unfortunately sometimes these requests are slower than your server. In that case you should cache these pictures to speed up load time.', 'swift-performance'),
 		                             'default'    => 0,
                                          'class'	=> 'should-clear-cache'
 		                        ),
@@ -467,6 +567,37 @@ $luvoptions = Luv_Framework::fields('option', array(
 		                         )
 		                   )
 				),
+                        'cron' => array(
+                              'title'     => esc_html__('Cronjobs', 'swift-performance'),
+                              'fields'    => array(
+                                    array(
+                                          'id'        => 'limit-wp-cron',
+                                          'type'      => 'custom',
+                                          'action'    => 'premium-only',
+                                          'min'       => 0,
+                                          'max'       => 100,
+                                          'title'     => esc_html__('Limit WP Cron', 'swift-performance'),
+                                          'desc'      => esc_html__('Prevent WP Cron being called on every page load.', 'swift-performance'),
+                                          'info'      => esc_html__('100% means unlimited, 0% means WP Cron is fully disabled.', 'swift-performance'),
+                                          'default'   => 100,
+                                          'required'  => array(
+                                                array('settings-mode', '=', 'advanced'),
+                                          )
+                                    ),
+                                    array(
+ 		                             'id'         => 'remote-cron',
+                                         'type'      => 'custom',
+                                         'action'    => 'premium-only',
+ 		                             'title'      => esc_html__('Enable Remote Cron', 'swift-performance'),
+ 						     'desc'       => esc_html__('Set up a real cronjob with our API.', 'swift-performance'),
+ 						     'info'		=> __('If all of your pages are cached - or if you disabled the default WP Cron - WordPress cronjobs won\'t run properly. With Remote Cron service you can run cronjobs daily, twicedaily or hourly.', 'swift-performance'),
+ 		                             'default'    => 0,
+ 		                             'required'   => array(
+                                                array('settings-mode', '=', 'advanced'),
+                                          )
+ 		                        )
+                              )
+                        ),
 				'general-ga' => array(
 		                  'title' => esc_html__('Google Analytics', 'swift-performance'),
 		                  'fields' => array(
@@ -476,7 +607,7 @@ $luvoptions = Luv_Framework::fields('option', array(
 		                             'title'      => esc_html__('Bypass Google Analytics', 'swift-performance'),
 		                             'default'    => 0,
                                          'class'	=> 'should-clear-cache',
-                                         'info'	      => __('If you enable Bypass Analytics feature Swift will block the default Google Analytics script, and will use AJAX requests and the <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters" target="_blank">Google Analytics Measurement protocoll</a> instead.', 'swift-performance'),
+                                         'info'	      => __('If you enable Bypass Analytics feature Swift will block the default Google Analytics script, and will use AJAX requests and the <a href="https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters" target="_blank">Google Analytics Measurement protocol</a> instead.', 'swift-performance'),
 					      ),
 		                        array(
 							'id'			=> 'ga-tracking-id',
@@ -571,7 +702,6 @@ $luvoptions = Luv_Framework::fields('option', array(
 							'title'      => esc_html__('Optimize Images on Upload', 'swift-performance'),
 							'desc'       => esc_html__('Enable if you would like to optimize the images during the upload using the our Image Optimization API service.', 'swift-performance'),
                                           'info'       => sprintf(esc_html__('Already uploaded images can be optimized %shere%s', 'swift-performance'), '<a href="'.esc_url(add_query_arg(array('page' => 'swift-performance', 'subpage' => 'image-optimizer'), admin_url('tools.php'))).'" target="_blank">', '</a>'),
-							'required'   => array('purchase-key', '!=', '')
 						),
 						array(
 							'id'         => 'resize-large-images',
@@ -589,14 +719,23 @@ $luvoptions = Luv_Framework::fields('option', array(
 							'title'      => esc_html__('Keep Original Images', 'swift-performance'),
                                           'desc'       => esc_html__('If you enable this option the image optimizer will keep original images.', 'swift-performance'),
                                           'info'       => __('It is recommended to keep original images on first try. If you realized that optimized images quality is not good enough, you can restore original images with one click, and reoptimize them on higher quality.<br><br> I you would like to save some space, you can also delete easily original images if you are satisfied with the optimization quality.', 'swift-performance'),
-							'required'   => array('purchase-key', '!=', '')
 						),
+                                    array(
+                                          'id'         => 'serve-webp',
+                                          'type'       => 'custom',
+                                          'action'     => 'premium-only',
+                                          'title'      => esc_html__('Serve WebP', 'swift-performance'),
+                                          'desc'       => esc_html__('Serve WebP images if possible.', 'swift-performance'),
+                                          'options'    => $swift_webp,
+                                          'class'	 => 'should-clear-cache',
+                                          'default'    => 'none',
+                                    ),
 						array(
 							'id'         => 'base64-small-images',
 							'type'       => 'switch',
 							'title'      => esc_html__('Inline Small Images', 'swift-performance'),
 							'desc'       => esc_html__('Use base64 encoded inline images for small images', 'swift-performance'),
-                                          'info'       => esc_html__('If you enable this option small images will be inlined, so you can reduce the number of HTML requests.', 'swift-performance'),
+                                          'info'       => esc_html__('If you enable this option small images will be inlined, so you can reduce the number of HTTP requests.', 'swift-performance'),
 							'default'    => 0,
                                           'class'	 => 'should-clear-cache'
 						),
@@ -676,6 +815,17 @@ $luvoptions = Luv_Framework::fields('option', array(
 					'id' => 'media-embeds',
 					'class'     => 'advanced',
 					'fields' => array(
+                                    array(
+							'id'         	=> 'smart-youtube-embed',
+                                          'type'       => 'custom',
+                                          'action'     => 'premium-only',
+							'title'      	=> esc_html__('Youtube Smart Embed', 'swift-performance'),
+							'desc'            => esc_html__('Load Youtube videos only on user interaction.', 'swift-performance'),
+                                          'info'            => __('Load only thumbnail image for Youtube videos with a pseudo play button, and load the video and the player only on click/touch.', 'swift-performance'),
+							'default'    	=> 0,
+                                          'class'		=> 'should-clear-cache',
+                                          'required'        => array('settings-mode', '=', 'advanced')
+						),
 						array(
 							'id'         	=> 'lazyload-iframes',
 							'type'       	=> 'switch',
@@ -812,7 +962,7 @@ $luvoptions = Luv_Framework::fields('option', array(
 							'id'         => 'merge-scripts',
 							'type'       => 'switch',
 							'title'	 => esc_html__('Merge Scripts', 'swift-performance'),
-                                          'desc'       => esc_html__('Merge javascript files to reduce number of HTML requests ', 'swift-performance'),
+                                          'desc'       => esc_html__('Merge javascript files to reduce number of HTTP requests ', 'swift-performance'),
                                           'info'       => __('Merging scripts can reduce number of requests dramatically. Even if your server is using HTTP2 it can speed up the page loading, and also save some resources on server side (because the server needs to serve less requests).', 'swift-performance'),
 							'default'    => 0,
                                           'class'	 => 'should-clear-cache'
@@ -967,7 +1117,7 @@ $luvoptions = Luv_Framework::fields('option', array(
 						     'id'         => 'merge-styles',
 						     'type'       => 'switch',
 						     'title'	=> esc_html__('Merge Styles', 'swift-performance'),
-                                         'desc'       => esc_html__('Merge CSS files to reduce number of HTML requests', 'swift-performance'),
+                                         'desc'       => esc_html__('Merge CSS files to reduce number of HTTP requests', 'swift-performance'),
                                          'info'       => __('Merging styles can reduce number of requests dramatically. Even if your server is using HTTP2 it can speed up the page loading, and also save some resources on server side (because the server needs to serve less requests).', 'swift-performance'),
 						     'default'    => 0,
                                          'class'	 => 'should-clear-cache'
@@ -1130,6 +1280,17 @@ $luvoptions = Luv_Framework::fields('option', array(
                                          ),
                                          'class'	 => 'should-clear-cache'
 						),
+                                    array(
+							'id'         => 'font-display',
+                                          'type'       => 'custom',
+                                          'action'     => 'premium-only',
+							'title'	 => esc_html__('Force Swap Font Display', 'swift-performance'),
+							'desc'	 => esc_html__('Set font-display property to swap', 'swift-performance'),
+                                          'info'       => sprintf(__('The font-display property defines how font files are loaded and displayed by the browser. Swap instructs the browser to use the fallback font to display the text until the custom font has fully downloaded to avoid "flash of invisible text" (FOIT).', 'swift-performance'), SWIFT_PERFORMANCE_PLUGIN_NAME),
+							'default'    => 0,
+                                          'class'	 => 'should-clear-cache',
+                                          'required'   => array('settings-mode', '=', 'advanced')
+						)
 					)
 				)
 			)
@@ -1233,10 +1394,10 @@ $luvoptions = Luv_Framework::fields('option', array(
 		                              'required'  => array('cache-expiry-mode', '=', 'timebased')
 		                        ),
 		                        array(
-		                                'id'	      => 'cache-garbage-collection-time',
+		                                'id'	=> 'cache-garbage-collection-time',
 		                                'type'	=> 'dropdown',
 		                                'title'	=> esc_html__('Garbage Collection Interval', 'swift-performance'),
-		                                'desc'  => esc_html__('How often should check the expired cached pages (in seconds)', 'swift-performance'),
+		                                'desc'  => esc_html__('How often should check the expired cached pages', 'swift-performance'),
 		                                'options'   => array(
 		                                      '600'       => '10 mins',
 		                                      '1800'      => '30 mins',
@@ -1390,7 +1551,7 @@ $luvoptions = Luv_Framework::fields('option', array(
                                         'action'     => 'premium-only',
                                         'title'       => esc_html__('Avoid Mixed Content', 'swift-performance'),
                                         'desc'        => esc_html__('Remove protocol from resource URLs to avoid mixed content errors', 'swift-performance'),
-                                        'info'       => __('If your site can be loaded via HTTP and HTTPS as well it can cause mixed content errors. If you enable this option it will remove the protocoll from all resources to avoid it. Use it only on HTTPS sites.', 'swift-performance'),
+                                        'info'       => __('If your site can be loaded via HTTP and HTTPS as well it can cause mixed content errors. If you enable this option it will remove the protocol from all resources to avoid it. Use it only on HTTPS sites.', 'swift-performance'),
                                         'required'   => array('enable-caching', '=', 1),
                                     ),
                                     array(
@@ -1461,6 +1622,14 @@ $luvoptions = Luv_Framework::fields('option', array(
 		                             'required'   => array('enable-caching', '=', 1),
                                          'class'	 => 'should-clear-cache'
 		                         ),
+                                     array(
+                                         'id'         => 'exclude-cookies',
+                                         'type'       => 'custom',
+                                         'action'     => 'premium-only',
+                                         'title'      => esc_html__('Exclude Cookies', 'swift-performance'),
+                                         'desc'   => esc_html__('Cache will be bypassed if the user has one of these cookies.', 'swift-performance'),
+                                         'required'   => array('enable-caching', '=', 1),
+                                     ),
 		                         array(
 		                             'id'         => 'exclude-content-parts',
 		                             'type'       => 'multi-text',
@@ -1523,12 +1692,12 @@ $luvoptions = Luv_Framework::fields('option', array(
 		                   'fields' => array(
 		                         array(
 		                             'id'          => 'enable-remote-prebuild-cache',
-		                             'type'        => 'switch',
+                                         'type'       => 'custom',
+                                         'action'     => 'premium-only',
 		                             'title'       => esc_html__('Enable Remote Prebuild Cache', 'swift-performance'),
 		                             'desc'   => esc_html__('Use API to prebuild cache.', 'swift-performance'),
                                          'info'       => __('It is a fallback option if loopbacks are disabled on the server. If you can use local prebuild it is recommended to leave this option unchecked.', 'swift-performance'),
 		                             'default'     => 0,
-		                             'required'   => array('purchase-key', '!=', ''),
 		                         ),
 		                         array(
 		                             'id'          => 'automated_prebuild_cache',
@@ -1653,7 +1822,7 @@ $luvoptions = Luv_Framework::fields('option', array(
 		                         array(
 		                             'id'         => 'appcache-desktop-included-pages',
 		                             'type'       => 'dropdown',
-		                             'multi'      => true,
+		                             'multiple'      => true,
 		                             'title'      => esc_html__('Include Pages', 'swift-performance'),
 		                             'desc'   => esc_html__('Select pages which should be cached with Appcache.', 'swift-performance'),
 		                             'required'   => array(
@@ -1675,7 +1844,7 @@ $luvoptions = Luv_Framework::fields('option', array(
 		                         array(
 		                             'id'         => 'appcache-desktop-excluded-pages',
 		                             'type'       => 'dropdown',
-		                             'multi'      => true,
+		                             'multiple'      => true,
 		                             'title'      => esc_html__('Exclude Pages', 'swift-performance'),
 		                             'desc'   => esc_html__('Select pages which shouldn\'t be cached with Appcache.', 'swift-performance'),
 		                             'required'   => array(
@@ -1730,7 +1899,7 @@ $luvoptions = Luv_Framework::fields('option', array(
 		                         array(
 		                             'id'         => 'appcache-mobile-included-pages',
 		                             'type'       => 'dropdown',
-		                             'multi'      => true,
+		                             'multiple'      => true,
 		                             'title'      => esc_html__('Include Pages', 'swift-performance'),
 		                             'desc'   => esc_html__('Select pages which should be cached with Appcache.', 'swift-performance'),
 		                             'required'   => array(
@@ -1752,7 +1921,7 @@ $luvoptions = Luv_Framework::fields('option', array(
 		                         array(
 		                             'id'         => 'appcache-mobile-excluded-pages',
 		                             'type'       => 'dropdown',
-		                             'multi'      => true,
+		                             'multiple'      => true,
 		                             'title'      => esc_html__('Exclude Pages', 'swift-performance'),
 		                             'desc'   => esc_html__('Select pages which shouldn\'t be cached with Appcache.', 'swift-performance'),
 		                             'required'   => array(
@@ -1775,22 +1944,95 @@ $luvoptions = Luv_Framework::fields('option', array(
 		            ),
 			)
 		),
-            'woocommerce' => array(
-                   'title' => esc_html__('WooCommerce', 'swift-performance'),
-                   'icon' => 'fas fa-shopping-cart',
-                   'fields' => array(
-                        array(
-                              'id'         => 'cache-empty-minicart',
-                              'type'	 => 'switch',
-                              'title'      => esc_html__('Cache Empty Minicart', 'swift-performance'),
-                              'desc'       => esc_html__('Let Swift to cache Cart Fragments (wc-ajax=get_refreshed_fragments) requests if the cart is empty', 'swift-performance'),
-                              'default'    => 0,
-                              'required'   => array(
-                                    array('settings-mode', '=', 'advanced'),
-                                    array('enable-caching', '=', 1)
-                              )
+            'plugins' => array(
+                  'title' => esc_html__('Plugins', 'swift-performance'),
+                  'icon' => 'fas fa-plug',
+                  'subsections'	=> array(
+                        'wpcf7' => array(
+                              'title' => esc_html__('Contact Form 7', 'swift-performance'),
+                              'fields' => array(
+                                   array(
+                                         'id'         => 'wpcf7-smart-load',
+                                         'type'       => 'custom',
+                                         'action'     => 'premium-only',
+                                         'title'      => esc_html__('Smart Enqueue Assets', 'swift-performance'),
+                                         'desc'       => esc_html__('Load Contact Form 7 CSS and JS only, if current page contains a contact form.', 'swift-performance'),
+                                         'default'    => 0,
+                                         'class'	=> 'should-clear-cache',
+                                         'required'   => array(
+                                               array('settings-mode', '=', 'advanced'),
+                                         )
+                                   ),
+                             )
                         ),
-
+                        'woocommerce' => array(
+                               'title' => esc_html__('WooCommerce', 'swift-performance'),
+                               'fields' => array(
+                                    array(
+                                          'id'         => 'cache-empty-minicart',
+                                          'type'	 => 'switch',
+                                          'title'      => esc_html__('Cache Empty Minicart', 'swift-performance'),
+                                          'desc'       => esc_html__('Cart Fragments (wc-ajax=get_refreshed_fragments) requests will be cached if the cart is empty', 'swift-performance'),
+                                          'default'    => 0,
+                                          'required'   => array(
+                                                array('settings-mode', '=', 'advanced'),
+                                                array('enable-caching', '=', 1)
+                                          )
+                                    ),
+                                    array(
+                                          'id'         => 'disable-cart-fragments',
+                                          'type'       => 'custom',
+                                          'action'     => 'premium-only',
+                                          'title'      => esc_html__('Disable Cart Fragments', 'swift-performance'),
+                                          'options'    => array(
+                                                 'none'             => __('Don\'t disable', 'swift-performance'),
+                                                 'everywhere'       => __('Everywhere', 'swift-performance'),
+                                                 'non-shop'         => __('Non-Shop Pages', 'swift-performance'),
+                                                 'specified-pages'  => __('Specified Pages', 'swift-performance'),
+                                                 'specified-urls'   => __('Specified URLs', 'swift-performance'),
+                                          ),
+                                          'default'    => 'none',
+                                          'required'   => array('settings-mode', '=', 'advanced')
+                                    ),
+                                    array(
+                                          'id'         => 'woocommerce-session-cache',
+                                          'type'       => 'custom',
+                                          'action'     => 'premium-only',
+                                          'title'      => esc_html__('WooCommerce Session Cache', 'swift-performance'),
+                                          'default'    => 0,
+                                          'required'   => array(
+                                               array('settings-mode', '=', 'advanced'),
+                                               array('enable-caching', '=', 1)
+                                          )
+                                    ),
+                                    array(
+                                          'id'         => 'woocommerce-geoip-support',
+                                          'type'       => 'custom',
+                                          'action'     => 'premium-only',
+                                          'title'      => esc_html__('GEO IP Support', 'swift-performance'),
+                                          'default'    => 0,
+                                          'required'   => array(
+                                               array('settings-mode', '=', 'advanced'),
+                                               array('caching-mode', 'contains', '_php')
+                                          ),
+                                          'class'	 => 'should-clear-cache'
+                                    ),
+                                    array(
+                                          'id'         => 'woocommerce-price-ajaxify',
+                                          'type'       => 'custom',
+                                          'action'     => 'premium-only',
+                                          'title'      => esc_html__('Ajaxify Prices', 'swift-performance'),
+                                          'desc'       => esc_html__('Load prices via AJAX', 'swift-performance'),
+                                          'info'       => __('This option is using Lazyload Elements feature to load prices. It can be useful if you sell items with different TAX rates, based on user\'s location.', 'swift-performance'),
+                                          'default'    => 0,
+                                          'required'   => array(
+                                                array('settings-mode', '=', 'advanced'),
+                                                array('enable-caching', '=', 1)
+                                          ),
+                                          'class'	 => 'should-clear-cache'
+                                    ),
+                                )
+                        ),
                   )
             ),
             'cdn' => array(
@@ -1896,6 +2138,15 @@ $luvoptions = Luv_Framework::fields('option', array(
                                       'type'          => 'license',
                                       'title'         => esc_html__('Cloudflare API Key', 'swift-performance'),
                                       'default'       => '',
+                                      'required'      => array(
+                                              array('cloudflare-auto-purge', '=', '1')
+                                      )
+                                    ),
+                                    array(
+                                      'id'            => 'cloudflare-host',
+                                      'type'          => 'text',
+                                      'title'         => esc_html__('Cloudflare Host', 'swift-performance'),
+                                      'default'       => parse_url(Swift_Performance_Lite::home_url(), PHP_URL_HOST),
                                       'required'      => array(
                                               array('cloudflare-auto-purge', '=', '1')
                                       )

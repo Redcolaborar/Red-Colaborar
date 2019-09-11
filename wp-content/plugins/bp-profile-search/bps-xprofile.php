@@ -34,7 +34,7 @@ function bps_xprofile_setup ($fields)
 				$f->sort_directory = 'bps_xprofile_sort_directory';
 				$f->get_value = 'bps_xprofile_get_value';
 
-				$f->options = bps_xprofile_options ($field->id);
+				$f->options = bps_xprofile_options ($field);
 				foreach ($f->options as $key => $label)
 					$f->options[$key] = bps_wpml (0, $f->id, 'option', $label);
 
@@ -42,7 +42,7 @@ function bps_xprofile_setup ($fields)
 					do_action ('bps_custom_field', $f);
 
 				if ($f->format == 'set')
-					unset ($f->sort_directory, $f->get_value);
+					unset ($f->sort_directory);
 
 				$fields[] = $f;
 			}
@@ -165,26 +165,6 @@ function bps_xprofile_search ($f)
 	return $results;
 }
 
-function bps_sql_expression ($format, $value, $escape=false)
-{
-	global $wpdb;
-
-	foreach (array (' AND ', ' OR ') as $split)
-	{
-		$values = explode ($split, $value);
-		if (count ($values) > 1)  break;
-	}
-
-	$parts = array ();
-	foreach ($values as $value)
-	{
-		if ($escape)  $value = '%'. bps_esc_like ($value). '%';
-		$parts[] = $wpdb->prepare ($format, $value);
-	}
-
-	return '('. implode ($split, $parts). ')';
-}
-
 function bps_xprofile_sort_directory ($sql, $object, $f, $order)
 {
 	global $bp, $wpdb;
@@ -213,7 +193,14 @@ function bps_xprofile_get_value ($f)
 	}
 
 	$value = BP_XProfile_ProfileData::get_value_byid ($f->id, $members_template->member->ID);
-	return stripslashes ($value);
+
+	if ($f->format == 'set')
+		return stripslashes (implode (', ', unserialize ($value)));
+
+	if ($f->format == 'date' && isset ($f->filter) && $f->filter == 'age_range')
+		return date_diff(date_create ($value), date_create ('today'))->y;
+
+	return xprofile_filter_format_field_value_by_type (stripslashes ($value), $f->type, $f->id);
 }
 
 function bps_xprofile_format ($type, $field_id)
@@ -241,12 +228,12 @@ function bps_xprofile_format ($type, $field_id)
 	return in_array ($format, $formats)? $format: $default;
 }
 
-function bps_xprofile_options ($field_id)
+function bps_xprofile_options ($field)
 {
-	$field = new BP_XProfile_Field ($field_id);
-	if (empty ($field->id))  return array ();
-
 	$options = array ();
+
+	if ($field->type_obj->supports_options == false)  return $options;
+
 	$rows = $field->get_children ();
 	if (is_array ($rows))
 		foreach ($rows as $row)

@@ -2,9 +2,9 @@
 Contributors: dontdream
 Tags: buddypress, directory, members, users, profile, search, filter
 Requires at least: 4.6
-Tested up to: 4.9
+Tested up to: 5.2
 Requires PHP: 5.3
-Stable tag: 4.9.4
+Stable tag: 5.0.5
 
 Custom members search forms and results pages, and custom members directories for your BuddyPress site.
 
@@ -12,7 +12,7 @@ Custom members search forms and results pages, and custom members directories fo
 
 With BP Profile Search you can build custom Members search forms, and custom Members directories or search results pages.
 
-You can search BuddyPress profile fields, the *users* and *usermeta* tables (including roles), and user taxonomies (including BP member types).
+You can search BuddyPress profile fields, the *users* and *usermeta* tables (including roles), and user taxonomies (including BP member types). A location field type with a search by distance becomes available when you install a free companion plugin, see [BP Distance Search](https://wordpress.org/plugins/bp-distance-search/) for details.
 
 To build a search form, use the form settings, and select the form's search results page among the existing Members directories.
 
@@ -22,11 +22,11 @@ You can display a search form:
 * in a sidebar or widget area, using the widget *Profile Search*
 * in a post or page, using the shortcode<br><code>[bps_form id='id of your form']</code>
 
-To build a Members directory, use the shortcode <code>[bps_directory]</code>, see the [Custom Directories](http://dontdream.it/bp-profile-search/custom-directories/) tutorial.
+To build a Members directory, use the shortcode <code>[bps_directory]</code>, see the [Custom Directories](https://dontdream.it/bp-profile-search/custom-directories/) tutorial.
 
-A detailed documentation is available on the [BP Profile Search](http://www.dontdream.it/bp-profile-search/) page.
+A detailed documentation is available on the [BP Profile Search](https://www.dontdream.it/bp-profile-search/) page.
 
-Requires at least BuddyPress 2.4 -- Tested up to BuddyPress 4.0.0
+Requires at least BuddyPress 2.4 -- Tested up to BuddyPress 4.3.0
 
 == Installation ==
 
@@ -42,6 +42,40 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 
 == Changelog ==
 
+= 5.0.5 =
+* Fixed bug with *range* and *age_range* in old templates, introduced in 5.0.2
+= 5.0.4 =
+* Made the AND and OR keywords translatable in searches
+* Fixed bug with the *bps_match_all* hook
+* Made the multiple select size adjustable in search forms
+* Minor adjustment to the bps-form-default template
+* See [BP Profile Search 5.0.4](https://dontdream.it/bp-profile-search-5-0-4/) for details
+= 5.0.3 =
+* Fixed compatibility with *GEO my WordPress*
+* Fixed bug in the [bps_directory] shortcode with values containing ampersand (&)
+= 5.0.2 =
+* Added display of profile fields in the [bps_directory] shortcode
+* Added display of selected profile fields in search results
+* Added option to sort search results by selected profile fields
+* Fixed a potential privacy problem involving unauthorized searches
+* Improved compatibility with *GEO my WordPress*
+* See [BP Profile Search 5.0.2](https://dontdream.it/bp-profile-search-5-0-2/) for details
+= 5.0.1 =
+* Fixed critical bug in the [bps_directory] shortcode - wrong links to user profiles
+= 5.0 =
+* Fixed the [bps_directory] shortcode to work with BP Legacy and BP Nouveau
+* Added search modes *is* and *range* for date fields
+* Improved compatibility with *BP xProfile Location*
+* Added notice for users of outdated form templates
+= 4.9.8 =
+* Added search by distance with [BP Distance Search](https://wordpress.org/plugins/bp-distance-search/)
+= 4.9.7 =
+* Fixed workaround to prevent a theme conflict
+= 4.9.6 =
+* Minor adjustment to the bps-form-default template
+* Workaround to prevent a plugin conflict
+= 4.9.5 =
+* Restored the bps-form-nouveau template, following user requests
 = 4.9.4 =
 * Fixed CSS bug with bps-form-default
 * Fixed bug with the Member Type search field
@@ -50,13 +84,13 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 * Retired the bps-form-nouveau template, replaced by bps-form-default
 = 4.9.2 =
 * Fixed bug introduced in 4.9.1 affecting older form templates
-* Added admin error notice when BuddyPress with *Extended Profiles* is not active
+* Added admin error notice when BuddyPress is not active
 = 4.9.1 =
 * Fixed PHP Warnings in form templates
 * Fixed bug in WPML support
 = 4.9 =
 * Introduced a new default form template, to gradually replace older templates
-* See [Form Templates](http://dontdream.it/bp-profile-search/form-templates/) for details
+* See [Form Templates](https://dontdream.it/bp-profile-search/form-templates/) for details
 = 4.8.6 =
 * Added search by user taxonomies (including BP member types)
 * Added column in the *Search Forms* page showing the current template and its location
@@ -64,27 +98,27 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 * Added choice of jQuery UI theme for the bps-form-nouveau template
 = 4.8.4 =
 * Added ability to search by data in the *usermeta* table
-* See [BP Profile Search 4.8.4](http://dontdream.it/bp-profile-search-4-8-4/) for details
+* See [BP Profile Search 4.8.4](https://dontdream.it/bp-profile-search-4-8-4/) for details
 = 4.8.3 =
-* Added a new form template compatible with BuddyPress Nouveau
+* Added a new form template compatible with BP Nouveau
 * Revised the plugin's contextual help
-* The shortcode [bps_directory] still doesn't work with BuddyPress Nouveau
-* See [BP Profile Search 4.8.3](http://dontdream.it/bp-profile-search-4-8-3/) for details
+* The shortcode [bps_directory] still doesn't work with BP Nouveau
+* See [BP Profile Search 4.8.3](https://dontdream.it/bp-profile-search-4-8-3/) for details
 = 4.8.2 =
 * Fixed issue when calling a template inside a template
 = 4.8.1 =
 * Added ability to search by data in the *users* table
 * Added option to enable or disable *persistent search*
 * Removed the old interface for custom field types
-* See [BP Profile Search 4.8.1](http://dontdream.it/bp-profile-search-4-8-1/) for details
+* See [BP Profile Search 4.8.1](https://dontdream.it/bp-profile-search-4-8-1/) for details
 = 4.8 =
-* Introduced *hidden filters* for custom directories, see [Custom Directories](http://dontdream.it/bp-profile-search/custom-directories/)
-* Developers: please switch to the [new interface for custom field types](http://dontdream.it/bp-profile-search/custom-profile-field-types/)
+* Introduced *hidden filters* for custom directories, see [Custom Directories](https://dontdream.it/bp-profile-search/custom-directories/)
+* Developers: please switch to the [new interface for custom field types](https://dontdream.it/bp-profile-search/custom-profile-field-types/)
 = 4.7.9 =
 * Introduced new search mode *is one of*
 = 4.7.8 =
 * Improved display of the active filters
-* For developers: [new interface for custom field types](http://dontdream.it/bp-profile-search/custom-profile-field-types/)
+* For developers: [new interface for custom field types](https://dontdream.it/bp-profile-search/custom-profile-field-types/)
 = 4.7.7 =
 * No longer clears the search when leaving the members directory
 * Removed PHP Warning during first activation
@@ -104,7 +138,7 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 * Modified the *Form Fields* settings UI to enable further development
 = 4.7 =
 * Added ability to sort a Members directory using a profile field
-* See [BP Profile Search 4.7](http://dontdream.it/bp-profile-search-4-7/) for details
+* See [BP Profile Search 4.7](https://dontdream.it/bp-profile-search-4-7/) for details
 = 4.6.3 =
 * Added support for WPGlobus
 * Updated templates for the *Twenty Seventeen* theme
@@ -141,7 +175,7 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 * Fixed rendering of hidden fields in form templates
 = 4.3 =
 * Updated templates to better support custom field types
-* Updated [documentation](http://dontdream.it/bp-profile-search/custom-profile-field-types/) for custom field types authors
+* Updated [documentation](https://dontdream.it/bp-profile-search/custom-profile-field-types/) for custom field types authors
 = 4.2.4 =
 * Updated for WordPress 4.3
 = 4.2.3 =
@@ -177,7 +211,7 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 = 3.6.5 =
 * Fixed bug when searching in a *number* profile field type
 = 3.6.4 =
-* Added support for custom profile field types, see [documentation](http://dontdream.it/bp-profile-search/custom-profile-field-types/)
+* Added support for custom profile field types, see [documentation](https://dontdream.it/bp-profile-search/custom-profile-field-types/)
 = 3.6.3 =
 * Reduced the number of database queries
 = 3.6.2 =

@@ -28,9 +28,11 @@ global $title, $hook_suffix, $current_screen, $wp_locale, $pagenow, $wp_version,
       	<?php do_action( 'admin_head' ); ?>
       </head>
       <body class="wp-core-ui swift-setup">
-      	<div class="swift-setup-wrapper">
-                  <img class="swift-setup-logo" src="<?php echo SWIFT_PERFORMANCE_SETUP_URI . 'images/logo.png'?>">
-                  <div class="swift-setup-slide active">
+      	<div id="swift-performance-wrapper" class="swift-setup-wrapper">
+			<div class="swift-performance-header">
+		            <img class="swift-performance-logo" src="<?php echo SWIFT_PERFORMANCE_URI;?>images/logo.png">
+		      </div>
+                  <div class="swift-setup-slide active has-bg">
                         <h2><?php echo sprintf(esc_html__('Deactivate %s', 'swift-performance'), SWIFT_PERFORMANCE_PLUGIN_NAME); ?></h2>
                         <div class="swift-p-row">
                               <input type="checkbox" class="ios8-switch" name="keep-settings" value="enabled" id="keep-settings" checked>

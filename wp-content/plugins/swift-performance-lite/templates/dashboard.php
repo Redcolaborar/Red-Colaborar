@@ -60,23 +60,28 @@
 
 <?php if ($caching_on && (!defined('SWIFT_PERFORMANCE_DISABLE_CACHE') || !SWIFT_PERFORMANCE_DISABLE_CACHE)):?>
 <input type="hidden" id="swift-performance-warmup-table-url" value="<?php echo set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );?>">
+
 <div id="swift-cache-status-box" class="swift-box">
 	<h3><?php esc_html_e('Cache Status', 'swift-performance');?></h3>
 	<div class="swift-box-inner">
             <ul>
                   <li>
+				<i class="far fa-copy"></i>
             		<label><?php esc_html_e('Known Pages', 'swift-performance')?></label>
                         <span class="cache-status-count warmup-pages-count">-</span>
                   </li>
                   <li>
+				<i class="fas fa-copy"></i>
                         <label><?php esc_html_e('Cached Pages', 'swift-performance')?></label>
                         <span class="cache-status-count cached-pages-count">-</span>
                   </li>
                   <li>
+				<i class="fas fa-weight"></i>
                         <label><?php esc_html_e('Cache size', 'swift-performance')?></label>
                         <span class="cache-status-count cache-size-count">-</span>
                   </li>
                   <li>
+				<i class="fas fa-microchip"></i>
                         <label><?php esc_html_e('Threads', 'swift-performance')?></label>
                         <span class="cache-status-count">
 					<span class="thread-count">-</span>
@@ -90,23 +95,27 @@
                   </li>
             </ul>
 		<?php if ($ajax_caching_on || $dynamic_caching_on):?>
-		<ul>
+		<ul class="secondary">
 			<?php if ($ajax_caching_on):?>
                   <li>
+				<i class="fas fa-tasks"></i>
             		<label><?php esc_html_e('AJAX Objects', 'swift-performance')?></label>
                         <span class="cache-status-count ajax-object-count">-</span>
                   </li>
 			<li>
+				<i class="fas fa-weight"></i>
             		<label><?php esc_html_e('AJAX Cache Size', 'swift-performance')?></label>
                         <span class="cache-status-count ajax-size-count">-</span>
                   </li>
 			<?php endif;?>
 			<?php if ($dynamic_caching_on):?>
                   <li>
+				<i class="fas fa-sync-alt"></i>
                         <label><?php esc_html_e('Dynamic Pages', 'swift-performance')?></label>
                         <span class="cache-status-count cached-dynamic-pages-count">-</span>
                   </li>
 			<li>
+				<i class="fas fa-weight"></i>
                         <label><?php esc_html_e('Dynamic Cache Size', 'swift-performance')?></label>
                         <span class="cache-status-count cached-dynamic-size-count">-</span>
                   </li>
@@ -122,9 +131,9 @@
 		<h3><?php esc_html_e('Warmup Table', 'swift-performance');?></h3>
 	      <div class="swift-actions-container">
 	            <div class="swift-button-container">
-	                  <a href="#" id="swift-performance-refresh-list-table" class="swift-btn swift-btn-gray swift-btn-thin"><i class="fa fa-refresh"></i></a>
-				<a href="#" id="swift-performance-add-warmup-link" class="swift-btn swift-btn-gray swift-btn-thin"><i class="fa fa-plus"></i></a>
-				<a href="#" id="swift-performance-prebuild-cache" class="swift-btn swift-btn-blue<?php echo ($prebuild_running ? ' swift-hidden' : '')?>"><?php esc_html_e('Start Prebuild Cache', 'swift-performance');?></a>
+	                  <a href="#" id="swift-performance-refresh-list-table" class="swift-btn swift-btn-black swift-btn-thin"><i class="fa fa-refresh"></i></a>
+				<a href="#" id="swift-performance-add-warmup-link" class="swift-btn swift-btn-black swift-btn-thin"><i class="fa fa-plus"></i></a>
+	                  <a href="#" id="swift-performance-prebuild-cache" class="swift-btn swift-btn-blue<?php echo ($prebuild_running ? ' swift-hidden' : '')?>"><?php esc_html_e('Start Prebuild Cache', 'swift-performance');?></a>
 				<a href="#" id="swift-performance-stop-prebuild-cache" class="swift-btn swift-btn-brand<?php echo (!$prebuild_running ? ' swift-hidden' : '')?>"><?php esc_html_e('Stop Prebuild Cache', 'swift-performance');?></a>
 				<a href="#" id="swift-performance-reset-warmup" class="swift-btn swift-btn-brand"><?php esc_html_e('Reset Warmup Table', 'swift-performance');?></a>
 	            </div>

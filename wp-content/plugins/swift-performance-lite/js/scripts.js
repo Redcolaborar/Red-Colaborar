@@ -421,7 +421,8 @@ jQuery(function(){
       });
 
       // Clear font filter
-      jQuery(document).on('click', '.swift-clear-critical-font-filter', function(){
+      jQuery(document).on('click', '.swift-clear-critical-font-filter', function(e){
+            e.preventDefault();
             jQuery(this).closest('.swift-critical-font-container').find('.swift-critical-font-filter').val('').trigger('change');
       });
 

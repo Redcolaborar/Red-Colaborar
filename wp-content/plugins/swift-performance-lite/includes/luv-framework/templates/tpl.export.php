@@ -1,6 +1,6 @@
 <div class="<?php echo implode(' ', $classes);?>" id="<?php echo esc_attr($prefix . $field['id']);?>-container"<?php echo (!empty($default) ? ' data-default="' . $default . '"' : '');?> data-type="<?php echo $field['type'];?>">
       <div class="luv-framework-field-title">
-            <strong><?php echo esc_html_e('Export Settings');?></strong>
+            <strong><?php echo esc_html_e('Export Settings', 'luv-framework');?></strong>
             <div class="luv-framework-field-description">
                   <?php echo esc_html_e('You can export and download current settings here.', 'luv-framework'); ?>
             </div>

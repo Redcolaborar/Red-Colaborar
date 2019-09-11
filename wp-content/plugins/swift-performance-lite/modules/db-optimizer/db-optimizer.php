@@ -52,8 +52,8 @@ class Swift_Performance_DB_Optimizer {
       public static function schedule_form($option){
       ?>
       <div id="schedule-<?php echo esc_attr($option);?>" class="swift-dbo-schedule-selector swift-hidden swift-centered">
-            <?php esc_html_e('This feature is available only in premium version.', 'swift-performance');?><br>
-            <a href="https://swteplugins.com" target="_blank" class="swift-btn swift-btn-brand"><?php esc_html_e('Purchase a license', 'swift-performance')?></a>
+            <?php esc_html_e('Schedule feature is available only in pro version.', 'swift-performance');?><br><br>
+            <a href="<?php echo Swift_Performance_Lite::upgrade_link();?>" target="_blank" class="swift-btn swift-btn-brand"><?php esc_html_e('Purchase a license', 'swift-performance')?></a><br><br>
       </div>
       <?php
       }

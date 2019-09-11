@@ -4,10 +4,8 @@
 	Swift_Performance_Lite::set_time_limit(120, 'db_optimizer_dashboard');
 ?>
 <div class="swift-message swift-backup-warning">
-	<p>
-		<span class="dashicons dashicons-warning"></span>
-		<span class="swift-message-text"><?php esc_html_e('Please first backup your database, because any optimization is irreversible.', 'swift-performance')?></span>
-	</p>
+	<i class="fas fa-exclamation-circle"></i>
+	<span class="swift-message-text"><?php esc_html_e('Please first backup your database, because any optimization is irreversible.', 'swift-performance')?></span>
 	<a href="#" class="swift-btn swift-btn-green swift-confirm-backup"><?php esc_html_e('I have backup!', 'swift-performance')?></a>
 </div>
 <div class="swift-dashboard content-blurred">

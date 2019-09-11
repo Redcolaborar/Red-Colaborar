@@ -89,21 +89,25 @@
 	background: #e7e7e7;
 }
 
-.left .luv-framework-container {
-	display: table;
-}
-
 .left .luv-framework-section-header {
-	width: 20%;
-	display: table-cell;
 	background: #f7f7f7;
 	padding: 0 !important;
 }
 
 .left .luv-framework-section-body {
-	width: 80%;
-	display: table-cell;
 	padding: 20px !important;
+}
+
+@media (min-width: 768px){
+	.left .luv-framework-section-header {
+		width: 20%;
+		display: table-cell;
+	}
+
+	.left .luv-framework-section-body {
+		width: 80%;
+		display: table-cell;
+	}
 }
 
 .luv-framework-field-title {
@@ -167,8 +171,10 @@
 	display: none;
 }
 
-.luv-framework-container.left {
-      display: flex;
+@media (min-width: 768px){
+	.luv-framework-container.left {
+	      display: flex;
+	}
 }
 
 .luv-framework-section-header {
@@ -235,7 +241,13 @@
 
 .luv-framework-header-menu li {
 	float: left;
-	margin: 0 5px;
+	margin: 5px auto;
+}
+
+@media (min-width: 768px){
+	.luv-framework-header-menu li {
+		margin: 0 5px;
+	}
 }
 
 .luv-framework-button {
@@ -316,6 +328,18 @@
 	width: 100%;
 	background: #E3E3E3;
 	z-index: 2147483647;
+	cursor: pointer;
+}
+
+.luv-framework-notice.luv-success::after {
+    content: "\f057";
+    position: absolute;
+    color: #fff;
+    font-family: "Font Awesome 5 Free";
+    font-size: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 5px;
 }
 
 .luv-framework-notice.luv-error {
@@ -497,6 +521,7 @@ input[type="checkbox"].ios8-switch + label {
     position: relative;
     padding: 5px 0 0 50px;
     line-height: 2.0em;
+    display: block;
 }
 input[type="checkbox"].ios8-switch + label:before {
     content: "";

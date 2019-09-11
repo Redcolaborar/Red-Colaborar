@@ -78,7 +78,7 @@ function bp_groups_format_activity_action_created_group( $action, $activity ) {
 	$group      = groups_get_group( $activity->item_id );
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
 
-	$action = sprintf( __( '%1$s created the group %2$s', 'buddypress'), $user_link, $group_link );
+	$action = sprintf( esc_html__( '%1$s created the group %2$s', 'buddypress'), $user_link, $group_link );
 
 	/**
 	 * Filters the 'created_group' activity actions.
@@ -106,7 +106,7 @@ function bp_groups_format_activity_action_joined_group( $action, $activity ) {
 	$group      = groups_get_group( $activity->item_id );
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
 
-	$action = sprintf( __( '%1$s joined the group %2$s', 'buddypress' ), $user_link, $group_link );
+	$action = sprintf( esc_html__( '%1$s joined the group %2$s', 'buddypress' ), $user_link, $group_link );
 
 	// Legacy filters (do not follow parameter patterns of other activity
 	// action filters, and requires apply_filters_ref_array()).
@@ -153,22 +153,22 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 
 	// No changed details were found, so use a generic message.
 	if ( empty( $changed ) ) {
-		$action = sprintf( __( '%1$s updated details for the group %2$s', 'buddypress' ), $user_link, $group_link );
+		$action = sprintf( esc_html__( '%1$s updated details for the group %2$s', 'buddypress' ), $user_link, $group_link );
 
 	// Name and description changed - to keep things short, don't describe changes in detail.
 	} elseif ( isset( $changed['name'] ) && isset( $changed['description'] ) ) {
-		$action = sprintf( __( '%1$s changed the name and description of the group %2$s', 'buddypress' ), $user_link, $group_link );
+		$action = sprintf( esc_html__( '%1$s changed the name and description of the group %2$s', 'buddypress' ), $user_link, $group_link );
 
 	// Name only.
 	} elseif ( ! empty( $changed['name']['old'] ) && ! empty( $changed['name']['new'] ) ) {
-		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddypress' ), $user_link, $group_link, esc_html( $changed['name']['old'] ), esc_html( $changed['name']['new'] ) );
+		$action = sprintf( esc_html__( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddypress' ), $user_link, $group_link, esc_html( $changed['name']['old'] ), esc_html( $changed['name']['new'] ) );
 
 	// Description only.
 	} elseif ( ! empty( $changed['description']['old'] ) && ! empty( $changed['description']['new'] ) ) {
-		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddypress' ), $user_link, $group_link, esc_html( $changed['description']['old'] ), esc_html( $changed['description']['new'] ) );
+		$action = sprintf( esc_html__( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddypress' ), $user_link, $group_link, esc_html( $changed['description']['old'] ), esc_html( $changed['description']['new'] ) );
 
 	} elseif ( ! empty( $changed['slug']['old'] ) && ! empty( $changed['slug']['new'] ) ) {
-		$action = sprintf( __( '%1$s changed the permalink of the group %2$s.', 'buddypress' ), $user_link, $group_link );
+		$action = sprintf( esc_html__( '%1$s changed the permalink of the group %2$s.', 'buddypress' ), $user_link, $group_link );
 
 	}
 
@@ -296,6 +296,119 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 	return $retval;
 }
 add_filter( 'bp_activity_set_groups_scope_args', 'bp_groups_filter_activity_scope', 10, 2 );
+
+/**
+ * Enforces group membership restrictions on activity favorite queries.
+ *
+ * @since 4.3.0
+
+ * @param array $retval Query arguments.
+ * @param array $filter
+ * @return array
+ */
+function bp_groups_filter_activity_favorites_scope( $retval, $filter ) {
+	// Only process for viewers looking at their own favorites feed.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = (int) $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
+	}
+
+	if ( ! $user_id || ! is_user_logged_in() || $user_id !== bp_loggedin_user_id() ) {
+		return $retval;
+	}
+
+	$favs = bp_activity_get_user_favorites( $user_id );
+	if ( empty( $favs ) ) {
+		return $retval;
+	}
+
+	$user_groups = bp_get_user_groups(
+		$user_id,
+		array(
+			'is_admin' => null,
+			'is_mod'   => null,
+		)
+	);
+
+	$retval = array(
+		'relation' => 'OR',
+
+		// Allow hidden items for items unconnected to groups.
+		'non_groups' => array(
+			'relation' => 'AND',
+			array(
+				'column'  => 'component',
+				'compare' => '!=',
+				'value'   => buddypress()->groups->id,
+			),
+			array(
+				'column'  => 'hide_sitewide',
+				'compare' => 'IN',
+				'value'   => array( 1, 0 ),
+			),
+			array(
+				'column'  => 'id',
+				'compare' => 'IN',
+				'value'   => $favs,
+			),
+		),
+
+		// Trust the favorites list for group items that are not hidden sitewide.
+		'non_hidden_groups' => array(
+			'relation' => 'AND',
+			array(
+				'column'  => 'component',
+				'compare' => '=',
+				'value'   => buddypress()->groups->id,
+			),
+			array(
+				'column'  => 'hide_sitewide',
+				'compare' => '=',
+				'value'   => 0,
+			),
+			array(
+				'column'  => 'id',
+				'compare' => 'IN',
+				'value'   => $favs,
+			),
+		),
+
+		// For hidden group items, limit to those in the user's groups.
+		'hidden_groups' => array(
+			'relation' => 'AND',
+			array(
+				'column'  => 'component',
+				'compare' => '=',
+				'value'   => buddypress()->groups->id,
+			),
+			array(
+				'column'  => 'hide_sitewide',
+				'compare' => '=',
+				'value'   => 1,
+			),
+			array(
+				'column'  => 'id',
+				'compare' => 'IN',
+				'value'   => $favs,
+			),
+			array(
+				'column'  => 'item_id',
+				'compare' => 'IN',
+				'value'   => wp_list_pluck( $user_groups, 'group_id' ),
+			),
+		),
+
+		'override' => array(
+			'display_comments' => true,
+			'filter'           => array( 'user_id' => 0 ),
+			'show_hidden'      => true,
+		),
+	);
+
+	return $retval;
+}
+add_filter( 'bp_activity_set_favorites_scope_args', 'bp_groups_filter_activity_favorites_scope', 20, 2 );
 
 /**
  * Record an activity item related to the Groups component.
